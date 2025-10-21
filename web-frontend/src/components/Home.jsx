@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/api';
+const API_URL = window.location.hostname.includes('replit.dev')
+  ? `https://${window.location.hostname.replace('-5000', '-8000')}/api`
+  : 'http://localhost:8000/api';
 
 function Home({ setCurrentView, viewTrail }) {
   const [recommendedTrail, setRecommendedTrail] = useState(null);
@@ -62,7 +64,7 @@ function Home({ setCurrentView, viewTrail }) {
             <div className="trail-grid">
               <div className="trail-card" onClick={() => viewTrail(recommendedTrail)}>
                 <img 
-                  src={recommendedTrail.thumbnail} 
+                  src={recommendedTrail.thumbnail || recommendedTrail.image_url} 
                   alt={recommendedTrail.name}
                   className="trail-image"
                 />
@@ -89,7 +91,10 @@ function Home({ setCurrentView, viewTrail }) {
                     </div>
                   </div>
                   <div className="trail-tags">
-                    {recommendedTrail.tags.slice(0, 3).map((tag, i) => (
+                    {recommendedTrail.tags && recommendedTrail.tags.slice(0, 3).map((tag, i) => (
+                      <span key={i} className="tag">{tag}</span>
+                    ))}
+                    {recommendedTrail.interests && !recommendedTrail.tags && recommendedTrail.interests.slice(0, 3).map((tag, i) => (
                       <span key={i} className="tag">{tag}</span>
                     ))}
                   </div>
