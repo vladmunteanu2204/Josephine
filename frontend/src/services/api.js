@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const API_BASE_URL = __DEV__ 
-  ? 'http://localhost:5000/api'
-  : 'https://your-replit-url.repl.co/api';
+  ? 'http://localhost:8000/api'
+  : 'https://your-replit-url.repl.co:8000/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

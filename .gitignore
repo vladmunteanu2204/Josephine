@@ -5,6 +5,48 @@ build/
 dist/
 wheels/
 *.egg-info
+.pythonlibs/
+uv.lock
 
 # Virtual environments
 .venv
+venv/
+ENV/
+env/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Expo / React Native
+.expo/
+.expo-shared/
+web-build/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Firebase
+.firebaserc
+firebase-debug.log
+firestore-debug.log
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Logs
+/tmp/logs/
+
+# OS
+.DS_Store
+Thumbs.db
