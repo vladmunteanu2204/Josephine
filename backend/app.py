@@ -14,14 +14,18 @@ client = OpenAI(
     base_url=os.environ.get("AI_INTEGRATIONS_OPENAI_BASE_URL")
 )
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 def load_trail_segments():
     """Load trail segments from the mock database"""
-    with open('data/trail_segments.json', 'r') as f:
+    segments_path = os.path.join(BASE_DIR, 'data', 'trail_segments.json')
+    with open(segments_path, 'r') as f:
         return json.load(f)
 
 def load_complete_trails():
     """Load complete trail data"""
-    with open('data/trails.json', 'r') as f:
+    trails_path = os.path.join(BASE_DIR, 'data', 'trails.json')
+    with open(trails_path, 'r') as f:
         return json.load(f)
 
 @app.route('/api/health', methods=['GET'])
