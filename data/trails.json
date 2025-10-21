@@ -220,6 +220,230 @@
       "facilities": ["cable_car", "restaurants", "restrooms"],
       "dog_friendly": true,
       "family_friendly": true
+    },
+    {
+      "id": "seceda_ridge",
+      "name": "Seceda Ridge Trail",
+      "region": "South Tyrol",
+      "difficulty": "medium",
+      "distance_km": 7.2,
+      "duration_hours": 3,
+      "elevation_gain_m": 380,
+      "elevation_loss_m": 380,
+      "trail_type": "loop",
+      "interests": ["panoramic views", "alpine lakes"],
+      "description": "Seceda is one of the most photographed peaks in the Dolomites, and this ridge trail showcases why. Starting from the Seceda cable car station, the trail follows the dramatic jagged ridge with breathtaking views of the Odle/Geisler peaks on one side and the Puez massif on the other. The unique geological formations create a surreal landscape of sharp limestone spires and rolling alpine meadows. Summer brings carpets of wildflowers, while autumn offers golden larches against the limestone. This trail rewards hikers with 360-degree mountain panoramas and is a photographer's dream, especially during sunrise and sunset.",
+      "coordinates": [
+        [11.6455, 46.5985],
+        [11.6525, 46.5995],
+        [11.6585, 46.5975],
+        [11.6605, 46.5945],
+        [11.6555, 46.5925],
+        [11.6485, 46.5945],
+        [11.6455, 46.5985]
+      ],
+      "pois": [
+        {
+          "name": "Seceda Cable Car Station",
+          "type": "viewpoint",
+          "coordinates": [11.6455, 46.5985],
+          "description": "Starting point with iconic ridge views"
+        },
+        {
+          "name": "Odle Viewpoint",
+          "type": "viewpoint",
+          "coordinates": [11.6525, 46.5995],
+          "description": "Best view of the Geisler peaks"
+        },
+        {
+          "name": "Col Raiser",
+          "type": "viewpoint",
+          "coordinates": [11.6585, 46.5975],
+          "description": "Summit viewpoint with 360-degree panorama"
+        }
+      ],
+      "rating": 4.9,
+      "reviews_count": 1832,
+      "image_url": "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800",
+      "difficulty_details": {
+        "technical": "low",
+        "fitness": "medium",
+        "exposure": "medium"
+      },
+      "best_season": ["June", "July", "August", "September"],
+      "facilities": ["cable_car", "restaurant"],
+      "dog_friendly": false,
+      "family_friendly": true
+    },
+    {
+      "id": "lago_carezza",
+      "name": "Lago di Carezza Trail",
+      "region": "Trentino",
+      "difficulty": "easy",
+      "distance_km": 2.8,
+      "duration_hours": 1,
+      "elevation_gain_m": 60,
+      "elevation_loss_m": 60,
+      "trail_type": "loop",
+      "interests": ["alpine lakes", "forests", "panoramic views"],
+      "description": "Discover the Rainbow Lake, as Lago di Carezza is locally known, famous for its stunning color palette that changes throughout the day. Nestled in a pine forest with the towering Latemar massif reflected in its emerald-green waters, this small but spectacular alpine lake offers an easy circular trail perfect for all ages. Legend says a wizard created a rainbow to capture a water nymph's heart, and when she rejected him, he shattered it into the lake, giving it its magical colors. The trail meanders through fragrant forests with numerous viewpoints to admire the lake's ever-changing hues, from turquoise to emerald to deep blue depending on light and season.",
+      "coordinates": [
+        [11.5745, 46.4095],
+        [11.5775, 46.4105],
+        [11.5795, 46.4092],
+        [11.5785, 46.4075],
+        [11.5755, 46.4072],
+        [11.5745, 46.4085],
+        [11.5745, 46.4095]
+      ],
+      "pois": [
+        {
+          "name": "Lago di Carezza",
+          "type": "lake",
+          "coordinates": [11.5765, 46.4088],
+          "description": "Rainbow Lake with Latemar reflection"
+        },
+        {
+          "name": "Latemar Viewpoint",
+          "type": "viewpoint",
+          "coordinates": [11.5795, 46.4092],
+          "description": "Best view of mountain reflection"
+        },
+        {
+          "name": "Forest Chapel",
+          "type": "cultural",
+          "coordinates": [11.5755, 46.4072],
+          "description": "Small woodland chapel"
+        }
+      ],
+      "rating": 4.8,
+      "reviews_count": 2567,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "low",
+        "exposure": "very_low"
+      },
+      "best_season": ["May", "June", "July", "August", "September", "October"],
+      "facilities": ["parking", "restrooms", "restaurant"],
+      "dog_friendly": true,
+      "family_friendly": true
+    },
+    {
+      "id": "puez_odle",
+      "name": "Puez-Odle Alta Via Trail",
+      "region": "South Tyrol",
+      "difficulty": "hard",
+      "distance_km": 12.5,
+      "duration_hours": 6,
+      "elevation_gain_m": 850,
+      "elevation_loss_m": 850,
+      "trail_type": "loop",
+      "interests": ["panoramic views", "via ferrata", "cultural routes"],
+      "description": "A challenging high-altitude traverse through the heart of the Puez-Odle Nature Park, this trail demands fitness and rewards with unparalleled Dolomite vistas. The route climbs steeply through alpine meadows before traversing rocky terrain with cable-assisted sections beneath towering limestone walls. Hikers pass through different geological formations, showcasing millions of years of Earth's history in the stratified rock faces. Multiple mountain huts provide rest stops and refreshments, while marmots and chamois are often spotted along the route. This is true alpine hiking at its finest, combining physical challenge with spiritual reward as you traverse one of the most dramatic mountain landscapes in the Alps.",
+      "coordinates": [
+        [11.6745, 46.6125],
+        [11.6825, 46.6155],
+        [11.6895, 46.6185],
+        [11.6955, 46.6165],
+        [11.6985, 46.6125],
+        [11.6935, 46.6085],
+        [11.6865, 46.6075],
+        [11.6795, 46.6095],
+        [11.6745, 46.6125]
+      ],
+      "pois": [
+        {
+          "name": "Rifugio Puez",
+          "type": "cabin",
+          "coordinates": [11.6745, 46.6125],
+          "description": "Starting hut with accommodation"
+        },
+        {
+          "name": "Sass de Putia",
+          "type": "viewpoint",
+          "coordinates": [11.6895, 46.6185],
+          "description": "Dramatic limestone peak viewpoint"
+        },
+        {
+          "name": "Forcella de Putia",
+          "type": "viewpoint",
+          "coordinates": [11.6955, 46.6165],
+          "description": "Mountain pass with panoramic views"
+        },
+        {
+          "name": "Rifugio Genova",
+          "type": "cabin",
+          "coordinates": [11.6865, 46.6075],
+          "description": "Mountain refuge with meals"
+        }
+      ],
+      "rating": 4.7,
+      "reviews_count": 645,
+      "image_url": "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800",
+      "difficulty_details": {
+        "technical": "high",
+        "fitness": "high",
+        "exposure": "high"
+      },
+      "best_season": ["July", "August", "September"],
+      "facilities": ["mountain_huts"],
+      "dog_friendly": false,
+      "family_friendly": false
+    },
+    {
+      "id": "val_di_funes",
+      "name": "Val di Funes Meadow Trail",
+      "region": "South Tyrol",
+      "difficulty": "easy",
+      "distance_km": 4.2,
+      "duration_hours": 1.5,
+      "elevation_gain_m": 100,
+      "elevation_loss_m": 100,
+      "trail_type": "loop",
+      "interests": ["panoramic views", "cultural routes", "forests"],
+      "description": "Experience one of the most iconic views in all of the Alps on this gentle valley walk. The trail offers the classic postcard perspective of the St. Johann church with the dramatic Odle/Geisler peaks rising behind it. This enchanting valley showcases the perfect harmony between human settlement and nature, with traditional Tyrolean farms scattered across rolling meadows against a backdrop of soaring limestone spires. The trail is especially magical in spring with blooming wildflowers, in autumn with golden foliage, and in early morning when mist clings to the valley floor. This easy walk captures the essence of alpine beauty and is suitable for all ages and fitness levels.",
+      "coordinates": [
+        [11.6985, 46.6425],
+        [11.7045, 46.6445],
+        [11.7095, 46.6425],
+        [11.7105, 46.6395],
+        [11.7055, 46.6375],
+        [11.7005, 46.6385],
+        [11.6985, 46.6425]
+      ],
+      "pois": [
+        {
+          "name": "St. Johann Church",
+          "type": "cultural",
+          "coordinates": [11.6985, 46.6425],
+          "description": "Famous alpine church with Odle backdrop"
+        },
+        {
+          "name": "Odle Viewpoint",
+          "type": "viewpoint",
+          "coordinates": [11.7045, 46.6445],
+          "description": "Classic photography spot"
+        },
+        {
+          "name": "Traditional Farm",
+          "type": "cultural",
+          "coordinates": [11.7095, 46.6425],
+          "description": "Historic Tyrolean farmstead"
+        }
+      ],
+      "rating": 4.8,
+      "reviews_count": 1453,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "low",
+        "exposure": "very_low"
+      },
+      "best_season": ["April", "May", "June", "July", "August", "September", "October"],
+      "facilities": ["parking", "restaurants"],
+      "dog_friendly": true,
+      "family_friendly": true
     }
   ]
 }

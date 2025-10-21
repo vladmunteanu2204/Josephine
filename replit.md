@@ -17,24 +17,35 @@ alpenvia/
 All core features have been implemented:
 - ✅ Flask backend API running on port 8000
 - ✅ Smart local recommendation engine (no external AI)
-- ✅ Verified trail database with 4 South Tyrol trails
+- ✅ Verified trail database with 8 South Tyrol/Trentino trails
 - ✅ React web app with complete navigation
 - ✅ All screens implemented (Home, Recommendations, Catalog, Detail)
 - ✅ Dark alpine-inspired theme
 - ✅ Works in Replit browser preview
+- ✅ Fixed API connectivity between frontend and backend
 
-## Recent Refactoring (October 21, 2025)
-**What Changed:**
+## Recent Updates (October 21, 2025)
+**Latest Changes:**
+- ✅ Fixed API URL logic in frontend components for Replit environment
+- ✅ Expanded trail database from 4 to 8 trails
+- ✅ Added 4 new authentic South Tyrol/Trentino routes:
+  - Seceda Ridge Trail (medium)
+  - Lago di Carezza Trail (easy)
+  - Puez-Odle Alta Via Trail (hard)
+  - Val di Funes Meadow Trail (easy)
+- ✅ All API endpoints working correctly with frontend
+
+**Previous Refactoring:**
 - ❌ Removed OpenAI API integration and all dependencies
 - ❌ Deprecated AI route generation endpoint (now returns HTTP 410)
 - ❌ Removed React Native mobile app
 - ✅ Created React web frontend for browser preview
 - ✅ Implemented local scoring-based recommendation algorithm
-- ✅ Updated all documentation and workflows
 
 **Why:**
 - User required app to be previewable in Replit web browser
 - User requested removal of OpenAI integration (use local DB only)
+- User requested at least 8 trails in database
 - Cost reduction: No external API dependencies
 - Quality: Verified routes only, no AI-generated content
 
@@ -78,8 +89,14 @@ None required! App works out of the box.
 - Backend runs from `backend/` directory, loads data from `../data/`
 - File paths resolved using `BASE_DIR` for portability
 - Web frontend configured for Replit preview (host: 0.0.0.0, port: 5000)
+- API URL uses `window.location.protocol` + hostname + `:8000` for Replit routing
 - API tested and confirmed working on all endpoints
-- Mock data includes 4 authentic South Tyrol trails
+- Database includes 8 authentic South Tyrol/Trentino trails with complete structure:
+  - Trail metadata (distance, duration, elevation, difficulty)
+  - Coordinates in GeoJSON format
+  - Points of interest (POIs)
+  - Ratings and reviews
+  - Facilities and season information
 - No external API dependencies (fully local)
 
 ## Architecture
@@ -96,10 +113,21 @@ None required! App works out of the box.
 - Dark alpine-inspired design theme
 - Verified routes only (no AI generation)
 
+## Trail Database (8 Trails)
+1. **Tre Cime di Lavaredo Loop** - Medium, 10.2km, 4h - Iconic three peaks circuit
+2. **Lago di Braies Circular Trail** - Easy, 3.5km, 1.5h - Famous turquoise lake
+3. **Sentiero del Viel del Pan** - Medium, 8.5km, 3.5h - Historic WWI trail with glacier views
+4. **Alpe di Siusi Meadow Walk** - Easy, 5.8km, 2h - Europe's largest alpine meadow
+5. **Seceda Ridge Trail** - Medium, 7.2km, 3h - Dramatic jagged ridge photography paradise
+6. **Lago di Carezza Trail** - Easy, 2.8km, 1h - Rainbow Lake with color-changing waters
+7. **Puez-Odle Alta Via Trail** - Hard, 12.5km, 6h - Challenging high-altitude traverse
+8. **Val di Funes Meadow Trail** - Easy, 4.2km, 1.5h - Iconic church with Odle peaks
+
 ## Next Steps for Users
 1. ✅ App is ready to use in Replit preview!
-2. (Optional) Add more verified trails to `data/trails.json`
-3. (Optional) Implement user authentication
-4. (Optional) Deploy to production (Replit Deployments)
-5. (Optional) Add Firebase or PostgreSQL database
-6. (Optional) Add real map tiles and interactive maps
+2. ✅ 8 verified trails with complete information
+3. (Optional) Add more verified trails to `data/trails.json`
+4. (Optional) Implement user authentication
+5. (Optional) Deploy to production (Replit Deployments)
+6. (Optional) Add Firebase or PostgreSQL database
+7. (Optional) Add real map tiles and interactive maps

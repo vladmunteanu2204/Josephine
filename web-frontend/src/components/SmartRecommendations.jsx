@@ -3,7 +3,7 @@ import axios from 'axios';
 import './SmartRecommendations.css';
 
 const API_URL = window.location.hostname.includes('replit.dev')
-  ? `https://${window.location.hostname.replace('-5000', '-8000')}/api`
+  ? `${window.location.protocol}//${window.location.hostname}:8000/api`
   : 'http://localhost:8000/api';
 
 const INTERESTS = [
