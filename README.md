@@ -1,153 +1,97 @@
 # Alpenvia 🏔️
 
-A premium React Native hiking app for the South Tyrol and Trentino Alps regions, featuring AI-powered trail generation, Firebase authentication, and immersive dark alpine-inspired design.
+A premium hiking web app for the South Tyrol and Trentino Alps regions, featuring smart trail recommendations, verified routes, and immersive dark alpine-inspired design.
 
 ## 🌟 Features
 
-### Core MVP Features
-- **🔐 Firebase Authentication** - Email/password, Google, and Apple login with hiking preferences onboarding
-- **🏠 Home Dashboard** - Dark immersive UI with alpine-inspired design, CTAs for AI trail generation and exploration
-- **🤖 AI Trail Generator** - Multi-step wizard that creates custom trails using OpenAI GPT-4
-- **📚 Trail Catalog** - Themed collections (Alpine Lakes, Via Ferrata, Family-Friendly, etc.) with advanced filtering
-- **📍 Trail Details** - Hero images, stats, interactive maps, elevation profiles, and POIs
-- **👤 User Profile** - Saved trails, completed trails, personal stats, and preferences management
-- **💳 Premium Subscription** - Feature comparison with Stripe checkout integration and free trial
-
-### Premium Features (UI Implemented)
-- Offline maps for all trails
-- Voice navigation with turn-by-turn guidance
-- Wrong-turn haptic and visual alerts
-- Unlimited AI trail generation
-- Live location sharing with trusted contacts
-- Premium-only trail collections
-
-## 🛠 Tech Stack
-
-### Frontend (React Native)
-- **React Native** with Expo
-- **React Navigation** - Stack and bottom tab navigation
-- **Firebase** - Authentication and Firestore for user data
-- **React Native Maps** - Interactive trail maps
-- **React Native Chart Kit** - Elevation profile visualization
-- **Axios** - API communication
-- **Expo Vector Icons** - Beautiful iconography
-
-### Backend (Flask)
-- **Flask** - Lightweight Python web framework
-- **OpenAI API** - AI-powered trail descriptions (via Replit AI Integrations)
-- **Flask-CORS** - Cross-origin resource sharing
-- **SQLite/JSON** - Mock trail database
+### Core Features
+- **🏠 Home Dashboard** - Dark immersive UI with alpine-inspired design and featured trail
+- **✨ Smart Recommendations** - Multi-step wizard for personalized trail suggestions from verified routes
+- **📚 Trail Catalog** - Browse all verified trails with filtering by difficulty
+- **📍 Detailed Trail Pages** - Hero images, stats, points of interest, and comprehensive descriptions
+- **🗺️ Verified Routes Only** - All trails curated and verified for South Tyrol & Trentino Alps
 
 ### Design System
 - **Dark Theme** - Deep grays (#0a0a0a), forest greens, amber accents (#d4a574)
 - **Typography** - Clear hierarchy with bold headings and readable body text
-- **Smooth Animations** - React Native Reanimated for fluid transitions
+- **Responsive Layout** - Works perfectly in Replit's web preview
+
+## 🛠 Tech Stack
+
+### Web Frontend (React + Vite)
+- **React 18** - Modern React with hooks
+- **Vite** - Lightning-fast development server
+- **Axios** - API communication
+- **CSS3** - Custom styling with CSS variables
+
+### Backend (Flask)
+- **Flask** - Lightweight Python web framework
+- **Smart Recommendation Engine** - Local scoring algorithm over verified trails database
+- **Flask-CORS** - Cross-origin resource sharing
+- **JSON Database** - Mock trail data with 4 authentic South Tyrol trails
 
 ## 📁 Project Structure
 
 ```
 alpenvia/
-├── backend/                    # Flask API server
+├── backend/                    # Flask API server (port 8000)
 │   ├── app.py                 # Main Flask application with API endpoints
 │   └── requirements.txt       # Python dependencies
-├── frontend/                   # React Native mobile app
+├── web-frontend/              # React web app (port 5000)
 │   ├── src/
 │   │   ├── components/        # Reusable UI components
-│   │   │   ├── TrailCard.js
-│   │   │   └── CTACard.js
-│   │   ├── screens/           # App screens
-│   │   │   ├── AuthScreen.js
-│   │   │   ├── OnboardingScreen.js
-│   │   │   ├── HomeScreen.js
-│   │   │   ├── ExploreScreen.js
-│   │   │   ├── AIGeneratorScreen.js
-│   │   │   ├── TrailDetailScreen.js
-│   │   │   ├── SavedTrailsScreen.js
-│   │   │   ├── ProfileScreen.js
-│   │   │   └── PremiumScreen.js
-│   │   ├── navigation/        # Navigation configuration
-│   │   │   └── MainNavigator.js
-│   │   ├── services/          # API services
-│   │   │   └── api.js
-│   │   ├── theme/             # Design system
-│   │   │   ├── colors.js
-│   │   │   └── typography.js
-│   │   └── config/            # Configuration
-│   │       └── firebase.js
-│   ├── App.js                 # Root component
+│   │   │   ├── Header.jsx
+│   │   │   ├── Home.jsx
+│   │   │   ├── SmartRecommendations.jsx
+│   │   │   ├── TrailCatalog.jsx
+│   │   │   └── TrailDetail.jsx
+│   │   ├── App.jsx            # Main app component
+│   │   ├── main.jsx           # React entry point
+│   │   └── index.css          # Global styles
+│   ├── index.html             # HTML template
+│   ├── vite.config.js         # Vite configuration
 │   └── package.json           # Node dependencies
-├── data/                       # Mock trail data
+├── data/                       # Mock trail database
 │   ├── trails.json            # Complete trail database (4 South Tyrol trails)
-│   └── trail_segments.json    # Trail segments for AI generation
+│   └── trail_segments.json    # Trail segments for recommendations
 └── README.md                  # This file
 ```
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ and npm
 - Python 3.11+
-- Expo CLI: `npm install -g expo-cli`
-- iOS Simulator (Mac) or Android Studio (for emulator)
-- Firebase account
-- Replit account (for OpenAI integration)
+- Node.js 18+
+- npm or yarn
 
-### Backend Setup
+### Quick Start (Replit)
 
-1. **Navigate to backend directory:**
+Both servers are already running in Replit:
+- **Web Frontend**: Port 5000 (visible in preview)
+- **Backend API**: Port 8000 (console only)
+
+Just open the preview to see the app! 🎉
+
+### Local Development
+
+1. **Start the Backend:**
    ```bash
    cd backend
-   ```
-
-2. **Install Python dependencies:**
-   ```bash
    pip install -r requirements.txt
-   ```
-
-3. **Configure environment variables:**
-   The OpenAI integration is already set up via Replit AI Integrations. The following environment variables are automatically available:
-   - `AI_INTEGRATIONS_OPENAI_API_KEY`
-   - `AI_INTEGRATIONS_OPENAI_BASE_URL`
-
-4. **Start the Flask backend:**
-   ```bash
    python app.py
    ```
-   The backend will run on `http://localhost:8000`
+   Backend runs on `http://localhost:8000`
 
-### Frontend Setup
-
-1. **Navigate to frontend directory:**
+2. **Start the Frontend:**
    ```bash
-   cd frontend
-   ```
-
-2. **Install dependencies:**
-   ```bash
+   cd web-frontend
    npm install
+   npm run dev
    ```
+   Frontend runs on `http://localhost:5000`
 
-3. **Configure Firebase:**
-   - Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
-   - Enable Authentication with Email/Password, Google, and Apple providers
-   - Create a Firestore database
-   - Copy your Firebase config and update `frontend/src/config/firebase.js`
-
-4. **Update API URL (if needed):**
-   If running the backend on a different host, update `frontend/src/services/api.js`:
-   ```javascript
-   const API_BASE_URL = 'http://YOUR_BACKEND_URL:8000/api';
-   ```
-
-5. **Start the Expo development server:**
-   ```bash
-   npm start
-   ```
-
-6. **Run on device/emulator:**
-   - Press `i` for iOS Simulator
-   - Press `a` for Android Emulator
-   - Scan QR code with Expo Go app on your physical device
+3. **Open in browser:**
+   Navigate to `http://localhost:5000`
 
 ## 🔗 API Endpoints
 
@@ -155,13 +99,30 @@ alpenvia/
 ```
 GET /api/health
 ```
-Returns the API health status.
+Returns API health status.
+
+**Response:**
+```json
+{
+  "ok": true,
+  "service": "alpenvia",
+  "status": "healthy"
+}
+```
 
 ### Get All Trails
 ```
-GET /api/trails?difficulty=medium&duration_max=4&interest=alpine%20lakes
+GET /api/trails?difficulty=medium
 ```
-Fetch trails with optional filtering by difficulty, duration, and interests.
+Fetch trails with optional filtering by difficulty.
+
+**Response:**
+```json
+{
+  "trails": [...],
+  "count": 4
+}
+```
 
 ### Get Trail by ID
 ```
@@ -169,34 +130,67 @@ GET /api/trails/{trail_id}
 ```
 Fetch detailed information for a specific trail.
 
-### Generate AI Trail
+### Smart Recommendations (New!)
 ```
-POST /api/trails/generate
+POST /api/ai/recommend
 Content-Type: application/json
 
 {
-  "duration": 3,
+  "duration_hours": 4,
   "difficulty": "medium",
   "interests": ["alpine lakes", "panoramic views"],
-  "starting_area": "Bolzano"
+  "start_area": "Bolzano"
 }
 ```
-Generates a custom trail using AI based on user preferences.
+Returns 3-5 recommended trails from verified routes based on user preferences.
 
-### Get Recommendations
-```
-POST /api/recommendations
-Content-Type: application/json
+**Scoring Algorithm:**
+- +3 if trail difficulty matches request
+- +2 per matching interest tag
+- +2 if duration within 1 hour of request
+- +1 if loop requested and trail is loop type
+- +1 if start area matches trail region/name
 
+**Response:**
+```json
 {
-  "preferences": {
-    "skill_level": "intermediate",
-    "interests": ["panoramic views"]
-  },
-  "location": {}
+  "results": [
+    {
+      "id": "tre_cime",
+      "name": "Tre Cime di Lavaredo Loop",
+      "distance_km": 10.2,
+      "duration_hours": 4.0,
+      "elevation_gain_m": 450,
+      "difficulty": "medium",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[12.2975, 46.6189], ...]
+      },
+      "pois": [...],
+      "tags": ["panoramic views", "alpine lakes"],
+      "description": "One of the most iconic hikes...",
+      "thumbnail": "https://...",
+      "region": "South Tyrol",
+      "rating": 4.8,
+      "trail_type": "loop"
+    }
+  ]
 }
 ```
-Returns personalized trail recommendations.
+
+### Deprecated Endpoints
+
+#### AI Route Generation (DEPRECATED)
+```
+POST /api/trails/generate
+```
+**Returns HTTP 410 Gone:**
+```json
+{
+  "error": "route_generation_deprecated",
+  "message": "Alpenvia now recommends only verified routes from our database. Please use /api/ai/recommend for personalized trail suggestions."
+}
+```
 
 ## 🎨 Design Philosophy
 
@@ -206,61 +200,90 @@ Alpenvia features a dark, immersive design inspired by the alpine environment:
 - **Accent Colors**: Warm amber (#d4a574) represents alpine sunsets, forest greens (#2d4a3e) connect to nature
 - **Typography**: Clear hierarchy ensures readability while maintaining elegance
 - **Imagery**: High-quality alpine photography creates emotional connection
-- **Animations**: Smooth, subtle transitions enhance the premium feel
-
-## 📱 User Journey
-
-1. **Authentication** → Sign up with email or social login
-2. **Onboarding** → Select skill level and interests
-3. **Home Dashboard** → View recommended trail and main CTAs
-4. **Explore or Generate** → Browse curated collections or create custom AI trail
-5. **Trail Details** → View comprehensive trail information with maps and elevation
-6. **Save & Track** → Bookmark favorites and track completed hikes
-7. **Premium Upgrade** → Unlock offline maps, navigation, and more
 
 ## 🗺️ Mock Trail Data
 
 The app includes 4 authentic South Tyrol trails:
 
-1. **Tre Cime di Lavaredo Loop** - Iconic Dolomites circuit (Medium, 10.2km)
-2. **Lago di Braies Circular Trail** - Stunning turquoise lake walk (Easy, 3.5km)
-3. **Sentiero del Viel del Pan** - Historic WWI trail (Medium, 8.5km)
-4. **Alpe di Siusi Meadow Walk** - Europe's largest alpine meadow (Easy, 5.8km)
+1. **Tre Cime di Lavaredo Loop** - Iconic Dolomites circuit (Medium, 10.2km, 4h)
+2. **Lago di Braies Circular Trail** - Stunning turquoise lake walk (Easy, 3.5km, 1.5h)
+3. **Sentiero del Viel del Pan** - Historic WWI trail (Medium, 8.5km, 3.5h)
+4. **Alpe di Siusi Meadow Walk** - Europe's largest alpine meadow (Easy, 5.8km, 2h)
 
-## 🔮 Future Enhancements
+## 🔮 Architecture Changes
 
-- Live GPS navigation with turn-by-turn guidance
-- Offline map downloads for Premium users
-- User-generated content (reviews, photos, trail conditions)
-- Achievement system and hiking statistics
-- Social features (share trails, location sharing)
-- Weather integration and trail condition updates
-- Multi-language support (German, Italian, English)
+### What Changed from Original Version
 
-## 🛡️ Security & Privacy
+**Removed:**
+- ❌ OpenAI API integration and dependencies
+- ❌ AI route generation endpoint
+- ❌ Replit AI Integrations usage
+- ❌ React Native mobile app (replaced with web app)
 
-- Firebase Authentication handles secure user credentials
-- API keys managed via Replit AI Integrations (no keys committed to repo)
-- User data stored securely in Firestore with proper access rules
-- Payment processing via Stripe (PCI compliant)
+**Added:**
+- ✅ Smart recommendation engine with local scoring
+- ✅ React web frontend (works in Replit preview!)
+- ✅ Verified routes only approach
+- ✅ HTTP 410 deprecation for AI generation
+
+**Why the Change:**
+- **Predictability**: Verified routes only, no AI-generated content
+- **Cost**: No OpenAI API costs
+- **Preview**: Web app works in Replit's browser preview
+- **Quality**: Curated, authentic South Tyrol trails
 
 ## 📝 Environment Variables
 
-The following environment variables are automatically configured via Replit:
-- `AI_INTEGRATIONS_OPENAI_API_KEY` - OpenAI API access
-- `AI_INTEGRATIONS_OPENAI_BASE_URL` - OpenAI base URL
+No environment variables required! The app works out of the box.
 
-For Firebase, update `frontend/src/config/firebase.js` with your own credentials.
+## 🤝 Development Notes
 
-## 🤝 Contributing
+### Testing the API
 
-This is an MVP demonstration project. For production deployment:
-1. Replace Firebase config with production credentials
-2. Implement proper error handling and validation
-3. Add comprehensive testing (Jest, Detox)
-4. Set up CI/CD pipeline
-5. Implement actual Stripe payment integration
-6. Add proper logging and monitoring
+```bash
+# Health check
+curl http://localhost:8000/api/health
+
+# Get recommendations
+curl -X POST http://localhost:8000/api/ai/recommend \
+  -H "Content-Type: application/json" \
+  -d '{
+    "duration_hours": 4,
+    "difficulty": "medium",
+    "interests": ["alpine lakes", "panoramic views"]
+  }'
+
+# Get all trails
+curl http://localhost:8000/api/trails
+
+# Test deprecated endpoint (should return 410)
+curl -X POST http://localhost:8000/api/trails/generate
+```
+
+### Building for Production
+
+```bash
+cd web-frontend
+npm run build
+```
+
+The built files will be in `web-frontend/dist/`
+
+## 🚀 Deployment
+
+### Backend
+Deploy the Flask backend to your preferred Python hosting:
+- Replit Deployments
+- Heroku
+- Google Cloud Run
+- AWS Elastic Beanstalk
+
+### Frontend
+Build and deploy the static frontend to:
+- Replit Static Deployments
+- Netlify
+- Vercel
+- GitHub Pages
 
 ## 📄 License
 
@@ -270,8 +293,14 @@ This project is a demonstration MVP for educational purposes.
 
 - Trail data inspired by real South Tyrol hiking routes
 - Design inspired by premium outdoor apps like AllTrails and Komoot
-- OpenAI integration powered by Replit AI Integrations
+- No OpenAI integration required!
 
 ---
 
-Built with ❤️ for alpine hiking enthusiasts
+**Built for alpine hiking enthusiasts** 🏔️
+
+**Now featuring:**
+✓ Verified routes only
+✓ Smart local recommendations
+✓ Works in Replit preview
+✓ No API costs

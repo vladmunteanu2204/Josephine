@@ -1,18 +1,12 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
-from openai import OpenAI
 import json
 import random
 from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
-
-client = OpenAI(
-    api_key=os.environ.get("AI_INTEGRATIONS_OPENAI_API_KEY"),
-    base_url=os.environ.get("AI_INTEGRATIONS_OPENAI_BASE_URL")
-)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -31,7 +25,7 @@ def load_complete_trails():
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
-    return jsonify({'status': 'healthy', 'message': 'Alpenvia API is running'})
+    return jsonify({'ok': True, 'service': 'alpenvia', 'status': 'healthy'})
 
 @app.route('/api/trails', methods=['GET'])
 def get_trails():
@@ -68,144 +62,102 @@ def get_trail(trail_id):
 
 @app.route('/api/trails/generate', methods=['POST'])
 def generate_trail():
-    """Generate a custom AI trail based on user preferences"""
-    try:
-        data = request.json
-        duration = data.get('duration', 3)
-        difficulty = data.get('difficulty', 'medium')
-        interests = data.get('interests', [])
-        starting_area = data.get('starting_area', 'Bolzano')
-        
-        segments = load_trail_segments()
-        
-        suitable_segments = []
-        for segment in segments['segments']:
-            if segment['difficulty'].lower() == difficulty.lower():
-                segment_interests = segment.get('features', [])
-                if any(interest in segment_interests for interest in interests) or not interests:
-                    suitable_segments.append(segment)
-        
-        if not suitable_segments:
-            suitable_segments = [s for s in segments['segments'] if s['difficulty'].lower() == difficulty.lower()]
-        
-        if not suitable_segments:
-            suitable_segments = segments['segments']
-        
-        selected_segments = random.sample(suitable_segments, min(len(suitable_segments), 3))
-        
-        total_distance = sum(seg['distance_km'] for seg in selected_segments)
-        total_elevation = sum(seg['elevation_gain_m'] for seg in selected_segments)
-        
-        interests_text = ", ".join(interests) if interests else "scenic alpine views"
-        
-        prompt = f"""Create a compelling description for a {difficulty} difficulty hiking trail in South Tyrol/Trentino Alps.
+    """
+    DEPRECATED: AI route generation has been retired.
+    Alpenvia now recommends only verified routes from our database.
+    Use POST /api/ai/recommend instead for smart recommendations.
+    """
+    return jsonify({
+        'error': 'route_generation_deprecated',
+        'message': 'Alpenvia now recommends only verified routes from our database. Please use /api/ai/recommend for personalized trail suggestions.'
+    }), 410
 
-Trail Details:
-- Duration: {duration} hours
-- Distance: {total_distance:.1f} km
-- Elevation gain: {total_elevation} meters
-- Starting area: {starting_area}
-- Key features: {interests_text}
-
-Write a vivid, inspiring 2-3 paragraph description that captures the essence of this alpine hike. Include what hikers will experience, key viewpoints, and why this trail is special. Keep it concise but evocative."""
-
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": "You are a passionate alpine hiking guide with deep knowledge of the South Tyrol and Trentino regions. Write engaging, informative trail descriptions."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.7,
-            max_tokens=300
-        )
-        
-        ai_description = response.choices[0].message.content
-        
-        coordinates = []
-        for segment in selected_segments:
-            coordinates.extend(segment['coordinates'])
-        
-        pois = []
-        for segment in selected_segments:
-            if 'pois' in segment:
-                pois.extend(segment['pois'])
-        
-        trail_name_prompt = f"Generate a short, evocative name (2-4 words) for a hiking trail in South Tyrol featuring: {interests_text}. Just return the name, nothing else."
-        
-        name_response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "user", "content": trail_name_prompt}
-            ],
-            temperature=0.8,
-            max_tokens=20
-        )
-        
-        trail_name = (name_response.choices[0].message.content or "Alpine Trail").strip().strip('"\'')
-        
-        generated_trail = {
-            'id': f'ai_{datetime.now().strftime("%Y%m%d_%H%M%S")}',
-            'name': trail_name,
-            'region': 'South Tyrol',
-            'difficulty': difficulty,
-            'distance_km': round(total_distance, 1),
-            'duration_hours': duration,
-            'elevation_gain_m': total_elevation,
-            'elevation_loss_m': total_elevation,
-            'trail_type': 'loop' if random.random() > 0.5 else 'point-to-point',
-            'interests': interests,
-            'description': ai_description,
-            'coordinates': coordinates,
-            'pois': pois,
-            'rating': 4.5,
-            'reviews_count': 0,
-            'image_url': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
-            'generated': True
-        }
-        
-        return jsonify(generated_trail)
-        
-    except Exception as e:
-        print(f"Error generating trail: {str(e)}")
-        return jsonify({'error': f'Failed to generate trail: {str(e)}'}), 500
-
+@app.route('/api/ai/recommend', methods=['POST'])
 @app.route('/api/recommendations', methods=['POST'])
 def get_recommendations():
-    """Get trail recommendations based on user preferences"""
+    """
+    Smart recommendation engine using local database scoring.
+    Scores trails based on difficulty, interests, duration, and location match.
+    Returns top 3-5 verified trails from South Tyrol & Trentino.
+    """
     try:
-        data = request.json
-        preferences = data.get('preferences', {})
-        location = data.get('location', {})
+        data = request.json or {}
+        
+        duration_hours = data.get('duration_hours', data.get('duration', 3))
+        difficulty = data.get('difficulty', 'medium')
+        interests = data.get('interests', [])
+        start_area = data.get('start_area', data.get('starting_area', ''))
         
         trails = load_complete_trails()['trails']
-        
-        user_interests = preferences.get('interests', [])
-        user_skill = preferences.get('skill_level', 'intermediate')
         
         scored_trails = []
         for trail in trails:
             score = 0
             
-            if trail['difficulty'].lower() == user_skill.lower():
+            if trail['difficulty'].lower() == difficulty.lower():
                 score += 3
-            elif user_skill == 'beginner' and trail['difficulty'].lower() == 'easy':
-                score += 5
-            elif user_skill == 'expert' and trail['difficulty'].lower() == 'hard':
-                score += 5
             
             trail_interests = trail.get('interests', [])
-            matching_interests = set(user_interests) & set(trail_interests)
+            matching_interests = set(interests) & set(trail_interests)
             score += len(matching_interests) * 2
+            
+            duration_diff = abs(trail['duration_hours'] - duration_hours)
+            if duration_diff <= 1:
+                score += 2
+            
+            if 'loop' in interests and trail.get('trail_type') == 'loop':
+                score += 1
+            
+            if start_area:
+                region_match = start_area.lower() in trail.get('region', '').lower()
+                name_match = start_area.lower() in trail.get('name', '').lower()
+                if region_match or name_match:
+                    score += 1
             
             scored_trails.append({'trail': trail, 'score': score})
         
         scored_trails.sort(key=lambda x: x['score'], reverse=True)
         
-        recommended = scored_trails[0]['trail'] if scored_trails else trails[0]
+        top_trails = [item['trail'] for item in scored_trails[:5]]
         
-        return jsonify(recommended)
+        results = []
+        for trail in top_trails:
+            coords_list = trail.get('coordinates', [])
+            geometry = {
+                'type': 'LineString',
+                'coordinates': coords_list
+            }
+            
+            pois_formatted = []
+            for poi in trail.get('pois', []):
+                pois_formatted.append({
+                    'type': poi.get('type', 'viewpoint'),
+                    'name': poi.get('name', ''),
+                    'coord': poi.get('coordinates', [0, 0]),
+                    'message': poi.get('description', '')
+                })
+            
+            results.append({
+                'id': trail['id'],
+                'name': trail['name'],
+                'distance_km': trail['distance_km'],
+                'duration_hours': trail['duration_hours'],
+                'elevation_gain_m': trail['elevation_gain_m'],
+                'difficulty': trail['difficulty'],
+                'geometry': geometry,
+                'pois': pois_formatted,
+                'tags': trail.get('interests', []),
+                'description': trail.get('description', ''),
+                'thumbnail': trail.get('image_url', ''),
+                'region': trail.get('region', ''),
+                'rating': trail.get('rating', 0),
+                'trail_type': trail.get('trail_type', '')
+            })
+        
+        return jsonify({'results': results})
         
     except Exception as e:
+        print(f"Error in recommendations: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':

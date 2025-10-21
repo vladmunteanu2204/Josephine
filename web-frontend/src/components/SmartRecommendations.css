@@ -1,0 +1,257 @@
+.recommendations-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.recommendations-header h1 {
+  margin-bottom: 16px;
+}
+
+.recommendations-header p {
+  color: var(--text-secondary);
+  font-size: 18px;
+}
+
+.wizard-progress {
+  max-width: 600px;
+  margin: 0 auto 48px;
+}
+
+.progress-text {
+  display: block;
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.progress-bar {
+  height: 4px;
+  background-color: var(--bg-elevated);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--accent-primary);
+  transition: width 0.3s ease;
+}
+
+.wizard-step {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.wizard-step h2 {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.hint {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+}
+
+.slider-container {
+  background-color: var(--bg-card);
+  padding: 32px;
+  border-radius: 16px;
+  margin-bottom: 32px;
+}
+
+.slider-value {
+  text-align: center;
+  font-size: 48px;
+  font-weight: bold;
+  color: var(--accent-primary);
+  margin-bottom: 24px;
+}
+
+.slider {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--bg-elevated);
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  cursor: pointer;
+  border: none;
+}
+
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.options-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.option-btn {
+  background-color: var(--bg-card);
+  color: var(--text-secondary);
+  padding: 20px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.option-btn.active {
+  background-color: var(--accent-primary);
+  color: #fff;
+}
+
+.interests-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.interest-card {
+  background-color: var(--bg-card);
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.interest-card.active {
+  background-color: var(--accent-forest);
+  border-color: var(--accent-primary);
+}
+
+.interest-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.interest-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.interest-card.active .interest-label {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.text-input {
+  width: 100%;
+  background-color: var(--bg-card);
+  border: 1px solid var(--bg-elevated);
+  border-radius: 12px;
+  padding: 16px;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+}
+
+.text-input::placeholder {
+  color: var(--text-muted);
+}
+
+.summary-card {
+  background-color: var(--bg-card);
+  padding: 24px;
+  border-radius: 12px;
+  border-left: 4px solid var(--accent-primary);
+  margin-bottom: 32px;
+}
+
+.summary-card h3 {
+  margin-bottom: 16px;
+}
+
+.summary-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.summary-card li {
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.summary-card li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--accent-primary);
+}
+
+.wizard-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.next-btn {
+  width: 100%;
+}
+
+.results-section {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.results-disclaimer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 32px;
+  padding: 12px;
+  background-color: var(--bg-card);
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .options-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .interests-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .results-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}

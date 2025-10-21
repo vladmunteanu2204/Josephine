@@ -1,0 +1,124 @@
+You already built Alpenvia with:
+- Flask backend (port 8000): /health, /trails (catalog), /ai/generate (OpenAI GPT-4), /recommendations (personalized suggestions)
+- React Native (Expo) frontend with AIGeneratorScreen and other 8 screens
+- Dark alpine UI and 4 mock trails
+
+Now refactor the project to REMOVE OpenAI route generation and keep ONLY local, DB-based recommendations.
+
+## Backend (Flask) — in /backend
+
+1) Remove OpenAI runtime:
+   - Delete any imports/usages of `openai` or Replit AI integration calls.
+   - Remove OPENAI key usage if present.
+   - Update requirements.txt: remove `openai` (keep Flask, CORS, ORM, etc.).
+
+2) Deprecate and disable /ai/generate:
+   - Option A (preferred): Keep endpoint but return HTTP 410 Gone with JSON:
+     {"error":"route_generation_deprecated","message":"Alpenvia now recommends only verified routes from our database."}
+   - Option B: Remove the route entirely ONLY IF frontend no longer references it.
+   - Add a code comment noting deprecation.
+
+3) Normalize recommendations endpoint:
+   - Ensure there is a POST endpoint at **/ai/recommend** (alias to existing /recommendations if needed) with request:
+     {
+       "duration_hours": number,
+       "difficulty": "easy"|"medium"|"hard",
+       "interests": [string],     // e.g. ["lakes","views","via_ferrata","family","forest","loop"]
+       "start_area": string       // optional
+     }
+   - Implement a lightweight local scoring function over existing trails (SQLite/JSON):
+     +3 if trail.difficulty == req.difficulty
+     +2 per matching tag (intersect interests)
+     +2 if |trail.duration_hours - req.duration_hours| <= 1
+     +1 if loop requested and trail.type == "loop"
+     +1 if start_area substring matches trail.region or name (case-insensitive)
+   - Return top 3–5 items:
+     {
+       "results": [
+         {
+           "id": "...",
+           "name": "...",
+           "distance_km": 10.2,
+           "duration_hours": 4.0,
+           "elevation_gain_m": 620,
+           "difficulty": "medium",
+           "geometry": { "type":"LineString","coordinates":[[lon,lat],...] },
+           "pois":[{"type":"lake"|"hut"|"viewpoint","name":"...", "coord":[lon,lat], "message":"optional"}],
+           "tags": ["lakes","loop","panoramic"],
+           "description": "Plain text from DB (no GPT).",
+           "thumbnail": "<asset path/url>"
+         }
+       ]
+     }
+
+4) Trails data:
+   - Ensure trails have: id, name, region, tags[], distance_km, duration_hours, elevation_gain_m, difficulty, geometry(LineString), pois[].
+   - Add/confirm tags aligned with filters: ["lakes","views","via_ferrata","family","forest","loop","panoramic","cultural"].
+
+5) CORS & health:
+   - Keep CORS for frontend origin.
+   - `GET /health` should return { "ok": true, "service": "alpenvia" }.
+
+6) Tests (light):
+   - Unit test for scoring (matching difficulty+tags > non-matching).
+   - Integration test: POST /ai/recommend with {"duration_hours":4,"difficulty":"medium","interests":["lakes","views"]} returns 200 and non-empty results (given seed).
+
+## Frontend (React Native / Expo) — in /frontend
+
+1) Rename AI generator UX:
+   - HomeScreen: change CTA label from “Generate a Trail (AI Planner)” to “Smart Recommendations”.
+   - Subtitle: “Personal suggestions from verified routes in South Tyrol & Trentino”.
+
+2) Replace AIGeneratorScreen:
+   - Keep the same wizard UI (duration/difficulty/interests/start area) but POST to **/ai/recommend** (not /ai/generate).
+   - Update API client to new endpoint + response shape.
+   - Rename screen and routes to **RecommendationsScreen** where appropriate.
+
+3) Copy changes:
+   - Remove any text like “create/generate new route with AI”.
+   - Replace with “personalized recommendations based on your preferences, from verified routes only.”
+   - On recommendations result list, show a tiny disclaimer: “Verified routes only — curated for South Tyrol & Trentino.”
+
+4) TrailDetailScreen:
+   - Use description from DB (no GPT). If current code expects GPT, fallback to the stored description field.
+   - No OpenAI calls anywhere.
+
+5) Explore/Filters:
+   - Ensure filter chips correspond to backend `tags`.
+
+6) PremiumScreen:
+   - Remove any mention of “Unlimited AI route generation”.
+   - Premium can list: Offline maps, Live location sharing (if present), Premium collections, Priority recommendations (optional).
+   - Keep Stripe checkout flow intact.
+
+7) Settings/.env:
+   - Remove any OPENAI env usage in frontend.
+   - Keep MAPBOX token, API base URL, Firebase, Stripe publishable key.
+
+8) Error handling:
+   - If any legacy call to /ai/generate hits 410, route the user to RecommendationsScreen and show a snackbar: “Route generation has been retired. Try Smart Recommendations.”
+
+## Docs & Cleanup
+
+1) README.md:
+   - Update features: “Smart Recommendation engine over verified routes (no auto route generation).”
+   - Remove OpenAI setup steps.
+   - Document POST /ai/recommend (payload + response example).
+   - Keep Firebase, Stripe, Mapbox instructions.
+
+2) ENV templates:
+   - Remove OPENAI_API_KEY from both backend and frontend examples.
+
+3) Dependencies:
+   - Backend requirements: remove openai/lib. 
+   - Frontend package.json: ensure labels and screen names updated.
+
+## Acceptance Checklist (please verify before finishing)
+- `GET /health` → 200 with {ok:true,...}
+- No imports/usage of OpenAI in backend/frontend.
+- `POST /ai/recommend` returns 3–5 trails for a common query.
+- HomeScreen shows “Smart Recommendations” CTA.
+- Wizard submits to `/ai/recommend` and renders cards.
+- TrailDetailScreen loads description from DB without GPT calls.
+- Premium page text free of “AI route generation”.
+- README/.env updated; requirements no longer include `openai`.
