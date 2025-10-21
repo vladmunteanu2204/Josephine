@@ -1,0 +1,109 @@
+Build a mobile hiking app called **Alpenvia** using **React Native**, with a dark, immersive, premium UI. The app is focused on hiking in the **South Tyrol and Trentino** regions of the Alps. Alpenvia should feel elegant, natural, and intuitive — blending powerful trail technology with inspiring visual design.
+
+The core MVP features are:
+
+1. 🔐 Authentication
+- Sign up and login using **Firebase Authentication**
+- Support email/password + Google and Apple login
+- After signup, ask for hiking preferences:
+  - Skill level (beginner / intermediate / expert)
+  - Interests (lakes, panoramic views, forests, via ferrata)
+- Store preferences in **Firebase Firestore**
+
+2. 🏠 Home Dashboard
+- Use a **dark modern UI** with alpine-inspired styling (deep grays, forest greens, soft amber accents)
+- Main screen includes:
+  - Two large CTA cards:
+    - “🧭 Generate a Trail (AI Planner)” → leads to custom trail wizard
+    - “🏞 Explore Hikes” → leads to the trail catalog
+  - A section for “Today’s Recommended Trail” based on location and preferences
+  - Smooth parallax or fade-in animations on scroll
+- Use a **bottom tab bar**: Home | Explore | + | Saved | Profile
+
+3. 🤖 AI Trail Generator
+- Multi-step input wizard:
+  - Duration (slider)
+  - Difficulty (easy / medium / hard)
+  - Interests (checkboxes: lakes, views, via ferrata, forests)
+  - Starting area (GPS or typed location)
+- On submit, send request to a **Flask backend API** that:
+  - Queries trail segments from a PostgreSQL (or JSON) database
+  - Combines trail segments into a valid loop or point-to-point trail
+  - Uses **OpenAI GPT-4** API to generate a detailed trail description
+  - Returns JSON with trail name, distance, duration, difficulty, coordinates, POIs, and description
+- Display suggested trails as cards with image, summary, and CTA to view full details
+
+4. 📚 Trail Catalog (Explore Hikes)
+- Organized by **themed collections** (cards with background images):
+  - Alpine Lakes
+  - Family-Friendly Walks
+  - Via Ferrata Adventures
+  - Scenic Ridge Trails
+  - Cultural & Historic Routes
+- Include global search + advanced filters:
+  - Duration, elevation, difficulty, terrain, dog/kid friendly, season
+- Each trail card includes:
+  - Image, name, duration, distance, rating, badges (ex: “Loop”, “New”)
+
+5. 📍 Trail Detail Page
+- Hero image with overlayed trail title
+- Info section: distance, elevation, duration, difficulty, terrain
+- Embedded **interactive map** (Mapbox GL or Google Maps)
+- **Elevation profile graph** using a chart library
+- Key POIs listed with icons (viewpoints, cabins, lakes)
+- Full description (static or AI-generated)
+- Buttons:
+  - “Start Trail” (to begin GPS guidance)
+  - “Save Trail” (adds to user’s profile)
+  - “Download for Offline” (locked if not Premium)
+
+6. 👤 User Profile
+- Displays avatar, email, and preferences
+- Sections:
+  - Saved Trails
+  - Completed Trails
+  - Personal Stats (if enabled)
+- Buttons for:
+  - Edit Preferences
+  - Settings (units, theme, notifications)
+  - Upgrade to Alpenvia Premium
+
+7. 💳 Subscription Page (Premium)
+- Payment via **Stripe Checkout** or mock payment
+- Benefits:
+  - Offline maps for all trails
+  - Voice navigation & wrong-turn alerts
+  - Unlimited AI trail generation
+  - Live location sharing with trusted contacts
+  - Premium-only collections (hidden gems, expert loops)
+- Show Free vs Premium comparison
+- Offer monthly and yearly plan with discount
+- Include “Start 7-Day Free Trial” button
+
+8. (Optional MVP+) 🧭 Navigation Mode
+- Full-screen trail map with live user position
+- Optional turn-by-turn voice prompts
+- “Wrong turn” haptic and visual alert
+- End-of-hike screen with distance, time, elevation gained
+
+🛠 Technical Stack:
+
+- **Frontend**: React Native + dark theme styling with Tailwind CSS or Styled Components
+- **Backend**: Python Flask API (deployed on Replit)
+  - Connects to OpenAI GPT API
+  - Queries local trail segments database (mocked in JSON or SQLite)
+- **Database**: SQLite or PostgreSQL for trail segments and metadata
+- **Auth & storage**: Firebase Authentication and Firestore
+- **Maps**: Mapbox GL or Google Maps SDK for React Native
+- Use .env for API keys
+- Include example static trail data: 3 hikes from South Tyrol
+
+📁 Generate file structure:
+
+- /frontend (React Native app)
+- /backend (Flask API)
+- /data (mock trail data, e.g. OSM format or GeoJSON)
+- /assets (placeholder trail images)
+- README.md with install & run instructions
+
+Use immersive design, smooth transitions, and map interactivity. Prioritize clean layout, iconography, and a modern user experience.

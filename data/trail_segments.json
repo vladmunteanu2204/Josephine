@@ -1,0 +1,206 @@
+{
+  "segments": [
+    {
+      "id": "seg_001",
+      "name": "Forest Ridge Ascent",
+      "difficulty": "easy",
+      "distance_km": 2.5,
+      "elevation_gain_m": 150,
+      "features": ["forests", "panoramic views"],
+      "coordinates": [
+        [11.3456, 46.4987],
+        [11.3489, 46.5012],
+        [11.3523, 46.5035]
+      ],
+      "pois": [
+        {
+          "name": "Forest Clearing",
+          "type": "viewpoint",
+          "coordinates": [11.3489, 46.5012]
+        }
+      ]
+    },
+    {
+      "id": "seg_002",
+      "name": "Alpine Lake Descent",
+      "difficulty": "easy",
+      "distance_km": 1.8,
+      "elevation_gain_m": 50,
+      "features": ["alpine lakes", "panoramic views"],
+      "coordinates": [
+        [11.3523, 46.5035],
+        [11.3545, 46.5058],
+        [11.3567, 46.5072]
+      ],
+      "pois": [
+        {
+          "name": "Hidden Lake",
+          "type": "lake",
+          "coordinates": [11.3545, 46.5058]
+        }
+      ]
+    },
+    {
+      "id": "seg_003",
+      "name": "Panoramic Ridge Trail",
+      "difficulty": "medium",
+      "distance_km": 3.2,
+      "elevation_gain_m": 280,
+      "features": ["panoramic views", "via ferrata"],
+      "coordinates": [
+        [11.4012, 46.5123],
+        [11.4056, 46.5145],
+        [11.4089, 46.5167],
+        [11.4123, 46.5189]
+      ],
+      "pois": [
+        {
+          "name": "Summit Viewpoint",
+          "type": "viewpoint",
+          "coordinates": [11.4089, 46.5167]
+        }
+      ]
+    },
+    {
+      "id": "seg_004",
+      "name": "Mountain Hut Approach",
+      "difficulty": "medium",
+      "distance_km": 2.7,
+      "elevation_gain_m": 220,
+      "features": ["forests", "cultural routes"],
+      "coordinates": [
+        [11.4567, 46.5234],
+        [11.4598, 46.5256],
+        [11.4634, 46.5278]
+      ],
+      "pois": [
+        {
+          "name": "Rifugio Alpino",
+          "type": "cabin",
+          "coordinates": [11.4634, 46.5278]
+        }
+      ]
+    },
+    {
+      "id": "seg_005",
+      "name": "Rocky Via Ferrata",
+      "difficulty": "hard",
+      "distance_km": 1.5,
+      "elevation_gain_m": 320,
+      "features": ["via ferrata", "panoramic views"],
+      "coordinates": [
+        [11.5123, 46.5389],
+        [11.5145, 46.5412],
+        [11.5167, 46.5435]
+      ],
+      "pois": [
+        {
+          "name": "Cable Section",
+          "type": "viewpoint",
+          "coordinates": [11.5145, 46.5412]
+        }
+      ]
+    },
+    {
+      "id": "seg_006",
+      "name": "Waterfall Valley",
+      "difficulty": "easy",
+      "distance_km": 2.1,
+      "elevation_gain_m": 90,
+      "features": ["alpine lakes", "forests"],
+      "coordinates": [
+        [11.5678, 46.5456],
+        [11.5712, 46.5478],
+        [11.5745, 46.5489]
+      ],
+      "pois": [
+        {
+          "name": "Alpine Waterfall",
+          "type": "viewpoint",
+          "coordinates": [11.5712, 46.5478]
+        }
+      ]
+    },
+    {
+      "id": "seg_007",
+      "name": "Historic War Path",
+      "difficulty": "medium",
+      "distance_km": 2.9,
+      "elevation_gain_m": 185,
+      "features": ["cultural routes", "panoramic views"],
+      "coordinates": [
+        [11.6234, 46.5567],
+        [11.6267, 46.5589],
+        [11.6301, 46.5611]
+      ],
+      "pois": [
+        {
+          "name": "WWI Memorial",
+          "type": "cultural",
+          "coordinates": [11.6267, 46.5589]
+        }
+      ]
+    },
+    {
+      "id": "seg_008",
+      "name": "Summit Challenge",
+      "difficulty": "hard",
+      "distance_km": 2.4,
+      "elevation_gain_m": 450,
+      "features": ["panoramic views", "via ferrata"],
+      "coordinates": [
+        [11.6789, 46.5678],
+        [11.6823, 46.5701],
+        [11.6856, 46.5723]
+      ],
+      "pois": [
+        {
+          "name": "Peak Summit",
+          "type": "viewpoint",
+          "coordinates": [11.6856, 46.5723]
+        }
+      ]
+    },
+    {
+      "id": "seg_009",
+      "name": "Meadow Loop",
+      "difficulty": "easy",
+      "distance_km": 3.1,
+      "elevation_gain_m": 75,
+      "features": ["forests", "panoramic views"],
+      "coordinates": [
+        [11.7234, 46.5789],
+        [11.7278, 46.5812],
+        [11.7312, 46.5834],
+        [11.7289, 46.5801]
+      ],
+      "pois": [
+        {
+          "name": "Flower Meadow",
+          "type": "viewpoint",
+          "coordinates": [11.7278, 46.5812]
+        }
+      ]
+    },
+    {
+      "id": "seg_010",
+      "name": "Crystal Lake Circuit",
+      "difficulty": "medium",
+      "distance_km": 2.6,
+      "elevation_gain_m": 195,
+      "features": ["alpine lakes", "panoramic views"],
+      "coordinates": [
+        [11.7845, 46.5901],
+        [11.7889, 46.5923],
+        [11.7923, 46.5945]
+      ],
+      "pois": [
+        {
+          "name": "Crystal Lake",
+          "type": "lake",
+          "coordinates": [11.7889, 46.5923]
+        }
+      ]
+    }
+  ]
+}

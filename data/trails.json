@@ -1,0 +1,225 @@
+{
+  "trails": [
+    {
+      "id": "tre_cime",
+      "name": "Tre Cime di Lavaredo Loop",
+      "region": "South Tyrol",
+      "difficulty": "medium",
+      "distance_km": 10.2,
+      "duration_hours": 4,
+      "elevation_gain_m": 450,
+      "elevation_loss_m": 450,
+      "trail_type": "loop",
+      "interests": ["panoramic views", "alpine lakes"],
+      "description": "One of the most iconic hikes in the Dolomites, the Tre Cime Loop offers breathtaking 360-degree views of the famous three peaks. Starting from Rifugio Auronzo, this well-maintained trail circles the massive limestone towers, passing crystal-clear alpine lakes and meadows filled with wildflowers in summer. The trail is relatively gentle, making it accessible to most hikers while still delivering world-class alpine scenery. Don't miss the stunning reflections in Lago dei Piani and the dramatic north faces of the peaks.",
+      "coordinates": [
+        [12.2975, 46.6189],
+        [12.3025, 46.6215],
+        [12.3085, 46.6198],
+        [12.3095, 46.6165],
+        [12.3045, 46.6142],
+        [12.2985, 46.6155],
+        [12.2975, 46.6189]
+      ],
+      "pois": [
+        {
+          "name": "Rifugio Auronzo",
+          "type": "cabin",
+          "coordinates": [12.2975, 46.6189],
+          "description": "Starting point with parking and refreshments"
+        },
+        {
+          "name": "Tre Cime di Lavaredo",
+          "type": "viewpoint",
+          "coordinates": [12.3025, 46.6215],
+          "description": "Iconic three peaks viewpoint"
+        },
+        {
+          "name": "Lago dei Piani",
+          "type": "lake",
+          "coordinates": [12.3045, 46.6142],
+          "description": "Beautiful alpine lake with peak reflections"
+        }
+      ],
+      "rating": 4.8,
+      "reviews_count": 1247,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "difficulty_details": {
+        "technical": "low",
+        "fitness": "medium",
+        "exposure": "low"
+      },
+      "best_season": ["June", "July", "August", "September"],
+      "facilities": ["parking", "restrooms", "restaurant"],
+      "dog_friendly": false,
+      "family_friendly": true
+    },
+    {
+      "id": "lago_braies",
+      "name": "Lago di Braies Circular Trail",
+      "region": "South Tyrol",
+      "difficulty": "easy",
+      "distance_km": 3.5,
+      "duration_hours": 1.5,
+      "elevation_gain_m": 80,
+      "elevation_loss_m": 80,
+      "trail_type": "loop",
+      "interests": ["alpine lakes", "forests", "panoramic views"],
+      "description": "Experience the magic of one of the most photographed lakes in the Alps. This gentle walk around Lago di Braies (Pragser Wildsee) showcases the lake's stunning turquoise waters framed by the dramatic Seekofel peak. The trail meanders through fragrant pine forests and opens to shoreline sections where you can admire the traditional wooden boats floating on the crystal-clear water. Perfect for families and those seeking an easy introduction to alpine hiking, this trail offers maximum beauty with minimal effort. Early morning visits reward hikers with mirror-like reflections and fewer crowds.",
+      "coordinates": [
+        [12.0851, 46.6945],
+        [12.0895, 46.6938],
+        [12.0925, 46.6952],
+        [12.0918, 46.6975],
+        [12.0878, 46.6982],
+        [12.0851, 46.6965],
+        [12.0851, 46.6945]
+      ],
+      "pois": [
+        {
+          "name": "Lago di Braies",
+          "type": "lake",
+          "coordinates": [12.0885, 46.6958],
+          "description": "Stunning turquoise alpine lake"
+        },
+        {
+          "name": "Boat Rental Dock",
+          "type": "viewpoint",
+          "coordinates": [12.0851, 46.6945],
+          "description": "Famous photo spot with wooden boats"
+        },
+        {
+          "name": "Chapel of the Lake",
+          "type": "cultural",
+          "coordinates": [12.0895, 46.6938],
+          "description": "Historic lakeside chapel"
+        }
+      ],
+      "rating": 4.9,
+      "reviews_count": 2134,
+      "image_url": "https://images.unsplash.com/photo-1531266752426-aad472b7bbf4?w=800",
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "low",
+        "exposure": "very_low"
+      },
+      "best_season": ["May", "June", "July", "August", "September", "October"],
+      "facilities": ["parking", "restrooms", "boat_rental", "restaurant"],
+      "dog_friendly": true,
+      "family_friendly": true
+    },
+    {
+      "id": "sentiero_viel_del_pan",
+      "name": "Sentiero del Viel del Pan",
+      "region": "Trentino",
+      "difficulty": "medium",
+      "distance_km": 8.5,
+      "duration_hours": 3.5,
+      "elevation_gain_m": 350,
+      "elevation_loss_m": 550,
+      "trail_type": "point-to-point",
+      "interests": ["panoramic views", "cultural routes", "via ferrata"],
+      "description": "A historic WWI trail following the Path of Bread, where supplies were transported to soldiers during the Great War. This spectacular route traverses beneath the Sella massif and Marmolada glacier, offering constant views of the Dolomites' most impressive peaks. The trail features well-maintained paths carved into the rock face, with several tunnels and galleries adding adventure to the journey. Along the way, discover war relics, memorials, and interpretive signs telling the story of the mountain war. The ever-changing perspectives of the Marmolada glacier make this a photographer's paradise.",
+      "coordinates": [
+        [11.7892, 46.4758],
+        [11.8025, 46.4745],
+        [11.8145, 46.4772],
+        [11.8265, 46.4755],
+        [11.8385, 46.4788],
+        [11.8495, 46.4765]
+      ],
+      "pois": [
+        {
+          "name": "Passo Pordoi",
+          "type": "viewpoint",
+          "coordinates": [11.7892, 46.4758],
+          "description": "Starting point with cable car access"
+        },
+        {
+          "name": "WWI Trenches",
+          "type": "cultural",
+          "coordinates": [11.8145, 46.4772],
+          "description": "Preserved World War I military positions"
+        },
+        {
+          "name": "Marmolada Viewpoint",
+          "type": "viewpoint",
+          "coordinates": [11.8385, 46.4788],
+          "description": "Spectacular glacier views"
+        },
+        {
+          "name": "Rifugio Fedaia",
+          "type": "cabin",
+          "coordinates": [11.8495, 46.4765],
+          "description": "Mountain hut and endpoint"
+        }
+      ],
+      "rating": 4.7,
+      "reviews_count": 892,
+      "image_url": "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800",
+      "difficulty_details": {
+        "technical": "medium",
+        "fitness": "medium",
+        "exposure": "medium"
+      },
+      "best_season": ["June", "July", "August", "September"],
+      "facilities": ["cable_car", "mountain_huts"],
+      "dog_friendly": false,
+      "family_friendly": false
+    },
+    {
+      "id": "alpe_siusi",
+      "name": "Alpe di Siusi Meadow Walk",
+      "region": "South Tyrol",
+      "difficulty": "easy",
+      "distance_km": 5.8,
+      "duration_hours": 2,
+      "elevation_gain_m": 120,
+      "elevation_loss_m": 120,
+      "trail_type": "loop",
+      "interests": ["forests", "panoramic views"],
+      "description": "Europe's largest high-altitude alpine meadow provides the stunning backdrop for this peaceful ramble. Rolling across flower-dotted grasslands with the jagged peaks of Sassolungo and Sassopiatto dominating the skyline, this trail epitomizes the romance of the Alps. Traditional Tyrolean farmhouses dot the landscape, and the gentle terrain makes it ideal for families and those seeking a relaxing mountain experience. In spring and summer, the meadows burst with wildflowers, while autumn brings golden larches. The crisp mountain air and sweeping vistas create an unforgettable sensory experience.",
+      "coordinates": [
+        [11.5645, 46.5425],
+        [11.5725, 46.5445],
+        [11.5795, 46.5422],
+        [11.5785, 46.5385],
+        [11.5705, 46.5375],
+        [11.5645, 46.5395],
+        [11.5645, 46.5425]
+      ],
+      "pois": [
+        {
+          "name": "Compatsch Cable Car Station",
+          "type": "viewpoint",
+          "coordinates": [11.5645, 46.5425],
+          "description": "Main access point to Alpe di Siusi"
+        },
+        {
+          "name": "Sassolungo Viewpoint",
+          "type": "viewpoint",
+          "coordinates": [11.5725, 46.5445],
+          "description": "Classic view of the iconic peak"
+        },
+        {
+          "name": "Mountain Chapel",
+          "type": "cultural",
+          "coordinates": [11.5785, 46.5385],
+          "description": "Charming alpine chapel"
+        }
+      ],
+      "rating": 4.6,
+      "reviews_count": 756,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "low",
+        "exposure": "very_low"
+      },
+      "best_season": ["May", "June", "July", "August", "September"],
+      "facilities": ["cable_car", "restaurants", "restrooms"],
+      "dog_friendly": true,
+      "family_friendly": true
+    }
+  ]
+}
