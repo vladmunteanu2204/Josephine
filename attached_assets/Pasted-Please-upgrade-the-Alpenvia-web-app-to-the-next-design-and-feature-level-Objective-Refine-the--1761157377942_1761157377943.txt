@@ -1,0 +1,99 @@
+Please upgrade the Alpenvia web app to the next design and feature level.
+
+Objective:
+Refine the web app into a premium, immersive, dark alpine experience — consistent across all pages, fully localized in English / Italian / German, and functionally complete with login, reviews, and subscription.
+
+Scope:
+Apply the enhanced “glassmorphism alpine” design language (dark base, amber accents, pine green highlights, smooth motion) across:
+Home, Smart Recommendations, Trail Catalog, Trail Detail, Login, Profile, Subscription.
+
+---
+
+1) 🏔️ Trail Detail Page Improvements
+- Add missing difficulty icon so it visually matches elevation/duration cards.
+- Make the map fully interactive (Mapbox zoom, pan, POI hover, and fullscreen mode).
+- Add a “Media Preview” section:
+   * Two tabs: Photos / Videos.
+   * Load gallery assets from /assets/trails/<trailId>/gallery.
+   * Use local static content (no upload functionality yet).
+- Add “User Feedback & Reviews” section:
+   * Display average rating and sample reviews from /data/reviews.json.
+   * Include form with name, rating (1–5), and comment fields (local save).
+- Add “Book this hike” button linking to future booking or Silent Trails form.
+- Include new metadata: tagline, best_season, dog_friendly.
+- Improve layout with gradient dividers, subtle hover glow, and motion fade-ins.
+
+---
+
+2) 🧭 Apply same visual system to all pages
+- **Home:**  
+  * Parallax hero with alpine background, poetic tagline, and CTA (“Explore your path”).  
+  * Add featured trails carousel and “Explore by Theme” (Lakes, Peaks, Forests, Family, Culture).  
+  * Smooth parallax scroll and light motion effects.
+
+- **Smart Recommendations:**  
+  * Step progress indicator (1 / 3 … 3 / 3).  
+  * Mini map snapshot per result card.  
+  * “Save this trail” button (requires login).  
+  * Use consistent glass card style.
+
+- **Trail Catalog:**  
+  * Sticky top filters (difficulty, tags, season).  
+  * Search bar with icon.  
+  * Animated trail cards (hover elevation and fade-in).
+
+- **Global:**  
+  * Shared theme tokens (colors, spacing, typography).  
+  * Glassmorphism card design with amber gradient separators.  
+  * Fade-in page transitions and skeleton loaders.  
+  * Pre-loader cinematic intro with Alpenvia logo silhouette.
+
+---
+
+3) 🔐 Authentication & Subscription
+- Add Login / Signup pages using Firebase Auth (email + Google).  
+- Add Profile page showing user info, saved trails, and subscription status.  
+- Add Subscription page with plan comparison and Stripe checkout integration.  
+- Navbar adapts dynamically: shows avatar & “My Trails” when logged in, “Login” otherwise.
+
+---
+
+4) 🌍 Multilingual Support (EN / IT / DE)
+- Integrate full i18n system using i18next (or similar).
+- Maintain three translation JSONs: /locales/en.json, /locales/it.json, /locales/de.json.
+- Auto-detect browser language with fallback to English.
+- Language switcher in navbar (flag or dropdown).  
+- Translate all UI strings, menu items, labels, and static texts:
+  * Home hero tagline
+  * All page titles
+  * Trail stats labels (Distance, Duration, Elevation, Difficulty)
+  * Buttons (View on Map, Save, Book this hike)
+  * Reviews form fields
+  * Login / Subscription texts
+- Ensure translations are consistent and easily extendable for new content.
+
+---
+
+5) ⚙️ Footer & Meta
+- Add global footer with Alpenvia logo, “Made in South Tyrol” tagline, and links (About, Contact, Privacy).
+- Add dynamic SEO meta tags per trail (title, description, og:image).
+- Include language-specific meta tags for hreflang (EN, IT, DE).
+
+---
+
+6) 🧰 Technical Additions
+- Update trail data schema to include:
+   { id, name, tagline, region, difficulty, duration_hours, distance_km, elevation_gain_m, best_season, dog_friendly, tags[], gallery[], rating_avg, pois[] }
+- Add /data/reviews.json with example reviews (mock).
+- Use Mapbox for all maps (token via VITE_MAPBOX_TOKEN).
+- Implement PWA caching for offline access to last-viewed trails.
+- Ensure full responsiveness (mobile / tablet / desktop) and accessibility (contrast, aria labels).
+
+---
+
+Deliverables:
+- All pages unified under the same premium dark alpine design.
+- Multilingual support (EN / IT / DE) working across the app.
+- Functional Mapbox maps, login, reviews, and subscription flow.
+- Updated README.md reflecting new architecture and i18n setup.
+- No changes to backend API endpoints.

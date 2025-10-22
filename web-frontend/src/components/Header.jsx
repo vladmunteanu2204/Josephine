@@ -1,7 +1,11 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from './LanguageSwitcher';
 import './Header.css';
 
 function Header({ currentView, setCurrentView }) {
+  const { t } = useTranslation();
+
   return (
     <header className="header">
       <div className="container header-content">
@@ -15,21 +19,23 @@ function Header({ currentView, setCurrentView }) {
             className={`nav-link ${currentView === 'home' ? 'active' : ''}`}
             onClick={() => setCurrentView('home')}
           >
-            Home
+            {t('nav.home')}
           </button>
           <button 
             className={`nav-link ${currentView === 'recommendations' ? 'active' : ''}`}
             onClick={() => setCurrentView('recommendations')}
           >
-            Smart Recommendations
+            {t('nav.smartRecommendations')}
           </button>
           <button 
             className={`nav-link ${currentView === 'catalog' ? 'active' : ''}`}
             onClick={() => setCurrentView('catalog')}
           >
-            Trail Catalog
+            {t('nav.trailCatalog')}
           </button>
         </nav>
+
+        <LanguageSwitcher />
       </div>
     </header>
   );
