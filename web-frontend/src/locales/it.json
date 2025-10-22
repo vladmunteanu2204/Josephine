@@ -34,11 +34,21 @@
     "verifiedRoutes": "Tutti i percorsi verificati e selezionati per Alto Adige e Trentino",
     "loadingRecommendation": "Caricamento raccomandazione...",
     "exploreByTheme": "Esplora per Tema",
+    "exploreByThemeDesc": "Scopri sentieri selezionati in base ai tuoi interessi e preferenze",
     "themeLakes": "Laghi Alpini",
+    "themeLakesDesc": "Acque cristalline che riflettono maestose vette",
     "themePeaks": "Cime Montane",
+    "themePeaksDesc": "Viste mozzafiato dalle cime e creste",
     "themeForests": "Sentieri Forestali",
+    "themeForestsDesc": "Passeggiate tranquille tra boschi antichi",
     "themeFamily": "Per Famiglie",
-    "themeCulture": "Percorsi Culturali"
+    "themeFamilyDesc": "Sentieri facili perfetti per tutte le età",
+    "themeCulture": "Percorsi Culturali",
+    "themeCultureDesc": "Sentieri storici e patrimonio alpino tradizionale",
+    "themeLoops": "Sentieri ad Anello",
+    "themeLoopsDesc": "Percorsi circolari che tornano al punto di partenza",
+    "featuredTrails": "Sentieri in Evidenza",
+    "exploreTrail": "Esplora Sentiero"
   },
   "trail": {
     "distance": "Distanza",

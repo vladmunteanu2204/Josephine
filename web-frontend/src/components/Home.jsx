@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import FeaturedCarousel from './FeaturedCarousel';
+import ThemeCards from './ThemeCards';
+import './Home.css';
 
 const API_URL = window.location.hostname.includes('replit.dev')
   ? `${window.location.protocol}//${window.location.hostname}:8000/api`
@@ -8,118 +11,131 @@ const API_URL = window.location.hostname.includes('replit.dev')
 
 function Home({ setCurrentView, viewTrail }) {
   const { t } = useTranslation();
-  const [recommendedTrail, setRecommendedTrail] = useState(null);
+  const [featuredTrails, setFeaturedTrails] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
-    loadRecommendation();
+    loadFeaturedTrails();
+    
+    // Parallax scroll effect
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const loadRecommendation = async () => {
+  const loadFeaturedTrails = async () => {
     try {
-      const response = await axios.post(`${API_URL}/ai/recommend`, {
-        duration_hours: 3,
-        difficulty: 'medium',
-        interests: ['panoramic views', 'alpine lakes']
-      });
+      const response = await axios.get(`${API_URL}/trails`);
       
-      if (response.data.results && response.data.results.length > 0) {
-        setRecommendedTrail(response.data.results[0]);
+      if (response.data.trails && response.data.trails.length > 0) {
+        // Select top 4 trails with highest ratings
+        const topTrails = response.data.trails
+          .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+          .slice(0, 4);
+        setFeaturedTrails(topTrails);
       }
     } catch (error) {
-      console.error('Error loading recommendation:', error);
+      console.error('Error loading trails:', error);
     } finally {
       setLoading(false);
     }
   };
 
+  const handleThemeClick = (tags) => {
+    // Navigate to catalog with filtered tags
+    setCurrentView('catalog');
+  };
+
   return (
-    <>
-      <div className="hero">
-        <div className="container">
-          <h1>{t('hero.title')}</h1>
-          <p>{t('hero.subtitle')}</p>
+    <div className="home-page">
+      {/* Parallax Hero Section */}
+      <div className="hero-parallax">
+        <div 
+          className="hero-layer hero-bg"
+          style={{ transform: `translateY(${scrollY * 0.5}px)` }}
+        ></div>
+        <div 
+          className="hero-layer hero-mountains-back"
+          style={{ transform: `translateY(${scrollY * 0.3}px)` }}
+        ></div>
+        <div 
+          className="hero-layer hero-mountains-front"
+          style={{ transform: `translateY(${scrollY * 0.15}px)` }}
+        ></div>
+        
+        <div className="hero-content-wrapper">
+          <div className="container hero-content">
+            <h1 className="hero-title-large" style={{ transform: `translateY(${scrollY * 0.1}px)` }}>
+              {t('hero.title')}
+            </h1>
+            <p className="hero-subtitle-large" style={{ transform: `translateY(${scrollY * 0.12}px)` }}>
+              {t('hero.subtitle')}
+            </p>
+            <div className="hero-cta-buttons" style={{ transform: `translateY(${scrollY * 0.08}px)` }}>
+              <button className="hero-btn-primary" onClick={() => setCurrentView('recommendations')}>
+                ✨ {t('home.smartRecommendations')}
+              </button>
+              <button className="hero-btn-secondary" onClick={() => setCurrentView('catalog')}>
+                🗺️ {t('home.browseTrailCatalog')}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="container">
-        <div className="cta-grid">
-          <div className="cta-card" onClick={() => setCurrentView('recommendations')}>
-            <div className="cta-icon">✨</div>
-            <h3>{t('home.smartRecommendations')}</h3>
-            <p>{t('home.smartRecommendationsDesc')}</p>
+      {/* Main Content */}
+      <div className="container home-content">
+        {/* Featured Trails Carousel */}
+        <section className="home-section">
+          <div className="section-header-home">
+            <h2 className="section-title-home">{t('home.featuredTrails')}</h2>
+            <div className="gradient-divider-home"></div>
           </div>
-          
-          <div className="cta-card" onClick={() => setCurrentView('catalog')}>
-            <div className="cta-icon">🗺️</div>
-            <h3>{t('home.browseTrailCatalog')}</h3>
-            <p>{t('home.browseTrailCatalogDesc')}</p>
-          </div>
-        </div>
-
-        <div className="section">
-          <h2 className="section-title">{t('home.todaysFeaturedTrail')}</h2>
           
           {loading ? (
-            <div className="loading">{t('home.loadingRecommendation')}</div>
-          ) : recommendedTrail ? (
-            <div className="trail-grid">
-              <div className="trail-card" onClick={() => viewTrail(recommendedTrail)}>
-                <img 
-                  src={recommendedTrail.thumbnail || recommendedTrail.image_url} 
-                  alt={recommendedTrail.name}
-                  className="trail-image"
-                />
-                <div className="trail-content">
-                  <div className="trail-header">
-                    <h3 className="trail-name">{recommendedTrail.name}</h3>
-                    <span className={`badge badge-${recommendedTrail.difficulty}`}>
-                      {t(`catalog.${recommendedTrail.difficulty}`)}
-                    </span>
-                  </div>
-                  <p className="trail-region">{recommendedTrail.region}</p>
-                  <div className="trail-stats">
-                    <div className="stat">
-                      <span className="stat-icon">📏</span>
-                      <span>{recommendedTrail.distance_km} km</span>
-                    </div>
-                    <div className="stat">
-                      <span className="stat-icon">⏱️</span>
-                      <span>{recommendedTrail.duration_hours}h</span>
-                    </div>
-                    <div className="stat">
-                      <span className="stat-icon">⛰️</span>
-                      <span>{recommendedTrail.elevation_gain_m}m</span>
-                    </div>
-                  </div>
-                  <div className="trail-tags">
-                    {recommendedTrail.tags && recommendedTrail.tags.slice(0, 3).map((tag, i) => (
-                      <span key={i} className="tag">{tag}</span>
-                    ))}
-                    {recommendedTrail.interests && !recommendedTrail.tags && recommendedTrail.interests.slice(0, 3).map((tag, i) => (
-                      <span key={i} className="tag">{tag}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <div className="loading-carousel">{t('home.loadingRecommendation')}</div>
           ) : (
-            <div className="empty-state">
-              <div className="empty-icon">🏔️</div>
-              <p>{t('home.noTrailsAvailable')}</p>
-            </div>
+            <FeaturedCarousel trails={featuredTrails} onViewTrail={viewTrail} />
           )}
-        </div>
+        </section>
 
-        <div className="section">
-          <div className="card" style={{ textAlign: 'center', padding: '32px' }}>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
-              ✓ {t('home.verifiedRoutes')}
-            </p>
+        {/* Explore by Theme */}
+        <section className="home-section">
+          <ThemeCards onThemeClick={handleThemeClick} />
+        </section>
+
+        {/* Quick Actions */}
+        <section className="home-section">
+          <div className="quick-actions-grid">
+            <div className="quick-action-card" onClick={() => setCurrentView('recommendations')}>
+              <div className="quick-action-icon">✨</div>
+              <h3 className="quick-action-title">{t('home.smartRecommendations')}</h3>
+              <p className="quick-action-desc">{t('home.smartRecommendationsDesc')}</p>
+              <span className="quick-action-arrow">→</span>
+            </div>
+            
+            <div className="quick-action-card" onClick={() => setCurrentView('catalog')}>
+              <div className="quick-action-icon">🗺️</div>
+              <h3 className="quick-action-title">{t('home.browseTrailCatalog')}</h3>
+              <p className="quick-action-desc">{t('home.browseTrailCatalogDesc')}</p>
+              <span className="quick-action-arrow">→</span>
+            </div>
           </div>
-        </div>
+        </section>
+
+        {/* Trust Badge */}
+        <section className="home-section">
+          <div className="trust-badge">
+            <div className="trust-icon">✓</div>
+            <p className="trust-text">{t('home.verifiedRoutes')}</p>
+          </div>
+        </section>
       </div>
-    </>
+    </div>
   );
 }
 

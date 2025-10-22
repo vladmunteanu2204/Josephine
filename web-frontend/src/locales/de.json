@@ -34,11 +34,21 @@
     "verifiedRoutes": "Alle Routen geprüft und kuratiert für Südtirol & Trentino",
     "loadingRecommendation": "Empfehlung wird geladen...",
     "exploreByTheme": "Nach Thema Erkunden",
+    "exploreByThemeDesc": "Entdecke Wanderwege nach deinen Interessen und Vorlieben",
     "themeLakes": "Alpenseen",
+    "themeLakesDesc": "Kristallklare Gewässer, die majestätische Gipfel spiegeln",
     "themePeaks": "Berggipfel",
+    "themePeaksDesc": "Atemberaubende Gipfelaussichten und Gratwanderungen",
     "themeForests": "Waldwege",
+    "themeForestsDesc": "Friedliche Spaziergänge durch uralte Wälder",
     "themeFamily": "Familienfreundlich",
-    "themeCulture": "Kulturrouten"
+    "themeFamilyDesc": "Einfache Wanderwege perfekt für alle Altersgruppen",
+    "themeCulture": "Kulturrouten",
+    "themeCultureDesc": "Historische Pfade und traditionelles alpines Erbe",
+    "themeLoops": "Rundwanderwege",
+    "themeLoopsDesc": "Kreisförmige Routen, die zum Ausgangspunkt zurückkehren",
+    "featuredTrails": "Highlight-Wanderwege",
+    "exploreTrail": "Wanderweg Erkunden"
   },
   "trail": {
     "distance": "Entfernung",

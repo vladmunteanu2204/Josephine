@@ -34,11 +34,21 @@
     "verifiedRoutes": "All routes verified and curated for South Tyrol & Trentino",
     "loadingRecommendation": "Loading recommendation...",
     "exploreByTheme": "Explore by Theme",
+    "exploreByThemeDesc": "Discover trails curated by your interests and preferences",
     "themeLakes": "Alpine Lakes",
+    "themeLakesDesc": "Crystal-clear waters reflecting majestic peaks",
     "themePeaks": "Mountain Peaks",
+    "themePeaksDesc": "Breathtaking summit views and ridge walks",
     "themeForests": "Forest Trails",
+    "themeForestsDesc": "Peaceful walks through ancient woodlands",
     "themeFamily": "Family Friendly",
-    "themeCulture": "Cultural Routes"
+    "themeFamilyDesc": "Easy trails perfect for all ages",
+    "themeCulture": "Cultural Routes",
+    "themeCultureDesc": "Historic paths and traditional alpine heritage",
+    "themeLoops": "Loop Trails",
+    "themeLoopsDesc": "Circular routes returning to the start",
+    "featuredTrails": "Featured Trails",
+    "exploreTrail": "Explore Trail"
   },
   "trail": {
     "distance": "Distance",
