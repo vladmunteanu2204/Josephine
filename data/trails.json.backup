@@ -5,7 +5,6 @@
       "name": "Tre Cime di Lavaredo Loop",
       "region": "South Tyrol",
       "difficulty": "medium",
-      "tagline": "Venture into the heart of the mountains",
       "distance_km": 10.2,
       "duration_hours": 4,
       "elevation_gain_m": 450,
@@ -45,12 +44,6 @@
       "rating": 4.8,
       "reviews_count": 1247,
       "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
-      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
-      "gallery": [
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
-        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800",
-        "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800"
-      ],
       "difficulty_details": {
         "technical": "low",
         "fitness": "medium",
@@ -59,15 +52,13 @@
       "best_season": ["June", "July", "August", "September"],
       "facilities": ["parking", "restrooms", "restaurant"],
       "dog_friendly": false,
-      "family_friendly": true,
-      "tags": ["panoramic views", "alpine lakes", "loop trail"]
+      "family_friendly": true
     },
     {
       "id": "lago_braies",
       "name": "Lago di Braies Circular Trail",
       "region": "South Tyrol",
       "difficulty": "easy",
-      "tagline": "Where serenity meets alpine beauty",
       "distance_km": 3.5,
       "duration_hours": 1.5,
       "elevation_gain_m": 80,
@@ -107,12 +98,6 @@
       "rating": 4.9,
       "reviews_count": 2134,
       "image_url": "https://images.unsplash.com/photo-1531266752426-aad472b7bbf4?w=800",
-      "thumbnail": "https://images.unsplash.com/photo-1531266752426-aad472b7bbf4?w=400",
-      "gallery": [
-        "https://images.unsplash.com/photo-1531266752426-aad472b7bbf4?w=800",
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
-        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800"
-      ],
       "difficulty_details": {
         "technical": "very_low",
         "fitness": "low",
@@ -121,15 +106,13 @@
       "best_season": ["May", "June", "July", "August", "September", "October"],
       "facilities": ["parking", "restrooms", "boat_rental", "restaurant"],
       "dog_friendly": true,
-      "family_friendly": true,
-      "tags": ["alpine lakes", "family friendly", "photography"]
+      "family_friendly": true
     },
     {
       "id": "sentiero_viel_del_pan",
       "name": "Sentiero del Viel del Pan",
       "region": "Trentino",
       "difficulty": "medium",
-      "tagline": "Venture into the heart of the mountains",
       "distance_km": 8.5,
       "duration_hours": 3.5,
       "elevation_gain_m": 350,
@@ -174,12 +157,6 @@
       "rating": 4.7,
       "reviews_count": 892,
       "image_url": "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800",
-      "thumbnail": "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=400",
-      "gallery": [
-        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800",
-        "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800",
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
-      ],
       "difficulty_details": {
         "technical": "medium",
         "fitness": "medium",
@@ -188,15 +165,13 @@
       "best_season": ["June", "July", "August", "September"],
       "facilities": ["cable_car", "mountain_huts"],
       "dog_friendly": false,
-      "family_friendly": false,
-      "tags": ["WWI history", "glacier views", "cultural route"]
+      "family_friendly": false
     },
     {
       "id": "alpe_siusi",
       "name": "Alpe di Siusi Meadow Walk",
       "region": "South Tyrol",
       "difficulty": "easy",
-      "tagline": "Where serenity meets alpine beauty",
       "distance_km": 5.8,
       "duration_hours": 2,
       "elevation_gain_m": 120,
@@ -236,12 +211,6 @@
       "rating": 4.6,
       "reviews_count": 756,
       "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
-      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
-      "gallery": [
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
-        "https://images.unsplash.com/photo-1531266752426-aad472b7bbf4?w=800",
-        "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800"
-      ],
       "difficulty_details": {
         "technical": "very_low",
         "fitness": "low",
@@ -250,15 +219,13 @@
       "best_season": ["May", "June", "July", "August", "September"],
       "facilities": ["cable_car", "restaurants", "restrooms"],
       "dog_friendly": true,
-      "family_friendly": true,
-      "tags": ["alpine meadow", "family friendly", "wildflowers"]
+      "family_friendly": true
     },
     {
       "id": "seceda_ridge",
       "name": "Seceda Ridge Trail",
       "region": "South Tyrol",
       "difficulty": "medium",
-      "tagline": "Venture into the heart of the mountains",
       "distance_km": 7.2,
       "duration_hours": 3,
       "elevation_gain_m": 380,
@@ -298,12 +265,6 @@
       "rating": 4.9,
       "reviews_count": 1832,
       "image_url": "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800",
-      "thumbnail": "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=400",
-      "gallery": [
-        "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800",
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
-        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800"
-      ],
       "difficulty_details": {
         "technical": "low",
         "fitness": "medium",
@@ -312,15 +273,13 @@
       "best_season": ["June", "July", "August", "September"],
       "facilities": ["cable_car", "restaurant"],
       "dog_friendly": false,
-      "family_friendly": true,
-      "tags": ["photography", "panoramic views", "ridge walk"]
+      "family_friendly": true
     },
     {
       "id": "lago_carezza",
       "name": "Lago di Carezza Trail",
       "region": "Trentino",
       "difficulty": "easy",
-      "tagline": "Where serenity meets alpine beauty",
       "distance_km": 2.8,
       "duration_hours": 1,
       "elevation_gain_m": 60,
@@ -360,12 +319,6 @@
       "rating": 4.8,
       "reviews_count": 2567,
       "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
-      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
-      "gallery": [
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
-        "https://images.unsplash.com/photo-1531266752426-aad472b7bbf4?w=800",
-        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800"
-      ],
       "difficulty_details": {
         "technical": "very_low",
         "fitness": "low",
@@ -374,15 +327,13 @@
       "best_season": ["May", "June", "July", "August", "September", "October"],
       "facilities": ["parking", "restrooms", "restaurant"],
       "dog_friendly": true,
-      "family_friendly": true,
-      "tags": ["rainbow lake", "family friendly", "forest walk"]
+      "family_friendly": true
     },
     {
       "id": "puez_odle",
       "name": "Puez-Odle Alta Via Trail",
       "region": "South Tyrol",
       "difficulty": "hard",
-      "tagline": "Challenge awaits among the peaks",
       "distance_km": 12.5,
       "duration_hours": 6,
       "elevation_gain_m": 850,
@@ -430,12 +381,6 @@
       "rating": 4.7,
       "reviews_count": 645,
       "image_url": "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800",
-      "thumbnail": "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=400",
-      "gallery": [
-        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800",
-        "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800",
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
-      ],
       "difficulty_details": {
         "technical": "high",
         "fitness": "high",
@@ -444,15 +389,13 @@
       "best_season": ["July", "August", "September"],
       "facilities": ["mountain_huts"],
       "dog_friendly": false,
-      "family_friendly": false,
-      "tags": ["via ferrata", "challenging", "high altitude"]
+      "family_friendly": false
     },
     {
       "id": "val_di_funes",
       "name": "Val di Funes Meadow Trail",
       "region": "South Tyrol",
       "difficulty": "easy",
-      "tagline": "Where serenity meets alpine beauty",
       "distance_km": 4.2,
       "duration_hours": 1.5,
       "elevation_gain_m": 100,
@@ -492,12 +435,6 @@
       "rating": 4.8,
       "reviews_count": 1453,
       "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
-      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
-      "gallery": [
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
-        "https://images.unsplash.com/photo-1531266752426-aad472b7bbf4?w=800",
-        "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800"
-      ],
       "difficulty_details": {
         "technical": "very_low",
         "fitness": "low",
@@ -506,8 +443,7 @@
       "best_season": ["April", "May", "June", "July", "August", "September", "October"],
       "facilities": ["parking", "restaurants"],
       "dog_friendly": true,
-      "family_friendly": true,
-      "tags": ["cultural heritage", "photography", "family friendly"]
+      "family_friendly": true
     }
   ]
 }
