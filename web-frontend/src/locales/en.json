@@ -75,7 +75,11 @@
     "taglineHard": "Challenge awaits among the peaks",
     "interactiveMap": "Interactive Map",
     "viewOnMap": "View on Map",
-    "backToTrails": "Back to Trails"
+    "backToTrails": "Back to Trails",
+    "mediaGallery": "Media Gallery",
+    "photo": "Photo",
+    "noPhotos": "No photos available for this trail",
+    "noVideos": "No videos available yet. Check back soon!"
   },
   "catalog": {
     "title": "Trail Catalog",

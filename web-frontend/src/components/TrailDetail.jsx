@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import ReviewsSection from './ReviewsSection';
 import TrailMap from './TrailMap';
+import MediaGallery from './MediaGallery';
 import './TrailDetail.css';
 
 function TrailDetail({ trail, onBack }) {
@@ -111,6 +112,8 @@ function TrailDetail({ trail, onBack }) {
           </div>
           <TrailMap trail={trail} />
         </div>
+
+        <MediaGallery trail={trail} />
 
         {trail.pois && trail.pois.length > 0 && (
           <div className="poi-section">

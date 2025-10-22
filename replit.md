@@ -13,12 +13,14 @@ alpenvia/
 ```
 
 ## Current State
-**Status**: 🚀 Phase 3 of 16 Complete - Reviews System Implemented
+**Status**: 🚀 Phase 5 of 16 Complete - Media Galleries Implemented
 
 **Completed Features:**
 - ✅ Full i18n infrastructure (EN/IT/DE) across all pages
 - ✅ Enhanced trail data schema with galleries, tags, ratings
 - ✅ Complete user reviews system with submission forms
+- ✅ Interactive Mapbox maps with POI markers and route visualization
+- ✅ Media galleries with Photos/Videos tabs and lightbox viewer
 - ✅ Flask backend API with reviews endpoints
 - ✅ Smart local recommendation engine (no external AI)
 - ✅ Verified trail database with 8 South Tyrol/Trentino trails
@@ -27,9 +29,7 @@ alpenvia/
 - ✅ Language switcher with browser detection
 - ✅ Works in Replit browser preview
 
-**In Progress (13 phases remaining):**
-- ⏳ Interactive Mapbox maps with POI markers
-- ⏳ Media galleries with photos/videos
+**In Progress (11 phases remaining):**
 - ⏳ Enhanced Home page with parallax and carousels
 - ⏳ Firebase authentication (email + Google)
 - ⏳ Stripe subscription payments
@@ -38,7 +38,33 @@ alpenvia/
 - ⏳ SEO optimization and meta tags
 
 ## Recent Updates (October 22, 2025)
-**Latest: Phase 3 - User Reviews System** ✅ COMPLETE
+**Latest: Phase 5 - Media Galleries** ✅ COMPLETE
+- ✅ MediaGallery component with Photos/Videos tab interface
+- ✅ Photo grid with glassmorphic thumbnail cards
+- ✅ Full-screen lightbox viewer with keyboard navigation
+- ✅ Left/right arrow navigation between photos
+- ✅ Photo counter display
+- ✅ Hover effects with zoom icon overlay
+- ✅ Full i18n support (EN/IT/DE)
+- ✅ Empty state for trails without media
+- ✅ Integrated into TrailDetail page
+- ✅ Mobile responsive design
+- ✅ Awaiting architect review
+
+**Phase 4: Interactive Mapbox Maps** ✅ COMPLETE
+- ✅ TrailMap component with full Mapbox GL integration
+- ✅ Interactive zoom, pan, and tilt controls
+- ✅ Trail route visualization with brand-colored line (#d4a574)
+- ✅ POI markers with custom icons and hover labels
+- ✅ Navigation controls and fullscreen mode
+- ✅ Auto-fit trail bounds on load
+- ✅ Defensive programming for missing data
+- ✅ Glassmorphic styling matching app theme
+- ✅ Full i18n support (EN/IT/DE)
+- ✅ Mobile responsive (400px height)
+- ✅ Passed architect review
+
+**Phase 3: User Reviews System** ✅ COMPLETE
 - ✅ Backend reviews endpoints (GET/POST /api/trails/{id}/reviews)
 - ✅ ReviewsSection component with glassmorphic design
 - ✅ Star rating system for display and input

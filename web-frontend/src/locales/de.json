@@ -75,7 +75,11 @@
     "taglineHard": "Die Herausforderung wartet zwischen den Gipfeln",
     "interactiveMap": "Interaktive Karte",
     "viewOnMap": "Auf Karte Anzeigen",
-    "backToTrails": "Zurück zu Wanderwegen"
+    "backToTrails": "Zurück zu Wanderwegen",
+    "mediaGallery": "Mediengalerie",
+    "photo": "Foto",
+    "noPhotos": "Keine Fotos für diesen Wanderweg verfügbar",
+    "noVideos": "Noch keine Videos verfügbar. Schauen Sie bald wieder vorbei!"
   },
   "catalog": {
     "title": "Wanderwege-Katalog",

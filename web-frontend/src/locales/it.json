@@ -75,7 +75,11 @@
     "taglineHard": "La sfida ti aspetta tra le vette",
     "interactiveMap": "Mappa Interattiva",
     "viewOnMap": "Visualizza sulla Mappa",
-    "backToTrails": "Torna ai Sentieri"
+    "backToTrails": "Torna ai Sentieri",
+    "mediaGallery": "Galleria Multimediale",
+    "photo": "Foto",
+    "noPhotos": "Nessuna foto disponibile per questo sentiero",
+    "noVideos": "Nessun video disponibile ancora. Torna presto!"
   },
   "catalog": {
     "title": "Catalogo Sentieri",
