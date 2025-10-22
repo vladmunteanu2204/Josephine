@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 
 const API_URL = window.location.hostname.includes('replit.dev')
@@ -6,6 +7,7 @@ const API_URL = window.location.hostname.includes('replit.dev')
   : 'http://localhost:8000/api';
 
 function TrailCatalog({ viewTrail }) {
+  const { t } = useTranslation();
   const [trails, setTrails] = useState([]);
   const [filteredTrails, setFilteredTrails] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -40,12 +42,12 @@ function TrailCatalog({ viewTrail }) {
   return (
     <div className="container">
       <div className="catalog-header">
-        <h1>Trail Catalog</h1>
-        <p>Explore our verified routes in South Tyrol & Trentino</p>
+        <h1>{t('catalog.title')}</h1>
+        <p>{t('catalog.subtitle')}</p>
       </div>
 
       <div className="filters">
-        <h3>Filter by Difficulty</h3>
+        <h3>{t('catalog.filterByDifficulty')}</h3>
         <div className="filter-buttons">
           {['all', 'easy', 'medium', 'hard'].map(diff => (
             <button
@@ -53,18 +55,18 @@ function TrailCatalog({ viewTrail }) {
               className={`filter-btn ${selectedDifficulty === diff ? 'active' : ''}`}
               onClick={() => filterByDifficulty(diff)}
             >
-              {diff === 'all' ? 'All' : diff.charAt(0).toUpperCase() + diff.slice(1)}
+              {t(`catalog.${diff}`)}
             </button>
           ))}
         </div>
       </div>
 
       {loading ? (
-        <div className="loading">Loading trails...</div>
+        <div className="loading">{t('catalog.loadingTrails')}</div>
       ) : filteredTrails.length > 0 ? (
         <>
           <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>
-            Showing {filteredTrails.length} trail{filteredTrails.length !== 1 ? 's' : ''}
+            {t('catalog.showing')} {filteredTrails.length} {filteredTrails.length !== 1 ? t('catalog.trails') : t('catalog.trail')}
           </p>
           <div className="trail-grid">
             {filteredTrails.map(trail => (
@@ -82,7 +84,7 @@ function TrailCatalog({ viewTrail }) {
                   <div className="trail-header">
                     <h3 className="trail-name">{trail.name}</h3>
                     <span className={`badge badge-${trail.difficulty}`}>
-                      {trail.difficulty}
+                      {t(`catalog.${trail.difficulty}`)}
                     </span>
                   </div>
                   <p className="trail-region">{trail.region}</p>
@@ -119,7 +121,7 @@ function TrailCatalog({ viewTrail }) {
       ) : (
         <div className="empty-state">
           <div className="empty-icon">🏔️</div>
-          <p>No trails match your criteria</p>
+          <p>{t('catalog.noMatchingTrails')}</p>
         </div>
       )}
     </div>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import './SmartRecommendations.css';
 
@@ -6,16 +7,8 @@ const API_URL = window.location.hostname.includes('replit.dev')
   ? `${window.location.protocol}//${window.location.hostname}:8000/api`
   : 'http://localhost:8000/api';
 
-const INTERESTS = [
-  { id: 'alpine lakes', icon: '💧', label: 'Alpine Lakes' },
-  { id: 'panoramic views', icon: '🏔️', label: 'Panoramic Views' },
-  { id: 'via ferrata', icon: '🧗', label: 'Via Ferrata' },
-  { id: 'forests', icon: '🌲', label: 'Forests' },
-  { id: 'cultural routes', icon: '🏛️', label: 'Cultural Routes' },
-  { id: 'loop', icon: '🔄', label: 'Loop Trails' },
-];
-
 function SmartRecommendations({ viewTrail }) {
+  const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const [duration, setDuration] = useState(3);
   const [difficulty, setDifficulty] = useState('medium');
@@ -24,6 +17,15 @@ function SmartRecommendations({ viewTrail }) {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const INTERESTS = [
+    { id: 'alpine lakes', icon: '💧', label: t('recommendations.alpineLakes') },
+    { id: 'panoramic views', icon: '🏔️', label: t('recommendations.panoramicViews') },
+    { id: 'via ferrata', icon: '🧗', label: t('recommendations.viaFerrata') },
+    { id: 'forests', icon: '🌲', label: t('recommendations.forests') },
+    { id: 'cultural routes', icon: '🏛️', label: t('recommendations.culturalRoutes') },
+    { id: 'loop', icon: '🔄', label: t('recommendations.loopTrails') },
+  ];
 
   const toggleInterest = (interestId) => {
     setInterests(prev =>
@@ -48,7 +50,7 @@ function SmartRecommendations({ viewTrail }) {
       setResults(response.data.results || []);
       setStep(4);
     } catch (err) {
-      setError('Failed to load recommendations. Please try again.');
+      setError(t('recommendations.failedToLoad'));
       console.error('Error:', err);
     } finally {
       setLoading(false);
@@ -68,13 +70,15 @@ function SmartRecommendations({ viewTrail }) {
   return (
     <div className="container">
       <div className="recommendations-header">
-        <h1>Smart Recommendations</h1>
-        <p>Get personalized trail suggestions from our verified routes in South Tyrol & Trentino</p>
+        <h1>{t('recommendations.title')}</h1>
+        <p>{t('recommendations.subtitle')}</p>
       </div>
 
       {step < 4 && (
         <div className="wizard-progress">
-          <span className="progress-text">Step {step} of 3</span>
+          <span className="progress-text">
+            {t('recommendations.step')} {step} {t('recommendations.of')} 3
+          </span>
           <div className="progress-bar">
             <div 
               className="progress-fill" 
@@ -88,9 +92,9 @@ function SmartRecommendations({ viewTrail }) {
 
       {step === 1 && (
         <div className="wizard-step">
-          <h2>How long do you want to hike?</h2>
+          <h2>{t('recommendations.howLong')}</h2>
           <div className="slider-container">
-            <div className="slider-value">{duration} hours</div>
+            <div className="slider-value">{duration} {t('recommendations.hours')}</div>
             <input
               type="range"
               min="1"
@@ -106,7 +110,7 @@ function SmartRecommendations({ viewTrail }) {
             </div>
           </div>
 
-          <h2 style={{ marginTop: '48px' }}>What difficulty?</h2>
+          <h2 style={{ marginTop: '48px' }}>{t('recommendations.whatDifficulty')}</h2>
           <div className="options-row">
             {['easy', 'medium', 'hard'].map(diff => (
               <button
@@ -114,21 +118,21 @@ function SmartRecommendations({ viewTrail }) {
                 className={`option-btn ${difficulty === diff ? 'active' : ''}`}
                 onClick={() => setDifficulty(diff)}
               >
-                {diff.charAt(0).toUpperCase() + diff.slice(1)}
+                {t(`catalog.${diff}`)}
               </button>
             ))}
           </div>
 
           <button className="btn-primary next-btn" onClick={() => setStep(2)}>
-            Next
+            {t('recommendations.next')}
           </button>
         </div>
       )}
 
       {step === 2 && (
         <div className="wizard-step">
-          <h2>What interests you?</h2>
-          <p className="hint">Select all that apply</p>
+          <h2>{t('recommendations.whatInterests')}</h2>
+          <p className="hint">{t('recommendations.selectAll')}</p>
           
           <div className="interests-grid">
             {INTERESTS.map(interest => (
@@ -145,10 +149,10 @@ function SmartRecommendations({ viewTrail }) {
 
           <div className="wizard-nav">
             <button className="btn-secondary" onClick={() => setStep(1)}>
-              Back
+              {t('recommendations.back')}
             </button>
             <button className="btn-primary" onClick={() => setStep(3)}>
-              Next
+              {t('recommendations.next')}
             </button>
           </div>
         </div>
@@ -156,35 +160,35 @@ function SmartRecommendations({ viewTrail }) {
 
       {step === 3 && (
         <div className="wizard-step">
-          <h2>Where do you want to start?</h2>
+          <h2>{t('recommendations.whereToStart')}</h2>
           <input
             type="text"
             className="text-input"
-            placeholder="Enter location (e.g., Bolzano, Merano)"
+            placeholder={t('recommendations.enterLocation')}
             value={startArea}
             onChange={(e) => setStartArea(e.target.value)}
           />
 
           <div className="summary-card">
-            <h3>Your Preferences</h3>
+            <h3>{t('recommendations.yourPreferences')}</h3>
             <ul>
-              <li>Duration: {duration} hours</li>
-              <li>Difficulty: {difficulty}</li>
-              <li>Interests: {interests.join(', ') || 'None selected'}</li>
-              <li>Starting area: {startArea || 'Any'}</li>
+              <li>{t('recommendations.duration')}: {duration} {t('recommendations.hours')}</li>
+              <li>{t('recommendations.difficulty')}: {t(`catalog.${difficulty}`)}</li>
+              <li>{t('recommendations.interests')}: {interests.join(', ') || t('recommendations.noneSelected')}</li>
+              <li>{t('recommendations.startArea')}: {startArea || t('recommendations.anyLocation')}</li>
             </ul>
           </div>
 
           <div className="wizard-nav">
             <button className="btn-secondary" onClick={() => setStep(2)}>
-              Back
+              {t('recommendations.back')}
             </button>
             <button 
               className="btn-primary" 
               onClick={handleSubmit}
               disabled={loading}
             >
-              {loading ? 'Finding trails...' : '✨ Get Recommendations'}
+              {loading ? t('recommendations.findingTrails') : `✨ ${t('recommendations.getRecommendations')}`}
             </button>
           </div>
         </div>
@@ -193,14 +197,14 @@ function SmartRecommendations({ viewTrail }) {
       {step === 4 && (
         <div className="results-section">
           <div className="results-header">
-            <h2>Recommended Trails for You</h2>
+            <h2>{t('recommendations.recommendedTrails')}</h2>
             <button className="btn-secondary" onClick={resetWizard}>
-              New Search
+              {t('recommendations.newSearch')}
             </button>
           </div>
 
           <p className="results-disclaimer">
-            ✓ Verified routes only — curated for South Tyrol & Trentino
+            ✓ {t('recommendations.verifiedOnly')}
           </p>
 
           {results.length > 0 ? (
@@ -220,7 +224,7 @@ function SmartRecommendations({ viewTrail }) {
                     <div className="trail-header">
                       <h3 className="trail-name">{trail.name}</h3>
                       <span className={`badge badge-${trail.difficulty}`}>
-                        {trail.difficulty}
+                        {t(`catalog.${trail.difficulty}`)}
                       </span>
                     </div>
                     <p className="trail-region">{trail.region}</p>
@@ -250,7 +254,7 @@ function SmartRecommendations({ viewTrail }) {
           ) : (
             <div className="empty-state">
               <div className="empty-icon">🏔️</div>
-              <p>No trails match your criteria. Try adjusting your preferences.</p>
+              <p>{t('recommendations.noResults')}</p>
             </div>
           )}
         </div>

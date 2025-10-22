@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 
 const API_URL = window.location.hostname.includes('replit.dev')
@@ -6,6 +7,7 @@ const API_URL = window.location.hostname.includes('replit.dev')
   : 'http://localhost:8000/api';
 
 function Home({ setCurrentView, viewTrail }) {
+  const { t } = useTranslation();
   const [recommendedTrail, setRecommendedTrail] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -35,8 +37,8 @@ function Home({ setCurrentView, viewTrail }) {
     <>
       <div className="hero">
         <div className="container">
-          <h1>Discover Alpine Hiking</h1>
-          <p>Verified trails in South Tyrol & Trentino, curated for every adventurer</p>
+          <h1>{t('hero.title')}</h1>
+          <p>{t('hero.subtitle')}</p>
         </div>
       </div>
 
@@ -44,22 +46,22 @@ function Home({ setCurrentView, viewTrail }) {
         <div className="cta-grid">
           <div className="cta-card" onClick={() => setCurrentView('recommendations')}>
             <div className="cta-icon">✨</div>
-            <h3>Smart Recommendations</h3>
-            <p>Personal suggestions from verified routes</p>
+            <h3>{t('home.smartRecommendations')}</h3>
+            <p>{t('home.smartRecommendationsDesc')}</p>
           </div>
           
           <div className="cta-card" onClick={() => setCurrentView('catalog')}>
             <div className="cta-icon">🗺️</div>
-            <h3>Browse Trail Catalog</h3>
-            <p>Explore all verified alpine routes</p>
+            <h3>{t('home.browseTrailCatalog')}</h3>
+            <p>{t('home.browseTrailCatalogDesc')}</p>
           </div>
         </div>
 
         <div className="section">
-          <h2 className="section-title">Today's Featured Trail</h2>
+          <h2 className="section-title">{t('home.todaysFeaturedTrail')}</h2>
           
           {loading ? (
-            <div className="loading">Loading recommendation...</div>
+            <div className="loading">{t('home.loadingRecommendation')}</div>
           ) : recommendedTrail ? (
             <div className="trail-grid">
               <div className="trail-card" onClick={() => viewTrail(recommendedTrail)}>
@@ -72,7 +74,7 @@ function Home({ setCurrentView, viewTrail }) {
                   <div className="trail-header">
                     <h3 className="trail-name">{recommendedTrail.name}</h3>
                     <span className={`badge badge-${recommendedTrail.difficulty}`}>
-                      {recommendedTrail.difficulty}
+                      {t(`catalog.${recommendedTrail.difficulty}`)}
                     </span>
                   </div>
                   <p className="trail-region">{recommendedTrail.region}</p>
@@ -104,7 +106,7 @@ function Home({ setCurrentView, viewTrail }) {
           ) : (
             <div className="empty-state">
               <div className="empty-icon">🏔️</div>
-              <p>No trails available</p>
+              <p>{t('home.noTrailsAvailable')}</p>
             </div>
           )}
         </div>
@@ -112,7 +114,7 @@ function Home({ setCurrentView, viewTrail }) {
         <div className="section">
           <div className="card" style={{ textAlign: 'center', padding: '32px' }}>
             <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
-              ✓ All routes verified and curated for South Tyrol & Trentino
+              ✓ {t('home.verifiedRoutes')}
             </p>
           </div>
         </div>
