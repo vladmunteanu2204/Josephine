@@ -1,4 +1,5 @@
 import React from 'react';
+import ReviewsSection from './ReviewsSection';
 import './TrailDetail.css';
 
 function TrailDetail({ trail, onBack }) {
@@ -149,6 +150,8 @@ function TrailDetail({ trail, onBack }) {
             </div>
           </div>
         </div>
+
+        <ReviewsSection trailId={trail.id} />
       </div>
     </div>
   );

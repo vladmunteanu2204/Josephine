@@ -22,6 +22,12 @@ def load_complete_trails():
     with open(trails_path, 'r') as f:
         return json.load(f)
 
+def load_reviews():
+    """Load reviews data"""
+    reviews_path = os.path.join(BASE_DIR, 'data', 'reviews.json')
+    with open(reviews_path, 'r') as f:
+        return json.load(f)
+
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
@@ -158,6 +164,50 @@ def get_recommendations():
         
     except Exception as e:
         print(f"Error in recommendations: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/trails/<trail_id>/reviews', methods=['GET'])
+def get_trail_reviews(trail_id):
+    """Get reviews for a specific trail"""
+    try:
+        reviews_data = load_reviews()
+        trail_reviews = reviews_data['reviews'].get(trail_id, [])
+        trail_stats = reviews_data['statistics'].get(trail_id, {
+            'average_rating': 0,
+            'total_reviews': 0
+        })
+        
+        return jsonify({
+            'reviews': trail_reviews,
+            'statistics': trail_stats
+        })
+    except Exception as e:
+        print(f"Error loading reviews: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/trails/<trail_id>/reviews', methods=['POST'])
+def add_trail_review(trail_id):
+    """Add a new review for a trail (mock implementation)"""
+    try:
+        data = request.json or {}
+        
+        new_review = {
+            'id': f"rev_{trail_id}_{datetime.now().timestamp()}",
+            'trail_id': trail_id,
+            'user_name': data.get('user_name', 'Anonymous'),
+            'rating': data.get('rating', 5),
+            'comment': data.get('comment', ''),
+            'date': datetime.now().strftime('%Y-%m-%d'),
+            'helpful_count': 0
+        }
+        
+        return jsonify({
+            'success': True,
+            'review': new_review,
+            'message': 'Review submitted successfully'
+        }), 201
+    except Exception as e:
+        print(f"Error adding review: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
