@@ -72,7 +72,10 @@
     "bookThisHike": "Prenota questa Escursione",
     "taglineEasy": "Dove la serenità incontra la bellezza alpina",
     "taglineMedium": "Avventurati nel cuore delle montagne",
-    "taglineHard": "La sfida ti aspetta tra le vette"
+    "taglineHard": "La sfida ti aspetta tra le vette",
+    "interactiveMap": "Mappa Interattiva",
+    "viewOnMap": "Visualizza sulla Mappa",
+    "backToTrails": "Torna ai Sentieri"
   },
   "catalog": {
     "title": "Catalogo Sentieri",

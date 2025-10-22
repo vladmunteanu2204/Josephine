@@ -72,7 +72,10 @@
     "bookThisHike": "Diese Wanderung Buchen",
     "taglineEasy": "Wo Ruhe auf alpine Schönheit trifft",
     "taglineMedium": "Wage dich ins Herz der Berge",
-    "taglineHard": "Die Herausforderung wartet zwischen den Gipfeln"
+    "taglineHard": "Die Herausforderung wartet zwischen den Gipfeln",
+    "interactiveMap": "Interaktive Karte",
+    "viewOnMap": "Auf Karte Anzeigen",
+    "backToTrails": "Zurück zu Wanderwegen"
   },
   "catalog": {
     "title": "Wanderwege-Katalog",

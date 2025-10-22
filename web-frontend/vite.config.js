@@ -8,4 +8,7 @@ export default defineConfig({
     port: 5000,
     allowedHosts: true,
   },
+  optimizeDeps: {
+    include: ['mapbox-gl', 'react-map-gl']
+  }
 });

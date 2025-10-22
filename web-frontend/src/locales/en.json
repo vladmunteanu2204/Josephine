@@ -72,7 +72,10 @@
     "bookThisHike": "Book this Hike",
     "taglineEasy": "Where serenity meets alpine beauty",
     "taglineMedium": "Venture into the heart of the mountains",
-    "taglineHard": "Challenge awaits among the peaks"
+    "taglineHard": "Challenge awaits among the peaks",
+    "interactiveMap": "Interactive Map",
+    "viewOnMap": "View on Map",
+    "backToTrails": "Back to Trails"
   },
   "catalog": {
     "title": "Trail Catalog",
