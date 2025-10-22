@@ -107,7 +107,11 @@
     "loadingTrails": "Caricamento sentieri...",
     "noMatchingTrails": "Nessun sentiero corrisponde ai tuoi criteri",
     "filterBySeason": "Filtra per Stagione",
-    "filterByTags": "Filtra per Tag"
+    "filterByTags": "Filtra per Tag",
+    "searchPlaceholder": "Cerca sentieri...",
+    "clearFilters": "Cancella Tutti i Filtri",
+    "mapViewTitle": "Vista Mappa Prossimamente",
+    "mapViewDesc": "La vista mappa interattiva con percorsi sarà disponibile in un futuro aggiornamento."
   },
   "recommendations": {
     "title": "Raccomandazioni Intelligenti",
@@ -146,6 +150,7 @@
     "results": "Raccomandazioni per Te",
     "noResults": "Nessun sentiero corrisponde ai tuoi criteri. Prova a modificare le tue preferenze.",
     "saveTrail": "Salva Sentiero",
+    "unsaveTrail": "Rimuovi dai salvati",
     "failedToLoad": "Impossibile caricare le raccomandazioni. Riprova."
   },
   "auth": {

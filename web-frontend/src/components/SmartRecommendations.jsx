@@ -17,6 +17,10 @@ function SmartRecommendations({ viewTrail }) {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [savedTrails, setSavedTrails] = useState(() => {
+    const saved = localStorage.getItem('savedTrails');
+    return saved ? JSON.parse(saved) : [];
+  });
 
   const INTERESTS = [
     { id: 'alpine lakes', icon: '💧', label: t('recommendations.alpineLakes') },
@@ -55,6 +59,25 @@ function SmartRecommendations({ viewTrail }) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const toggleSaveTrail = (trail, e) => {
+    e.stopPropagation();
+    const isSaved = savedTrails.some(t => t.id === trail.id);
+    
+    let newSaved;
+    if (isSaved) {
+      newSaved = savedTrails.filter(t => t.id !== trail.id);
+    } else {
+      newSaved = [...savedTrails, trail];
+    }
+    
+    setSavedTrails(newSaved);
+    localStorage.setItem('savedTrails', JSON.stringify(newSaved));
+  };
+
+  const isTrailSaved = (trailId) => {
+    return savedTrails.some(t => t.id === trailId);
   };
 
   const resetWizard = () => {
@@ -215,6 +238,13 @@ function SmartRecommendations({ viewTrail }) {
                   className="trail-card"
                   onClick={() => viewTrail(trail)}
                 >
+                  <button
+                    className={`save-btn ${isTrailSaved(trail.id) ? 'saved' : ''}`}
+                    onClick={(e) => toggleSaveTrail(trail, e)}
+                    aria-label={isTrailSaved(trail.id) ? t('recommendations.unsaveTrail') : t('recommendations.saveTrail')}
+                  >
+                    {isTrailSaved(trail.id) ? '❤️' : '🤍'}
+                  </button>
                   <img 
                     src={trail.thumbnail} 
                     alt={trail.name}

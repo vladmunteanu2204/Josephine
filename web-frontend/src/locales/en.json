@@ -107,7 +107,11 @@
     "loadingTrails": "Loading trails...",
     "noMatchingTrails": "No trails match your criteria",
     "filterBySeason": "Filter by Season",
-    "filterByTags": "Filter by Tags"
+    "filterByTags": "Filter by Tags",
+    "searchPlaceholder": "Search trails...",
+    "clearFilters": "Clear All Filters",
+    "mapViewTitle": "Map View Coming Soon",
+    "mapViewDesc": "Interactive map view with trail routes will be available in a future update."
   },
   "recommendations": {
     "title": "Smart Recommendations",
@@ -146,6 +150,7 @@
     "results": "Recommendations for You",
     "noResults": "No trails match your criteria. Try adjusting your preferences.",
     "saveTrail": "Save Trail",
+    "unsaveTrail": "Remove from saved",
     "failedToLoad": "Failed to load recommendations. Please try again."
   },
   "auth": {

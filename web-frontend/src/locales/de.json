@@ -107,7 +107,11 @@
     "loadingTrails": "Wanderwege werden geladen...",
     "noMatchingTrails": "Keine Wanderwege passen zu deinen Kriterien",
     "filterBySeason": "Nach Jahreszeit Filtern",
-    "filterByTags": "Nach Tags Filtern"
+    "filterByTags": "Nach Tags Filtern",
+    "searchPlaceholder": "Wanderwege suchen...",
+    "clearFilters": "Alle Filter Löschen",
+    "mapViewTitle": "Kartenansicht Kommt Bald",
+    "mapViewDesc": "Die interaktive Kartenansicht mit Wanderrouten wird in einem zukünftigen Update verfügbar sein."
   },
   "recommendations": {
     "title": "Smarte Empfehlungen",
@@ -146,6 +150,7 @@
     "results": "Empfehlungen für Dich",
     "noResults": "Keine Wanderwege passen zu deinen Kriterien. Versuche, deine Präferenzen anzupassen.",
     "saveTrail": "Wanderweg Speichern",
+    "unsaveTrail": "Aus Gespeicherten entfernen",
     "failedToLoad": "Empfehlungen konnten nicht geladen werden. Bitte erneut versuchen."
   },
   "auth": {
