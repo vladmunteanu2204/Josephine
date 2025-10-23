@@ -126,6 +126,57 @@
   transform: translateY(-2px);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.auth-btn {
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.login-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.login-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.signup-btn {
+  background: linear-gradient(135deg, #d4a574 0%, #c89960 100%);
+  color: #0a0a0a;
+  box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
+}
+
+.signup-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 165, 116, 0.5);
+}
+
+.user-name-header {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 @media (max-width: 768px) {
   .header-content {
     flex-direction: column;
@@ -150,5 +201,18 @@
   
   .logo-text {
     font-size: 24px;
+  }
+
+  .user-name-header {
+    display: none;
+  }
+
+  .auth-buttons {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .auth-btn {
+    flex: 1;
   }
 }

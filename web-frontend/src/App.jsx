@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
+import { AuthProvider } from './contexts/AuthContext';
 import Header from './components/Header';
 import Home from './components/Home';
 import SmartRecommendations from './components/SmartRecommendations';
@@ -16,33 +17,35 @@ function App() {
   };
 
   return (
-    <div className="app">
-      <Header currentView={currentView} setCurrentView={setCurrentView} />
-      
-      <main className="main-content">
-        {currentView === 'home' && (
-          <Home 
-            setCurrentView={setCurrentView}
-            viewTrail={viewTrail}
-          />
-        )}
+    <AuthProvider>
+      <div className="app">
+        <Header currentView={currentView} setCurrentView={setCurrentView} />
         
-        {currentView === 'recommendations' && (
-          <SmartRecommendations viewTrail={viewTrail} />
-        )}
-        
-        {currentView === 'catalog' && (
-          <TrailCatalog viewTrail={viewTrail} />
-        )}
-        
-        {currentView === 'detail' && selectedTrail && (
-          <TrailDetail 
-            trail={selectedTrail}
-            onBack={() => setCurrentView('catalog')}
-          />
-        )}
-      </main>
-    </div>
+        <main className="main-content">
+          {currentView === 'home' && (
+            <Home 
+              setCurrentView={setCurrentView}
+              viewTrail={viewTrail}
+            />
+          )}
+          
+          {currentView === 'recommendations' && (
+            <SmartRecommendations viewTrail={viewTrail} />
+          )}
+          
+          {currentView === 'catalog' && (
+            <TrailCatalog viewTrail={viewTrail} />
+          )}
+          
+          {currentView === 'detail' && selectedTrail && (
+            <TrailDetail 
+              trail={selectedTrail}
+              onBack={() => setCurrentView('catalog')}
+            />
+          )}
+        </main>
+      </div>
+    </AuthProvider>
   );
 }
 
