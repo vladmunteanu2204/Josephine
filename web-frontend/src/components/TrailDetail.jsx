@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
 import ReviewsSection from './ReviewsSection';
 import TrailMap from './TrailMap';
 import MediaGallery from './MediaGallery';
@@ -7,6 +8,53 @@ import './TrailDetail.css';
 
 function TrailDetail({ trail, onBack }) {
   const { t } = useTranslation();
+  const [fullTrail, setFullTrail] = useState(trail);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // If trail only has an ID, fetch the full trail data
+    if (trail && trail.id && !trail.name) {
+      const fetchTrailData = async () => {
+        setLoading(true);
+        try {
+          const API_URL = `${window.location.protocol}//${window.location.hostname}:8000`;
+          const response = await axios.get(`${API_URL}/api/trails`);
+          const trails = response.data;
+          const foundTrail = trails.find(t => t.id === trail.id);
+          if (foundTrail) {
+            setFullTrail(foundTrail);
+          }
+        } catch (error) {
+          console.error('Error fetching trail:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchTrailData();
+    }
+  }, [trail]);
+
+  if (loading) {
+    return (
+      <div className="trail-detail">
+        <button className="back-button" onClick={onBack}>
+          ← {t('trail.backToTrails')}
+        </button>
+        <div className="loading-state">{t('common.loading')}</div>
+      </div>
+    );
+  }
+
+  if (!fullTrail || !fullTrail.name) {
+    return (
+      <div className="trail-detail">
+        <button className="back-button" onClick={onBack}>
+          ← {t('trail.backToTrails')}
+        </button>
+        <div className="error-state">{t('common.error')}</div>
+      </div>
+    );
+  }
   const getDifficultyColor = (difficulty) => {
     const colors = {
       easy: '#4ade80',
@@ -48,18 +96,18 @@ function TrailDetail({ trail, onBack }) {
 
       <div className="detail-hero">
         <img 
-          src={trail.thumbnail || trail.image_url || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200'} 
-          alt={trail.name}
+          src={fullTrail.thumbnail || fullTrail.image_url || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200'} 
+          alt={fullTrail.name}
           className="detail-hero-image"
         />
         <div className="detail-hero-overlay"></div>
         <div className="detail-hero-content">
-          <span className="region-badge">{trail.region}</span>
-          <h1 className="hero-title">{trail.name}</h1>
+          <span className="region-badge">{fullTrail.region}</span>
+          <h1 className="hero-title">{fullTrail.name}</h1>
           <p className="hero-tagline">
-            {trail.difficulty === 'easy' && t('trail.taglineEasy')}
-            {trail.difficulty === 'medium' && t('trail.taglineMedium')}
-            {trail.difficulty === 'hard' && t('trail.taglineHard')}
+            {fullTrail.difficulty === 'easy' && t('trail.taglineEasy')}
+            {fullTrail.difficulty === 'medium' && t('trail.taglineMedium')}
+            {fullTrail.difficulty === 'hard' && t('trail.taglineHard')}
           </p>
         </div>
       </div>
@@ -68,17 +116,17 @@ function TrailDetail({ trail, onBack }) {
         <div className="stats-grid">
           <div className="stat-glass-card">
             <div className="stat-icon">📏</div>
-            <div className="stat-value">{trail.distance_km} km</div>
+            <div className="stat-value">{fullTrail.distance_km} km</div>
             <div className="stat-label">{t('trail.distance')}</div>
           </div>
           <div className="stat-glass-card">
             <div className="stat-icon">⏱️</div>
-            <div className="stat-value">{trail.duration_hours}h</div>
+            <div className="stat-value">{fullTrail.duration_hours}h</div>
             <div className="stat-label">{t('trail.duration')}</div>
           </div>
           <div className="stat-glass-card">
             <div className="stat-icon">⛰️</div>
-            <div className="stat-value">{trail.elevation_gain_m}m</div>
+            <div className="stat-value">{fullTrail.elevation_gain_m}m</div>
             <div className="stat-label">{t('trail.elevation')}</div>
           </div>
           <div className="stat-glass-card">
@@ -86,11 +134,11 @@ function TrailDetail({ trail, onBack }) {
               <span 
                 className="difficulty-badge-detail" 
                 style={{ 
-                  backgroundColor: getDifficultyColor(trail.difficulty),
-                  boxShadow: `0 0 20px ${getDifficultyColor(trail.difficulty)}40`
+                  backgroundColor: getDifficultyColor(fullTrail.difficulty),
+                  boxShadow: `0 0 20px ${getDifficultyColor(fullTrail.difficulty)}40`
                 }}
               >
-                {trail.difficulty}
+                {fullTrail.difficulty}
               </span>
             </div>
             <div className="stat-label" style={{ marginTop: '12px' }}>{t('trail.difficulty')}</div>
@@ -102,7 +150,7 @@ function TrailDetail({ trail, onBack }) {
             <h2 className="section-title">{t('trail.trailOverview')}</h2>
             <div className="gradient-divider"></div>
           </div>
-          <p className="overview-text">{trail.description}</p>
+          <p className="overview-text">{fullTrail.description}</p>
         </div>
 
         <div className="map-section">
@@ -110,19 +158,19 @@ function TrailDetail({ trail, onBack }) {
             <h2 className="section-title">{t('trail.interactiveMap')}</h2>
             <div className="gradient-divider"></div>
           </div>
-          <TrailMap trail={trail} />
+          <TrailMap trail={fullTrail} />
         </div>
 
-        <MediaGallery trail={trail} />
+        <MediaGallery trail={fullTrail} />
 
-        {trail.pois && trail.pois.length > 0 && (
+        {fullTrail.pois && fullTrail.pois.length > 0 && (
           <div className="poi-section">
             <div className="section-header">
               <h2 className="section-title">{t('trail.pointsOfInterest')}</h2>
               <div className="gradient-divider"></div>
             </div>
             <div className="poi-grid">
-              {trail.pois.map((poi, index) => (
+              {fullTrail.pois.map((poi, index) => (
                 <div key={index} className="poi-card-premium">
                   <div className="poi-icon-circle">
                     {getPoiIcon(poi.type)}
@@ -142,26 +190,26 @@ function TrailDetail({ trail, onBack }) {
             <span className="meta-icon">🥾</span>
             <div className="meta-content">
               <span className="meta-label">{t('trail.trailType')}</span>
-              <span className="meta-value">{trail.trail_type || 'Loop'}</span>
+              <span className="meta-value">{fullTrail.trail_type || 'Loop'}</span>
             </div>
           </div>
           <div className="meta-card">
             <span className="meta-icon">🌤️</span>
             <div className="meta-content">
               <span className="meta-label">{t('trail.bestSeason')}</span>
-              <span className="meta-value">{formatSeason(trail.best_season)}</span>
+              <span className="meta-value">{formatSeason(fullTrail.best_season)}</span>
             </div>
           </div>
           <div className="meta-card">
             <span className="meta-icon">🐕</span>
             <div className="meta-content">
               <span className="meta-label">{t('trail.dogFriendly')}</span>
-              <span className="meta-value">{trail.dog_friendly ? t('trail.yes') : t('trail.no')}</span>
+              <span className="meta-value">{fullTrail.dog_friendly ? t('trail.yes') : t('trail.no')}</span>
             </div>
           </div>
         </div>
 
-        <ReviewsSection trailId={trail.id} />
+        <ReviewsSection trailId={fullTrail.id} />
       </div>
     </div>
   );

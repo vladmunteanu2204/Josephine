@@ -6,14 +6,38 @@ import Home from './components/Home';
 import SmartRecommendations from './components/SmartRecommendations';
 import TrailCatalog from './components/TrailCatalog';
 import TrailDetail from './components/TrailDetail';
+import Profile from './components/Profile';
+import SavedTrails from './components/SavedTrails';
+import Settings from './components/Settings';
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
+  const [previousView, setPreviousView] = useState('home');
   const [selectedTrail, setSelectedTrail] = useState(null);
 
   const viewTrail = (trail) => {
+    setPreviousView(currentView);
     setSelectedTrail(trail);
     setCurrentView('detail');
+  };
+
+  const navigate = (view, trailId = null) => {
+    if (view === 'detail') {
+      setPreviousView(currentView);
+    }
+    
+    if (trailId) {
+      setCurrentView(view);
+      if (view === 'detail') {
+        setSelectedTrail({ id: trailId });
+      }
+    } else {
+      setCurrentView(view);
+    }
+  };
+
+  const goBack = () => {
+    setCurrentView(previousView);
   };
 
   return (
@@ -40,8 +64,20 @@ function App() {
           {currentView === 'detail' && selectedTrail && (
             <TrailDetail 
               trail={selectedTrail}
-              onBack={() => setCurrentView('catalog')}
+              onBack={goBack}
             />
+          )}
+
+          {currentView === 'profile' && (
+            <Profile onNavigate={navigate} />
+          )}
+
+          {currentView === 'savedTrails' && (
+            <SavedTrails onNavigate={navigate} />
+          )}
+
+          {currentView === 'settings' && (
+            <Settings onNavigate={navigate} />
           )}
         </main>
       </AuthProvider>

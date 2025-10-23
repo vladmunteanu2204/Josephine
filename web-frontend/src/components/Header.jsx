@@ -77,15 +77,33 @@ function Header({ currentView, setCurrentView }) {
 
                 {showUserMenu && (
                   <div className="user-menu-dropdown">
-                    <button className="user-menu-item">
+                    <button 
+                      className="user-menu-item"
+                      onClick={() => {
+                        setCurrentView('profile');
+                        setShowUserMenu(false);
+                      }}
+                    >
                       <span>👤</span>
                       {t('auth.profile')}
                     </button>
-                    <button className="user-menu-item">
+                    <button 
+                      className="user-menu-item"
+                      onClick={() => {
+                        setCurrentView('savedTrails');
+                        setShowUserMenu(false);
+                      }}
+                    >
                       <span>❤️</span>
                       {t('auth.savedTrails')}
                     </button>
-                    <button className="user-menu-item">
+                    <button 
+                      className="user-menu-item"
+                      onClick={() => {
+                        setCurrentView('settings');
+                        setShowUserMenu(false);
+                      }}
+                    >
                       <span>⚙️</span>
                       {t('auth.settings')}
                     </button>
