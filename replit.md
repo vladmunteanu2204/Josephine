@@ -19,7 +19,7 @@ The design system employs a premium dark alpine theme with glassmorphism effects
 - **Internationalization (i18n):** Full support for English, Italian, and German using `i18next` with browser language detection, covering all pages and over 240 strings.
 - **Smart Recommendations:** A local, scoring-based algorithm provides personalized trail suggestions based on difficulty, tags, duration, and other preferences.
 - **User Authentication:** Firebase Authentication (email/password, Google OAuth) is integrated for secure user management, including profile editing and password changes.
-- **Persistent State:** User preferences (language, units, notifications) and saved trails are persisted using `localStorage`.
+- **Persistent State:** User preferences (language, units, notifications) and saved trails are persisted using `localStorage`. Saved trails store only trail IDs (not full objects) for optimal storage and data freshness.
 - **Media Galleries:** A `MediaGallery` component supports photo and video display with a full-screen lightbox viewer.
 - **Interactive Maps:** `Mapbox GL` is integrated for interactive trail route visualization and point-of-interest (POI) markers.
 - **Review System:** A comprehensive user review system allows submissions, displays star ratings, and calculates real-time statistics.

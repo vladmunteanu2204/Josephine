@@ -16,9 +16,18 @@ function TrailCatalog({ viewTrail }) {
   const [selectedTags, setSelectedTags] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'map'
-  const [savedTrails, setSavedTrails] = useState(() => {
+  const [savedTrailIds, setSavedTrailIds] = useState(() => {
     const saved = localStorage.getItem('savedTrails');
-    return saved ? JSON.parse(saved) : [];
+    if (!saved) return [];
+    
+    const parsed = JSON.parse(saved);
+    // Migration: Convert old format (full objects) to new format (IDs only)
+    if (parsed.length > 0 && typeof parsed[0] === 'object') {
+      const ids = parsed.map(trail => trail.id);
+      localStorage.setItem('savedTrails', JSON.stringify(ids));
+      return ids;
+    }
+    return parsed;
   });
 
   useEffect(() => {
@@ -80,21 +89,21 @@ function TrailCatalog({ viewTrail }) {
 
   const toggleSaveTrail = (trail, e) => {
     e.stopPropagation();
-    const isSaved = savedTrails.some(t => t.id === trail.id);
+    const isSaved = savedTrailIds.includes(trail.id);
     
     let newSaved;
     if (isSaved) {
-      newSaved = savedTrails.filter(t => t.id !== trail.id);
+      newSaved = savedTrailIds.filter(id => id !== trail.id);
     } else {
-      newSaved = [...savedTrails, trail];
+      newSaved = [...savedTrailIds, trail.id];
     }
     
-    setSavedTrails(newSaved);
+    setSavedTrailIds(newSaved);
     localStorage.setItem('savedTrails', JSON.stringify(newSaved));
   };
 
   const isTrailSaved = (trailId) => {
-    return savedTrails.some(t => t.id === trailId);
+    return savedTrailIds.includes(trailId);
   };
 
   const allTags = ['alpine lakes', 'panoramic views', 'forests', 'family friendly', 'loop trail', 'cultural routes'];
