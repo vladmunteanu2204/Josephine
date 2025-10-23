@@ -24,7 +24,7 @@ function SavedTrails({ onNavigate }) {
       // Fetch full trail details for saved trails
       const API_URL = `${window.location.protocol}//${window.location.hostname}:8000`;
       const response = await axios.get(`${API_URL}/api/trails`);
-      const allTrails = response.data;
+      const allTrails = response.data.trails || response.data;
       
       const savedTrailData = allTrails.filter(trail => saved.includes(trail.id));
       setSavedTrails(savedTrailData);
