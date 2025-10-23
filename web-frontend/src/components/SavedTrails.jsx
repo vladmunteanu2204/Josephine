@@ -119,7 +119,7 @@ function SavedTrails({ onNavigate }) {
                       className="difficulty-badge"
                       style={{ backgroundColor: getDifficultyColor(trail.difficulty) }}
                     >
-                      {t(`catalog.difficulty.${trail.difficulty?.toLowerCase()}`)}
+                      {trail.difficulty?.charAt(0).toUpperCase() + trail.difficulty?.slice(1)}
                     </div>
                   </div>
 

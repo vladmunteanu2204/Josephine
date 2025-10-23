@@ -167,12 +167,17 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.8);
 }
 
 .stat-icon {
-  font-size: 1rem;
+  font-size: 0.9rem;
+}
+
+.stat-value {
+  font-size: 0.85rem;
+  font-weight: 500;
 }
 
 .card-rating {
