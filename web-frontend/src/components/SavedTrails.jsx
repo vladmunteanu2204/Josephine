@@ -132,15 +132,15 @@ function SavedTrails({ onNavigate }) {
                     <div className="card-stats">
                       <div className="stat">
                         <span className="stat-icon">📏</span>
-                        <span className="stat-value">{trail.distance} km</span>
+                        <span className="stat-value">{trail.distance_km} km</span>
                       </div>
                       <div className="stat">
                         <span className="stat-icon">⏱️</span>
-                        <span className="stat-value">{trail.duration}</span>
+                        <span className="stat-value">{trail.duration_hours}h</span>
                       </div>
                       <div className="stat">
                         <span className="stat-icon">⛰️</span>
-                        <span className="stat-value">{trail.elevation_gain}m</span>
+                        <span className="stat-value">{trail.elevation_gain_m}m</span>
                       </div>
                     </div>
 
