@@ -17,8 +17,8 @@ function App() {
   };
 
   return (
-    <AuthProvider>
-      <div className="app">
+    <div className="app">
+      <AuthProvider>
         <Header currentView={currentView} setCurrentView={setCurrentView} />
         
         <main className="main-content">
@@ -44,8 +44,8 @@ function App() {
             />
           )}
         </main>
-      </div>
-    </AuthProvider>
+      </AuthProvider>
+    </div>
   );
 }
 

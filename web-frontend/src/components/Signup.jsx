@@ -44,6 +44,10 @@ function Signup({ onClose, switchToLogin }) {
         setError(t('auth.invalidEmail'));
       } else if (error.code === 'auth/weak-password') {
         setError(t('auth.weakPassword'));
+      } else if (error.code === 'auth/too-many-requests') {
+        setError(t('auth.tooManyRequests'));
+      } else if (error.code === 'auth/network-request-failed') {
+        setError(t('auth.networkError'));
       } else {
         setError(t('auth.signupFailed'));
       }
@@ -67,12 +71,12 @@ function Signup({ onClose, switchToLogin }) {
   }
 
   return (
-    <div className="auth-overlay" onClick={onClose}>
+    <div className="auth-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="signup-title">
       <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="auth-close" onClick={onClose}>✕</button>
+        <button className="auth-close" onClick={onClose} aria-label={t('common.close')}>✕</button>
         
         <div className="auth-header">
-          <h2 className="auth-title">{t('auth.signup')}</h2>
+          <h2 id="signup-title" className="auth-title">{t('auth.signup')}</h2>
           <p className="auth-subtitle">{t('auth.signupSubtitle')}</p>
         </div>
 

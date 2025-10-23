@@ -32,6 +32,12 @@ function Login({ onClose, switchToSignup }) {
         setError(t('auth.userNotFound'));
       } else if (error.code === 'auth/wrong-password') {
         setError(t('auth.wrongPassword'));
+      } else if (error.code === 'auth/too-many-requests') {
+        setError(t('auth.tooManyRequests'));
+      } else if (error.code === 'auth/user-disabled') {
+        setError(t('auth.userDisabled'));
+      } else if (error.code === 'auth/network-request-failed') {
+        setError(t('auth.networkError'));
       } else {
         setError(t('auth.loginFailed'));
       }
@@ -55,12 +61,12 @@ function Login({ onClose, switchToSignup }) {
   }
 
   return (
-    <div className="auth-overlay" onClick={onClose}>
+    <div className="auth-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="login-title">
       <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="auth-close" onClick={onClose}>✕</button>
+        <button className="auth-close" onClick={onClose} aria-label={t('common.close')}>✕</button>
         
         <div className="auth-header">
-          <h2 className="auth-title">{t('auth.login')}</h2>
+          <h2 id="login-title" className="auth-title">{t('auth.login')}</h2>
           <p className="auth-subtitle">{t('auth.loginSubtitle')}</p>
         </div>
 

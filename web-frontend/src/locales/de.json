@@ -9,7 +9,8 @@
     "logout": "Abmelden",
     "signup": "Registrieren",
     "profile": "Profil",
-    "myTrails": "Meine Wanderwege"
+    "myTrails": "Meine Wanderwege",
+    "close": "Schließen"
   },
   "nav": {
     "home": "Home",
@@ -191,7 +192,10 @@
     "weakPassword": "Passwort ist zu schwach",
     "loginFailed": "Anmeldung fehlgeschlagen. Bitte erneut versuchen.",
     "signupFailed": "Registrierung fehlgeschlagen. Bitte erneut versuchen.",
-    "googleLoginFailed": "Google-Anmeldung fehlgeschlagen. Bitte erneut versuchen."
+    "googleLoginFailed": "Google-Anmeldung fehlgeschlagen. Bitte erneut versuchen.",
+    "tooManyRequests": "Zu viele Versuche. Bitte später erneut versuchen.",
+    "userDisabled": "Dieses Konto wurde deaktiviert. Bitte kontaktieren Sie den Support.",
+    "networkError": "Netzwerkfehler. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut."
   },
   "subscription": {
     "title": "Wähle Deinen Plan",

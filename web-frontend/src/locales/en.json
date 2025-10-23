@@ -9,7 +9,8 @@
     "logout": "Logout",
     "signup": "Sign Up",
     "profile": "Profile",
-    "myTrails": "My Trails"
+    "myTrails": "My Trails",
+    "close": "Close"
   },
   "nav": {
     "home": "Home",
@@ -191,7 +192,10 @@
     "weakPassword": "Password is too weak",
     "loginFailed": "Login failed. Please try again.",
     "signupFailed": "Signup failed. Please try again.",
-    "googleLoginFailed": "Google sign-in failed. Please try again."
+    "googleLoginFailed": "Google sign-in failed. Please try again.",
+    "tooManyRequests": "Too many attempts. Please try again later.",
+    "userDisabled": "This account has been disabled. Please contact support.",
+    "networkError": "Network error. Please check your connection and try again."
   },
   "subscription": {
     "title": "Choose Your Plan",

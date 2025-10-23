@@ -9,7 +9,8 @@
     "logout": "Esci",
     "signup": "Registrati",
     "profile": "Profilo",
-    "myTrails": "I Miei Sentieri"
+    "myTrails": "I Miei Sentieri",
+    "close": "Chiudi"
   },
   "nav": {
     "home": "Home",
@@ -191,7 +192,10 @@
     "weakPassword": "La password è troppo debole",
     "loginFailed": "Accesso fallito. Riprova.",
     "signupFailed": "Registrazione fallita. Riprova.",
-    "googleLoginFailed": "Accesso Google fallito. Riprova."
+    "googleLoginFailed": "Accesso Google fallito. Riprova.",
+    "tooManyRequests": "Troppi tentativi. Riprova più tardi.",
+    "userDisabled": "Questo account è stato disabilitato. Contatta il supporto.",
+    "networkError": "Errore di rete. Controlla la connessione e riprova."
   },
   "subscription": {
     "title": "Scegli il Tuo Piano",
