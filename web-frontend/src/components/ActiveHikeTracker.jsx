@@ -507,40 +507,25 @@ function ActiveHikeTracker({ trail, onEnd }) {
       </div>
 
       {/* Stats bar - Age of Empires style */}
-      <div className="stats-overlay">
-        {/* Distance */}
-        <div className="stat-item">
-          <span className="stat-icon">🥾</span>
-          <span className="stat-value">
-            {(stats.distance / 1000).toFixed(1)}km
-          </span>
-        </div>
-
-        {/* Elevation */}
-        <div className="stat-item">
-          <span className="stat-icon">⛰️</span>
-          <span className="stat-value">
-            {Math.round(stats.elevation)}m
-          </span>
-        </div>
-
-        {/* Completion */}
-        <span className="completion-badge">
-          {Math.round(Math.min(100, (stats.distance / 1000 / trail.distance_km) * 100))}%
-        </span>
-
-        {/* Duration */}
-        <div className="stat-item">
-          <span className="stat-icon">⏱️</span>
-          <span className="stat-value">
-            {Math.floor(stats.duration / 3600)}:{String(Math.floor((stats.duration % 3600) / 60)).padStart(2, '0')}
-          </span>
-        </div>
-
-        {/* Status */}
-        <span className={`status-badge ${offTrailWarning ? 'off-trail' : 'on-trail'}`}>
-          {offTrailWarning ? '⚠️ Off Trail' : '✓ On Trail'}
-        </span>
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        background: 'red',
+        color: 'white',
+        padding: '20px',
+        fontSize: '24px',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        zIndex: 999999,
+        border: '5px solid yellow'
+      }}>
+        🥾 {(stats.distance / 1000).toFixed(1)}km | 
+        ⛰️ {Math.round(stats.elevation)}m | 
+        {Math.round(Math.min(100, (stats.distance / 1000 / trail.distance_km) * 100))}% | 
+        ⏱️ {Math.floor(stats.duration / 3600)}:{String(Math.floor((stats.duration % 3600) / 60)).padStart(2, '0')} | 
+        {offTrailWarning ? '⚠️ OFF' : '✓ ON'}
       </div>
 
       {/* Controls */}
