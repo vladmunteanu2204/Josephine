@@ -67,20 +67,19 @@
 
 .stats-overlay {
   position: fixed;
-  top: env(safe-area-inset-top, 0px);
+  top: 0;
   left: 0;
   right: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  padding: 0.5rem 1rem;
-  padding-top: calc(0.5rem + env(safe-area-inset-top, 0px));
-  background: rgba(10, 10, 10, 0.92);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
-  z-index: 10;
+  padding: max(0.5rem, env(safe-area-inset-top, 0px)) 1rem 0.5rem 1rem;
+  background: rgba(10, 10, 10, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+  z-index: 10000;
   transition: opacity 0.3s ease;
 }
 
@@ -133,7 +132,7 @@
   flex-wrap: wrap;
   justify-content: center;
   max-width: 90%;
-  z-index: 10;
+  z-index: 10000;
 }
 
 .control-btn {
