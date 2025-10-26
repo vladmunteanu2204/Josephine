@@ -20,13 +20,11 @@ function WeatherWidget({ lat, lon, difficulty = 'moderate' }) {
 
   const fetchWeather = async () => {
     try {
-      const API_URL = window.location.hostname.includes('replit.dev')
-        ? `https://${window.location.hostname}`
-        : 'http://localhost:8000';
+      const url = `/api/weather/suitability?lat=${lat}&lon=${lon}&difficulty=${difficulty}`;
       
-      console.log('Fetching weather from:', `${API_URL}/api/weather/suitability?lat=${lat}&lon=${lon}&difficulty=${difficulty}`);
+      console.log('Fetching weather from:', url);
       
-      const response = await fetch(`${API_URL}/api/weather/suitability?lat=${lat}&lon=${lon}&difficulty=${difficulty}`);
+      const response = await fetch(url);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
