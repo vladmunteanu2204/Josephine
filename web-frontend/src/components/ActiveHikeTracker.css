@@ -74,38 +74,39 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  padding: 1rem;
-  background: rgba(212, 165, 116, 0.95);
-  border-bottom: 2px solid #d4a574;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(180deg, rgba(24, 51, 44, 0.95) 0%, rgba(18, 40, 35, 0.92) 100%);
+  border-bottom: 1px solid rgba(212, 165, 116, 0.3);
   backdrop-filter: blur(12px);
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
   z-index: 10000;
-  min-height: 50px;
 }
 
 .stats-overlay:hover {
-  background: rgba(10, 10, 10, 0.95);
+  background: linear-gradient(180deg, rgba(24, 51, 44, 0.98) 0%, rgba(18, 40, 35, 0.95) 100%);
 }
 
 .stat-item {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.4rem 0.75rem;
-  background: rgba(255, 255, 255, 0.05);
+  padding: 0.45rem 0.85rem;
+  background: rgba(10, 10, 10, 0.4);
+  border: 1px solid rgba(212, 165, 116, 0.2);
   border-radius: 8px;
   white-space: nowrap;
 }
 
 .stat-icon {
-  font-size: 1.1rem;
-  opacity: 0.9;
+  font-size: 1.15rem;
+  opacity: 1;
 }
 
 .stat-value {
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 700;
   color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .stat-value.warning {
