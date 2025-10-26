@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import Map, { Source, Layer, Marker } from 'react-map-gl';
+import Map, { Source, Layer, Marker, NavigationControl } from 'react-map-gl';
 import SafetyDisclaimerModal from './SafetyDisclaimerModal';
 import './ActiveHikeTracker.css';
 
@@ -415,6 +415,9 @@ function ActiveHikeTracker({ trail, onEnd }) {
           style={{ width: '100%', height: '100%' }}
           mapStyle="mapbox://styles/mapbox/outdoors-v12"
         >
+          {/* Navigation controls - positioned top-left to avoid stats panel */}
+          <NavigationControl position="top-left" showCompass={true} showZoom={true} />
+
           {/* Trail route - highlighted when tracking */}
           {trailRoute && (
             <Source id="route" type="geojson" data={trailRoute}>
