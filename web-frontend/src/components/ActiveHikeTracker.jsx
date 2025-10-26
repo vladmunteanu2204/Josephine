@@ -33,6 +33,15 @@ function ActiveHikeTracker({ trail, onEnd }) {
   const wakeLockRef = useRef(null);
   const intervalRef = useRef(null);
 
+  // Convert coordinates to GeoJSON route if needed
+  const trailRoute = trail.route || (trail.coordinates ? {
+    type: 'Feature',
+    geometry: {
+      type: 'LineString',
+      coordinates: trail.coordinates
+    }
+  } : null);
+
   // Request wake lock to prevent screen sleep
   const requestWakeLock = async () => {
     try {
@@ -205,8 +214,8 @@ function ActiveHikeTracker({ trail, onEnd }) {
       }
 
       // Check if off trail
-      if (trail.route?.coordinates) {
-        const distToTrail = distanceToTrail(newPoint, trail.route.coordinates);
+      if (trail.coordinates || trailRoute?.geometry?.coordinates) {
+        const distToTrail = distanceToTrail(newPoint, trail.coordinates || trailRoute.geometry.coordinates);
         if (distToTrail > OFF_TRAIL_DISTANCE) {
           if (!offTrailWarning) {
             sendNotification(
@@ -399,16 +408,16 @@ function ActiveHikeTracker({ trail, onEnd }) {
         <Map
           mapboxAccessToken={MAPBOX_TOKEN}
           initialViewState={{
-            longitude: trail.route?.coordinates[0][0] || currentPosition?.lon || 11.35,
-            latitude: trail.route?.coordinates[0][1] || currentPosition?.lat || 46.49,
+            longitude: trailRoute?.geometry?.coordinates[0][0] || currentPosition?.lon || 11.35,
+            latitude: trailRoute?.geometry?.coordinates[0][1] || currentPosition?.lat || 46.49,
             zoom: 13
           }}
           style={{ width: '100%', height: '100%' }}
           mapStyle="mapbox://styles/mapbox/outdoors-v12"
         >
           {/* Trail route - highlighted when tracking */}
-          {trail.route && (
-            <Source id="route" type="geojson" data={trail.route}>
+          {trailRoute && (
+            <Source id="route" type="geojson" data={trailRoute}>
               <Layer
                 id="route-line"
                 type="line"
