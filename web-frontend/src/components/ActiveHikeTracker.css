@@ -471,8 +471,8 @@
 @media (max-width: 480px) {
   .stats-overlay {
     width: min(92vw, 280px);
-    max-height: calc(100vh - 12rem);
-    top: max(3.5rem, env(safe-area-inset-top, 0px) + 3rem);
+    max-height: calc(100vh - 20rem);
+    top: max(10rem, env(safe-area-inset-top, 0px) + 9.5rem);
     right: max(0.5rem, env(safe-area-inset-right, 0px) + 0.25rem);
     gap: 0.4rem;
     padding: 0.3rem;
