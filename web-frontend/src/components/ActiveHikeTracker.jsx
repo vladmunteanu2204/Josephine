@@ -107,11 +107,37 @@ function ActiveHikeTracker({ trail, onEnd }) {
     return minDistance;
   };
 
+  // Find next POI and distance to it
+  const getNextPOI = () => {
+    const pois = trail.points_of_interest || trail.pois;
+    if (!pois || !currentPosition) return null;
+
+    let nearestPOI = null;
+    let minDistance = Infinity;
+
+    pois.forEach((poi) => {
+      const distance = calculateDistance(
+        currentPosition.lat,
+        currentPosition.lon,
+        poi.coordinates[1],
+        poi.coordinates[0]
+      );
+
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestPOI = { ...poi, distance };
+      }
+    });
+
+    return nearestPOI;
+  };
+
   // Check POI proximity and send alerts
   const checkPOIProximity = (position) => {
-    if (!trail.points_of_interest) return;
+    const pois = trail.points_of_interest || trail.pois;
+    if (!pois) return;
 
-    trail.points_of_interest.forEach((poi, index) => {
+    pois.forEach((poi, index) => {
       const distance = calculateDistance(
         position.latitude,
         position.longitude,
@@ -380,18 +406,30 @@ function ActiveHikeTracker({ trail, onEnd }) {
           style={{ width: '100%', height: '100%' }}
           mapStyle="mapbox://styles/mapbox/outdoors-v12"
         >
-          {/* Trail route */}
+          {/* Trail route - highlighted when tracking */}
           {trail.route && (
             <Source id="route" type="geojson" data={trail.route}>
               <Layer
                 id="route-line"
                 type="line"
                 paint={{
-                  'line-color': '#3b82f6',
-                  'line-width': 4,
-                  'line-opacity': 0.8
+                  'line-color': isTracking ? '#60a5fa' : '#3b82f6',
+                  'line-width': isTracking ? 6 : 4,
+                  'line-opacity': isTracking ? 1 : 0.8
                 }}
               />
+              {isTracking && (
+                <Layer
+                  id="route-line-glow"
+                  type="line"
+                  paint={{
+                    'line-color': '#60a5fa',
+                    'line-width': 12,
+                    'line-opacity': 0.3,
+                    'line-blur': 4
+                  }}
+                />
+              )}
             </Source>
           )}
 
@@ -436,43 +474,70 @@ function ActiveHikeTracker({ trail, onEnd }) {
         </Map>
       </div>
 
-      {/* Stats overlay */}
+      {/* Stats overlay with progress */}
       <div className="stats-overlay">
-        <div className="stat-card">
-          <span className="stat-icon">⏱️</span>
-          <div className="stat-content">
-            <div className="stat-label">Duration</div>
-            <div className="stat-value">
-              {Math.floor(stats.duration / 3600)}h {Math.floor((stats.duration % 3600) / 60)}m
+        {/* Progress Panel */}
+        <div className="progress-panel">
+          <div className="progress-item">
+            <div className="progress-header">
+              <span className="progress-icon">🥾</span>
+              <span className="progress-label">Distance</span>
+              <span className="progress-values">
+                {(stats.distance / 1000).toFixed(2)} / {trail.distance_km} km
+              </span>
+            </div>
+            <div className="progress-bar-container">
+              <div 
+                className="progress-bar"
+                style={{ width: `${Math.min(100, (stats.distance / 1000 / trail.distance_km) * 100)}%` }}
+              ></div>
             </div>
           </div>
-        </div>
 
-        <div className="stat-card">
-          <span className="stat-icon">🥾</span>
-          <div className="stat-content">
-            <div className="stat-label">Distance</div>
-            <div className="stat-value">{(stats.distance / 1000).toFixed(2)} km</div>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <span className="stat-icon">⛰️</span>
-          <div className="stat-content">
-            <div className="stat-label">Elevation</div>
-            <div className="stat-value">{Math.round(stats.elevation)} m</div>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <span className="stat-icon">📍</span>
-          <div className="stat-content">
-            <div className="stat-label">Status</div>
-            <div className={`stat-value ${offTrailWarning ? 'warning' : 'success'}`}>
-              {offTrailWarning ? 'Off Trail!' : 'On Trail'}
+          <div className="progress-item">
+            <div className="progress-header">
+              <span className="progress-icon">⛰️</span>
+              <span className="progress-label">Elevation</span>
+              <span className="progress-values">
+                {Math.round(stats.elevation)} / {trail.elevation_gain_m} m
+              </span>
+            </div>
+            <div className="progress-bar-container">
+              <div 
+                className="progress-bar"
+                style={{ width: `${Math.min(100, (stats.elevation / trail.elevation_gain_m) * 100)}%` }}
+              ></div>
             </div>
           </div>
+
+          <div className="progress-summary">
+            <span className="completion-badge">
+              {Math.round(Math.min(100, (stats.distance / 1000 / trail.distance_km) * 100))}% Complete
+            </span>
+            <span className="duration-text">
+              ⏱️ {Math.floor(stats.duration / 3600)}h {Math.floor((stats.duration % 3600) / 60)}m
+            </span>
+            <span className={`status-badge ${offTrailWarning ? 'off-trail' : 'on-trail'}`}>
+              {offTrailWarning ? '⚠️ Off Trail' : '✓ On Trail'}
+            </span>
+          </div>
         </div>
+
+        {/* Next Checkpoint */}
+        {getNextPOI() && (
+          <div className="next-checkpoint">
+            <span className="checkpoint-icon">📍</span>
+            <div className="checkpoint-content">
+              <div className="checkpoint-name">{getNextPOI().name}</div>
+              <div className="checkpoint-distance">
+                {getNextPOI().distance < 1000 
+                  ? `${Math.round(getNextPOI().distance)}m ahead`
+                  : `${(getNextPOI().distance / 1000).toFixed(1)}km ahead`
+                }
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Controls */}
