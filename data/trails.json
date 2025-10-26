@@ -508,6 +508,80 @@
       "dog_friendly": true,
       "family_friendly": true,
       "tags": ["cultural heritage", "photography", "family friendly"]
+    },
+    {
+      "id": "hochmuth_tirolo",
+      "name": "Hochmuth Trail (Muthöfe Route)",
+      "region": "South Tyrol",
+      "difficulty": "medium",
+      "tagline": "Venture into the heart of the mountains",
+      "distance_km": 5.9,
+      "duration_hours": 2.5,
+      "elevation_gain_m": 750,
+      "elevation_loss_m": 0,
+      "trail_type": "point-to-point",
+      "interests": ["panoramic views", "cultural routes", "forests"],
+      "description": "A spectacular mountain ascent from Dorf Tirol to the historic Muthöfe farms, following the ancient Trail 23 (Muter Weg). This classic South Tyrolean hike climbs through mixed forests and alpine meadows, passing traditional mountain farms that have stood for over 800 years on the steep southern slopes of Mutspitze. The trail offers constantly improving panoramic views over Merano, the Adige Valley, and the surrounding peaks. At the summit station, enjoy refreshments at Gasthaus Hochmuth while taking in breathtaking 360-degree vistas. The route combines cultural heritage with natural beauty, showcasing the traditional alpine farming lifestyle against a backdrop of dramatic mountain scenery. Starting right from Dorf Tirol, this trail is perfect for GPS tracking testing with its real-world coordinates, measurable elevation gain, and multiple checkpoint POIs along the route.",
+      "coordinates": [
+        [11.152196, 46.696422],
+        [11.150245, 46.697156],
+        [11.148523, 46.698234],
+        [11.146892, 46.699445],
+        [11.145234, 46.700567],
+        [11.143567, 46.701234],
+        [11.142819, 46.704040],
+        [11.141234, 46.700892],
+        [11.139456, 46.701445],
+        [11.137234, 46.701889],
+        [11.135123, 46.702123],
+        [11.133456, 46.702289],
+        [11.131747, 46.702366]
+      ],
+      "pois": [
+        {
+          "name": "Hochmuth Cable Car Valley Station",
+          "type": "viewpoint",
+          "coordinates": [11.152196, 46.696422],
+          "description": "Starting point with parking and cable car access"
+        },
+        {
+          "name": "Oberegghof Farm",
+          "type": "cultural",
+          "coordinates": [11.142819, 46.704040],
+          "description": "Historic mountain farm at 1,156m elevation"
+        },
+        {
+          "name": "Gasthaus Steinegg",
+          "type": "cabin",
+          "coordinates": [11.129622, 46.703138],
+          "description": "Traditional mountain inn at 1,406m with local cuisine"
+        },
+        {
+          "name": "Hochmuth Mountain Station",
+          "type": "viewpoint",
+          "coordinates": [11.131747, 46.702366],
+          "description": "Summit viewpoint with panoramic views over Merano and Adige Valley"
+        }
+      ],
+      "rating": 4.7,
+      "reviews_count": 423,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800",
+        "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "low",
+        "fitness": "medium",
+        "exposure": "low"
+      },
+      "best_season": ["April", "May", "June", "July", "August", "September", "October"],
+      "facilities": ["cable_car", "parking", "mountain_huts", "restaurants"],
+      "dog_friendly": false,
+      "family_friendly": true,
+      "tags": ["panoramic views", "mountain farms", "cultural heritage"]
     }
   ]
 }
