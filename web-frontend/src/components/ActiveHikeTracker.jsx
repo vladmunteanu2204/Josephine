@@ -512,20 +512,51 @@ function ActiveHikeTracker({ trail, onEnd }) {
         top: 0,
         left: 0,
         right: 0,
-        background: 'red',
-        color: 'white',
-        padding: '20px',
-        fontSize: '24px',
-        fontWeight: 'bold',
-        textAlign: 'center',
-        zIndex: 999999,
-        border: '5px solid yellow'
+        background: 'linear-gradient(180deg, rgba(24, 51, 44, 0.98) 0%, rgba(18, 40, 35, 0.95) 100%)',
+        backdropFilter: 'blur(12px)',
+        borderBottom: '2px solid rgba(212, 165, 116, 0.5)',
+        padding: '12px 16px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '16px',
+        flexWrap: 'wrap',
+        zIndex: 10000,
+        boxShadow: '0 2px 16px rgba(0, 0, 0, 0.6)'
       }}>
-        🥾 {(stats.distance / 1000).toFixed(1)}km | 
-        ⛰️ {Math.round(stats.elevation)}m | 
-        {Math.round(Math.min(100, (stats.distance / 1000 / trail.distance_km) * 100))}% | 
-        ⏱️ {Math.floor(stats.duration / 3600)}:{String(Math.floor((stats.duration % 3600) / 60)).padStart(2, '0')} | 
-        {offTrailWarning ? '⚠️ OFF' : '✓ ON'}
+        {/* Distance */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: 'rgba(10, 10, 10, 0.6)', borderRadius: '8px', border: '1px solid rgba(212, 165, 116, 0.3)' }}>
+          <span style={{ fontSize: '20px' }}>🥾</span>
+          <span style={{ fontSize: '16px', fontWeight: '700', color: '#fff' }}>
+            {(stats.distance / 1000).toFixed(1)}km
+          </span>
+        </div>
+
+        {/* Elevation */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: 'rgba(10, 10, 10, 0.6)', borderRadius: '8px', border: '1px solid rgba(212, 165, 116, 0.3)' }}>
+          <span style={{ fontSize: '20px' }}>⛰️</span>
+          <span style={{ fontSize: '16px', fontWeight: '700', color: '#fff' }}>
+            {Math.round(stats.elevation)}m
+          </span>
+        </div>
+
+        {/* Completion */}
+        <div style={{ padding: '8px 16px', background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)', borderRadius: '8px', fontSize: '16px', fontWeight: '700', color: '#fff', boxShadow: '0 2px 8px rgba(96, 165, 250, 0.4)' }}>
+          {Math.round(Math.min(100, (stats.distance / 1000 / trail.distance_km) * 100))}%
+        </div>
+
+        {/* Duration */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: 'rgba(10, 10, 10, 0.6)', borderRadius: '8px', border: '1px solid rgba(212, 165, 116, 0.3)' }}>
+          <span style={{ fontSize: '20px' }}>⏱️</span>
+          <span style={{ fontSize: '16px', fontWeight: '700', color: '#fff' }}>
+            {Math.floor(stats.duration / 3600)}:{String(Math.floor((stats.duration % 3600) / 60)).padStart(2, '0')}
+          </span>
+        </div>
+
+        {/* Status */}
+        <div style={{ padding: '8px 16px', background: offTrailWarning ? 'rgba(239, 68, 68, 0.9)' : 'rgba(74, 222, 128, 0.9)', borderRadius: '8px', fontSize: '16px', fontWeight: '700', color: '#fff', border: '1px solid rgba(255, 255, 255, 0.3)' }}>
+          {offTrailWarning ? '⚠️ Off Trail' : '✓ On Trail'}
+        </div>
       </div>
 
       {/* Controls */}
