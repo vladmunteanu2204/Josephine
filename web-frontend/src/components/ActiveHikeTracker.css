@@ -65,46 +65,33 @@
   box-shadow: 0 2px 12px rgba(239, 68, 68, 0.6), 0 0 0 2px rgba(239, 68, 68, 0.3);
 }
 
-.hike-stats-bar {
+.floating-stats-panel {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: #18332c;
-  padding: 12px;
+  top: 80px;
+  right: 16px;
+  background: rgba(24, 51, 44, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 16px;
+  border-radius: 12px;
+  border: 2px solid #d4a574;
+  z-index: 5000;
+  min-width: 140px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.stat-row {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
   gap: 12px;
-  flex-wrap: wrap;
-  z-index: 10000;
-  border-bottom: 2px solid #d4a574;
-}
-
-.hike-stat {
-  padding: 8px 16px;
-  background: #0a0a0a;
+  padding: 6px 0;
   color: white;
-  font-size: 16px;
-  font-weight: 700;
-  border-radius: 6px;
-  border: 1px solid #d4a574;
-  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 600;
 }
 
-.hike-stat-blue {
-  background: #3b82f6;
-  border-color: #60a5fa;
-}
-
-.hike-stat-green {
-  background: #22c55e;
-  border-color: #4ade80;
-}
-
-.hike-stat-red {
-  background: #ef4444;
-  border-color: #f87171;
+.stat-row:not(:last-child) {
+  border-bottom: 1px solid rgba(212, 165, 116, 0.2);
 }
 
 .stat-value.success {

@@ -506,15 +506,28 @@ function ActiveHikeTracker({ trail, onEnd }) {
         </Map>
       </div>
 
-      {/* Stats Bar */}
-      <div className="hike-stats-bar">
-        <span className="hike-stat">🥾 {(stats.distance / 1000).toFixed(1)}km</span>
-        <span className="hike-stat">⛰️ {Math.round(stats.elevation)}m</span>
-        <span className="hike-stat hike-stat-blue">{Math.round(Math.min(100, (stats.distance / 1000 / trail.distance_km) * 100))}%</span>
-        <span className="hike-stat">⏱️ {Math.floor(stats.duration / 3600)}:{String(Math.floor((stats.duration % 3600) / 60)).padStart(2, '0')}</span>
-        <span className={offTrailWarning ? 'hike-stat hike-stat-red' : 'hike-stat hike-stat-green'}>
-          {offTrailWarning ? '⚠️ OFF' : '✓ ON'}
-        </span>
+      {/* Floating Stats Panel */}
+      <div className="floating-stats-panel">
+        <div className="stat-row">
+          <span>🥾</span>
+          <span>{(stats.distance / 1000).toFixed(1)}km</span>
+        </div>
+        <div className="stat-row">
+          <span>⛰️</span>
+          <span>{Math.round(stats.elevation)}m</span>
+        </div>
+        <div className="stat-row">
+          <span>📊</span>
+          <span>{Math.round(Math.min(100, (stats.distance / 1000 / trail.distance_km) * 100))}%</span>
+        </div>
+        <div className="stat-row">
+          <span>⏱️</span>
+          <span>{Math.floor(stats.duration / 3600)}:{String(Math.floor((stats.duration % 3600) / 60)).padStart(2, '0')}</span>
+        </div>
+        <div className="stat-row" style={{color: offTrailWarning ? '#ef4444' : '#4ade80'}}>
+          <span>{offTrailWarning ? '⚠️' : '✓'}</span>
+          <span>{offTrailWarning ? 'OFF' : 'ON'}</span>
+        </div>
       </div>
 
       {/* Controls */}
