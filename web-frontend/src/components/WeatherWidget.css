@@ -9,9 +9,22 @@
 
 .weather-widget.loading {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 200px;
+}
+
+.weather-widget.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+}
+
+.weather-error-message {
+  text-align: center;
+  padding: 2rem;
 }
 
 .weather-loader {

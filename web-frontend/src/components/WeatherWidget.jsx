@@ -6,11 +6,15 @@ function WeatherWidget({ lat, lon, difficulty = 'moderate' }) {
   const { t } = useTranslation();
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [showForecast, setShowForecast] = useState(false);
 
   useEffect(() => {
     if (lat && lon) {
       fetchWeather();
+    } else {
+      setError('No coordinates provided');
+      setLoading(false);
     }
   }, [lat, lon]);
 
@@ -19,12 +23,27 @@ function WeatherWidget({ lat, lon, difficulty = 'moderate' }) {
       const API_URL = window.location.hostname.includes('replit.dev')
         ? `https://${window.location.hostname}`
         : 'http://localhost:8000';
+      
+      console.log('Fetching weather from:', `${API_URL}/api/weather/suitability?lat=${lat}&lon=${lon}&difficulty=${difficulty}`);
+      
       const response = await fetch(`${API_URL}/api/weather/suitability?lat=${lat}&lon=${lon}&difficulty=${difficulty}`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
+      console.log('Weather data received:', data);
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      
       setWeatherData(data);
       setLoading(false);
-    } catch (error) {
-      console.error('Weather fetch error:', error);
+    } catch (err) {
+      console.error('Weather fetch error:', err);
+      setError(err.message || 'Failed to load weather data');
       setLoading(false);
     }
   };
@@ -33,12 +52,31 @@ function WeatherWidget({ lat, lon, difficulty = 'moderate' }) {
     return (
       <div className="weather-widget loading">
         <div className="weather-loader"></div>
+        <p style={{marginTop: '1rem', color: 'rgba(255, 255, 255, 0.7)'}}>Loading weather data...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="weather-widget error">
+        <div className="weather-error-message">
+          <span style={{fontSize: '2rem'}}>⚠️</span>
+          <p style={{margin: '0.5rem 0', color: '#fbbf24'}}>Unable to load weather data</p>
+          <p style={{margin: 0, fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.6)'}}>{error}</p>
+        </div>
       </div>
     );
   }
 
   if (!weatherData || !weatherData.current) {
-    return null;
+    return (
+      <div className="weather-widget error">
+        <div className="weather-error-message">
+          <p style={{color: 'rgba(255, 255, 255, 0.7)'}}>No weather data available</p>
+        </div>
+      </div>
+    );
   }
 
   const { current, forecast, alerts, suitability } = weatherData;
