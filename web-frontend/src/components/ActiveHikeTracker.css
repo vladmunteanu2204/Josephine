@@ -67,75 +67,44 @@
 
 .stats-overlay {
   position: fixed;
-  top: max(4.5rem, env(safe-area-inset-top, 0px) + 4rem);
-  right: max(1rem, env(safe-area-inset-right, 0px) + 0.5rem);
+  top: env(safe-area-inset-top, 0px);
+  left: 0;
+  right: 0;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 0.75rem;
-  align-items: stretch;
-  width: clamp(280px, 28vw, 380px);
-  max-height: calc(100vh - 16rem);
-  overflow-y: auto;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
+  padding-top: calc(0.5rem + env(safe-area-inset-top, 0px));
+  background: rgba(10, 10, 10, 0.92);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
   z-index: 10;
-  opacity: 0.92;
   transition: opacity 0.3s ease;
 }
 
-.stats-overlay:hover,
-.stats-overlay:focus-within {
-  opacity: 1;
+.stats-overlay:hover {
+  background: rgba(10, 10, 10, 0.95);
 }
 
-/* Custom scrollbar for stats overlay */
-.stats-overlay::-webkit-scrollbar {
-  width: 6px;
-}
-
-.stats-overlay::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 3px;
-}
-
-.stats-overlay::-webkit-scrollbar-thumb {
-  background: rgba(212, 165, 116, 0.5);
-  border-radius: 3px;
-}
-
-.stats-overlay::-webkit-scrollbar-thumb:hover {
-  background: rgba(212, 165, 116, 0.7);
-}
-
-.stat-card {
+.stat-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background: rgba(10, 10, 10, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  white-space: nowrap;
 }
 
 .stat-icon {
-  font-size: 1.25rem;
-}
-
-.stat-content {
-  display: flex;
-  flex-direction: column;
-}
-
-.stat-label {
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.6);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-size: 1.1rem;
+  opacity: 0.9;
 }
 
 .stat-value {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #fff;
 }
@@ -168,14 +137,14 @@
 }
 
 .control-btn {
-  padding: 0.875rem 1.5rem;
+  padding: 0.6rem 1rem;
   border: none;
-  border-radius: 12px;
-  font-size: 0.95rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
 }
 
 .pause-btn {
@@ -233,96 +202,22 @@
   75% { transform: translate(-50%, -50%) rotate(2deg); }
 }
 
-/* Progress Panel */
-.progress-panel {
-  width: 100%;
-  padding: 1rem;
-  background: rgba(10, 10, 10, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-}
-
-.progress-item {
-  margin-bottom: 0.75rem;
-}
-
-.progress-item:last-of-type {
-  margin-bottom: 1rem;
-}
-
-.progress-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.progress-icon {
-  font-size: 1.1rem;
-}
-
-.progress-label {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
-  font-weight: 500;
-}
-
-.progress-values {
-  margin-left: auto;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #60a5fa;
-}
-
-.progress-bar-container {
-  width: 100%;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.progress-bar {
-  height: 100%;
-  background: linear-gradient(90deg, #60a5fa 0%, #3b82f6 100%);
-  border-radius: 4px;
-  transition: width 0.5s ease;
-  box-shadow: 0 0 8px rgba(96, 165, 250, 0.5);
-}
-
-.progress-summary {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  align-items: center;
-  padding-top: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
+/* Completion badge in stats bar */
 .completion-badge {
-  padding: 0.4rem 0.75rem;
+  padding: 0.4rem 0.65rem;
   background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
   color: #fff;
   font-size: 0.85rem;
   font-weight: 700;
-  border-radius: 8px;
+  border-radius: 6px;
   box-shadow: 0 2px 8px rgba(96, 165, 250, 0.3);
 }
 
-.duration-text {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.8);
-  font-weight: 500;
-}
-
 .status-badge {
-  padding: 0.4rem 0.75rem;
+  padding: 0.4rem 0.65rem;
   font-size: 0.85rem;
   font-weight: 600;
-  border-radius: 8px;
-  margin-left: auto;
+  border-radius: 6px;
 }
 
 .status-badge.on-trail {
@@ -338,196 +233,76 @@
   animation: blink 1s infinite;
 }
 
-/* Next Checkpoint */
-.next-checkpoint {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem 1rem;
-  background: rgba(212, 165, 116, 0.15);
-  border: 1px solid rgba(212, 165, 116, 0.3);
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  width: 100%;
-}
-
-.checkpoint-icon {
-  font-size: 1.5rem;
-  filter: drop-shadow(0 2px 4px rgba(212, 165, 116, 0.5));
-}
-
-.checkpoint-content {
-  flex: 1;
-}
-
-.checkpoint-name {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #d4a574;
-  margin-bottom: 0.15rem;
-}
-
-.checkpoint-distance {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.7);
-}
-
 @media (max-width: 768px) {
   .stats-overlay {
-    width: clamp(260px, 85vw, 320px);
-    max-height: calc(100vh - 14rem);
-    top: max(4rem, env(safe-area-inset-top, 0px) + 3.5rem);
-    right: max(0.75rem, env(safe-area-inset-right, 0px) + 0.5rem);
     gap: 0.5rem;
-    padding: 0.4rem;
+    padding: 0.4rem 0.75rem;
+    flex-wrap: wrap;
   }
 
-  .progress-panel {
-    padding: 0.75rem;
-  }
-
-  .progress-header {
-    gap: 0.4rem;
-  }
-
-  .progress-icon {
-    font-size: 1rem;
-  }
-
-  .progress-label {
-    font-size: 0.75rem;
-  }
-
-  .progress-values {
-    font-size: 0.8rem;
-  }
-
-  .progress-bar-container {
-    height: 6px;
-  }
-
-  .progress-summary {
-    gap: 0.5rem;
-  }
-
-  .completion-badge,
-  .duration-text,
-  .status-badge {
-    font-size: 0.75rem;
-    padding: 0.3rem 0.6rem;
-  }
-
-  .next-checkpoint {
-    padding: 0.75rem;
-    gap: 0.6rem;
-  }
-
-  .checkpoint-icon {
-    font-size: 1.25rem;
-  }
-
-  .checkpoint-name {
-    font-size: 0.85rem;
-  }
-
-  .checkpoint-distance {
-    font-size: 0.75rem;
-  }
-
-  .stat-card {
-    padding: 0.5rem 0.75rem;
+  .stat-item {
+    padding: 0.35rem 0.6rem;
+    gap: 0.35rem;
   }
 
   .stat-icon {
     font-size: 1rem;
   }
 
-  .stat-label {
-    font-size: 0.65rem;
+  .stat-value {
+    font-size: 0.8rem;
   }
 
-  .stat-value {
-    font-size: 0.85rem;
+  .completion-badge,
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.55rem;
   }
 
   .tracker-controls {
-    bottom: 1rem;
+    bottom: 0.75rem;
     gap: 0.5rem;
   }
 
   .control-btn {
-    padding: 0.75rem 1.25rem;
-    font-size: 0.875rem;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.8rem;
   }
 
   .warning-banner {
-    font-size: 1rem;
-    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
+    padding: 1rem 1.25rem;
   }
 }
 
 /* Extra small screens - very compact layout */
 @media (max-width: 480px) {
   .stats-overlay {
-    width: min(92vw, 280px);
-    max-height: calc(100vh - 20rem);
-    top: max(10rem, env(safe-area-inset-top, 0px) + 9.5rem);
-    right: max(0.5rem, env(safe-area-inset-right, 0px) + 0.25rem);
     gap: 0.4rem;
-    padding: 0.3rem;
+    padding: 0.35rem 0.5rem;
   }
 
-  .progress-panel {
-    padding: 0.6rem;
-    border-radius: 12px;
+  .stat-item {
+    padding: 0.3rem 0.5rem;
+    gap: 0.3rem;
   }
 
-  .progress-item {
-    margin-bottom: 0.5rem;
-  }
-
-  .progress-header {
-    gap: 0.35rem;
-  }
-
-  .progress-icon {
+  .stat-icon {
     font-size: 0.9rem;
   }
 
-  .progress-label {
-    font-size: 0.7rem;
-  }
-
-  .progress-values {
+  .stat-value {
     font-size: 0.75rem;
   }
 
-  .progress-bar-container {
-    height: 5px;
-  }
-
   .completion-badge,
-  .duration-text,
   .status-badge {
     font-size: 0.7rem;
-    padding: 0.25rem 0.5rem;
+    padding: 0.3rem 0.45rem;
   }
 
-  .next-checkpoint {
-    padding: 0.6rem;
-    gap: 0.5rem;
-  }
-
-  .checkpoint-icon {
-    font-size: 1.1rem;
-  }
-
-  .checkpoint-name {
-    font-size: 0.8rem;
-  }
-
-  .checkpoint-distance {
-    font-size: 0.7rem;
+  .control-btn {
+    padding: 0.45rem 0.75rem;
+    font-size: 0.75rem;
   }
 }

@@ -512,70 +512,41 @@ function ActiveHikeTracker({ trail, onEnd }) {
         </Map>
       </div>
 
-      {/* Stats overlay with progress */}
+      {/* Stats bar - Age of Empires style */}
       <div className="stats-overlay">
-        {/* Progress Panel */}
-        <div className="progress-panel">
-          <div className="progress-item">
-            <div className="progress-header">
-              <span className="progress-icon">🥾</span>
-              <span className="progress-label">Distance</span>
-              <span className="progress-values">
-                {(stats.distance / 1000).toFixed(2)} / {trail.distance_km} km
-              </span>
-            </div>
-            <div className="progress-bar-container">
-              <div 
-                className="progress-bar"
-                style={{ width: `${Math.min(100, (stats.distance / 1000 / trail.distance_km) * 100)}%` }}
-              ></div>
-            </div>
-          </div>
-
-          <div className="progress-item">
-            <div className="progress-header">
-              <span className="progress-icon">⛰️</span>
-              <span className="progress-label">Elevation</span>
-              <span className="progress-values">
-                {Math.round(stats.elevation)} / {trail.elevation_gain_m} m
-              </span>
-            </div>
-            <div className="progress-bar-container">
-              <div 
-                className="progress-bar"
-                style={{ width: `${Math.min(100, (stats.elevation / trail.elevation_gain_m) * 100)}%` }}
-              ></div>
-            </div>
-          </div>
-
-          <div className="progress-summary">
-            <span className="completion-badge">
-              {Math.round(Math.min(100, (stats.distance / 1000 / trail.distance_km) * 100))}% Complete
-            </span>
-            <span className="duration-text">
-              ⏱️ {Math.floor(stats.duration / 3600)}h {Math.floor((stats.duration % 3600) / 60)}m
-            </span>
-            <span className={`status-badge ${offTrailWarning ? 'off-trail' : 'on-trail'}`}>
-              {offTrailWarning ? '⚠️ Off Trail' : '✓ On Trail'}
-            </span>
-          </div>
+        {/* Distance */}
+        <div className="stat-item">
+          <span className="stat-icon">🥾</span>
+          <span className="stat-value">
+            {(stats.distance / 1000).toFixed(1)}km
+          </span>
         </div>
 
-        {/* Next Checkpoint */}
-        {getNextPOI() && (
-          <div className="next-checkpoint">
-            <span className="checkpoint-icon">📍</span>
-            <div className="checkpoint-content">
-              <div className="checkpoint-name">{getNextPOI().name}</div>
-              <div className="checkpoint-distance">
-                {getNextPOI().distance < 1000 
-                  ? `${Math.round(getNextPOI().distance)}m ahead`
-                  : `${(getNextPOI().distance / 1000).toFixed(1)}km ahead`
-                }
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Elevation */}
+        <div className="stat-item">
+          <span className="stat-icon">⛰️</span>
+          <span className="stat-value">
+            {Math.round(stats.elevation)}m
+          </span>
+        </div>
+
+        {/* Completion */}
+        <span className="completion-badge">
+          {Math.round(Math.min(100, (stats.distance / 1000 / trail.distance_km) * 100))}%
+        </span>
+
+        {/* Duration */}
+        <div className="stat-item">
+          <span className="stat-icon">⏱️</span>
+          <span className="stat-value">
+            {Math.floor(stats.duration / 3600)}:{String(Math.floor((stats.duration % 3600) / 60)).padStart(2, '0')}
+          </span>
+        </div>
+
+        {/* Status */}
+        <span className={`status-badge ${offTrailWarning ? 'off-trail' : 'on-trail'}`}>
+          {offTrailWarning ? '⚠️ Off Trail' : '✓ On Trail'}
+        </span>
       </div>
 
       {/* Controls */}
