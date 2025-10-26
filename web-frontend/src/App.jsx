@@ -9,6 +9,8 @@ import TrailDetail from './components/TrailDetail';
 import Profile from './components/Profile';
 import SavedTrails from './components/SavedTrails';
 import Settings from './components/Settings';
+import Leaderboards from './components/Leaderboards';
+import HikePlanner from './components/HikePlanner';
 import TermsAndConditions from './components/TermsAndConditions';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import Footer from './components/Footer';
@@ -81,6 +83,14 @@ function App() {
 
           {currentView === 'settings' && (
             <Settings onNavigate={navigate} />
+          )}
+
+          {currentView === 'leaderboards' && (
+            <Leaderboards onNavigate={navigate} />
+          )}
+
+          {currentView === 'planner' && (
+            <HikePlanner onNavigate={navigate} />
           )}
 
           {currentView === 'terms' && (

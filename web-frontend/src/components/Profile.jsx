@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { updateProfile, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
+import { getUserGamificationData, calculateLevel, getXPProgress, getBadgeById, BADGES } from '../utils/gamification';
+import BadgeDisplay from './BadgeDisplay';
 import './Profile.css';
 
 function Profile({ onNavigate }) {
@@ -16,6 +18,12 @@ function Profile({ onNavigate }) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+  const [gamificationData, setGamificationData] = useState(null);
+
+  useEffect(() => {
+    const data = getUserGamificationData();
+    setGamificationData(data);
+  }, []);
 
   const handleUpdateName = async (e) => {
     e.preventDefault();
@@ -244,6 +252,93 @@ function Profile({ onNavigate }) {
             </form>
           )}
         </div>
+
+        {gamificationData && (
+          <>
+            <div className="profile-section">
+              <div className="profile-section-header">
+                <h2>{t('profile.stats', 'Your Stats')}</h2>
+                <button 
+                  onClick={() => onNavigate('leaderboards')} 
+                  className="btn-link"
+                >
+                  {t('profile.viewLeaderboards', 'View Leaderboards')} →
+                </button>
+              </div>
+
+              <div className="gamification-stats">
+                <div className="level-display">
+                  <div className="level-circle">
+                    <div className="level-number">{gamificationData.level}</div>
+                    <div className="level-title">{calculateLevel(gamificationData.xp).title}</div>
+                  </div>
+                  <div className="xp-progress">
+                    <div className="xp-bar-container">
+                      <div 
+                        className="xp-bar-fill" 
+                        style={{ width: `${getXPProgress(gamificationData.xp).percentage}%` }}
+                      ></div>
+                    </div>
+                    <div className="xp-text">
+                      {gamificationData.xp} XP 
+                      {getXPProgress(gamificationData.xp).nextLevel && (
+                        <span> • {getXPProgress(gamificationData.xp).current}/{getXPProgress(gamificationData.xp).required} to Level {getXPProgress(gamificationData.xp).nextLevel.level}</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="stats-grid">
+                  <div className="stat-card">
+                    <div className="stat-icon">🥾</div>
+                    <div className="stat-number">{gamificationData.stats.totalHikes}</div>
+                    <div className="stat-label">{t('profile.totalHikes', 'Total Hikes')}</div>
+                  </div>
+                  <div className="stat-card">
+                    <div className="stat-icon">📏</div>
+                    <div className="stat-number">{gamificationData.stats.totalDistance.toFixed(1)}km</div>
+                    <div className="stat-label">{t('profile.totalDistance', 'Distance')}</div>
+                  </div>
+                  <div className="stat-card">
+                    <div className="stat-icon">⛰️</div>
+                    <div className="stat-number">{Math.round(gamificationData.stats.totalElevation)}m</div>
+                    <div className="stat-label">{t('profile.totalElevation', 'Elevation')}</div>
+                  </div>
+                  <div className="stat-card">
+                    <div className="stat-icon">🏆</div>
+                    <div className="stat-number">{gamificationData.badges.length}</div>
+                    <div className="stat-label">{t('profile.badgesEarned', 'Badges')}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="profile-section">
+              <div className="profile-section-header">
+                <h2>{t('profile.badges', 'Achievements & Badges')}</h2>
+              </div>
+
+              <div className="badges-grid">
+                {Object.values(BADGES).slice(0, 12).map((badge) => (
+                  <BadgeDisplay
+                    key={badge.id}
+                    badge={badge}
+                    earned={gamificationData.badges.includes(badge.id)}
+                    showDetails={true}
+                  />
+                ))}
+              </div>
+
+              {Object.keys(BADGES).length > 12 && (
+                <div className="view-all-badges">
+                  <p className="badges-count">
+                    {gamificationData.badges.length} of {Object.keys(BADGES).length} badges earned
+                  </p>
+                </div>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

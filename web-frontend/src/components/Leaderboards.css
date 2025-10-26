@@ -1,0 +1,267 @@
+.leaderboards-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0a0a0a 0%, #0f1419 100%);
+  padding: 2rem 1rem;
+  padding-bottom: 4rem;
+}
+
+.leaderboards-header {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #d4a574;
+  margin: 1rem 0 0.5rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.user-stats-card {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  background: rgba(24, 51, 44, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 165, 116, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.stats-row:last-child {
+  margin-bottom: 0;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #d4a574;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.leaderboard-tabs {
+  max-width: 1200px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 1rem;
+  background: rgba(24, 51, 44, 0.3);
+  border: 1px solid rgba(212, 165, 116, 0.2);
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab-button:hover {
+  background: rgba(24, 51, 44, 0.5);
+  border-color: rgba(212, 165, 116, 0.4);
+}
+
+.tab-button.active {
+  background: rgba(212, 165, 116, 0.2);
+  border-color: #d4a574;
+  color: #d4a574;
+}
+
+.leaderboard-table {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: rgba(24, 51, 44, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 165, 116, 0.2);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 80px 1fr 80px 100px 80px 100px;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: rgba(24, 51, 44, 0.8);
+  border-bottom: 1px solid rgba(212, 165, 116, 0.3);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 80px 100px 80px 100px;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(212, 165, 116, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s ease;
+}
+
+.table-row:hover {
+  background: rgba(212, 165, 116, 0.05);
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-row.current-user {
+  background: rgba(212, 165, 116, 0.15);
+  border: 1px solid rgba(212, 165, 116, 0.3);
+  border-radius: 8px;
+  margin: 0.5rem;
+}
+
+.col-rank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.medal {
+  font-size: 2rem;
+}
+
+.rank-number {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.col-name {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+}
+
+.you-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.col-level {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.level-badge {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  background: linear-gradient(135deg, #d4a574 0%, #c49463 100%);
+  color: #0a0a0a;
+  font-weight: 700;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(212, 165, 116, 0.3);
+}
+
+.col-xp,
+.col-hikes,
+.col-distance {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.leaderboard-info {
+  max-width: 1200px;
+  margin: 2rem auto 0;
+  padding: 1.5rem;
+  background: rgba(24, 51, 44, 0.3);
+  border: 1px solid rgba(212, 165, 116, 0.2);
+  border-radius: 12px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 1024px) {
+  .table-header,
+  .table-row {
+    grid-template-columns: 60px 1fr 70px 90px 70px 90px;
+    gap: 0.75rem;
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .table-header {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 2rem;
+  }
+  
+  .user-stats-card {
+    padding: 1.5rem 1rem;
+  }
+  
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+  }
+  
+  .table-header,
+  .table-row {
+    grid-template-columns: 50px 1fr 60px;
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+  
+  .col-xp,
+  .col-hikes,
+  .col-distance {
+    display: none;
+  }
+  
+  .medal {
+    font-size: 1.5rem;
+  }
+}

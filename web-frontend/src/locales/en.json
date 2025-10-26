@@ -20,6 +20,7 @@
     "home": "Home",
     "smartRecommendations": "Smart Recommendations",
     "trailCatalog": "Trail Catalog",
+    "hikePlanner": "Hike Planner",
     "login": "Login",
     "profile": "Profile"
   },
@@ -243,7 +244,119 @@
     "updatePassword": "Update Password",
     "passwordUpdated": "Password updated successfully!",
     "passwordChangeFailed": "Failed to change password. Please try again.",
-    "wrongCurrentPassword": "Current password is incorrect"
+    "wrongCurrentPassword": "Current password is incorrect",
+    "stats": "Your Stats",
+    "viewLeaderboards": "View Leaderboards",
+    "totalHikes": "Total Hikes",
+    "totalDistance": "Distance",
+    "totalElevation": "Elevation",
+    "badgesEarned": "Badges",
+    "badges": "Achievements & Badges"
+  },
+  "leaderboards": {
+    "title": "Leaderboards",
+    "subtitle": "Compete with other hikers",
+    "yourRank": "Your Rank",
+    "level": "Level",
+    "totalXP": "Total XP",
+    "totalHikes": "Total Hikes",
+    "totalDistance": "Distance",
+    "totalElevation": "Elevation",
+    "allTime": "All Time",
+    "monthly": "This Month",
+    "rank": "Rank",
+    "hiker": "Hiker",
+    "xp": "XP",
+    "hikes": "Hikes",
+    "distance": "Distance",
+    "you": "You",
+    "info": "Complete more hikes to climb the leaderboard and earn badges!"
+  },
+  "levels": {
+    "beginner": "Beginner",
+    "noviceHiker": "Novice Hiker",
+    "trailExplorer": "Trail Explorer",
+    "mountainEnthusiast": "Mountain Enthusiast",
+    "alpineAdventurer": "Alpine Adventurer",
+    "peakPursuer": "Peak Pursuer",
+    "summitSeeker": "Summit Seeker",
+    "mountainGuide": "Mountain Guide",
+    "alpineMaster": "Alpine Master",
+    "legendOfTheAlps": "Legend of the Alps"
+  },
+  "badges": {
+    "first_steps": {
+      "name": "First Steps",
+      "description": "Complete your first hike"
+    },
+    "trail_explorer": {
+      "name": "Trail Explorer",
+      "description": "Complete 5 hikes"
+    },
+    "mountain_wanderer": {
+      "name": "Mountain Wanderer",
+      "description": "Complete 10 hikes"
+    },
+    "alpine_veteran": {
+      "name": "Alpine Veteran",
+      "description": "Complete 25 hikes"
+    },
+    "peak_master": {
+      "name": "Peak Master",
+      "description": "Complete 50 hikes"
+    },
+    "kilometer_king": {
+      "name": "Kilometer King",
+      "description": "Hike 10km total"
+    },
+    "marathon_hiker": {
+      "name": "Marathon Hiker",
+      "description": "Hike 42km total"
+    },
+    "ultra_distance": {
+      "name": "Ultra Distance",
+      "description": "Hike 100km total"
+    },
+    "legendary_explorer": {
+      "name": "Legendary Explorer",
+      "description": "Hike 250km total"
+    },
+    "hill_climber": {
+      "name": "Hill Climber",
+      "description": "Climb 500m total elevation"
+    },
+    "mountain_ascender": {
+      "name": "Mountain Ascender",
+      "description": "Climb 1,000m total elevation"
+    },
+    "summit_seeker": {
+      "name": "Summit Seeker",
+      "description": "Climb 2,500m total elevation"
+    },
+    "peak_conqueror": {
+      "name": "Peak Conqueror",
+      "description": "Climb 5,000m total elevation"
+    },
+    "early_bird": {
+      "name": "Early Bird",
+      "description": "Start a hike before 7 AM"
+    },
+    "night_owl": {
+      "name": "Night Owl",
+      "description": "Complete a hike after 8 PM"
+    },
+    "speed_demon": {
+      "name": "Speed Demon",
+      "description": "Complete a difficult trail in record time"
+    },
+    "endurance_champion": {
+      "name": "Endurance Champion",
+      "description": "Complete a hike longer than 4 hours"
+    },
+    "trail_completionist": {
+      "name": "Trail Completionist",
+      "description": "Complete every available trail"
+    }
   },
   "savedTrails": {
     "title": "Saved Trails",
@@ -330,6 +443,124 @@
     "disclaimerText": "You acknowledge that hiking involves inherent risks. Alpenvia provides trail information for informational purposes only and assumes no liability for accidents, injuries, or incidents. You hike at your own risk and are solely responsible for your safety.",
     "iUnderstand": "I understand the risks and have read the safety guidelines. I am prepared for this hike and accept full responsibility for my safety.",
     "startHike": "Start Hike"
+  },
+  "weather": {
+    "title": "Weather Conditions",
+    "currentConditions": "Current Conditions",
+    "mockData": "Demo Data",
+    "feelsLike": "Feels like",
+    "wind": "Wind",
+    "humidity": "Humidity",
+    "clouds": "Cloud Cover",
+    "visibility": "Visibility",
+    "hikingSuitability": "Hiking Suitability",
+    "excellent": "Excellent",
+    "fair": "Fair",
+    "poor": "Not Recommended",
+    "sevenDayForecast": "7-Day Forecast",
+    "today": "Today",
+    "highWindAlert": "⚠️ High winds expected. Exercise caution on exposed ridges.",
+    "snowAlert": "❄️ Snow possible. Bring warm layers and check trail conditions.",
+    "rainAlert": "🌧️ Rain expected. Trails may be slippery.",
+    "stormAlert": "⚡ Thunderstorm risk. Consider postponing your hike.",
+    "coldAlert": "🥶 Very cold temperatures. Dress in warm layers.",
+    "heatAlert": "🌡️ High temperatures. Stay hydrated and start early.",
+    "conditionsOptimal": "Conditions are optimal for alpine hiking",
+    "conditionsGood": "Good hiking weather with minor concerns",
+    "conditionsCaution": "Hiking possible but requires caution and preparation",
+    "conditionsPoor": "Challenging conditions - only for experienced hikers"
+  },
+  "planner": {
+    "title": "Hike Planner",
+    "subtitle": "Plan your multi-day alpine adventure",
+    "tripDates": "Trip Dates",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "day": "day",
+    "days": "days",
+    "selectTrails": "Select Trails",
+    "noTrailsSelected": "No trails added yet. Select trails from the list below.",
+    "itinerary": "Your Itinerary",
+    "summary": "Trip Summary",
+    "estimatedDuration": "Estimated Duration",
+    "trails": "trails",
+    "saveItinerary": "Save Itinerary",
+    "exportItinerary": "Export Itinerary",
+    "copyToClipboard": "Copy to Clipboard",
+    "copied": "Copied to clipboard!",
+    "savedItineraries": "Saved Plans",
+    "load": "Load",
+    "delete": "Delete",
+    "nameRequired": "Please enter a name for your itinerary",
+    "itineraryNamePlaceholder": "My Alpine Adventure"
+  },
+  "equipment": {
+    "title": "Equipment Checklist",
+    "essentials": "Essentials",
+    "clothing": "Clothing",
+    "navigation": "Navigation",
+    "safety": "Safety",
+    "foodWater": "Food & Water",
+    "backpack": "Hiking Backpack",
+    "water": "Water (2L minimum)",
+    "firstAid": "First Aid Kit",
+    "sunscreen": "Sunscreen & Sunglasses",
+    "phone": "Charged Mobile Phone",
+    "tent": "Tent",
+    "sleepingBag": "Sleeping Bag",
+    "sleepingPad": "Sleeping Pad",
+    "hikingBoots": "Hiking Boots",
+    "layers": "Layered Clothing",
+    "rainJacket": "Rain Jacket",
+    "hat": "Sun Hat",
+    "gloves": "Gloves",
+    "extraClothes": "Extra Clothes",
+    "campShoes": "Camp Shoes",
+    "map": "Trail Map",
+    "compass": "Compass",
+    "gps": "GPS Device",
+    "altimeter": "Altimeter",
+    "whistle": "Emergency Whistle",
+    "headlamp": "Headlamp/Flashlight",
+    "emergencyBlanket": "Emergency Blanket",
+    "helmet": "Climbing Helmet",
+    "iceAxe": "Ice Axe",
+    "crampons": "Crampons",
+    "trekingPoles": "Trekking Poles",
+    "snacks": "Energy Snacks",
+    "energyBars": "Energy Bars",
+    "extraWater": "Extra Water",
+    "electrolytes": "Electrolyte Tablets",
+    "cookingGear": "Cooking Gear",
+    "meals": "Prepared Meals",
+    "waterFilter": "Water Filter/Purifier"
+  },
+  "safety": {
+    "title": "Safety Tips",
+    "beforeYouGo": "Before You Go",
+    "onTheTrail": "On The Trail",
+    "emergency": "Emergency Procedures",
+    "checkWeather": "Check weather forecast and trail conditions",
+    "tellSomeone": "Tell someone your plans and expected return time",
+    "startEarly": "Start early to avoid afternoon storms",
+    "checkGear": "Double-check all equipment before departure",
+    "planCampsites": "Plan and research campsites in advance",
+    "foodStorage": "Learn proper food storage in bear country",
+    "knowRoute": "Study the route and alternative paths thoroughly",
+    "technicalSkills": "Ensure you have necessary technical skills",
+    "stayHydrated": "Drink water regularly, don't wait until thirsty",
+    "stayOnPath": "Stay on marked trails to avoid getting lost",
+    "paceYourself": "Pace yourself - it's not a race",
+    "takeBreaks": "Take regular breaks to rest and refuel",
+    "setupBeforeDark": "Set up camp with enough daylight remaining",
+    "weatherChanges": "Watch for sudden weather changes in mountains",
+    "turnBackIfNeeded": "Turn back if conditions become dangerous",
+    "emergencyNumber": "Know emergency number: 112 (Europe)",
+    "knowLocation": "Always know your current location",
+    "signalHelp": "Use whistle (3 blasts) to signal for help",
+    "firstAid": "Know basic first aid and carry a kit",
+    "alpineWarningTitle": "Alpine Environment Warning",
+    "alpineWarningText": "Mountain weather can change rapidly. Always be prepared for sudden temperature drops, wind, and precipitation. Altitude can affect physical performance and judgment. Know the signs of altitude sickness and hypothermia."
   },
   "common": {
     "loading": "Loading...",

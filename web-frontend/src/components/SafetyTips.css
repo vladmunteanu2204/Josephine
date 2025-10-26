@@ -1,0 +1,126 @@
+.safety-tips-section {
+  cursor: pointer;
+}
+
+.safety-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.safety-content {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(212, 165, 116, 0.2);
+}
+
+.safety-categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.safety-category {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(212, 165, 116, 0.2);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.safety-category.emergency {
+  border-color: rgba(244, 67, 54, 0.3);
+  background: rgba(244, 67, 54, 0.05);
+}
+
+.safety-category-title {
+  color: #d4a574;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.safety-category.emergency .safety-category-title {
+  color: #e57373;
+}
+
+.safety-tips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.safety-tip-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(212, 165, 116, 0.15);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.safety-tip-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(212, 165, 116, 0.3);
+  transform: translateX(4px);
+}
+
+.tip-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tip-text {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.alpine-warning {
+  background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%);
+  border: 2px solid rgba(244, 67, 54, 0.3);
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.warning-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.warning-content h4 {
+  color: #e57373;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.warning-content p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .safety-categories {
+    grid-template-columns: 1fr;
+  }
+
+  .alpine-warning {
+    flex-direction: column;
+    text-align: center;
+  }
+}

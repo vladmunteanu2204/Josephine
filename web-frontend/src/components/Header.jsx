@@ -56,6 +56,12 @@ function Header({ currentView, setCurrentView }) {
             >
               {t('nav.trailCatalog')}
             </button>
+            <button 
+              className={`nav-link ${currentView === 'planner' ? 'active' : ''}`}
+              onClick={() => setCurrentView('planner')}
+            >
+              {t('nav.hikePlanner')}
+            </button>
           </nav>
 
           <div className="header-actions">

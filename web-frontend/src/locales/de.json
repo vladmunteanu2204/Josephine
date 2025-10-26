@@ -20,6 +20,7 @@
     "home": "Home",
     "smartRecommendations": "Smarte Empfehlungen",
     "trailCatalog": "Wanderwege-Katalog",
+    "hikePlanner": "Wanderplaner",
     "login": "Anmelden",
     "profile": "Profil"
   },
@@ -243,7 +244,119 @@
     "updatePassword": "Passwort Aktualisieren",
     "passwordUpdated": "Passwort erfolgreich aktualisiert!",
     "passwordChangeFailed": "Passwortänderung fehlgeschlagen. Bitte erneut versuchen.",
-    "wrongCurrentPassword": "Das aktuelle Passwort ist falsch"
+    "wrongCurrentPassword": "Das aktuelle Passwort ist falsch",
+    "stats": "Deine Statistiken",
+    "viewLeaderboards": "Bestenlisten Ansehen",
+    "totalHikes": "Wanderungen Gesamt",
+    "totalDistance": "Distanz",
+    "totalElevation": "Höhenunterschied",
+    "badgesEarned": "Abzeichen",
+    "badges": "Erfolge & Abzeichen"
+  },
+  "leaderboards": {
+    "title": "Bestenlisten",
+    "subtitle": "Tritt gegen andere Wanderer an",
+    "yourRank": "Dein Rang",
+    "level": "Level",
+    "totalXP": "Gesamt-XP",
+    "totalHikes": "Wanderungen Gesamt",
+    "totalDistance": "Distanz",
+    "totalElevation": "Höhenunterschied",
+    "allTime": "Alle Zeiten",
+    "monthly": "Diesen Monat",
+    "rank": "Rang",
+    "hiker": "Wanderer",
+    "xp": "XP",
+    "hikes": "Wanderungen",
+    "distance": "Distanz",
+    "you": "Du",
+    "info": "Absolviere mehr Wanderungen, um in der Bestenliste aufzusteigen und Abzeichen zu verdienen!"
+  },
+  "levels": {
+    "beginner": "Anfänger",
+    "noviceHiker": "Wanderanfänger",
+    "trailExplorer": "Pfaderkunder",
+    "mountainEnthusiast": "Bergbegeisterter",
+    "alpineAdventurer": "Alpiner Abenteurer",
+    "peakPursuer": "Gipfelstürmer",
+    "summitSeeker": "Gipfelsucher",
+    "mountainGuide": "Bergführer",
+    "alpineMaster": "Alpenmeister",
+    "legendOfTheAlps": "Legende der Alpen"
+  },
+  "badges": {
+    "first_steps": {
+      "name": "Erste Schritte",
+      "description": "Absolviere deine erste Wanderung"
+    },
+    "trail_explorer": {
+      "name": "Pfaderkunder",
+      "description": "Absolviere 5 Wanderungen"
+    },
+    "mountain_wanderer": {
+      "name": "Bergwanderer",
+      "description": "Absolviere 10 Wanderungen"
+    },
+    "alpine_veteran": {
+      "name": "Alpenveteran",
+      "description": "Absolviere 25 Wanderungen"
+    },
+    "peak_master": {
+      "name": "Gipfelmeister",
+      "description": "Absolviere 50 Wanderungen"
+    },
+    "kilometer_king": {
+      "name": "Kilometerkönig",
+      "description": "Wandere 10km gesamt"
+    },
+    "marathon_hiker": {
+      "name": "Marathon-Wanderer",
+      "description": "Wandere 42km gesamt"
+    },
+    "ultra_distance": {
+      "name": "Ultra-Distanz",
+      "description": "Wandere 100km gesamt"
+    },
+    "legendary_explorer": {
+      "name": "Legendärer Entdecker",
+      "description": "Wandere 250km gesamt"
+    },
+    "hill_climber": {
+      "name": "Hügelkletterer",
+      "description": "Erklimme 500m Gesamthöhe"
+    },
+    "mountain_ascender": {
+      "name": "Bergbesteiger",
+      "description": "Erklimme 1.000m Gesamthöhe"
+    },
+    "summit_seeker": {
+      "name": "Gipfelsucher",
+      "description": "Erklimme 2.500m Gesamthöhe"
+    },
+    "peak_conqueror": {
+      "name": "Gipfeleroberer",
+      "description": "Erklimme 5.000m Gesamthöhe"
+    },
+    "early_bird": {
+      "name": "Frühaufsteher",
+      "description": "Starte eine Wanderung vor 7 Uhr"
+    },
+    "night_owl": {
+      "name": "Nachteule",
+      "description": "Beende eine Wanderung nach 20 Uhr"
+    },
+    "speed_demon": {
+      "name": "Geschwindigkeitsdämon",
+      "description": "Absolviere einen schwierigen Weg in Rekordzeit"
+    },
+    "endurance_champion": {
+      "name": "Ausdauermeister",
+      "description": "Absolviere eine Wanderung über 4 Stunden"
+    },
+    "trail_completionist": {
+      "name": "Wegvollender",
+      "description": "Absolviere alle verfügbaren Wanderwege"
+    }
   },
   "savedTrails": {
     "title": "Gespeicherte Wanderwege",
@@ -330,5 +443,123 @@
     "disclaimerText": "Sie erkennen an, dass Wandern inhärente Risiken birgt. Alpenvia bietet Wanderweginformationen nur zu Informationszwecken an und übernimmt keine Haftung für Unfälle, Verletzungen oder Vorfälle. Sie wandern auf eigenes Risiko und sind allein für Ihre Sicherheit verantwortlich.",
     "iUnderstand": "Ich verstehe die Risiken und habe die Sicherheitsrichtlinien gelesen. Ich bin auf diese Wanderung vorbereitet und übernehme die volle Verantwortung für meine Sicherheit.",
     "startHike": "Wanderung Starten"
+  },
+  "weather": {
+    "title": "Wetterbedingungen",
+    "currentConditions": "Aktuelle Bedingungen",
+    "mockData": "Demo-Daten",
+    "feelsLike": "Gefühlt",
+    "wind": "Wind",
+    "humidity": "Luftfeuchtigkeit",
+    "clouds": "Bewölkung",
+    "visibility": "Sichtweite",
+    "hikingSuitability": "Wandereignung",
+    "excellent": "Ausgezeichnet",
+    "fair": "Angemessen",
+    "poor": "Nicht Empfohlen",
+    "sevenDayForecast": "7-Tage-Vorhersage",
+    "today": "Heute",
+    "highWindAlert": "⚠️ Starke Winde erwartet. Vorsicht auf exponierten Graten.",
+    "snowAlert": "❄️ Schnee möglich. Warme Schichten mitbringen und Wegbedingungen prüfen.",
+    "rainAlert": "🌧️ Regen erwartet. Wege können rutschig sein.",
+    "stormAlert": "⚡ Gewittergefahr. Erwägen Sie, die Wanderung zu verschieben.",
+    "coldAlert": "🥶 Sehr kalte Temperaturen. Warm in Schichten kleiden.",
+    "heatAlert": "🌡️ Hohe Temperaturen. Hydratisiert bleiben und früh starten.",
+    "conditionsOptimal": "Bedingungen sind optimal für alpine Wanderungen",
+    "conditionsGood": "Gutes Wanderwetter mit geringfügigen Bedenken",
+    "conditionsCaution": "Wandern möglich, erfordert aber Vorsicht und Vorbereitung",
+    "conditionsPoor": "Herausfordernde Bedingungen - nur für erfahrene Wanderer"
+  },
+  "planner": {
+    "title": "Wanderplaner",
+    "subtitle": "Plane deine mehrtägige alpine Wanderung",
+    "tripDates": "Reisedaten",
+    "startDate": "Startdatum",
+    "endDate": "Enddatum",
+    "day": "Tag",
+    "days": "Tage",
+    "selectTrails": "Wanderwege Auswählen",
+    "noTrailsSelected": "Keine Wanderwege hinzugefügt. Wähle Wanderwege aus der Liste unten.",
+    "itinerary": "Dein Reiseplan",
+    "summary": "Reisezusammenfassung",
+    "estimatedDuration": "Geschätzte Dauer",
+    "trails": "Wanderwege",
+    "saveItinerary": "Reiseplan Speichern",
+    "exportItinerary": "Reiseplan Exportieren",
+    "copyToClipboard": "In Zwischenablage Kopieren",
+    "copied": "In Zwischenablage kopiert!",
+    "savedItineraries": "Gespeicherte Pläne",
+    "load": "Laden",
+    "delete": "Löschen",
+    "nameRequired": "Bitte gib einen Namen für deinen Reiseplan ein",
+    "itineraryNamePlaceholder": "Mein Alpines Abenteuer"
+  },
+  "equipment": {
+    "title": "Ausrüstungscheckliste",
+    "essentials": "Grundausstattung",
+    "clothing": "Bekleidung",
+    "navigation": "Navigation",
+    "safety": "Sicherheit",
+    "foodWater": "Essen & Wasser",
+    "backpack": "Wanderrucksack",
+    "water": "Wasser (mindestens 2L)",
+    "firstAid": "Erste-Hilfe-Set",
+    "sunscreen": "Sonnenschutz & Sonnenbrille",
+    "phone": "Aufgeladenes Mobiltelefon",
+    "tent": "Zelt",
+    "sleepingBag": "Schlafsack",
+    "sleepingPad": "Isomatte",
+    "hikingBoots": "Wanderschuhe",
+    "layers": "Schichtkleidung",
+    "rainJacket": "Regenjacke",
+    "hat": "Sonnenhut",
+    "gloves": "Handschuhe",
+    "extraClothes": "Ersatzkleidung",
+    "campShoes": "Lagerschuhe",
+    "map": "Wanderkarte",
+    "compass": "Kompass",
+    "gps": "GPS-Gerät",
+    "altimeter": "Höhenmesser",
+    "whistle": "Notfallpfeife",
+    "headlamp": "Stirnlampe/Taschenlampe",
+    "emergencyBlanket": "Notfalldecke",
+    "helmet": "Kletterhelm",
+    "iceAxe": "Eispickel",
+    "crampons": "Steigeisen",
+    "trekingPoles": "Wanderstöcke",
+    "snacks": "Energie-Snacks",
+    "energyBars": "Energieriegel",
+    "extraWater": "Extra Wasser",
+    "electrolytes": "Elektrolyttabletten",
+    "cookingGear": "Kochausrüstung",
+    "meals": "Vorbereitete Mahlzeiten",
+    "waterFilter": "Wasserfilter/Reiniger"
+  },
+  "safety": {
+    "title": "Sicherheitstipps",
+    "beforeYouGo": "Vor der Wanderung",
+    "onTheTrail": "Auf dem Wanderweg",
+    "emergency": "Notfallverfahren",
+    "checkWeather": "Wettervorhersage und Wegbedingungen prüfen",
+    "tellSomeone": "Teile jemandem deine Pläne und voraussichtliche Rückkehrzeit mit",
+    "startEarly": "Starte früh, um Nachmittagsgewittern zu entgehen",
+    "checkGear": "Prüfe die gesamte Ausrüstung vor der Abreise doppelt",
+    "planCampsites": "Plane und recherchiere Campingplätze im Voraus",
+    "foodStorage": "Lerne die richtige Lebensmittellagerung in Bärengebieten",
+    "knowRoute": "Studiere die Route und alternative Wege gründlich",
+    "technicalSkills": "Stelle sicher, dass du die notwendigen technischen Fähigkeiten hast",
+    "stayHydrated": "Trinke regelmäßig Wasser, warte nicht bis du durstig bist",
+    "stayOnPath": "Bleibe auf markierten Wegen, um dich nicht zu verirren",
+    "paceYourself": "Setze dein eigenes Tempo - es ist kein Rennen",
+    "takeBreaks": "Mache regelmäßige Pausen zum Ausruhen und Auftanken",
+    "setupBeforeDark": "Baue das Lager mit genügend Tageslicht auf",
+    "weatherChanges": "Achte auf plötzliche Wetteränderungen in den Bergen",
+    "turnBackIfNeeded": "Kehre um, wenn die Bedingungen gefährlich werden",
+    "emergencyNumber": "Kenne die Notrufnummer: 112 (Europa)",
+    "knowLocation": "Kenne immer deine aktuelle Position",
+    "signalHelp": "Verwende die Pfeife (3 Pfiffe), um Hilfe zu signalisieren",
+    "firstAid": "Kenne Erste Hilfe-Grundlagen und trage ein Set",
+    "alpineWarningTitle": "Warnung Alpine Umgebung",
+    "alpineWarningText": "Bergwetter kann sich schnell ändern. Sei immer auf plötzliche Temperaturabfälle, Wind und Niederschläge vorbereitet. Höhe kann die körperliche Leistung und das Urteilsvermögen beeinträchtigen. Kenne die Anzeichen von Höhenkrankheit und Unterkühlung."
   }
 }

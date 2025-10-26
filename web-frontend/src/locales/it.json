@@ -20,6 +20,7 @@
     "home": "Home",
     "smartRecommendations": "Raccomandazioni Intelligenti",
     "trailCatalog": "Catalogo Sentieri",
+    "hikePlanner": "Pianificatore Escursioni",
     "login": "Accedi",
     "profile": "Profilo"
   },
@@ -243,7 +244,119 @@
     "updatePassword": "Aggiorna Password",
     "passwordUpdated": "Password aggiornata con successo!",
     "passwordChangeFailed": "Cambio password fallito. Riprova.",
-    "wrongCurrentPassword": "La password attuale non è corretta"
+    "wrongCurrentPassword": "La password attuale non è corretta",
+    "stats": "Le Tue Statistiche",
+    "viewLeaderboards": "Vedi Classifiche",
+    "totalHikes": "Escursioni Totali",
+    "totalDistance": "Distanza",
+    "totalElevation": "Dislivello",
+    "badgesEarned": "Distintivi",
+    "badges": "Conquiste e Distintivi"
+  },
+  "leaderboards": {
+    "title": "Classifiche",
+    "subtitle": "Gareggia con altri escursionisti",
+    "yourRank": "Il Tuo Posto",
+    "level": "Livello",
+    "totalXP": "XP Totali",
+    "totalHikes": "Escursioni Totali",
+    "totalDistance": "Distanza",
+    "totalElevation": "Dislivello",
+    "allTime": "Di Sempre",
+    "monthly": "Questo Mese",
+    "rank": "Posto",
+    "hiker": "Escursionista",
+    "xp": "XP",
+    "hikes": "Escursioni",
+    "distance": "Distanza",
+    "you": "Tu",
+    "info": "Completa più escursioni per scalare la classifica e guadagnare distintivi!"
+  },
+  "levels": {
+    "beginner": "Principiante",
+    "noviceHiker": "Escursionista Novizio",
+    "trailExplorer": "Esploratore di Sentieri",
+    "mountainEnthusiast": "Appassionato di Montagna",
+    "alpineAdventurer": "Avventuriero Alpino",
+    "peakPursuer": "Cacciatore di Vette",
+    "summitSeeker": "Cercatore di Cime",
+    "mountainGuide": "Guida Alpina",
+    "alpineMaster": "Maestro Alpino",
+    "legendOfTheAlps": "Leggenda delle Alpi"
+  },
+  "badges": {
+    "first_steps": {
+      "name": "Primi Passi",
+      "description": "Completa la tua prima escursione"
+    },
+    "trail_explorer": {
+      "name": "Esploratore di Sentieri",
+      "description": "Completa 5 escursioni"
+    },
+    "mountain_wanderer": {
+      "name": "Viandante di Montagna",
+      "description": "Completa 10 escursioni"
+    },
+    "alpine_veteran": {
+      "name": "Veterano Alpino",
+      "description": "Completa 25 escursioni"
+    },
+    "peak_master": {
+      "name": "Maestro delle Vette",
+      "description": "Completa 50 escursioni"
+    },
+    "kilometer_king": {
+      "name": "Re dei Chilometri",
+      "description": "Cammina 10km totali"
+    },
+    "marathon_hiker": {
+      "name": "Escursionista Maratoneta",
+      "description": "Cammina 42km totali"
+    },
+    "ultra_distance": {
+      "name": "Ultra Distanza",
+      "description": "Cammina 100km totali"
+    },
+    "legendary_explorer": {
+      "name": "Esploratore Leggendario",
+      "description": "Cammina 250km totali"
+    },
+    "hill_climber": {
+      "name": "Scalatore di Colline",
+      "description": "Scala 500m di dislivello totale"
+    },
+    "mountain_ascender": {
+      "name": "Scalatore di Montagne",
+      "description": "Scala 1.000m di dislivello totale"
+    },
+    "summit_seeker": {
+      "name": "Cercatore di Cime",
+      "description": "Scala 2.500m di dislivello totale"
+    },
+    "peak_conqueror": {
+      "name": "Conquistatore di Vette",
+      "description": "Scala 5.000m di dislivello totale"
+    },
+    "early_bird": {
+      "name": "Mattiniero",
+      "description": "Inizia un'escursione prima delle 7"
+    },
+    "night_owl": {
+      "name": "Gufo Notturno",
+      "description": "Completa un'escursione dopo le 20"
+    },
+    "speed_demon": {
+      "name": "Demone della Velocità",
+      "description": "Completa un sentiero difficile in tempo record"
+    },
+    "endurance_champion": {
+      "name": "Campione di Resistenza",
+      "description": "Completa un'escursione di oltre 4 ore"
+    },
+    "trail_completionist": {
+      "name": "Completista dei Sentieri",
+      "description": "Completa tutti i sentieri disponibili"
+    }
   },
   "savedTrails": {
     "title": "Sentieri Salvati",
@@ -330,5 +443,123 @@
     "disclaimerText": "Riconosci che l'escursionismo comporta rischi intrinseci. Alpenvia fornisce informazioni sui sentieri solo a scopo informativo e non si assume alcuna responsabilità per incidenti, lesioni o eventi. Cammini a tuo rischio e sei l'unico responsabile della tua sicurezza.",
     "iUnderstand": "Comprendo i rischi e ho letto le linee guida sulla sicurezza. Sono preparato per questa escursione e accetto la piena responsabilità per la mia sicurezza.",
     "startHike": "Inizia Escursione"
+  },
+  "weather": {
+    "title": "Condizioni Meteo",
+    "currentConditions": "Condizioni Attuali",
+    "mockData": "Dati Demo",
+    "feelsLike": "Percepita",
+    "wind": "Vento",
+    "humidity": "Umidità",
+    "clouds": "Nuvolosità",
+    "visibility": "Visibilità",
+    "hikingSuitability": "Idoneità Escursionistica",
+    "excellent": "Eccellente",
+    "fair": "Discreta",
+    "poor": "Sconsigliata",
+    "sevenDayForecast": "Previsioni 7 Giorni",
+    "today": "Oggi",
+    "highWindAlert": "⚠️ Venti forti previsti. Cautela sui crinali esposti.",
+    "snowAlert": "❄️ Neve possibile. Porta strati caldi e controlla le condizioni del sentiero.",
+    "rainAlert": "🌧️ Pioggia prevista. I sentieri potrebbero essere scivolosi.",
+    "stormAlert": "⚡ Rischio temporali. Considera di posticipare l'escursione.",
+    "coldAlert": "🥶 Temperature molto fredde. Vestiti a strati caldi.",
+    "heatAlert": "🌡️ Temperature elevate. Rimani idratato e parti presto.",
+    "conditionsOptimal": "Le condizioni sono ottimali per escursioni alpine",
+    "conditionsGood": "Buone condizioni con preoccupazioni minori",
+    "conditionsCaution": "Escursione possibile ma richiede cautela e preparazione",
+    "conditionsPoor": "Condizioni impegnative - solo per escursionisti esperti"
+  },
+  "planner": {
+    "title": "Pianificatore Escursioni",
+    "subtitle": "Pianifica la tua avventura alpina di più giorni",
+    "tripDates": "Date del Viaggio",
+    "startDate": "Data di Inizio",
+    "endDate": "Data di Fine",
+    "day": "giorno",
+    "days": "giorni",
+    "selectTrails": "Seleziona Sentieri",
+    "noTrailsSelected": "Nessun sentiero aggiunto. Seleziona i sentieri dall'elenco qui sotto.",
+    "itinerary": "Il Tuo Itinerario",
+    "summary": "Riepilogo del Viaggio",
+    "estimatedDuration": "Durata Stimata",
+    "trails": "sentieri",
+    "saveItinerary": "Salva Itinerario",
+    "exportItinerary": "Esporta Itinerario",
+    "copyToClipboard": "Copia negli Appunti",
+    "copied": "Copiato negli appunti!",
+    "savedItineraries": "Piani Salvati",
+    "load": "Carica",
+    "delete": "Elimina",
+    "nameRequired": "Inserisci un nome per il tuo itinerario",
+    "itineraryNamePlaceholder": "La Mia Avventura Alpina"
+  },
+  "equipment": {
+    "title": "Lista Attrezzatura",
+    "essentials": "Essenziali",
+    "clothing": "Abbigliamento",
+    "navigation": "Navigazione",
+    "safety": "Sicurezza",
+    "foodWater": "Cibo e Acqua",
+    "backpack": "Zaino da Escursione",
+    "water": "Acqua (minimo 2L)",
+    "firstAid": "Kit di Pronto Soccorso",
+    "sunscreen": "Crema Solare e Occhiali da Sole",
+    "phone": "Telefono Cellulare Carico",
+    "tent": "Tenda",
+    "sleepingBag": "Sacco a Pelo",
+    "sleepingPad": "Materassino",
+    "hikingBoots": "Scarponi da Trekking",
+    "layers": "Abbigliamento a Strati",
+    "rainJacket": "Giacca Antipioggia",
+    "hat": "Cappello da Sole",
+    "gloves": "Guanti",
+    "extraClothes": "Vestiti di Ricambio",
+    "campShoes": "Scarpe da Campo",
+    "map": "Mappa del Sentiero",
+    "compass": "Bussola",
+    "gps": "Dispositivo GPS",
+    "altimeter": "Altimetro",
+    "whistle": "Fischietto di Emergenza",
+    "headlamp": "Lampada Frontale/Torcia",
+    "emergencyBlanket": "Coperta di Emergenza",
+    "helmet": "Casco da Arrampicata",
+    "iceAxe": "Piccozza",
+    "crampons": "Ramponi",
+    "trekingPoles": "Bastoncini da Trekking",
+    "snacks": "Snack Energetici",
+    "energyBars": "Barrette Energetiche",
+    "extraWater": "Acqua Extra",
+    "electrolytes": "Compresse Elettrolitiche",
+    "cookingGear": "Attrezzatura da Cucina",
+    "meals": "Pasti Preparati",
+    "waterFilter": "Filtro/Purificatore Acqua"
+  },
+  "safety": {
+    "title": "Consigli di Sicurezza",
+    "beforeYouGo": "Prima di Partire",
+    "onTheTrail": "Sul Sentiero",
+    "emergency": "Procedure di Emergenza",
+    "checkWeather": "Controlla previsioni meteo e condizioni del sentiero",
+    "tellSomeone": "Comunica a qualcuno i tuoi piani e l'orario di rientro previsto",
+    "startEarly": "Parti presto per evitare temporali pomeridiani",
+    "checkGear": "Controlla tutta l'attrezzatura prima della partenza",
+    "planCampsites": "Pianifica e studia i campeggi in anticipo",
+    "foodStorage": "Impara la corretta conservazione del cibo in zone con orsi",
+    "knowRoute": "Studia il percorso e i sentieri alternativi accuratamente",
+    "technicalSkills": "Assicurati di avere le competenze tecniche necessarie",
+    "stayHydrated": "Bevi acqua regolarmente, non aspettare di avere sete",
+    "stayOnPath": "Resta sui sentieri segnalati per evitare di perderti",
+    "paceYourself": "Mantieni il tuo ritmo - non è una gara",
+    "takeBreaks": "Fai pause regolari per riposare e ricaricarti",
+    "setupBeforeDark": "Monta il campo con abbastanza luce diurna",
+    "weatherChanges": "Fai attenzione a cambiamenti improvvisi del tempo in montagna",
+    "turnBackIfNeeded": "Torna indietro se le condizioni diventano pericolose",
+    "emergencyNumber": "Conosci il numero di emergenza: 112 (Europa)",
+    "knowLocation": "Conosci sempre la tua posizione attuale",
+    "signalHelp": "Usa il fischietto (3 colpi) per segnalare aiuto",
+    "firstAid": "Conosci il pronto soccorso di base e porta un kit",
+    "alpineWarningTitle": "Avviso Ambiente Alpino",
+    "alpineWarningText": "Il tempo in montagna può cambiare rapidamente. Preparati sempre a cali improvvisi di temperatura, vento e precipitazioni. L'altitudine può influenzare le prestazioni fisiche e il giudizio. Conosci i segni del mal di montagna e dell'ipotermia."
   }
 }

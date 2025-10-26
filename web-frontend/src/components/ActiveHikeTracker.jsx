@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import Map, { Source, Layer, Marker, NavigationControl } from 'react-map-gl';
 import SafetyDisclaimerModal from './SafetyDisclaimerModal';
+import { checkNewBadges } from '../utils/gamification';
 import './ActiveHikeTracker.css';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -391,12 +392,25 @@ function ActiveHikeTracker({ trail, onEnd }) {
       console.error('Failed to save hike:', error);
     }
 
+    // Check for badges and award XP
+    const gamificationData = {
+      distance: stats.distance,
+      elevation: stats.elevation,
+      duration: stats.duration,
+      trailId: trail.id,
+      startTime: startTimeRef.current,
+      endTime: Date.now(),
+      completed: !autoEnded
+    };
+    
+    const gamificationResult = checkNewBadges(gamificationData);
+    
     // Export GPX automatically
     if (gpsTrack.length > 0) {
       exportGPX();
     }
 
-    onEnd(hikeData);
+    onEnd({ ...hikeData, gamification: gamificationResult });
   };
 
   // Cleanup on unmount

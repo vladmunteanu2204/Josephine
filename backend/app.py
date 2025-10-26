@@ -4,6 +4,7 @@ import os
 import json
 import random
 from datetime import datetime
+from weather_service import weather_service
 
 app = Flask(__name__)
 CORS(app)
@@ -260,6 +261,64 @@ def get_hikes():
             hikes = json.load(f)
         
         return jsonify({'hikes': hikes.get('hikes', []), 'count': len(hikes.get('hikes', []))})
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/weather/current', methods=['GET'])
+def get_current_weather():
+    """Get current weather for trail coordinates"""
+    try:
+        lat = request.args.get('lat', type=float)
+        lon = request.args.get('lon', type=float)
+        
+        if not lat or not lon:
+            return jsonify({'error': 'Latitude and longitude required'}), 400
+        
+        weather = weather_service.get_current_weather(lat, lon)
+        return jsonify(weather)
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/weather/forecast', methods=['GET'])
+def get_weather_forecast():
+    """Get 7-day forecast for trail coordinates"""
+    try:
+        lat = request.args.get('lat', type=float)
+        lon = request.args.get('lon', type=float)
+        
+        if not lat or not lon:
+            return jsonify({'error': 'Latitude and longitude required'}), 400
+        
+        forecast = weather_service.get_forecast(lat, lon)
+        return jsonify({'forecast': forecast})
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/weather/suitability', methods=['GET'])
+def get_weather_suitability():
+    """Get weather suitability for hiking"""
+    try:
+        lat = request.args.get('lat', type=float)
+        lon = request.args.get('lon', type=float)
+        difficulty = request.args.get('difficulty', 'moderate')
+        
+        if not lat or not lon:
+            return jsonify({'error': 'Latitude and longitude required'}), 400
+        
+        current_weather = weather_service.get_current_weather(lat, lon)
+        forecast = weather_service.get_forecast(lat, lon)
+        alerts = weather_service.get_weather_alerts(current_weather, forecast)
+        suitability = weather_service.get_trail_suitability(current_weather, difficulty)
+        
+        return jsonify({
+            'current': current_weather,
+            'forecast': forecast,
+            'alerts': alerts,
+            'suitability': suitability
+        })
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500

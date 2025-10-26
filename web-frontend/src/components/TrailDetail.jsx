@@ -5,6 +5,7 @@ import ReviewsSection from './ReviewsSection';
 import TrailMap from './TrailMap';
 import MediaGallery from './MediaGallery';
 import ActiveHikeTracker from './ActiveHikeTracker';
+import WeatherWidget from './WeatherWidget';
 import './TrailDetail.css';
 
 function TrailDetail({ trail, onBack }) {
@@ -173,6 +174,20 @@ function TrailDetail({ trail, onBack }) {
             <span className="btn-subtext">GPS tracking with safety features</span>
           </button>
         </div>
+
+        {fullTrail.coordinates && fullTrail.coordinates.length > 0 && (
+          <div className="weather-section">
+            <div className="section-header">
+              <h2 className="section-title">{t('weather.title', 'Weather Conditions')}</h2>
+              <div className="gradient-divider"></div>
+            </div>
+            <WeatherWidget 
+              lat={fullTrail.coordinates[0][1]} 
+              lon={fullTrail.coordinates[0][0]} 
+              difficulty={fullTrail.difficulty}
+            />
+          </div>
+        )}
 
         <div className="trail-overview-section">
           <div className="section-header">
