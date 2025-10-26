@@ -98,14 +98,15 @@
 }
 
 .stat-icon {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 0, 0.8));
 }
 
 .stat-value {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: #ffffff;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #00ff00;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 1);
 }
 
 .stat-value.warning {
@@ -204,13 +205,13 @@
 /* Completion badge in stats bar */
 .completion-badge {
   padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+  background: #ff00ff;
   color: #fff;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-weight: 900;
   border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(96, 165, 250, 0.6);
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.8);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 1);
 }
 
 .status-badge {
@@ -222,9 +223,10 @@
 }
 
 .status-badge.on-trail {
-  background: rgba(74, 222, 128, 0.3);
-  color: #4ade80;
-  border: 2px solid rgba(74, 222, 128, 0.6);
+  background: #00ff00;
+  color: #000;
+  border: 2px solid #fff;
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
 }
 
 .status-badge.off-trail {

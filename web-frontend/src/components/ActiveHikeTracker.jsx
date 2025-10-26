@@ -258,24 +258,18 @@ function ActiveHikeTracker({ trail, onEnd }) {
     }
 
     if ('geolocation' in navigator) {
+      console.log('Starting GPS tracking...');
       watchIdRef.current = navigator.geolocation.watchPosition(
-        handlePositionUpdate,
+        (position) => {
+          console.log('GPS UPDATE RECEIVED:', position.coords.latitude, position.coords.longitude);
+          handlePositionUpdate(position);
+        },
         (error) => {
           console.error('GPS Error:', error);
           console.error('GPS Error code:', error.code, 'Message:', error.message);
           
-          // If GPS fails, keep the test position so user can still see the marker
-          if (!currentPosition && trailRoute?.geometry?.coordinates?.[0]) {
-            const [lon, lat] = trailRoute.geometry.coordinates[0];
-            setCurrentPosition({
-              lat,
-              lon,
-              alt: 650,
-              timestamp: Date.now()
-            });
-          }
-          
-          sendNotification('GPS Error', 'Using test position. Enable GPS for real tracking.');
+          // Show alert to user about GPS permission
+          alert(`GPS Error (${error.code}): ${error.message}. Please enable location permission in your browser settings.`);
         },
         {
           enableHighAccuracy: true,
