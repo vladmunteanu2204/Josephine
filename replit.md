@@ -16,31 +16,36 @@ Alpenvia consists of a Flask backend API and a React web-frontend.
 The design system employs a premium dark alpine theme with glassmorphism effects, featuring frosted glass cards and backdrop blur. It incorporates dramatic hero sections with mountain silhouettes and aurora gradients, enhanced shadows for layered depth, and glowing accent colors. Smooth animations, micro-interactions, premium typography with text shadows, and topographic patterns contribute to an immersive user experience.
 
 ### Technical Implementations
-- **Internationalization (i18n):** Full support for English, Italian, and German using `i18next` with browser language detection, covering all pages and over 240 strings.
+- **Internationalization (i18n):** Full support for English, Italian, and German using `i18next` with browser language detection, covering all pages and over 400 translation strings including gamification, weather, and planning features.
 - **Smart Recommendations:** A local, scoring-based algorithm provides personalized trail suggestions based on difficulty, tags, duration, and other preferences.
 - **User Authentication:** Firebase Authentication (email/password, Google OAuth) is integrated for secure user management, including profile editing and password changes.
-- **Persistent State:** User preferences (language, units, notifications) and saved trails are persisted using `localStorage`. Saved trails store only trail IDs (not full objects) for optimal storage and data freshness.
+- **Persistent State:** User preferences (language, units, notifications), saved trails, gamification data (badges, XP, levels), and hike plans are persisted using `localStorage`. Saved trails store only trail IDs (not full objects) for optimal storage and data freshness.
 - **Media Galleries:** A `MediaGallery` component supports photo and video display with a full-screen lightbox viewer.
 - **Interactive Maps:** `Mapbox GL` is integrated for interactive trail route visualization and point-of-interest (POI) markers.
+- **GPS Tracking:** Real-time GPS tracking during hikes with 20-second position updates, automatic hike end after 6 hours of inactivity, POI checkpoint alerts, and live stats display via floating panel. GPS testing requires opening app URL in new browser tab on mobile (not Replit iframe) for location permissions.
+- **Gamification System:** Badge/achievement system with 18 badges across distance, peaks, and trail completion categories. XP/levels system with 10 tiers from Beginner to Legend of the Alps. Monthly and all-time leaderboards tracking user rankings and hiking statistics. Profile displays earned badges, current level, XP progress, and comprehensive hiking stats.
+- **Weather Integration:** OpenWeatherMap API integration providing current conditions, 7-day forecasts, hiking suitability scores, and weather-based safety alerts. Weather widget displays on trail detail pages with temperature, wind, humidity, visibility, and precipitation forecasts. Mock data fallback for development/testing.
+- **Hike Planning:** Multi-day trip planner with trail selection, itinerary builder, and trip summary calculations. Dynamic equipment checklist generator (12-20 items) adapting to difficulty, duration, and weather conditions. Personalized safety tips system with alpine-specific advice. Save/load/export functionality for trip itineraries.
 - **Review System:** A comprehensive user review system allows submissions, displays star ratings, and calculates real-time statistics.
 - **Trail Catalog:** Features a sticky filters sidebar, live search, multi-filter support (difficulty, tags, search), and a grid/map view toggle.
 - **Navigation:** A component-based routing system manages bidirectional navigation throughout the application without using React Router.
 
 ### Feature Specifications
-- **Core Pages:** Home, Catalog, Recommendations, Trail Detail, User Profile, Saved Trails, and Settings.
-- **Trail Data:** Enhanced schema includes taglines, galleries, thumbnails, and tags for categorization.
+- **Core Pages:** Home, Catalog, Recommendations, Trail Detail, User Profile, Saved Trails, Settings, Leaderboards, and Hike Planner.
+- **Trail Data:** Enhanced schema includes taglines, galleries, thumbnails, tags, and GPS coordinates for categorization and tracking.
 - **Responsiveness:** All components and pages are designed to be mobile-responsive.
 - **Accessibility:** Features like ARIA labels and focus management are integrated.
 
 ### System Design Choices
-- **Backend:** Flask API (Python) running on port 8000, serving trail data and recommendations.
+- **Backend:** Flask API (Python) running on port 8000, serving trail data, recommendations, and weather data.
 - **Frontend:** React 18 web application built with Vite, running on port 5000 for Replit webview preview.
 - **Database:** Local JSON files (`trails.json`, `reviews.json`) store verified trail data and reviews.
-- **API URL Handling:** Dynamically constructed using `window.location.protocol` + hostname + `:8000` for Replit environment compatibility.
+- **API URL Handling:** Dynamically constructed using conditional pattern: `window.location.hostname.includes('replit.dev') ? https://${hostname} : http://localhost:8000` for cross-environment compatibility.
 
 ## External Dependencies
 - **Firebase:** For user authentication (email/password, Google OAuth).
 - **Mapbox GL:** For interactive map functionalities and trail visualization.
+- **OpenWeatherMap API:** For real-time weather data, forecasts, and hiking suitability calculations.
 - **Axios:** HTTP client for API requests in the frontend.
 - **i18next, react-i18next, i18next-browser-languagedetector:** For internationalization.
-- **Flask, Flask-CORS:** Python libraries for the backend API.
+- **Flask, Flask-CORS, Requests:** Python libraries for the backend API and external API calls.
