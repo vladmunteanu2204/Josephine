@@ -385,19 +385,67 @@
 }
 
 @media (max-width: 768px) {
+  .app {
+    overflow-x: hidden;
+  }
+
+  .main-content {
+    padding-top: 70px;
+    padding-bottom: 20px;
+  }
+
+  .hero {
+    padding: 80px 16px 60px;
+    margin-bottom: 32px;
+  }
+
   .hero h1 {
-    font-size: 42px;
+    font-size: 36px;
   }
   
   .hero p {
-    font-size: 18px;
+    font-size: 16px;
+    padding: 0 8px;
+  }
+  
+  .container {
+    padding: 0 16px;
+    max-width: 100%;
+  }
+
+  .section {
+    margin-bottom: 32px;
+  }
+
+  .section-title {
+    font-size: 28px;
+    margin-bottom: 20px;
   }
   
   .cta-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
   }
   
   .trail-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .trail-card {
+    margin-bottom: 0;
+  }
+
+  .trail-name {
+    font-size: 18px;
+  }
+
+  .empty-state {
+    padding: 60px 16px;
+  }
+
+  .empty-icon {
+    font-size: 60px;
   }
 }

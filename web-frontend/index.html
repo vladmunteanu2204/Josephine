@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Alpenvia - Alpine Hiking in South Tyrol & Trentino</title>
     <style>
       * {
@@ -10,10 +10,21 @@
         padding: 0;
         box-sizing: border-box;
       }
+      html {
+        overflow-x: hidden;
+        max-width: 100vw;
+      }
       body {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
+        max-width: 100vw;
+        position: relative;
+      }
+      #root {
+        overflow-x: hidden;
+        max-width: 100vw;
       }
     </style>
   </head>
