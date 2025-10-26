@@ -66,19 +66,25 @@
 }
 
 .stats-overlay {
-  position: absolute;
-  top: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
+  position: fixed;
+  top: max(1rem, env(safe-area-inset-top, 0px) + 0.5rem);
+  right: max(1rem, env(safe-area-inset-right, 0px) + 0.5rem);
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  align-items: center;
-  max-width: 90%;
-  max-height: calc(100vh - 12rem);
+  align-items: stretch;
+  width: clamp(280px, 28vw, 380px);
+  max-height: clamp(45vh, 60vh, 70vh);
   overflow-y: auto;
-  padding-bottom: 1rem;
+  padding: 0.5rem;
   z-index: 10;
+  opacity: 0.92;
+  transition: opacity 0.3s ease;
+}
+
+.stats-overlay:hover,
+.stats-overlay:focus-within {
+  opacity: 1;
 }
 
 /* Custom scrollbar for stats overlay */
@@ -230,7 +236,6 @@
 /* Progress Panel */
 .progress-panel {
   width: 100%;
-  max-width: 500px;
   padding: 1rem;
   background: rgba(10, 10, 10, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -344,8 +349,6 @@
   border-radius: 12px;
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  margin-top: 0.75rem;
-  max-width: 500px;
   width: 100%;
 }
 
@@ -372,13 +375,16 @@
 
 @media (max-width: 768px) {
   .stats-overlay {
-    top: 0.75rem;
+    width: clamp(260px, 85vw, 320px);
+    max-height: clamp(40vh, 55vh, 65vh);
+    top: max(0.75rem, env(safe-area-inset-top, 0px) + 0.5rem);
+    right: max(0.75rem, env(safe-area-inset-right, 0px) + 0.5rem);
     gap: 0.5rem;
+    padding: 0.4rem;
   }
 
   .progress-panel {
     padding: 0.75rem;
-    max-width: 95%;
   }
 
   .progress-header {
@@ -415,7 +421,6 @@
   .next-checkpoint {
     padding: 0.75rem;
     gap: 0.6rem;
-    max-width: 95%;
   }
 
   .checkpoint-icon {
@@ -459,5 +464,70 @@
   .warning-banner {
     font-size: 1rem;
     padding: 1rem 1.5rem;
+  }
+}
+
+/* Extra small screens - very compact layout */
+@media (max-width: 480px) {
+  .stats-overlay {
+    width: min(92vw, 280px);
+    max-height: clamp(35vh, 50vh, 60vh);
+    top: max(0.5rem, env(safe-area-inset-top, 0px) + 0.25rem);
+    right: max(0.5rem, env(safe-area-inset-right, 0px) + 0.25rem);
+    gap: 0.4rem;
+    padding: 0.3rem;
+  }
+
+  .progress-panel {
+    padding: 0.6rem;
+    border-radius: 12px;
+  }
+
+  .progress-item {
+    margin-bottom: 0.5rem;
+  }
+
+  .progress-header {
+    gap: 0.35rem;
+  }
+
+  .progress-icon {
+    font-size: 0.9rem;
+  }
+
+  .progress-label {
+    font-size: 0.7rem;
+  }
+
+  .progress-values {
+    font-size: 0.75rem;
+  }
+
+  .progress-bar-container {
+    height: 5px;
+  }
+
+  .completion-badge,
+  .duration-text,
+  .status-badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .next-checkpoint {
+    padding: 0.6rem;
+    gap: 0.5rem;
+  }
+
+  .checkpoint-icon {
+    font-size: 1.1rem;
+  }
+
+  .checkpoint-name {
+    font-size: 0.8rem;
+  }
+
+  .checkpoint-distance {
+    font-size: 0.7rem;
   }
 }
