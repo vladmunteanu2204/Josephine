@@ -210,5 +210,59 @@ def add_trail_review(trail_id):
         print(f"Error adding review: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/hikes/save', methods=['POST'])
+def save_hike():
+    """Save a completed hike"""
+    try:
+        hike_data = request.json
+        
+        hikes_path = os.path.join(BASE_DIR, 'data', 'completed_hikes.json')
+        
+        # Load existing hikes or create new structure
+        if os.path.exists(hikes_path):
+            with open(hikes_path, 'r') as f:
+                hikes = json.load(f)
+        else:
+            hikes = {'hikes': []}
+        
+        # Add new hike
+        hike_entry = {
+            'id': f"hike-{datetime.now().strftime('%Y%m%d%H%M%S')}",
+            'trail_id': hike_data.get('trail_id'),
+            'trail_name': hike_data.get('trail_name'),
+            'start_time': hike_data.get('start_time'),
+            'end_time': hike_data.get('end_time'),
+            'stats': hike_data.get('stats'),
+            'gps_track': hike_data.get('gps_track', [])
+        }
+        
+        hikes['hikes'].append(hike_entry)
+        
+        # Save back to file
+        with open(hikes_path, 'w') as f:
+            json.dump(hikes, f, indent=2)
+        
+        return jsonify({'success': True, 'hike_id': hike_entry['id']})
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/hikes', methods=['GET'])
+def get_hikes():
+    """Get all completed hikes"""
+    try:
+        hikes_path = os.path.join(BASE_DIR, 'data', 'completed_hikes.json')
+        
+        if not os.path.exists(hikes_path):
+            return jsonify({'hikes': [], 'count': 0})
+        
+        with open(hikes_path, 'r') as f:
+            hikes = json.load(f)
+        
+        return jsonify({'hikes': hikes.get('hikes', []), 'count': len(hikes.get('hikes', []))})
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)

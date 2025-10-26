@@ -4,12 +4,14 @@ import axios from 'axios';
 import ReviewsSection from './ReviewsSection';
 import TrailMap from './TrailMap';
 import MediaGallery from './MediaGallery';
+import ActiveHikeTracker from './ActiveHikeTracker';
 import './TrailDetail.css';
 
 function TrailDetail({ trail, onBack }) {
   const { t } = useTranslation();
   const [fullTrail, setFullTrail] = useState(trail);
   const [loading, setLoading] = useState(false);
+  const [isHikeActive, setIsHikeActive] = useState(false);
 
   useEffect(() => {
     // If trail only has an ID, fetch the full trail data
@@ -88,6 +90,22 @@ function TrailDetail({ trail, onBack }) {
     return icons[type] || '📍';
   };
 
+  const handleHikeEnd = (hikeData) => {
+    setIsHikeActive(false);
+    if (hikeData) {
+      alert(`Hike completed! Distance: ${hikeData.stats.distance_km.toFixed(2)}km, Duration: ${hikeData.stats.duration_hours.toFixed(1)}h. GPX file downloaded.`);
+    }
+  };
+
+  if (isHikeActive) {
+    return (
+      <ActiveHikeTracker 
+        trail={fullTrail} 
+        onEnd={handleHikeEnd}
+      />
+    );
+  }
+
   return (
     <div className="trail-detail">
       <button className="back-button" onClick={onBack}>
@@ -143,6 +161,17 @@ function TrailDetail({ trail, onBack }) {
             </div>
             <div className="stat-label" style={{ marginTop: '12px' }}>{t('trail.difficulty')}</div>
           </div>
+        </div>
+
+        <div className="start-hike-section">
+          <button 
+            className="btn-start-hike"
+            onClick={() => setIsHikeActive(true)}
+          >
+            <span className="btn-icon">🥾</span>
+            <span className="btn-text">Start Hike</span>
+            <span className="btn-subtext">GPS tracking with safety features</span>
+          </button>
         </div>
 
         <div className="trail-overview-section">

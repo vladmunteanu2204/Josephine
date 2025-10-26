@@ -9,6 +9,9 @@ import TrailDetail from './components/TrailDetail';
 import Profile from './components/Profile';
 import SavedTrails from './components/SavedTrails';
 import Settings from './components/Settings';
+import TermsAndConditions from './components/TermsAndConditions';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import Footer from './components/Footer';
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
@@ -79,7 +82,17 @@ function App() {
           {currentView === 'settings' && (
             <Settings onNavigate={navigate} />
           )}
+
+          {currentView === 'terms' && (
+            <TermsAndConditions onBack={goBack} />
+          )}
+
+          {currentView === 'privacy' && (
+            <PrivacyPolicy onBack={goBack} />
+          )}
         </main>
+
+        <Footer setCurrentView={setCurrentView} />
       </AuthProvider>
     </div>
   );
