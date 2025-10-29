@@ -242,7 +242,16 @@ function TrailManager({ adminPassword }) {
           files.map(file => uploadMediaFile(file, fieldName))
         );
         
-        const currentUrls = formData[fieldName] ? formData[fieldName].split(',').map(u => u.trim()).filter(u => u) : [];
+        // Handle both string (comma-separated) and array formats
+        let currentUrls = [];
+        if (formData[fieldName]) {
+          if (Array.isArray(formData[fieldName])) {
+            currentUrls = formData[fieldName].filter(u => u);
+          } else if (typeof formData[fieldName] === 'string') {
+            currentUrls = formData[fieldName].split(',').map(u => u.trim()).filter(u => u);
+          }
+        }
+        
         const newUrls = [...currentUrls, ...uploadedUrls];
         
         setFormData(prev => ({
