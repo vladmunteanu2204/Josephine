@@ -12,6 +12,13 @@
   --diff-easy: #4caf50;
   --diff-medium: #ff9800;
   --diff-hard: #f44336;
+  
+  /* Layout & Z-Index System */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --header-h: 64px;
+  --z-navbar: 1000;
+  --z-dropdown: 3000;
+  --z-modal: 4000;
 }
 
 * {

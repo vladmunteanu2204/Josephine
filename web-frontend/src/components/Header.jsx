@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import LanguageSwitcher from './LanguageSwitcher';
 import Login from './Login';
 import Signup from './Signup';
+import UserMenuPortal from './UserMenuPortal';
 import './Header.css';
 
 function Header({ currentView, setCurrentView }) {
@@ -12,6 +13,7 @@ function Header({ currentView, setCurrentView }) {
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const avatarButtonRef = useRef(null);
 
   const handleLogout = async () => {
     try {
@@ -26,6 +28,37 @@ function Header({ currentView, setCurrentView }) {
   const getInitials = (name) => {
     if (!name) return '?';
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
+
+  const handleMenuNavigation = (key) => {
+    switch(key) {
+      case 'profile':
+        setCurrentView('profile');
+        break;
+      case 'saved':
+        setCurrentView('savedTrails');
+        break;
+      case 'challenges':
+        setCurrentView('challenges');
+        break;
+      case 'leaderboards':
+        setCurrentView('leaderboards');
+        break;
+      case 'planner':
+        setCurrentView('planner');
+        break;
+      case 'admin':
+        setCurrentView('admin');
+        break;
+      case 'settings':
+        setCurrentView('settings');
+        break;
+      case 'logout':
+        handleLogout();
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -68,10 +101,13 @@ function Header({ currentView, setCurrentView }) {
             <LanguageSwitcher />
             
             {currentUser ? (
-              <div className="user-menu-container">
+              <>
                 <button 
+                  ref={avatarButtonRef}
                   className="user-menu-btn"
                   onClick={() => setShowUserMenu(!showUserMenu)}
+                  aria-label="User menu"
+                  aria-expanded={showUserMenu}
                 >
                   <div className="user-avatar">
                     {getInitials(currentUser.displayName || currentUser.email)}
@@ -81,83 +117,15 @@ function Header({ currentView, setCurrentView }) {
                   </span>
                 </button>
 
-                {showUserMenu && (
-                  <div className="user-menu-dropdown">
-                    <button 
-                      className="user-menu-item"
-                      onClick={() => {
-                        setCurrentView('profile');
-                        setShowUserMenu(false);
-                      }}
-                    >
-                      <span>👤</span>
-                      {t('auth.profile')}
-                    </button>
-                    <button 
-                      className="user-menu-item"
-                      onClick={() => {
-                        setCurrentView('savedTrails');
-                        setShowUserMenu(false);
-                      }}
-                    >
-                      <span>❤️</span>
-                      {t('auth.savedTrails')}
-                    </button>
-                    <button 
-                      className="user-menu-item"
-                      onClick={() => {
-                        setCurrentView('challenges');
-                        setShowUserMenu(false);
-                      }}
-                    >
-                      <span>🏆</span>
-                      Challenges
-                    </button>
-                    <button 
-                      className="user-menu-item"
-                      onClick={() => {
-                        setCurrentView('leaderboards');
-                        setShowUserMenu(false);
-                      }}
-                    >
-                      <span>🏅</span>
-                      Leaderboards
-                    </button>
-                    <button 
-                      className="user-menu-item"
-                      onClick={() => {
-                        setCurrentView('settings');
-                        setShowUserMenu(false);
-                      }}
-                    >
-                      <span>⚙️</span>
-                      {t('auth.settings')}
-                    </button>
-                    
-                    {currentUser?.email === 'vladmunteanu2204@gmail.com' && (
-                      <>
-                        <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '4px 0' }}></div>
-                        <button 
-                          className="user-menu-item admin-menu-item"
-                          onClick={() => {
-                            setCurrentView('admin');
-                            setShowUserMenu(false);
-                          }}
-                        >
-                          <span>⚙️</span>
-                          Admin Panel
-                        </button>
-                      </>
-                    )}
-                    
-                    <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '4px 0' }}></div>
-                    <button className="user-menu-item logout" onClick={handleLogout}>
-                      <span>🚪</span>
-                      {t('auth.logout')}
-                    </button>
-                  </div>
-                )}
-              </div>
+                <UserMenuPortal
+                  isOpen={showUserMenu}
+                  onClose={() => setShowUserMenu(false)}
+                  anchorRef={avatarButtonRef}
+                  userEmail={currentUser.email}
+                  isAdmin={currentUser.email === 'vladmunteanu2204@gmail.com'}
+                  onNavigate={handleMenuNavigation}
+                />
+              </>
             ) : (
               <div className="auth-buttons">
                 <button 
