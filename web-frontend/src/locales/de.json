@@ -24,6 +24,16 @@
     "login": "Anmelden",
     "profile": "Profil"
   },
+  "header": {
+    "profile": "Profil",
+    "savedTrails": "Gespeicherte Wege",
+    "challenges": "Herausforderungen",
+    "leaderboards": "Bestenlisten",
+    "hikePlanner": "Wanderplaner",
+    "adminPanel": "Admin Panel",
+    "settings": "Einstellungen",
+    "logout": "Abmelden"
+  },
   "hero": {
     "title": "Entdecke Alpines Wandern",
     "subtitle": "Geprüfte Wanderwege in Südtirol & Trentino, kuratiert für jeden Abenteurer",

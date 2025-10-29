@@ -24,6 +24,16 @@
     "login": "Accedi",
     "profile": "Profilo"
   },
+  "header": {
+    "profile": "Profilo",
+    "savedTrails": "Sentieri Salvati",
+    "challenges": "Sfide",
+    "leaderboards": "Classifiche",
+    "hikePlanner": "Pianificatore",
+    "adminPanel": "Pannello Admin",
+    "settings": "Impostazioni",
+    "logout": "Esci"
+  },
   "hero": {
     "title": "Scopri l'Escursionismo Alpino",
     "subtitle": "Sentieri verificati in Alto Adige e Trentino, selezionati per ogni avventuriero",

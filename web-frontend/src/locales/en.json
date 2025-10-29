@@ -24,6 +24,16 @@
     "login": "Login",
     "profile": "Profile"
   },
+  "header": {
+    "profile": "Profile",
+    "savedTrails": "Saved Trails",
+    "challenges": "Challenges",
+    "leaderboards": "Leaderboards",
+    "hikePlanner": "Hike Planner",
+    "adminPanel": "Admin Panel",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
   "hero": {
     "title": "Discover Alpine Hiking",
     "subtitle": "Verified trails in South Tyrol & Trentino, curated for every adventurer",
