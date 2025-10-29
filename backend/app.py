@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
 import os
 import json
@@ -13,7 +13,10 @@ import subprocess
 import tempfile
 import uuid
 
-app = Flask(__name__)
+# Configure Flask to serve static files from the built React frontend
+app = Flask(__name__, 
+            static_folder='../web-frontend/dist',
+            static_url_path='')
 CORS(app)
 
 # Initialize Object Storage client
@@ -817,6 +820,20 @@ def serve_media(filename):
     except Exception as e:
         print(f"Serve error: {str(e)}")
         return jsonify({'error': f'File retrieval failed: {str(e)}'}), 500
+
+# Serve React frontend (catch-all route for SPA)
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_frontend(path):
+    """Serve React frontend static files or index.html for SPA routing"""
+    if not app.static_folder:
+        return jsonify({'error': 'Frontend not available'}), 503
+    
+    # If path is a file that exists in the static folder, serve it
+    if path and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    # Otherwise, serve index.html (for React Router)
+    return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
