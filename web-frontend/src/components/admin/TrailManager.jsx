@@ -14,6 +14,7 @@ function TrailManager({ adminPassword }) {
   const [gpxData, setGpxData] = useState(null);
   const [gpxLoading, setGpxLoading] = useState(false);
   const [preview, setPreview] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState({});
   const [formData, setFormData] = useState({
     id: '',
     name: '',
@@ -154,6 +155,78 @@ function TrailManager({ adminPassword }) {
       ...prev,
       coordinates: null
     }));
+  };
+
+  const uploadMediaFile = async (file, fieldType) => {
+    const uploadKey = `${fieldType}-${Date.now()}`;
+    setUploadProgress(prev => ({ ...prev, [uploadKey]: { uploading: true, progress: 0 } }));
+    
+    try {
+      const formDataUpload = new FormData();
+      formDataUpload.append('file', file);
+      formDataUpload.append('type', fieldType);
+      
+      const headers = { 
+        'X-Admin-Password': adminPassword
+      };
+      
+      const response = await axios.post('/api/admin/upload/media', formDataUpload, { headers });
+      
+      setUploadProgress(prev => ({ ...prev, [uploadKey]: { uploading: false, success: true } }));
+      
+      setTimeout(() => {
+        setUploadProgress(prev => {
+          const newProgress = { ...prev };
+          delete newProgress[uploadKey];
+          return newProgress;
+        });
+      }, 2000);
+      
+      return response.data.url;
+    } catch (error) {
+      console.error('Upload error:', error);
+      setUploadProgress(prev => ({ ...prev, [uploadKey]: { uploading: false, error: true } }));
+      setTimeout(() => {
+        setUploadProgress(prev => {
+          const newProgress = { ...prev };
+          delete newProgress[uploadKey];
+          return newProgress;
+        });
+      }, 3000);
+      throw error;
+    }
+  };
+
+  const handleFileUpload = async (e, fieldName) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    
+    try {
+      if (fieldName === 'photos' || fieldName === 'videos') {
+        const uploadedUrls = await Promise.all(
+          files.map(file => uploadMediaFile(file, fieldName))
+        );
+        
+        const currentUrls = formData[fieldName] ? formData[fieldName].split(',').map(u => u.trim()).filter(u => u) : [];
+        const newUrls = [...currentUrls, ...uploadedUrls];
+        
+        setFormData(prev => ({
+          ...prev,
+          [fieldName]: newUrls.join(', ')
+        }));
+        
+        alert(`✅ ${files.length} file(s) uploaded successfully!`);
+      } else {
+        const uploadedUrl = await uploadMediaFile(files[0], fieldName);
+        setFormData(prev => ({
+          ...prev,
+          [fieldName]: uploadedUrl
+        }));
+        alert('✅ File uploaded successfully!');
+      }
+    } catch (error) {
+      alert('❌ Upload failed: ' + (error.response?.data?.error || error.message));
+    }
   };
 
   const handleSave = async () => {
@@ -426,36 +499,110 @@ function TrailManager({ adminPassword }) {
               </div>
 
               <div className="form-group">
-                <label>Wallpaper URL</label>
-                <input
-                  type="text"
-                  value={formData.wallpaper}
-                  onChange={(e) => setFormData({ ...formData, wallpaper: e.target.value })}
-                  placeholder="https://..."
-                />
+                <label>Wallpaper (Hero Image)</label>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                  <input
+                    type="text"
+                    value={formData.wallpaper}
+                    onChange={(e) => setFormData({ ...formData, wallpaper: e.target.value })}
+                    placeholder="Enter URL or upload file..."
+                    style={{ flex: 1 }}
+                  />
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleFileUpload(e, 'wallpaper')}
+                      id="wallpaper-upload"
+                      style={{ display: 'none' }}
+                    />
+                    <label htmlFor="wallpaper-upload" className="btn-upload" style={{
+                      display: 'inline-block',
+                      padding: '8px 16px',
+                      background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+                      color: 'white',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      whiteSpace: 'nowrap'
+                    }}>
+                      📤 Upload
+                    </label>
+                  </div>
+                </div>
                 <small style={{ opacity: 0.7, fontSize: '12px' }}>Background/hero image for the trail</small>
               </div>
 
               <div className="form-group">
-                <label>Photos URLs (comma-separated)</label>
-                <input
-                  type="text"
-                  value={formData.photos}
-                  onChange={(e) => setFormData({ ...formData, photos: e.target.value })}
-                  placeholder="https://photo1.jpg, https://photo2.jpg"
-                />
-                <small style={{ opacity: 0.7, fontSize: '12px' }}>Photo gallery images</small>
+                <label>Photos (Gallery Images)</label>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                  <input
+                    type="text"
+                    value={formData.photos}
+                    onChange={(e) => setFormData({ ...formData, photos: e.target.value })}
+                    placeholder="Enter URLs or upload files..."
+                    style={{ flex: 1 }}
+                  />
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={(e) => handleFileUpload(e, 'photos')}
+                      id="photos-upload"
+                      style={{ display: 'none' }}
+                    />
+                    <label htmlFor="photos-upload" className="btn-upload" style={{
+                      display: 'inline-block',
+                      padding: '8px 16px',
+                      background: 'linear-gradient(135deg, #10b981, #059669)',
+                      color: 'white',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      whiteSpace: 'nowrap'
+                    }}>
+                      📸 Upload
+                    </label>
+                  </div>
+                </div>
+                <small style={{ opacity: 0.7, fontSize: '12px' }}>Photo gallery images (multiple files allowed)</small>
               </div>
 
               <div className="form-group">
-                <label>Videos URLs (comma-separated)</label>
-                <input
-                  type="text"
-                  value={formData.videos}
-                  onChange={(e) => setFormData({ ...formData, videos: e.target.value })}
-                  placeholder="https://video1.mp4, https://video2.mp4"
-                />
-                <small style={{ opacity: 0.7, fontSize: '12px' }}>Video gallery files</small>
+                <label>Videos (Gallery Videos)</label>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                  <input
+                    type="text"
+                    value={formData.videos}
+                    onChange={(e) => setFormData({ ...formData, videos: e.target.value })}
+                    placeholder="Enter URLs or upload files..."
+                    style={{ flex: 1 }}
+                  />
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      type="file"
+                      accept="video/*"
+                      multiple
+                      onChange={(e) => handleFileUpload(e, 'videos')}
+                      id="videos-upload"
+                      style={{ display: 'none' }}
+                    />
+                    <label htmlFor="videos-upload" className="btn-upload" style={{
+                      display: 'inline-block',
+                      padding: '8px 16px',
+                      background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                      color: 'white',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      whiteSpace: 'nowrap'
+                    }}>
+                      🎥 Upload
+                    </label>
+                  </div>
+                </div>
+                <small style={{ opacity: 0.7, fontSize: '12px' }}>Video gallery files (multiple files allowed)</small>
               </div>
 
               <div className="form-group">
