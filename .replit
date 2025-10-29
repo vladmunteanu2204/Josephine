@@ -77,3 +77,7 @@ externalPort = 3002
 
 [objectStorage]
 defaultBucketID = "replit-objstore-28da3846-684e-49f4-8865-1e4ef0322a73"
+
+[deployment]
+deploymentTarget = "autoscale"
+run = ["bash", "-c", "cd backend && python app.py & cd web-frontend && npm run dev"]
