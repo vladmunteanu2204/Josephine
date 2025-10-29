@@ -466,15 +466,18 @@
 
 @media (max-width: 768px) {
   .catalog-header-section {
-    padding: 60px 0 40px;
+    padding: 100px 20px 40px;
+    margin-bottom: 20px;
   }
 
   .catalog-title {
-    font-size: 36px;
+    font-size: 32px;
+    margin-bottom: 16px;
   }
 
   .catalog-subtitle {
-    font-size: 16px;
+    font-size: 15px;
+    padding: 0 10px;
   }
 
   .trail-grid-catalog {

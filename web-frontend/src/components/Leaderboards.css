@@ -231,8 +231,18 @@
 }
 
 @media (max-width: 768px) {
+  .leaderboards-page {
+    padding: 100px 1rem 2rem;
+  }
+
+  .back-button {
+    margin-bottom: 1.5rem;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
   .page-title {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
   
   .user-stats-card {

@@ -257,7 +257,13 @@ input:checked + .toggle-slider:before {
 
 @media (max-width: 768px) {
   .settings-page {
-    padding: 1rem 0.5rem;
+    padding: 100px 1rem 1rem;
+  }
+
+  .back-button {
+    margin-bottom: 1.5rem;
+    padding: 12px 20px;
+    font-size: 14px;
   }
 
   .settings-section {
@@ -265,7 +271,7 @@ input:checked + .toggle-slider:before {
   }
 
   .settings-title {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 
   .toggle-item {

@@ -516,8 +516,20 @@
 }
 
 @media (max-width: 768px) {
+  .planner-page {
+    padding: 100px 0 2rem;
+  }
+
+  .back-button {
+    margin-bottom: 1.5rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
   .planner-title {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 
   .date-selector {
