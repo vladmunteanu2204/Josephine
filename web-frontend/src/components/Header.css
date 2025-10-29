@@ -3,11 +3,12 @@
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  position: fixed;
-  top: 0;
+  position: sticky;
+  top: var(--safe-top);
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: var(--z-navbar);
+  overflow: visible;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4),
               inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
@@ -180,7 +181,6 @@
 @media (max-width: 768px) {
   .header {
     max-width: 100vw;
-    overflow: visible;
   }
 
   .header-content {

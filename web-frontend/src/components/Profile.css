@@ -398,7 +398,10 @@
 
 @media (max-width: 768px) {
   .profile-page {
-    padding: 100px 1rem 1rem;
+    padding-top: calc(var(--safe-top) + var(--header-h) + 16px);
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 1rem;
   }
 
   .back-button {

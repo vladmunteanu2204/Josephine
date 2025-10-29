@@ -517,7 +517,10 @@
 
 @media (max-width: 768px) {
   .planner-page {
-    padding: 100px 0 2rem;
+    padding-top: calc(var(--safe-top) + var(--header-h) + 16px);
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 2rem;
   }
 
   .back-button {

@@ -384,7 +384,7 @@
 
 @media (max-width: 768px) {
   .recommendations-page {
-    padding-top: 100px;
+    padding-top: calc(var(--safe-top) + var(--header-h) + 16px);
   }
 
   .recommendations-header h1 {

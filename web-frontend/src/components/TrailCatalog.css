@@ -466,7 +466,10 @@
 
 @media (max-width: 768px) {
   .catalog-header-section {
-    padding: 100px 20px 40px;
+    padding-top: calc(var(--safe-top) + var(--header-h) + 20px);
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 40px;
     margin-bottom: 20px;
   }
 
