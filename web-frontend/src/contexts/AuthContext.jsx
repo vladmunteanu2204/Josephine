@@ -18,9 +18,35 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-// Detect if user is on mobile device
+// Detect if user is on mobile device using capability checks (more reliable than UA)
 function isMobileDevice() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  // Check for touch support with multiple touch points (not just single touch for stylus)
+  const hasTouchPoints = navigator.maxTouchPoints > 1;
+  
+  // Check for coarse pointer (touch screen) - true mobile devices have coarse primary pointer
+  const hasCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+  
+  // Check for small screen (mobile-sized)
+  const hasSmallScreen = window.innerWidth < 768;
+  
+  // User agent as fallback
+  const mobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
+  // Stronger detection: coarse pointer with touch OR small screen with mobile UA
+  // This avoids classifying touch-enabled laptops as mobile
+  const isMobile = (hasCoarsePointer && hasTouchPoints) || (hasSmallScreen && mobileUA);
+  
+  // Log detection details for debugging
+  console.log('Mobile detection:', {
+    userAgent: navigator.userAgent,
+    maxTouchPoints: navigator.maxTouchPoints,
+    hasCoarsePointer,
+    hasSmallScreen,
+    mobileUA,
+    finalDecision: isMobile
+  });
+  
+  return isMobile;
 }
 
 export function AuthProvider({ children }) {
@@ -59,20 +85,29 @@ export function AuthProvider({ children }) {
         console.log('Mobile device detected, using signInWithRedirect');
         await signInWithRedirect(auth, provider);
       } else {
-        console.log('Desktop device detected, using signInWithPopup');
+        console.log('Desktop device detected, attempting signInWithPopup');
         try {
           const result = await signInWithPopup(auth, provider);
+          console.log('Popup sign-in successful');
           return result;
         } catch (popupError) {
-          // If popup is blocked, fall back to redirect
-          if (popupError.code === 'auth/popup-blocked' || 
-              popupError.code === 'auth/cancelled-popup-request' ||
-              popupError.code === 'auth/popup-closed-by-user') {
-            console.log('Popup blocked, falling back to redirect');
-            await signInWithRedirect(auth, provider);
-          } else {
+          console.error('Popup error details:', {
+            code: popupError.code,
+            message: popupError.message,
+            name: popupError.name
+          });
+          
+          // Don't fall back to redirect if user explicitly cancelled
+          if (popupError.code === 'auth/popup-closed-by-user' || 
+              popupError.code === 'auth/cancelled-popup-request') {
+            console.log('User cancelled popup, not falling back to redirect');
             throw popupError;
           }
+          
+          // For any other error (popup blocked, invalid request, etc.), fall back to redirect
+          console.log('Popup failed, falling back to redirect. Error code:', popupError.code);
+          await signInWithRedirect(auth, provider);
+          return; // Redirect doesn't return immediately
         }
       }
     } catch (error) {
