@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import TrailManager from './admin/TrailManager';
-import GPXUploader from './admin/GPXUploader';
 import ReviewsModeration from './admin/ReviewsModeration';
 import ChallengesManager from './admin/ChallengesManager';
 import './AdminPanel.css';
@@ -94,12 +93,6 @@ function AdminPanel({ onNavigate }) {
             🗺️ Trail Management
           </button>
           <button
-            className={`admin-tab ${activeTab === 'gpx' ? 'active' : ''}`}
-            onClick={() => setActiveTab('gpx')}
-          >
-            📍 GPX Upload
-          </button>
-          <button
             className={`admin-tab ${activeTab === 'reviews' ? 'active' : ''}`}
             onClick={() => setActiveTab('reviews')}
           >
@@ -115,7 +108,6 @@ function AdminPanel({ onNavigate }) {
 
         <div className="admin-content">
           {activeTab === 'trails' && <TrailManager adminPassword={adminPassword} />}
-          {activeTab === 'gpx' && <GPXUploader adminPassword={adminPassword} />}
           {activeTab === 'reviews' && <ReviewsModeration adminPassword={adminPassword} />}
           {activeTab === 'challenges' && <ChallengesManager adminPassword={adminPassword} />}
         </div>
