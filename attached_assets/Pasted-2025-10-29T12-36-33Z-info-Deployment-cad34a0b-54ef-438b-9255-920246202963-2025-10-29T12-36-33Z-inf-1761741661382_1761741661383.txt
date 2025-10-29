@@ -1,0 +1,39 @@
+2025-10-29T12:36:33Z info: Deployment: cad34a0b-54ef-438b-9255-920246202963
+2025-10-29T12:36:33Z info: Build: 87d90a9b-167a-4e5a-93db-e7eba6b09575
+2025-10-29T12:36:33Z info: Connecting to builder
+2025-10-29T12:36:34Z info: Builder connected
+2025-10-29T12:36:34Z info: Installing packages
+2025-10-29T12:36:35Z info: Skipping Build as no Build command set
+2025-10-29T12:36:35Z info: Pushing pid1 binary layer...
+2025-10-29T12:36:37Z info: Created pid1 binary layer
+2025-10-29T12:36:40Z info: Pushing hosting layer...
+2025-10-29T12:36:40Z info: Pushing Repl layer...
+2025-10-29T12:36:40Z info: Nix layers for this Repl are uncached.
+2025-10-29T12:36:40Z info: Pushing nix-0 layer...
+2025-10-29T12:36:41Z info: Created hosting layer
+2025-10-29T12:37:12Z info: Created Repl layer
+2025-10-29T12:37:12Z info: Pushing Repl (cache) layer...
+2025-10-29T12:37:13Z info: Created Repl (cache) layer
+2025-10-29T12:38:39Z info: Created nix-0 layer
+2025-10-29T12:38:39Z info: uploading image for cached layer
+2025-10-29T12:38:39Z info: pushed cache image manifest
+2025-10-29T12:38:40Z info: pushed cache soci index manifest
+2025-10-29T12:38:40Z info: uploading cached layer
+2025-10-29T12:38:40Z info: successfully uploaded cached layer
+2025-10-29T12:38:42Z info: Pushed image manifest
+2025-10-29T12:38:44Z info: Pushed soci index manifest
+2025-10-29T12:38:44Z info: Pushed referrer manifest
+2025-10-29T12:38:47Z info: Creating Autoscale service
+npm error   npm run
+npm error A complete log of this run can be found in: /home/runner/.npm/_logs/2025-10-29T12_39_32_830Z-debug-0.log
+npm error To see a list of scripts, run:
+npm error
+npm error To see a list of scripts, run:
+npm error Missing script: "build"
+npm error   npm run
+command finished with error [sh -c npm run build]: exit status 1
+npm error Missing script: "build"
+npm error A complete log of this run can be found in: /home/runner/.npm/_logs/2025-10-29T12_39_47_522Z-debug-0.log
+command finished with error [sh -c npm run build]: exit status 1
+npm error
+crash loop detected
