@@ -106,6 +106,26 @@ function Header({ currentView, setCurrentView }) {
                     <button 
                       className="user-menu-item"
                       onClick={() => {
+                        setCurrentView('challenges');
+                        setShowUserMenu(false);
+                      }}
+                    >
+                      <span>🏆</span>
+                      Challenges
+                    </button>
+                    <button 
+                      className="user-menu-item"
+                      onClick={() => {
+                        setCurrentView('leaderboards');
+                        setShowUserMenu(false);
+                      }}
+                    >
+                      <span>🏅</span>
+                      Leaderboards
+                    </button>
+                    <button 
+                      className="user-menu-item"
+                      onClick={() => {
                         setCurrentView('settings');
                         setShowUserMenu(false);
                       }}
