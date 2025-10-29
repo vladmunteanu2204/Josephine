@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "cd web-frontend && npm install && npm run build",
-    "start": "cd backend && python app.py",
+    "start": "cd backend && PORT=5000 python app.py",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

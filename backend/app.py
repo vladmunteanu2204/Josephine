@@ -836,4 +836,9 @@ def serve_frontend(path):
     return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    # Use port from environment variable, default to 8000 for development
+    # Deployment will set PORT=5000
+    port = int(os.environ.get('PORT', 8000))
+    # Disable debug mode in production (PORT=5000)
+    debug_mode = port != 5000
+    app.run(host='0.0.0.0', port=port, debug=debug_mode)

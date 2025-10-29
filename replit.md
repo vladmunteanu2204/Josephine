@@ -40,16 +40,20 @@ The design system employs a premium dark alpine theme with glassmorphism effects
 - **Accessibility:** Features like ARIA labels and focus management are integrated.
 
 ### System Design Choices
-- **Backend:** Flask API (Python) running on port 8000, serving trail data, recommendations, and weather data.
-- **Frontend:** React 18 web application built with Vite, running on port 5000 for Replit webview preview.
+- **Backend:** Flask API (Python) serving trail data, recommendations, and weather data.
+- **Frontend:** React 18 web application built with Vite for Replit webview preview.
 - **Database:** Local JSON files (`trails.json`, `reviews.json`) store verified trail data and reviews.
 - **API URL Handling:** Dynamically constructed using conditional pattern: `window.location.hostname.includes('replit.dev') ? https://${hostname} : http://localhost:8000` for cross-environment compatibility.
+- **Port Configuration:**
+  - **Development:** Frontend (React dev server) on port 5000, Backend (Flask) on port 8000
+  - **Production/Deployment:** Single Flask server on port 5000 (serves both API and built frontend)
 
 ### Deployment Configuration
 - **Deployment Type:** Autoscale deployment (automatically scales with traffic, charges only when app is being used)
-- **Build Command:** `cd web-frontend && npm install && npm run build` - Installs dependencies and builds React frontend into static files
-- **Run Command:** `cd backend && python app.py` - Starts Flask server which serves both API (on `/api/*` routes) and the built React frontend (on all other routes)
-- **Port:** Single port 8000 exposed for both frontend and backend
+- **Build Command:** `npm run build` → Runs `cd web-frontend && npm install && npm run build` (builds React frontend to dist folder)
+- **Run Command:** `npm run start` → Runs `cd backend && PORT=5000 python app.py` (starts Flask with PORT=5000)
+- **Port:** Flask listens on port 5000 in production (mapped to external port 80), port 8000 in development
+- **Debug Mode:** Automatically disabled when PORT=5000 (production), enabled for development
 - **Static File Serving:** Flask configured with `static_folder='../web-frontend/dist'` to serve built React app. Catch-all route serves `index.html` for SPA routing while preserving API endpoints.
 - **Post-Deployment:** Add production domain to Firebase Console authorized domains for authentication to work correctly.
 
