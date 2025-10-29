@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import TrailManager from './admin/TrailManager';
 import GPXUploader from './admin/GPXUploader';
@@ -7,33 +8,41 @@ import ReviewsModeration from './admin/ReviewsModeration';
 import ChallengesManager from './admin/ChallengesManager';
 import './AdminPanel.css';
 
+const ADMIN_EMAIL = 'vladmunteanu2204@gmail.com';
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'alpenvia_admin_2025';
+
 function AdminPanel({ onNavigate }) {
   const { t } = useTranslation();
+  const { currentUser } = useAuth();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
-  const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('trails');
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setIsLoggingIn(true);
-    setError('');
-    
-    try {
-      const response = await axios.post('/api/admin/login', { password });
-      if (response.data.success) {
-        setIsAuthenticated(true);
-        setAdminPassword(password);
-        setPassword('');
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || 'Invalid password');
-    } finally {
-      setIsLoggingIn(false);
+  useEffect(() => {
+    // Check if user is admin
+    if (currentUser?.email === ADMIN_EMAIL) {
+      // Auto-authenticate admin user
+      setIsAuthenticated(true);
+      setAdminPassword(ADMIN_PASSWORD);
     }
-  };
+    setIsCheckingAuth(false);
+  }, [currentUser]);
+
+  if (isCheckingAuth) {
+    return (
+      <div className="admin-login-page">
+        <div className="admin-login-container">
+          <div className="admin-login-card">
+            <div className="admin-login-header">
+              <h1>🔐 Admin Panel</h1>
+              <p>Verifying access...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
@@ -41,23 +50,19 @@ function AdminPanel({ onNavigate }) {
         <div className="admin-login-container">
           <div className="admin-login-card">
             <div className="admin-login-header">
-              <h1>🔐 Admin Panel</h1>
-              <p>Enter password to access admin functions</p>
+              <h1>🚫 Access Denied</h1>
+              <p>You do not have permission to access the admin panel.</p>
+              <p style={{ marginTop: '20px', fontSize: '14px', opacity: 0.7 }}>
+                Only the site administrator can access this area.
+              </p>
             </div>
-            <form onSubmit={handleLogin} className="admin-login-form">
-              <input
-                type="password"
-                className="admin-password-input"
-                placeholder="Enter admin password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoFocus
-              />
-              {error && <div className="admin-login-error">{error}</div>}
-              <button type="submit" className="admin-login-btn" disabled={isLoggingIn}>
-                {isLoggingIn ? 'Verifying...' : 'Access Admin Panel'}
-              </button>
-            </form>
+            <button 
+              className="admin-login-btn" 
+              onClick={() => onNavigate('home')}
+              style={{ marginTop: '20px' }}
+            >
+              ← Back to Home
+            </button>
           </div>
         </div>
       </div>

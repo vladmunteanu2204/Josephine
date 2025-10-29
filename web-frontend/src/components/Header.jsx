@@ -113,6 +113,23 @@ function Header({ currentView, setCurrentView }) {
                       <span>⚙️</span>
                       {t('auth.settings')}
                     </button>
+                    
+                    {currentUser?.email === 'vladmunteanu2204@gmail.com' && (
+                      <>
+                        <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '4px 0' }}></div>
+                        <button 
+                          className="user-menu-item admin-menu-item"
+                          onClick={() => {
+                            setCurrentView('admin');
+                            setShowUserMenu(false);
+                          }}
+                        >
+                          <span>⚙️</span>
+                          Admin Panel
+                        </button>
+                      </>
+                    )}
+                    
                     <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '4px 0' }}></div>
                     <button className="user-menu-item logout" onClick={handleLogout}>
                       <span>🚪</span>
