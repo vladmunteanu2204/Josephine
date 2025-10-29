@@ -528,4 +528,34 @@
   .overview-text {
     font-size: 16px;
   }
+
+  .back-button,
+  .action-btn,
+  .review-submit,
+  .start-hike-btn {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 14px 24px;
+    font-size: 15px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .action-buttons button {
+    width: 100%;
+  }
+
+  .review-form textarea {
+    min-height: 120px;
+    font-size: 16px;
+  }
+
+  .review-form input,
+  .review-form select {
+    min-height: 48px;
+    font-size: 16px;
+  }
 }

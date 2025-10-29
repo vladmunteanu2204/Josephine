@@ -440,4 +440,44 @@
   .badges-grid {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   }
+
+  .profile-edit-buttons button,
+  .profile-action-btn,
+  .edit-form button {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 14px 24px;
+    font-size: 15px;
+  }
+
+  .edit-form input,
+  .edit-form select,
+  .edit-form textarea {
+    min-height: 48px;
+    font-size: 16px;
+    padding: 12px 16px;
+  }
+
+  .edit-form textarea {
+    min-height: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-section {
+    padding: 1rem;
+  }
+
+  .profile-title {
+    font-size: 1.25rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
 }

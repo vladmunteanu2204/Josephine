@@ -100,6 +100,8 @@
   cursor: pointer;
   transition: all 0.3s ease;
   border: none;
+  min-height: 54px;
+  min-width: 44px;
 }
 
 .hero-btn-primary {
@@ -276,25 +278,38 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .hero-parallax {
-    height: 600px;
+    height: 400px !important;
+    min-height: 400px;
+    max-height: 400px;
+  }
+
+  .hero-content {
+    padding: 30px 20px;
   }
 
   .hero-title-large {
-    font-size: 48px;
+    font-size: 40px;
+    line-height: 1.2;
+    margin-bottom: 12px;
   }
 
   .hero-subtitle-large {
-    font-size: 18px;
+    font-size: 16px;
+    margin: 0 0 28px 0;
+    max-width: 90%;
   }
 
   .hero-cta-buttons {
     flex-direction: column;
     align-items: stretch;
+    gap: 12px;
   }
 
   .hero-btn-primary,
   .hero-btn-secondary {
     width: 100%;
+    padding: 14px 24px;
+    font-size: 15px;
   }
 
   .section-title-home {
@@ -313,15 +328,29 @@
 
 @media (max-width: 480px) {
   .hero-parallax {
-    height: 500px;
+    height: 350px !important;
+    min-height: 350px;
+    max-height: 350px;
+  }
+
+  .hero-content {
+    padding: 25px 16px;
   }
 
   .hero-title-large {
-    font-size: 36px;
+    font-size: 32px;
+    margin-bottom: 10px;
   }
 
   .hero-subtitle-large {
-    font-size: 16px;
+    font-size: 14px;
+    margin: 0 0 24px 0;
+  }
+
+  .hero-btn-primary,
+  .hero-btn-secondary {
+    padding: 12px 20px;
+    font-size: 14px;
   }
 
   .section-title-home {
@@ -329,10 +358,36 @@
   }
 
   .quick-action-card {
-    padding: 28px;
+    padding: 24px;
+    min-height: 160px;
   }
 
   .quick-action-icon {
-    font-size: 48px;
+    font-size: 44px;
+  }
+
+  .quick-action-title {
+    font-size: 18px;
+  }
+
+  .quick-action-desc {
+    font-size: 13px;
+  }
+}
+
+/* Global WCAG-compliant touch targets */
+button, .btn, [role="button"], input[type="button"], input[type="submit"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+input, select, textarea {
+  min-height: 44px;
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px;
   }
 }

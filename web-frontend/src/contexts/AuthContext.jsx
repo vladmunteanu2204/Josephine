@@ -10,7 +10,8 @@ import {
   getRedirectResult,
   updateProfile,
   setPersistence,
-  browserLocalPersistence
+  browserLocalPersistence,
+  sendPasswordResetEmail
 } from 'firebase/auth';
 import { auth } from '../firebase';
 
@@ -22,6 +23,11 @@ export function useAuth() {
 
 // Detect if user is on mobile device using capability checks (more reliable than UA)
 function isMobileDevice() {
+  // Guard for SSR/non-browser contexts
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+    return false;
+  }
+  
   // Check for touch support with multiple touch points (not just single touch for stylus)
   const hasTouchPoints = navigator.maxTouchPoints > 1;
   
@@ -70,6 +76,10 @@ export function AuthProvider({ children }) {
 
   function logout() {
     return signOut(auth);
+  }
+
+  function resetPassword(email) {
+    return sendPasswordResetEmail(auth, email);
   }
 
   async function loginWithGoogle() {
@@ -336,6 +346,7 @@ export function AuthProvider({ children }) {
     login,
     logout,
     loginWithGoogle,
+    resetPassword,
     authError,
     clearAuthError
   };
