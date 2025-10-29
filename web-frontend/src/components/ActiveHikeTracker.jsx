@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import Map, { Source, Layer, Marker, NavigationControl } from 'react-map-gl';
 import SafetyDisclaimerModal from './SafetyDisclaimerModal';
+import CelebrationModal from './CelebrationModal';
 import { checkNewBadges } from '../utils/gamification';
 import './ActiveHikeTracker.css';
 
@@ -16,6 +17,8 @@ function ActiveHikeTracker({ trail, onEnd }) {
   const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [isTracking, setIsTracking] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [isEnding, setIsEnding] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
   const [gpsTrack, setGpsTrack] = useState([]);
   const [currentPosition, setCurrentPosition] = useState(null);
   const [stats, setStats] = useState({
@@ -27,6 +30,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
   const [offTrailWarning, setOffTrailWarning] = useState(false);
   const [alertedPOIs, setAlertedPOIs] = useState(new Set());
   const [shareLink, setShareLink] = useState(null);
+  const [completedHikeData, setCompletedHikeData] = useState(null);
   
   const watchIdRef = useRef(null);
   const startTimeRef = useRef(null);
@@ -206,11 +210,13 @@ function ActiveHikeTracker({ trail, onEnd }) {
             longitude
           );
 
-          const elevationChange = altitude ? Math.max(0, (altitude - lastPoint.alt)) : 0;
+          // Filter elevation noise: only count changes >= 5m to reduce GPS altitude error
+          const elevationChange = altitude && lastPoint.alt ? (altitude - lastPoint.alt) : 0;
+          const significantElevation = Math.abs(elevationChange) >= 5 ? Math.max(0, elevationChange) : 0;
 
           setStats(prevStats => ({
             distance: prevStats.distance + segmentDistance,
-            elevation: prevStats.elevation + elevationChange,
+            elevation: prevStats.elevation + significantElevation,
             duration: Math.floor((Date.now() - startTimeRef.current) / 1000),
             pace: speed || prevStats.pace
           }));
@@ -362,6 +368,14 @@ function ActiveHikeTracker({ trail, onEnd }) {
 
   // End hike
   const endHike = async (autoEnded = false) => {
+    // Prevent duplicate saves
+    if (isEnding) {
+      console.log('Already ending hike, ignoring duplicate click');
+      return;
+    }
+    
+    setIsEnding(true);
+    
     // Stop tracking
     if (watchIdRef.current) {
       navigator.geolocation.clearWatch(watchIdRef.current);
@@ -409,12 +423,21 @@ function ActiveHikeTracker({ trail, onEnd }) {
     
     const gamificationResult = checkNewBadges(gamificationData);
     
+    // Show celebration modal instead of immediately calling onEnd
+    const completeData = { ...hikeData, gamification: gamificationResult };
+    setCompletedHikeData(completeData);
+    setShowCelebration(true);
+  };
+  
+  // Handle celebration close
+  const handleCelebrationClose = () => {
     // Export GPX automatically
     if (gpsTrack.length > 0) {
       exportGPX();
     }
-
-    onEnd({ ...hikeData, gamification: gamificationResult });
+    
+    setShowCelebration(false);
+    onEnd(completedHikeData);
   };
 
   // Cleanup on unmount
@@ -558,7 +581,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
         </div>
         <div className="stat-row">
           <span>📊</span>
-          <span>{Math.round(Math.min(100, (stats.distance / 1000 / trail.distance_km) * 100))}%</span>
+          <span>{Math.min(100, Math.round((stats.distance / 1000 / trail.distance_km) * 100))}%</span>
         </div>
         <div className="stat-row">
           <span>⏱️</span>
@@ -589,8 +612,9 @@ function ActiveHikeTracker({ trail, onEnd }) {
         <button 
           className="control-btn end-btn"
           onClick={() => endHike(false)}
+          disabled={isEnding}
         >
-          ⏹️ End Hike
+          {isEnding ? '⌛ Ending...' : '🏁 End Hike'}
         </button>
       </div>
 
@@ -599,6 +623,15 @@ function ActiveHikeTracker({ trail, onEnd }) {
         <div className="warning-banner">
           ⚠️ You are off the trail. Please return to the highlighted route.
         </div>
+      )}
+
+      {/* Celebration Modal */}
+      {showCelebration && completedHikeData && (
+        <CelebrationModal
+          hikeData={completedHikeData}
+          gamification={completedHikeData.gamification}
+          onClose={handleCelebrationClose}
+        />
       )}
     </div>
   );
