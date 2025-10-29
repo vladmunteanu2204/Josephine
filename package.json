@@ -4,6 +4,8 @@
   "description": "A premium hiking web app for the South Tyrol and Trentino Alps regions, featuring smart trail recommendations, verified routes, and immersive dark alpine-inspired design.",
   "main": "index.js",
   "scripts": {
+    "build": "cd web-frontend && npm install && npm run build",
+    "start": "cd backend && python app.py",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
