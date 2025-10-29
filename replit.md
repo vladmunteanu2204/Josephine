@@ -45,6 +45,14 @@ The design system employs a premium dark alpine theme with glassmorphism effects
 - **Database:** Local JSON files (`trails.json`, `reviews.json`) store verified trail data and reviews.
 - **API URL Handling:** Dynamically constructed using conditional pattern: `window.location.hostname.includes('replit.dev') ? https://${hostname} : http://localhost:8000` for cross-environment compatibility.
 
+### Deployment Configuration
+- **Deployment Type:** Autoscale deployment (automatically scales with traffic, charges only when app is being used)
+- **Build Command:** `cd web-frontend && npm install && npm run build` - Installs dependencies and builds React frontend into static files
+- **Run Command:** `cd backend && python app.py` - Starts Flask server which serves both API (on `/api/*` routes) and the built React frontend (on all other routes)
+- **Port:** Single port 8000 exposed for both frontend and backend
+- **Static File Serving:** Flask configured with `static_folder='../web-frontend/dist'` to serve built React app. Catch-all route serves `index.html` for SPA routing while preserving API endpoints.
+- **Post-Deployment:** Add production domain to Firebase Console authorized domains for authentication to work correctly.
+
 ## External Dependencies
 - **Firebase:** For user authentication (email/password, Google OAuth).
 - **Mapbox GL:** For interactive map functionalities and trail visualization.
