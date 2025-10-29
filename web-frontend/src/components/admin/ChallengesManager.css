@@ -1,1 +1,100 @@
 .challenges-manager{color:#fff}.challenges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}.challenge-card{background:rgba(255,255,255,0.05);border-radius:12px;padding:1.5rem;border:1px solid rgba(255,255,255,0.1)}.challenge-icon{font-size:3rem;margin-bottom:1rem}.challenge-description{color:rgba(255,255,255,0.7);margin:1rem 0}.challenge-details{display:flex;flex-direction:column;gap:0.5rem;margin:1rem 0}.detail-item{display:flex;justify-content:space-between}.detail-item .label{color:rgba(255,255,255,0.7)}.detail-item .value{font-weight:600}.challenge-actions{display:flex;gap:0.5rem;margin-top:1rem}
+
+/* GPX Upload Section */
+.gpx-upload-section {
+  background: rgba(245, 158, 11, 0.1);
+  border: 2px dashed rgba(245, 158, 11, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.gpx-upload-header h4 {
+  margin: 0 0 0.5rem 0;
+  color: #fbbf24;
+}
+
+.file-input-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-label {
+  padding: 0.75rem 1.5rem;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fbbf24;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.file-label:hover {
+  background: rgba(245, 158, 11, 0.3);
+  border-color: rgba(245, 158, 11, 0.6);
+}
+
+.btn-clear-gpx {
+  padding: 0.75rem 1.5rem;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 8px;
+  color: #f87171;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.loading-indicator {
+  padding: 1rem;
+  background: rgba(251, 191, 36, 0.1);
+  border-radius: 8px;
+  color: #fbbf24;
+  text-align: center;
+}
+
+.gpx-info {
+  margin-top: 1rem;
+}
+
+.gpx-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.stat-item {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.75rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fbbf24;
+}
+
+.gpx-map-preview {
+  margin-top: 1rem;
+}
+
+.form-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 1.5rem 0;
+}
