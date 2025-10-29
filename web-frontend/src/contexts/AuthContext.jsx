@@ -135,19 +135,74 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     let redirectCheckComplete = false;
     
+    // ===== COMPREHENSIVE OAUTH REDIRECT DEBUGGING =====
+    const timestamp = new Date().toISOString();
+    console.log('=== AUTH CONTEXT INITIALIZATION ===', timestamp);
+    
+    // Log current URL and parameters
+    console.log('Current URL:', window.location.href);
+    console.log('URL search params:', window.location.search);
+    console.log('URL hash:', window.location.hash);
+    
+    // Check for OAuth callback parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasOAuthParams = urlParams.has('state') || urlParams.has('code') || urlParams.has('error');
+    console.log('OAuth params present:', hasOAuthParams, {
+      state: urlParams.get('state'),
+      code: urlParams.get('code') ? 'PRESENT' : null,
+      error: urlParams.get('error')
+    });
+    
+    // Check storage availability
+    try {
+      const testKey = '_firebase_test';
+      sessionStorage.setItem(testKey, 'test');
+      const canUseSessionStorage = sessionStorage.getItem(testKey) === 'test';
+      sessionStorage.removeItem(testKey);
+      console.log('Session storage available:', canUseSessionStorage);
+      
+      localStorage.setItem(testKey, 'test');
+      const canUseLocalStorage = localStorage.getItem(testKey) === 'test';
+      localStorage.removeItem(testKey);
+      console.log('Local storage available:', canUseLocalStorage);
+    } catch (e) {
+      console.error('Storage check failed:', e);
+    }
+    
+    // Log all storage keys (to see Firebase state)
+    console.log('Session storage keys:', Object.keys(sessionStorage));
+    console.log('Local storage keys:', Object.keys(localStorage));
+    
+    console.log('Starting getRedirectResult check...');
+    
     // Check for redirect result when app loads (mobile users returning from Google)
     getRedirectResult(auth)
       .then((result) => {
         redirectCheckComplete = true;
+        console.log('=== getRedirectResult RESOLVED ===');
+        console.log('Result object:', result);
+        console.log('Result is null:', result === null);
+        console.log('Result is undefined:', result === undefined);
+        
         if (result) {
-          console.log('Redirect result received:', result.user);
+          console.log('✅ REDIRECT SUCCESS - User data:', {
+            uid: result.user.uid,
+            email: result.user.email,
+            displayName: result.user.displayName
+          });
           setCurrentUser(result.user);
           setAuthError(null);
+        } else {
+          console.log('⚠️ getRedirectResult returned NULL (no pending redirect)');
         }
       })
       .catch((error) => {
         redirectCheckComplete = true;
-        console.error('Redirect result error:', error);
+        console.error('=== getRedirectResult ERROR ===');
+        console.error('Error object:', error);
+        console.error('Error code:', error.code);
+        console.error('Error message:', error.message);
+        console.error('Full error:', JSON.stringify(error, null, 2));
         
         // Provide user-friendly error messages
         let errorMessage = 'Authentication failed. Please try again.';
@@ -164,16 +219,34 @@ export function AuthProvider({ children }) {
 
     // Set up auth state listener
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      const authTimestamp = new Date().toISOString();
+      console.log('=== onAuthStateChanged FIRED ===', authTimestamp);
+      console.log('User object:', user);
+      console.log('Is logged in:', !!user);
+      if (user) {
+        console.log('User details:', {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          emailVerified: user.emailVerified
+        });
+      }
+      console.log('redirectCheckComplete:', redirectCheckComplete);
+      
       setCurrentUser(user);
       
       // Only set loading to false after both redirect check and auth state are ready
       if (redirectCheckComplete || !isMobileDevice()) {
+        console.log('Setting loading to false');
         setLoading(false);
+      } else {
+        console.log('Still loading, waiting for redirect check...');
       }
     });
 
     // Fallback: ensure loading state clears after reasonable timeout
     const timeout = setTimeout(() => {
+      console.log('⏱️ 3-second timeout reached, forcing loading to false');
       setLoading(false);
     }, 3000);
 
