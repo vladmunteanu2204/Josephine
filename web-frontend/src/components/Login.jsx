@@ -5,11 +5,18 @@ import './Auth.css';
 
 function Login({ onClose, switchToSignup }) {
   const { t } = useTranslation();
-  const { login, loginWithGoogle } = useAuth();
+  const { login, loginWithGoogle, authError, clearAuthError } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Clear auth errors when component unmounts
+  React.useEffect(() => {
+    return () => {
+      if (clearAuthError) clearAuthError();
+    };
+  }, [clearAuthError]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -54,7 +61,11 @@ function Login({ onClose, switchToSignup }) {
       onClose();
     } catch (error) {
       console.error('Google login error:', error);
-      setError(t('auth.googleLoginFailed'));
+      // Don't set local error - context already has user-friendly message
+      // If context doesn't have it, fall back to generic message
+      if (!authError) {
+        setError(t('auth.googleLoginFailed'));
+      }
     } finally {
       setLoading(false);
     }
@@ -70,7 +81,7 @@ function Login({ onClose, switchToSignup }) {
           <p className="auth-subtitle">{t('auth.loginSubtitle')}</p>
         </div>
 
-        {error && <div className="auth-error">{error}</div>}
+        {(authError || error) && <div className="auth-error">{authError || error}</div>}
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
