@@ -382,8 +382,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
     };
 
     try {
-      const API_URL = `${window.location.protocol}//${window.location.hostname}:8000`;
-      await fetch(`${API_URL}/api/hikes/save`, {
+      await fetch('/api/hikes/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(hikeData)

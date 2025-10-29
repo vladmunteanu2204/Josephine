@@ -20,8 +20,7 @@ function TrailDetail({ trail, onBack }) {
       const fetchTrailData = async () => {
         setLoading(true);
         try {
-          const API_URL = `${window.location.protocol}//${window.location.hostname}:8000`;
-          const response = await axios.get(`${API_URL}/api/trails`);
+          const response = await axios.get('/api/trails');
           const trails = response.data.trails || response.data;
           const foundTrail = trails.find(t => t.id === trail.id);
           if (foundTrail) {

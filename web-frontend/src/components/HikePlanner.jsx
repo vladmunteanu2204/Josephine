@@ -5,9 +5,7 @@ import EquipmentChecklist from './EquipmentChecklist';
 import SafetyTips from './SafetyTips';
 import './HikePlanner.css';
 
-const API_URL = window.location.hostname.includes('replit.dev')
-  ? `${window.location.protocol}//${window.location.hostname}:8000/api`
-  : 'http://localhost:8000/api';
+const API_URL = '/api';
 
 function HikePlanner({ onNavigate }) {
   const { t } = useTranslation();
