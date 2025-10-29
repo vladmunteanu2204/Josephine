@@ -37,6 +37,8 @@ function ActiveHikeTracker({ trail, onEnd }) {
   const lastMoveTimeRef = useRef(null);
   const wakeLockRef = useRef(null);
   const intervalRef = useRef(null);
+  const elevationGainBufferRef = useRef(0); // Accumulate positive elevation changes
+  const elevationLossBufferRef = useRef(0); // Accumulate negative elevation changes
 
   // Convert coordinates to GeoJSON route if needed
   const trailRoute = trail.route || (trail.coordinates ? {
@@ -210,13 +212,54 @@ function ActiveHikeTracker({ trail, onEnd }) {
             longitude
           );
 
-          // Filter elevation noise: only count changes >= 5m to reduce GPS altitude error
+          // Filter elevation noise: let opposing changes cancel each other to reject oscillations
+          // Only commit elevation gain when net positive drift exceeds 5m threshold
           const elevationChange = altitude && lastPoint.alt ? (altitude - lastPoint.alt) : 0;
-          const significantElevation = Math.abs(elevationChange) >= 5 ? Math.max(0, elevationChange) : 0;
+          
+          let elevationToAdd = 0;
+          
+          if (elevationChange > 0) {
+            // Positive change: cancel any pending loss first, then add remainder to gain
+            if (elevationLossBufferRef.current > 0) {
+              const cancellation = Math.min(elevationLossBufferRef.current, elevationChange);
+              elevationLossBufferRef.current -= cancellation;
+              const netChange = elevationChange - cancellation;
+              if (netChange > 0) {
+                elevationGainBufferRef.current += netChange;
+              }
+            } else {
+              elevationGainBufferRef.current += elevationChange;
+            }
+            
+            // When accumulated gain exceeds threshold, count it and reset
+            if (elevationGainBufferRef.current >= 5) {
+              elevationToAdd = elevationGainBufferRef.current;
+              elevationGainBufferRef.current = 0;
+            }
+          } else if (elevationChange < 0) {
+            // Negative change: cancel any pending gain first, then add remainder to loss
+            const absChange = Math.abs(elevationChange);
+            if (elevationGainBufferRef.current > 0) {
+              const cancellation = Math.min(elevationGainBufferRef.current, absChange);
+              elevationGainBufferRef.current -= cancellation;
+              const netChange = absChange - cancellation;
+              if (netChange > 0) {
+                elevationLossBufferRef.current += netChange;
+              }
+            } else {
+              elevationLossBufferRef.current += absChange;
+            }
+            
+            // If accumulated loss exceeds threshold, it's a real descent - reset both buffers
+            if (elevationLossBufferRef.current >= 5) {
+              elevationGainBufferRef.current = 0;
+              elevationLossBufferRef.current = 0;
+            }
+          }
 
           setStats(prevStats => ({
             distance: prevStats.distance + segmentDistance,
-            elevation: prevStats.elevation + significantElevation,
+            elevation: prevStats.elevation + elevationToAdd,
             duration: Math.floor((Date.now() - startTimeRef.current) / 1000),
             pace: speed || prevStats.pace
           }));
