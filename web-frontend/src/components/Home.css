@@ -278,25 +278,27 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .hero-parallax {
-    height: 400px !important;
-    min-height: 400px;
-    max-height: 400px;
+    height: 500px !important;
+    min-height: 500px;
+    max-height: 500px;
+    margin-top: 0;
   }
 
   .hero-content {
-    padding: 30px 20px;
+    padding: 50px 20px 30px;
   }
 
   .hero-title-large {
-    font-size: 40px;
+    font-size: 36px;
     line-height: 1.2;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
   }
 
   .hero-subtitle-large {
-    font-size: 16px;
+    font-size: 15px;
     margin: 0 0 28px 0;
     max-width: 90%;
+    line-height: 1.5;
   }
 
   .hero-cta-buttons {
