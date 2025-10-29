@@ -1,8 +1,8 @@
-self.__SW_VERSION = 'v8';
+self.__SW_VERSION = 'v9';
 
-const CACHE_NAME = 'alpenvia-v8';
-const STATIC_CACHE = 'alpenvia-static-v8';
-const DYNAMIC_CACHE = 'alpenvia-dynamic-v8';
+const CACHE_NAME = 'alpenvia-v9';
+const STATIC_CACHE = 'alpenvia-static-v9';
+const DYNAMIC_CACHE = 'alpenvia-dynamic-v9';
 
 const STATIC_ASSETS = [
   '/',
