@@ -565,7 +565,32 @@ def upload_media():
         import mimetypes
         import uuid
         
-        file_ext = os.path.splitext(file.filename)[1]
+        file_ext = os.path.splitext(file.filename)[1].lower()
+        
+        # File size validation
+        file.seek(0, 2)
+        file_size = file.tell()
+        file.seek(0)
+        
+        MAX_PHOTO_SIZE = 16 * 1024 * 1024
+        MAX_VIDEO_SIZE = 100 * 1024 * 1024
+        
+        if file_type in ['wallpaper', 'photos']:
+            if file_size > MAX_PHOTO_SIZE:
+                return jsonify({'error': f'Photo size exceeds 16MB limit. Your file: {file_size / 1024 / 1024:.1f}MB'}), 400
+        elif file_type == 'videos':
+            if file_size > MAX_VIDEO_SIZE:
+                return jsonify({'error': f'Video size exceeds 100MB limit. Your file: {file_size / 1024 / 1024:.1f}MB'}), 400
+        
+        # File type validation
+        image_extensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif']
+        video_extensions = ['.mp4', '.webm', '.mov', '.avi']
+        
+        if file_type in ['wallpaper', 'photos'] and file_ext not in image_extensions:
+            return jsonify({'error': f'Invalid image format. Allowed: {", ".join(image_extensions)}'}), 400
+        elif file_type == 'videos' and file_ext not in video_extensions:
+            return jsonify({'error': f'Invalid video format. Allowed: {", ".join(video_extensions)}'}), 400
+        
         unique_filename = f"{file_type}/{uuid.uuid4()}{file_ext}"
         
         file_content = file.read()

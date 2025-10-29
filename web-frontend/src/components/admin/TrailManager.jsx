@@ -159,7 +159,21 @@ function TrailManager({ adminPassword }) {
 
   const uploadMediaFile = async (file, fieldType) => {
     const uploadKey = `${fieldType}-${Date.now()}`;
-    setUploadProgress(prev => ({ ...prev, [uploadKey]: { uploading: true, progress: 0 } }));
+    setUploadProgress(prev => ({ ...prev, [uploadKey]: { uploading: true, progress: 0, filename: file.name } }));
+    
+    // File size validation on frontend
+    const MAX_PHOTO_SIZE = 16 * 1024 * 1024; // 16MB
+    const MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100MB
+    
+    if (fieldType === 'wallpaper' || fieldType === 'photos') {
+      if (file.size > MAX_PHOTO_SIZE) {
+        throw new Error(`Photo exceeds 16MB limit. File size: ${(file.size / 1024 / 1024).toFixed(1)}MB`);
+      }
+    } else if (fieldType === 'videos') {
+      if (file.size > MAX_VIDEO_SIZE) {
+        throw new Error(`Video exceeds 100MB limit. File size: ${(file.size / 1024 / 1024).toFixed(1)}MB`);
+      }
+    }
     
     try {
       const formDataUpload = new FormData();
@@ -170,9 +184,18 @@ function TrailManager({ adminPassword }) {
         'X-Admin-Password': adminPassword
       };
       
-      const response = await axios.post('/api/admin/upload/media', formDataUpload, { headers });
+      const response = await axios.post('/api/admin/upload/media', formDataUpload, { 
+        headers,
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          setUploadProgress(prev => ({ 
+            ...prev, 
+            [uploadKey]: { uploading: true, progress: percentCompleted, filename: file.name } 
+          }));
+        }
+      });
       
-      setUploadProgress(prev => ({ ...prev, [uploadKey]: { uploading: false, success: true } }));
+      setUploadProgress(prev => ({ ...prev, [uploadKey]: { uploading: false, success: true, progress: 100, filename: file.name } }));
       
       setTimeout(() => {
         setUploadProgress(prev => {
@@ -185,7 +208,7 @@ function TrailManager({ adminPassword }) {
       return response.data.url;
     } catch (error) {
       console.error('Upload error:', error);
-      setUploadProgress(prev => ({ ...prev, [uploadKey]: { uploading: false, error: true } }));
+      setUploadProgress(prev => ({ ...prev, [uploadKey]: { uploading: false, error: true, filename: file.name } }));
       setTimeout(() => {
         setUploadProgress(prev => {
           const newProgress = { ...prev };
@@ -382,6 +405,44 @@ function TrailManager({ adminPassword }) {
             </div>
 
             <div className="form-divider"></div>
+
+            {/* Upload Progress Indicators */}
+            {Object.keys(uploadProgress).length > 0 && (
+              <div style={{ 
+                marginBottom: '20px', 
+                padding: '15px', 
+                background: 'rgba(59, 130, 246, 0.1)', 
+                borderRadius: '8px',
+                border: '1px solid rgba(59, 130, 246, 0.3)'
+              }}>
+                <h4 style={{ marginBottom: '10px', color: '#3b82f6' }}>📤 Uploading Files...</h4>
+                {Object.entries(uploadProgress).map(([key, progress]) => (
+                  <div key={key} style={{ marginBottom: '10px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px', fontSize: '13px' }}>
+                      <span style={{ opacity: 0.9 }}>{progress.filename}</span>
+                      <span style={{ fontWeight: 'bold' }}>
+                        {progress.uploading ? `${progress.progress}%` : progress.success ? '✅ Done' : '❌ Failed'}
+                      </span>
+                    </div>
+                    <div style={{ 
+                      width: '100%', 
+                      height: '6px', 
+                      background: 'rgba(255,255,255,0.1)', 
+                      borderRadius: '3px',
+                      overflow: 'hidden'
+                    }}>
+                      <div style={{ 
+                        width: `${progress.progress}%`, 
+                        height: '100%', 
+                        background: progress.error ? '#ef4444' : progress.success ? '#10b981' : '#3b82f6',
+                        transition: 'width 0.3s ease',
+                        borderRadius: '3px'
+                      }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
             
             <div className="form-grid">
               <div className="form-group">
