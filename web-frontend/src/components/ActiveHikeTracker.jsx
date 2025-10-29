@@ -192,27 +192,32 @@ function ActiveHikeTracker({ trail, onEnd }) {
     lastMoveTimeRef.current = Date.now();
 
     if (!isPaused) {
-      setGpsTrack(prev => [...prev, newPoint]);
+      // Update GPS track and calculate stats using the previous track value
+      setGpsTrack(prev => {
+        const updatedTrack = [...prev, newPoint];
+        
+        // Calculate stats if we have at least one previous point
+        if (prev.length > 0) {
+          const lastPoint = prev[prev.length - 1];
+          const segmentDistance = calculateDistance(
+            lastPoint.lat,
+            lastPoint.lon,
+            latitude,
+            longitude
+          );
 
-      // Update stats
-      if (gpsTrack.length > 0) {
-        const lastPoint = gpsTrack[gpsTrack.length - 1];
-        const segmentDistance = calculateDistance(
-          lastPoint.lat,
-          lastPoint.lon,
-          latitude,
-          longitude
-        );
+          const elevationChange = altitude ? Math.max(0, (altitude - lastPoint.alt)) : 0;
 
-        const elevationChange = altitude ? Math.max(0, (altitude - lastPoint.alt)) : 0;
-
-        setStats(prev => ({
-          distance: prev.distance + segmentDistance,
-          elevation: prev.elevation + elevationChange,
-          duration: Math.floor((Date.now() - startTimeRef.current) / 1000),
-          pace: speed || prev.pace
-        }));
-      }
+          setStats(prevStats => ({
+            distance: prevStats.distance + segmentDistance,
+            elevation: prevStats.elevation + elevationChange,
+            duration: Math.floor((Date.now() - startTimeRef.current) / 1000),
+            pace: speed || prevStats.pace
+          }));
+        }
+        
+        return updatedTrack;
+      });
 
       // Check if off trail
       if (trail.coordinates || trailRoute?.geometry?.coordinates) {
