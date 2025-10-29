@@ -1,14 +1,23 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import os
 import json
 import random
+import io
 from datetime import datetime
 from functools import wraps
 from weather_service import weather_service
+from replit.object_storage import Client as ObjectStorageClient
 
 app = Flask(__name__)
 CORS(app)
+
+# Initialize Object Storage client
+try:
+    storage_client = ObjectStorageClient()
+except Exception as e:
+    print(f"Warning: Object Storage not initialized: {e}")
+    storage_client = None
 
 # Admin authentication
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'alpenvia_admin_2025')
@@ -535,6 +544,71 @@ def delete_challenge(challenge_id):
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/upload/media', methods=['POST'])
+@require_admin_auth
+def upload_media():
+    """Upload media file to Object Storage (Admin)"""
+    try:
+        if not storage_client:
+            return jsonify({'error': 'Object Storage not available'}), 503
+        
+        if 'file' not in request.files:
+            return jsonify({'error': 'No file provided'}), 400
+        
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'error': 'Empty filename'}), 400
+        
+        file_type = request.form.get('type', 'media')
+        
+        import mimetypes
+        import uuid
+        
+        file_ext = os.path.splitext(file.filename)[1]
+        unique_filename = f"{file_type}/{uuid.uuid4()}{file_ext}"
+        
+        file_content = file.read()
+        storage_client.upload_from_bytes(unique_filename, file_content)
+        
+        file_url = f"/api/media/{unique_filename}"
+        
+        return jsonify({
+            'success': True,
+            'url': file_url,
+            'filename': unique_filename,
+            'size': len(file_content)
+        }), 201
+    
+    except Exception as e:
+        print(f"Upload error: {str(e)}")
+        return jsonify({'error': f'Upload failed: {str(e)}'}), 500
+
+@app.route('/api/media/<path:filename>', methods=['GET'])
+def serve_media(filename):
+    """Serve media files from Object Storage"""
+    try:
+        if not storage_client:
+            return jsonify({'error': 'Object Storage not available'}), 503
+        
+        if not storage_client.exists(filename):
+            return jsonify({'error': 'File not found'}), 404
+        
+        file_content = storage_client.download_as_bytes(filename)
+        
+        import mimetypes
+        mime_type = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
+        
+        return send_file(
+            io.BytesIO(file_content),
+            mimetype=mime_type,
+            as_attachment=False,
+            download_name=os.path.basename(filename)
+        )
+    
+    except Exception as e:
+        print(f"Serve error: {str(e)}")
+        return jsonify({'error': f'File retrieval failed: {str(e)}'}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
