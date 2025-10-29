@@ -8,6 +8,10 @@ from datetime import datetime
 from functools import wraps
 from weather_service import weather_service
 from replit.object_storage import Client as ObjectStorageClient
+from PIL import Image
+import subprocess
+import tempfile
+import uuid
 
 app = Flask(__name__)
 CORS(app)
@@ -51,6 +55,105 @@ def load_reviews():
     reviews_path = os.path.join(BASE_DIR, 'data', 'reviews.json')
     with open(reviews_path, 'r') as f:
         return json.load(f)
+
+def compress_image(file_data, filename):
+    """
+    Compress image to WebP format with 85% quality.
+    Returns compressed image data and new filename with .webp extension.
+    """
+    try:
+        # Open image from bytes
+        img = Image.open(io.BytesIO(file_data))
+        
+        # Convert RGBA to RGB if necessary (WebP doesn't support transparency well)
+        if img.mode in ('RGBA', 'LA', 'P'):
+            background = Image.new('RGB', img.size, (255, 255, 255))
+            background.paste(img, mask=img.split()[3] if img.mode == 'RGBA' else None)
+            img = background
+        
+        # Compress to WebP
+        output = io.BytesIO()
+        img.save(output, format='WEBP', quality=85, method=6)
+        output.seek(0)
+        
+        # Change extension to .webp
+        base_name = os.path.splitext(filename)[0]
+        new_filename = f"{base_name}.webp"
+        
+        return output.read(), new_filename
+    except Exception as e:
+        print(f"Image compression error: {str(e)}")
+        # Return original if compression fails
+        return file_data, filename
+
+def compress_video(file_data, filename):
+    """
+    Compress video using FFmpeg with H.264 codec, CRF 23 for high quality.
+    Returns compressed video data and filename.
+    """
+    try:
+        # Create temporary files for input and output
+        with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(filename)[1]) as input_file:
+            input_path = input_file.name
+            input_file.write(file_data)
+        
+        # Output file with .mp4 extension
+        output_path = tempfile.mktemp(suffix='.mp4')
+        
+        # FFmpeg command for high-quality compression
+        # CRF 23 is visually lossless, lower = better quality but larger file
+        # preset 'medium' balances speed and compression
+        command = [
+            'ffmpeg',
+            '-i', input_path,
+            '-c:v', 'libx264',       # H.264 video codec
+            '-crf', '23',            # Quality (18-28, 23 is high quality)
+            '-preset', 'medium',     # Encoding speed vs compression
+            '-c:a', 'aac',           # AAC audio codec
+            '-b:a', '128k',          # Audio bitrate
+            '-movflags', '+faststart',  # Enable web streaming
+            '-y',                    # Overwrite output
+            output_path
+        ]
+        
+        # Run FFmpeg
+        result = subprocess.run(
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=300  # 5 minute timeout
+        )
+        
+        if result.returncode != 0:
+            print(f"FFmpeg error: {result.stderr.decode()}")
+            os.unlink(input_path)
+            return file_data, filename
+        
+        # Read compressed video
+        with open(output_path, 'rb') as f:
+            compressed_data = f.read()
+        
+        # Cleanup
+        os.unlink(input_path)
+        os.unlink(output_path)
+        
+        # Change extension to .mp4
+        base_name = os.path.splitext(filename)[0]
+        new_filename = f"{base_name}.mp4"
+        
+        return compressed_data, new_filename
+        
+    except Exception as e:
+        print(f"Video compression error: {str(e)}")
+        # Cleanup on error
+        try:
+            os.unlink(input_path)
+            if os.path.exists(output_path):
+                os.unlink(output_path)
+        except:
+            pass
+        # Return original if compression fails
+        return file_data, filename
 
 def process_trail_media(trail):
     """
@@ -647,18 +750,42 @@ def upload_media():
         elif file_type == 'videos' and file_ext not in video_extensions:
             return jsonify({'error': f'Invalid video format. Allowed: {", ".join(video_extensions)}'}), 400
         
+        # Read file content
+        file_content = file.read()
+        original_size = len(file_content)
+        
+        # Compress based on file type
+        compressed_content = file_content
+        final_filename = file.filename
+        
+        if file_type in ['wallpaper', 'photos']:
+            # Compress images to WebP
+            print(f"Compressing image: {file.filename} ({original_size / 1024:.1f}KB)")
+            compressed_content, final_filename = compress_image(file_content, file.filename)
+            print(f"Compressed to: {final_filename} ({len(compressed_content) / 1024:.1f}KB)")
+        elif file_type == 'videos':
+            # Compress videos with FFmpeg
+            print(f"Compressing video: {file.filename} ({original_size / 1024 / 1024:.1f}MB)")
+            compressed_content, final_filename = compress_video(file_content, file.filename)
+            print(f"Compressed to: {final_filename} ({len(compressed_content) / 1024 / 1024:.1f}MB)")
+        
+        # Generate unique filename with correct extension
+        file_ext = os.path.splitext(final_filename)[1]
         unique_filename = f"{file_type}/{uuid.uuid4()}{file_ext}"
         
-        file_content = file.read()
-        storage_client.upload_from_bytes(unique_filename, file_content)
+        # Upload compressed file
+        storage_client.upload_from_bytes(unique_filename, compressed_content)
         
         file_url = f"/api/media/{unique_filename}"
+        compression_ratio = (1 - len(compressed_content) / original_size) * 100 if original_size > 0 else 0
         
         return jsonify({
             'success': True,
             'url': file_url,
             'filename': unique_filename,
-            'size': len(file_content)
+            'size': len(compressed_content),
+            'originalSize': original_size,
+            'compressionRatio': f"{compression_ratio:.1f}%"
         }), 201
     
     except Exception as e:
