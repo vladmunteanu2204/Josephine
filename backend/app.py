@@ -52,6 +52,53 @@ def load_reviews():
     with open(reviews_path, 'r') as f:
         return json.load(f)
 
+def process_trail_media(trail):
+    """
+    Process trail media fields:
+    - Convert comma-separated 'photos' string to 'gallery' array
+    - Convert comma-separated 'videos' string to array
+    - Preserve existing arrays if already present
+    - Keep 'wallpaper' as single string
+    - Populate 'thumbnail' if empty (use wallpaper or first photo)
+    """
+    if not trail:
+        return trail
+    
+    # Parse photos into gallery array (or keep existing array)
+    photos_field = trail.get('photos', '')
+    if isinstance(photos_field, list):
+        # Already an array, use as gallery
+        trail['gallery'] = photos_field
+    elif isinstance(photos_field, str) and photos_field.strip():
+        # Comma-separated string, parse it
+        trail['gallery'] = [url.strip() for url in photos_field.split(',') if url.strip()]
+    elif 'gallery' not in trail:
+        # No photos field and no existing gallery, default to empty
+        trail['gallery'] = []
+    # else: gallery already exists, leave it unchanged
+    
+    # Parse videos into array (or keep existing array)
+    videos_field = trail.get('videos', '')
+    if isinstance(videos_field, list):
+        # Already an array, keep it
+        trail['videos'] = videos_field
+    elif isinstance(videos_field, str) and videos_field.strip():
+        # Comma-separated string, parse it
+        trail['videos'] = [url.strip() for url in videos_field.split(',') if url.strip()]
+    elif 'videos' not in trail:
+        # No videos field, default to empty
+        trail['videos'] = []
+    # else: videos already exists as array, leave it unchanged
+    
+    # Ensure thumbnail is set (fallback to wallpaper or first photo)
+    if not trail.get('thumbnail'):
+        if trail.get('wallpaper'):
+            trail['thumbnail'] = trail['wallpaper']
+        elif trail.get('gallery') and len(trail['gallery']) > 0:
+            trail['thumbnail'] = trail['gallery'][0]
+    
+    return trail
+
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
@@ -77,7 +124,10 @@ def get_trails():
     if interest:
         filtered_trails = [t for t in filtered_trails if interest.lower() in [i.lower() for i in t['interests']]]
     
-    return jsonify({'trails': filtered_trails, 'count': len(filtered_trails)})
+    # Process media fields for all trails
+    processed_trails = [process_trail_media(t) for t in filtered_trails]
+    
+    return jsonify({'trails': processed_trails, 'count': len(processed_trails)})
 
 @app.route('/api/trails/<trail_id>', methods=['GET'])
 def get_trail(trail_id):
@@ -87,6 +137,9 @@ def get_trail(trail_id):
     
     if not trail:
         return jsonify({'error': 'Trail not found'}), 404
+    
+    # Process media fields
+    trail = process_trail_media(trail)
     
     return jsonify(trail)
 
@@ -149,6 +202,9 @@ def get_recommendations():
         scored_trails.sort(key=lambda x: x['score'], reverse=True)
         
         top_trails = [item['trail'] for item in scored_trails[:5]]
+        
+        # Process media fields for recommended trails
+        top_trails = [process_trail_media(trail) for trail in top_trails]
         
         results = []
         for trail in top_trails:

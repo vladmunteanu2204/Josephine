@@ -8,8 +8,9 @@ function MediaGallery({ trail }) {
   const [lightboxIndex, setLightboxIndex] = useState(null);
 
   const photos = trail.gallery || [];
+  const videos = trail.videos || [];
   const hasPhotos = photos.length > 0;
-  const hasVideos = false; // Future feature
+  const hasVideos = videos.length > 0;
 
   const openLightbox = (index) => {
     setLightboxIndex(index);
@@ -57,7 +58,7 @@ function MediaGallery({ trail }) {
             onClick={() => setActiveTab('videos')}
             disabled={!hasVideos}
           >
-            🎥 {t('trail.videos')} (0)
+            🎥 {t('trail.videos')} ({videos.length})
           </button>
         </div>
       </div>
@@ -94,10 +95,30 @@ function MediaGallery({ trail }) {
 
       {activeTab === 'videos' && (
         <div className="media-content">
-          <div className="media-empty">
-            <span className="empty-icon">🎬</span>
-            <p>{t('trail.noVideos')}</p>
-          </div>
+          {hasVideos ? (
+            <div className="photo-grid">
+              {videos.map((video, index) => (
+                <div 
+                  key={index} 
+                  className="photo-card video-card"
+                >
+                  <video 
+                    src={video} 
+                    controls
+                    preload="metadata"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  >
+                    {t('trail.videoNotSupported')}
+                  </video>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="media-empty">
+              <span className="empty-icon">🎬</span>
+              <p>{t('trail.noVideos')}</p>
+            </div>
+          )}
         </div>
       )}
 

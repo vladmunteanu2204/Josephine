@@ -4475,23 +4475,10 @@
       ]
     },
     {
-      "id": "maso_corto",
-      "name": "Maso Corto hike",
-      "region": "",
-      "difficulty": "medium",
-      "distance_km": 11.31,
-      "duration_hours": 4.5,
-      "elevation_gain_m": 742,
-      "description": "bla bla",
-      "thumbnail": "",
-      "image_url": "",
-      "tags": [],
-      "interests": [],
       "best_season": [
-        "June"
+        "June",
+        "September"
       ],
-      "trail_type": "loop",
-      "dog_friendly": true,
       "coordinates": [
         [
           10.782876,
@@ -14401,7 +14388,28 @@
           10.849355,
           46.729731
         ]
-      ]
+      ],
+      "description": "bla bla",
+      "difficulty": "medium",
+      "distance_km": 11.31,
+      "dog_friendly": true,
+      "duration_hours": 4.5,
+      "elevation_gain_m": 742,
+      "id": "maso_corto",
+      "image_url": "",
+      "interests": [
+        "alpine lakes"
+      ],
+      "name": "Maso Corto hike",
+      "photos": "/api/media/photos/add824f2-3526-4d83-9878-2bc988829cdb.jpg, /api/media/photos/bc8fc40a-ef8d-435b-a463-e4cf9bdf9267.jpg, /api/media/photos/e6b37376-ce9f-4e20-86d1-7097d65a4af0.jpg, /api/media/photos/e37616d4-169f-4912-8427-784996918b7b.jpg",
+      "region": "South Tyrol",
+      "tags": [
+        "alpine lakes"
+      ],
+      "thumbnail": "",
+      "trail_type": "loop",
+      "videos": "/api/media/videos/194d6c93-7dd9-45d4-8c9e-eeb6d1f7db5c.mp4",
+      "wallpaper": "/api/media/wallpaper/d68c9d73-594c-4192-b236-996d67e79e60.jpg"
     }
   ]
 }
