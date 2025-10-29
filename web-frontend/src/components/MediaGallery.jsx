@@ -1,6 +1,102 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import './MediaGallery.css';
+
+// Lazy Image Component with Intersection Observer and Blur-up
+function LazyImage({ src, alt, onClick, className }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const imgRef = useRef(null);
+
+  useEffect(() => {
+    if (!imgRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsInView(true);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        rootMargin: '100px', // Start loading 100px before image enters viewport
+        threshold: 0.01
+      }
+    );
+
+    observer.observe(imgRef.current);
+
+    return () => {
+      if (imgRef.current) {
+        observer.unobserve(imgRef.current);
+      }
+    };
+  }, []);
+
+  return (
+    <div 
+      ref={imgRef} 
+      className={className}
+      onClick={onClick}
+      style={{
+        position: 'relative',
+        overflow: 'hidden',
+        background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)'
+      }}
+    >
+      {/* Blur-up placeholder */}
+      {!isLoaded && isInView && (
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)',
+          animation: 'pulse 2s ease-in-out infinite',
+          backdropFilter: 'blur(20px)'
+        }} />
+      )}
+      
+      {/* Actual image */}
+      {isInView && (
+        <img 
+          src={src} 
+          alt={alt}
+          onLoad={() => setIsLoaded(true)}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            opacity: isLoaded ? 1 : 0,
+            transition: 'opacity 0.5s ease-in-out'
+          }}
+        />
+      )}
+      
+      {/* Photo overlay - only show when loaded */}
+      {isLoaded && (
+        <div className="photo-overlay">
+          <span className="photo-expand-icon">🔍</span>
+        </div>
+      )}
+      
+      {/* Loading indicator */}
+      {!isLoaded && isInView && (
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'rgba(255,255,255,0.5)',
+          fontSize: '12px'
+        }}>
+          Loading...
+        </div>
+      )}
+    </div>
+  );
+}
 
 function MediaGallery({ trail }) {
   const { t } = useTranslation();
@@ -68,20 +164,13 @@ function MediaGallery({ trail }) {
           {hasPhotos ? (
             <div className="photo-grid">
               {photos.map((photo, index) => (
-                <div 
-                  key={index} 
-                  className="photo-card"
+                <LazyImage
+                  key={index}
+                  src={photo}
+                  alt={`${trail.name} - ${t('trail.photo')} ${index + 1}`}
                   onClick={() => openLightbox(index)}
-                >
-                  <img 
-                    src={photo} 
-                    alt={`${trail.name} - ${t('trail.photo')} ${index + 1}`}
-                    loading="lazy"
-                  />
-                  <div className="photo-overlay">
-                    <span className="photo-expand-icon">🔍</span>
-                  </div>
-                </div>
+                  className="photo-card"
+                />
               ))}
             </div>
           ) : (
@@ -154,6 +243,13 @@ function MediaGallery({ trail }) {
           </div>
         </div>
       )}
+      
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 0.6; }
+          50% { opacity: 0.3; }
+        }
+      `}</style>
     </div>
   );
 }

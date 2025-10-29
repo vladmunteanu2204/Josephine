@@ -190,12 +190,24 @@ function TrailManager({ adminPassword }) {
           const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
           setUploadProgress(prev => ({ 
             ...prev, 
-            [uploadKey]: { uploading: true, progress: percentCompleted, filename: file.name } 
+            [uploadKey]: { uploading: true, progress: percentCompleted, filename: file.name, compressing: percentCompleted === 100 } 
           }));
         }
       });
       
-      setUploadProgress(prev => ({ ...prev, [uploadKey]: { uploading: false, success: true, progress: 100, filename: file.name } }));
+      // Extract compression info from response
+      const compressionInfo = response.data.compressionRatio ? ` (${response.data.compressionRatio} saved)` : '';
+      
+      setUploadProgress(prev => ({ 
+        ...prev, 
+        [uploadKey]: { 
+          uploading: false, 
+          success: true, 
+          progress: 100, 
+          filename: file.name,
+          compressionInfo 
+        } 
+      }));
       
       setTimeout(() => {
         setUploadProgress(prev => {
@@ -421,7 +433,11 @@ function TrailManager({ adminPassword }) {
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px', fontSize: '13px' }}>
                       <span style={{ opacity: 0.9 }}>{progress.filename}</span>
                       <span style={{ fontWeight: 'bold' }}>
-                        {progress.uploading ? `${progress.progress}%` : progress.success ? '✅ Done' : '❌ Failed'}
+                        {progress.uploading ? (
+                          progress.compressing ? '🗜️ Compressing...' : `${progress.progress}%`
+                        ) : progress.success ? (
+                          `✅ Done${progress.compressionInfo || ''}`
+                        ) : '❌ Failed'}
                       </span>
                     </div>
                     <div style={{ 
