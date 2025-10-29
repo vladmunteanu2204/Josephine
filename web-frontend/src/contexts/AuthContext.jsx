@@ -8,7 +8,9 @@ import {
   signInWithPopup,
   signInWithRedirect,
   getRedirectResult,
-  updateProfile
+  updateProfile,
+  setPersistence,
+  browserLocalPersistence
 } from 'firebase/auth';
 import { auth } from '../firebase';
 
@@ -81,8 +83,20 @@ export function AuthProvider({ children }) {
     const isMobile = isMobileDevice();
     
     try {
+      // CRITICAL FIX: Set Firebase persistence to LOCAL before sign-in
+      // This ensures auth state survives OAuth redirects on mobile browsers
+      console.log('Setting Firebase persistence to LOCAL (survives redirects)');
+      await setPersistence(auth, browserLocalPersistence);
+      
       if (isMobile) {
         console.log('Mobile device detected, using signInWithRedirect');
+        
+        // Store a flag in localStorage to track that we initiated OAuth
+        // This helps detect if we're returning from Google after redirect
+        localStorage.setItem('_firebase_oauth_pending', 'true');
+        localStorage.setItem('_firebase_oauth_timestamp', Date.now().toString());
+        console.log('Stored OAuth pending flag in localStorage');
+        
         await signInWithRedirect(auth, provider);
       } else {
         console.log('Desktop device detected, attempting signInWithPopup');
@@ -106,6 +120,11 @@ export function AuthProvider({ children }) {
           
           // For any other error (popup blocked, invalid request, etc.), fall back to redirect
           console.log('Popup failed, falling back to redirect. Error code:', popupError.code);
+          
+          // Store OAuth pending flag for redirect fallback too
+          localStorage.setItem('_firebase_oauth_pending', 'true');
+          localStorage.setItem('_firebase_oauth_timestamp', Date.now().toString());
+          
           await signInWithRedirect(auth, provider);
           return; // Redirect doesn't return immediately
         }
@@ -173,6 +192,17 @@ export function AuthProvider({ children }) {
     console.log('Session storage keys:', Object.keys(sessionStorage));
     console.log('Local storage keys:', Object.keys(localStorage));
     
+    // Check if we're returning from an OAuth redirect
+    const oauthPending = localStorage.getItem('_firebase_oauth_pending');
+    const oauthTimestamp = localStorage.getItem('_firebase_oauth_timestamp');
+    const isReturningFromOAuth = oauthPending === 'true';
+    
+    if (isReturningFromOAuth) {
+      const timeSinceRedirect = Date.now() - parseInt(oauthTimestamp || '0');
+      console.log('🔄 RETURNING FROM OAUTH REDIRECT!');
+      console.log('Time since redirect:', timeSinceRedirect + 'ms');
+    }
+    
     console.log('Starting getRedirectResult check...');
     
     // Check for redirect result when app loads (mobile users returning from Google)
@@ -190,10 +220,24 @@ export function AuthProvider({ children }) {
             email: result.user.email,
             displayName: result.user.displayName
           });
+          
+          // Clear OAuth pending flags
+          localStorage.removeItem('_firebase_oauth_pending');
+          localStorage.removeItem('_firebase_oauth_timestamp');
+          console.log('Cleared OAuth pending flags');
+          
           setCurrentUser(result.user);
           setAuthError(null);
         } else {
-          console.log('⚠️ getRedirectResult returned NULL (no pending redirect)');
+          console.log('⚠️ getRedirectResult returned NULL');
+          
+          if (isReturningFromOAuth) {
+            console.log('📋 BUT we have OAuth pending flag - waiting for onAuthStateChanged...');
+            console.log('Firebase should restore auth from localStorage persistence');
+            // Don't clear the flag yet - wait for onAuthStateChanged to confirm
+          } else {
+            console.log('No OAuth pending (normal page load)');
+          }
         }
       })
       .catch((error) => {
@@ -203,6 +247,10 @@ export function AuthProvider({ children }) {
         console.error('Error code:', error.code);
         console.error('Error message:', error.message);
         console.error('Full error:', JSON.stringify(error, null, 2));
+        
+        // Clear OAuth pending flags on error
+        localStorage.removeItem('_firebase_oauth_pending');
+        localStorage.removeItem('_firebase_oauth_timestamp');
         
         // Provide user-friendly error messages
         let errorMessage = 'Authentication failed. Please try again.';
@@ -223,6 +271,7 @@ export function AuthProvider({ children }) {
       console.log('=== onAuthStateChanged FIRED ===', authTimestamp);
       console.log('User object:', user);
       console.log('Is logged in:', !!user);
+      
       if (user) {
         console.log('User details:', {
           uid: user.uid,
@@ -230,7 +279,18 @@ export function AuthProvider({ children }) {
           displayName: user.displayName,
           emailVerified: user.emailVerified
         });
+        
+        // Check if this is from an OAuth redirect
+        const wasOAuthPending = localStorage.getItem('_firebase_oauth_pending') === 'true';
+        if (wasOAuthPending) {
+          console.log('✅ OAuth redirect completed successfully via localStorage persistence!');
+          // Clear OAuth pending flags now that we have the user
+          localStorage.removeItem('_firebase_oauth_pending');
+          localStorage.removeItem('_firebase_oauth_timestamp');
+          console.log('Cleared OAuth pending flags');
+        }
       }
+      
       console.log('redirectCheckComplete:', redirectCheckComplete);
       
       setCurrentUser(user);
@@ -245,10 +305,19 @@ export function AuthProvider({ children }) {
     });
 
     // Fallback: ensure loading state clears after reasonable timeout
+    // Increased from 3s to 8s for mobile OAuth redirects which can be slower
     const timeout = setTimeout(() => {
-      console.log('⏱️ 3-second timeout reached, forcing loading to false');
+      console.log('⏱️ 8-second timeout reached, forcing loading to false');
+      
+      // If OAuth was pending but we still don't have a user, clear the flags
+      if (localStorage.getItem('_firebase_oauth_pending') === 'true') {
+        console.log('⚠️ OAuth pending flag still set after timeout - clearing');
+        localStorage.removeItem('_firebase_oauth_pending');
+        localStorage.removeItem('_firebase_oauth_timestamp');
+      }
+      
       setLoading(false);
-    }, 3000);
+    }, 8000);
 
     return () => {
       unsubscribe();
