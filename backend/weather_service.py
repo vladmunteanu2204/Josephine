@@ -2,13 +2,20 @@
 # Uses OpenWeatherMap API for weather data
 
 import requests
+import os
 from datetime import datetime, timedelta
 
 class WeatherService:
     def __init__(self, api_key=None):
-        # Use environment variable or fallback to free tier
-        self.api_key = api_key or "demo"  # User can set OPENWEATHER_API_KEY
+        # Use environment variable or fallback to demo
+        self.api_key = api_key or os.environ.get('OPENWEATHER_API_KEY', 'demo')
         self.base_url = "https://api.openweathermap.org/data/2.5"
+        
+        # Log API key status (without revealing the actual key)
+        if self.api_key == 'demo':
+            print("⚠️  Using mock weather data (no API key configured)")
+        else:
+            print(f"✅ OpenWeatherMap API key configured (key starts with: {self.api_key[:4]}...)")
         
     def get_current_weather(self, lat, lon):
         """Get current weather for coordinates"""
