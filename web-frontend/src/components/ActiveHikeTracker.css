@@ -217,6 +217,21 @@
 }
 
 @media (max-width: 768px) {
+  .floating-stats-panel {
+    top: 60px;
+    right: 8px;
+    left: 8px;
+    min-width: unset;
+    max-width: calc(100% - 16px);
+    padding: 12px;
+  }
+
+  .stat-row {
+    font-size: 13px;
+    gap: 8px;
+    padding: 5px 0;
+  }
+
   .stats-overlay {
     gap: 0.5rem;
     padding: 0.4rem 0.75rem;
@@ -260,6 +275,17 @@
 
 /* Extra small screens - very compact layout */
 @media (max-width: 480px) {
+  .floating-stats-panel {
+    top: 55px;
+    padding: 10px;
+  }
+
+  .stat-row {
+    font-size: 12px;
+    gap: 6px;
+    padding: 4px 0;
+  }
+
   .stats-overlay {
     gap: 0.4rem;
     padding: 0.35rem 0.5rem;

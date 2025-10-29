@@ -1,0 +1,35 @@
+{
+  "name": "Alpenvia - Premium Alpine Hiking",
+  "short_name": "Alpenvia",
+  "description": "Premium multilingual hiking platform for South Tyrol and Trentino Alps with GPS tracking, trail recommendations, and gamification",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#d4a574",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["travel", "sports", "health"],
+  "screenshots": [],
+  "permissions": [
+    "geolocation"
+  ],
+  "features": [
+    "GPS tracking",
+    "Offline maps",
+    "Trail recommendations",
+    "Gamification badges"
+  ]
+}

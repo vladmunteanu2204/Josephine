@@ -430,6 +430,28 @@ function ActiveHikeTracker({ trail, onEnd }) {
     };
   }, []);
 
+  // Handle page visibility changes to maintain GPS tracking
+  useEffect(() => {
+    const handleVisibilityChange = async () => {
+      if (document.visibilityState === 'visible' && isTracking) {
+        console.log('[GPS] Page visible - re-acquiring wake lock');
+        await requestWakeLock();
+      } else if (document.visibilityState === 'hidden' && isTracking) {
+        console.log('[GPS] Page hidden - GPS may pause on some devices');
+        sendNotification(
+          'GPS Tracking Active',
+          'Keep Alpenvia open to continue tracking your hike'
+        );
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [isTracking]);
+
   if (showDisclaimer) {
     return (
       <SafetyDisclaimerModal
