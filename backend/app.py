@@ -4,10 +4,24 @@ import os
 import json
 import random
 from datetime import datetime
+from functools import wraps
 from weather_service import weather_service
 
 app = Flask(__name__)
 CORS(app)
+
+# Admin authentication
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'alpenvia_admin_2025')
+
+def require_admin_auth(f):
+    """Decorator to require admin authentication"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        auth_header = request.headers.get('X-Admin-Password')
+        if not auth_header or auth_header != ADMIN_PASSWORD:
+            return jsonify({'error': 'Unauthorized - Invalid admin credentials'}), 401
+        return f(*args, **kwargs)
+    return decorated_function
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -320,6 +334,205 @@ def get_weather_suitability():
             'suitability': suitability
         })
     
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# ===== ADMIN API ENDPOINTS =====
+
+@app.route('/api/admin/login', methods=['POST'])
+def admin_login():
+    """Verify admin password"""
+    password = request.json.get('password')
+    if password == ADMIN_PASSWORD:
+        return jsonify({'success': True, 'message': 'Login successful'})
+    return jsonify({'success': False, 'message': 'Invalid password'}), 401
+
+@app.route('/api/admin/trails', methods=['POST'])
+@require_admin_auth
+def create_trail():
+    """Create a new trail (Admin)"""
+    try:
+        trail_data = request.json
+        trails = load_complete_trails()
+        
+        if any(t['id'] == trail_data['id'] for t in trails['trails']):
+            return jsonify({'error': 'Trail ID already exists'}), 400
+        
+        trails['trails'].append(trail_data)
+        
+        trails_path = os.path.join(BASE_DIR, 'data', 'trails.json')
+        with open(trails_path, 'w') as f:
+            json.dump(trails, f, indent=2)
+        
+        return jsonify({'success': True, 'trail': trail_data}), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/trails/<trail_id>', methods=['PUT'])
+@require_admin_auth
+def update_trail(trail_id):
+    """Update an existing trail (Admin)"""
+    try:
+        trail_data = request.json
+        trails = load_complete_trails()
+        
+        trail_index = next((i for i, t in enumerate(trails['trails']) if t['id'] == trail_id), None)
+        if trail_index is None:
+            return jsonify({'error': 'Trail not found'}), 404
+        
+        trails['trails'][trail_index] = trail_data
+        
+        trails_path = os.path.join(BASE_DIR, 'data', 'trails.json')
+        with open(trails_path, 'w') as f:
+            json.dump(trails, f, indent=2)
+        
+        return jsonify({'success': True, 'trail': trail_data})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/trails/<trail_id>', methods=['DELETE'])
+@require_admin_auth
+def delete_trail(trail_id):
+    """Delete a trail (Admin)"""
+    try:
+        trails = load_complete_trails()
+        original_count = len(trails['trails'])
+        trails['trails'] = [t for t in trails['trails'] if t['id'] != trail_id]
+        
+        if len(trails['trails']) == original_count:
+            return jsonify({'error': 'Trail not found'}), 404
+        
+        trails_path = os.path.join(BASE_DIR, 'data', 'trails.json')
+        with open(trails_path, 'w') as f:
+            json.dump(trails, f, indent=2)
+        
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/gpx/parse', methods=['POST'])
+@require_admin_auth
+def parse_gpx():
+    """Parse GPX file and extract trail data (Admin)"""
+    try:
+        import xml.etree.ElementTree as ET
+        from math import radians, sin, cos, sqrt, atan2
+        
+        gpx_content = request.json.get('gpxContent')
+        if not gpx_content:
+            return jsonify({'error': 'No GPX content provided'}), 400
+        
+        root = ET.fromstring(gpx_content)
+        ns = {'gpx': 'http://www.topografix.com/GPX/1/1'}
+        
+        track_points = []
+        for trkpt in root.findall('.//gpx:trkpt', ns):
+            lat = float(trkpt.get('lat'))
+            lon = float(trkpt.get('lon'))
+            ele = trkpt.find('gpx:ele', ns)
+            elevation = float(ele.text) if ele is not None else 0
+            track_points.append({'lat': lat, 'lon': lon, 'ele': elevation})
+        
+        if not track_points:
+            return jsonify({'error': 'No track points found in GPX'}), 400
+        
+        coordinates = [[pt['lon'], pt['lat']] for pt in track_points]
+        
+        total_distance = 0
+        elevation_gain = 0
+        elevations = [pt['ele'] for pt in track_points]
+        
+        for i in range(1, len(track_points)):
+            lat1, lon1 = radians(track_points[i-1]['lat']), radians(track_points[i-1]['lon'])
+            lat2, lon2 = radians(track_points[i]['lat']), radians(track_points[i]['lon'])
+            dlat, dlon = lat2 - lat1, lon2 - lon1
+            a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+            c = 2 * atan2(sqrt(a), sqrt(1-a))
+            total_distance += 6371 * c
+            
+            if track_points[i]['ele'] > track_points[i-1]['ele']:
+                elevation_gain += track_points[i]['ele'] - track_points[i-1]['ele']
+        
+        return jsonify({
+            'total_points': len(track_points),
+            'distance': round(total_distance, 2),
+            'elevation_gain': round(elevation_gain, 0),
+            'min_elevation': round(min(elevations), 0),
+            'max_elevation': round(max(elevations), 0),
+            'route': {
+                'type': 'Feature',
+                'geometry': {
+                    'type': 'LineString',
+                    'coordinates': coordinates
+                }
+            }
+        })
+    except Exception as e:
+        return jsonify({'error': f'GPX parsing failed: {str(e)}'}), 500
+
+@app.route('/api/admin/reviews/<review_id>', methods=['DELETE'])
+@require_admin_auth
+def delete_review(review_id):
+    """Delete a review (Admin)"""
+    try:
+        trail_id = request.json.get('trail_id')
+        if not trail_id:
+            return jsonify({'error': 'trail_id required'}), 400
+        
+        return jsonify({'success': True, 'message': 'Review deletion not yet implemented in backend persistence'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# Challenges Management
+challenges_data = {
+    'challenges': []
+}
+
+@app.route('/api/challenges', methods=['GET'])
+def get_challenges():
+    """Get all challenges"""
+    return jsonify(challenges_data)
+
+@app.route('/api/admin/challenges', methods=['POST'])
+@require_admin_auth
+def create_challenge():
+    """Create a new challenge (Admin)"""
+    try:
+        challenge_data = request.json
+        if any(c['id'] == challenge_data['id'] for c in challenges_data['challenges']):
+            return jsonify({'error': 'Challenge ID already exists'}), 400
+        
+        challenges_data['challenges'].append(challenge_data)
+        return jsonify({'success': True, 'challenge': challenge_data}), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/challenges/<challenge_id>', methods=['PUT'])
+@require_admin_auth
+def update_challenge(challenge_id):
+    """Update a challenge (Admin)"""
+    try:
+        challenge_data = request.json
+        idx = next((i for i, c in enumerate(challenges_data['challenges']) if c['id'] == challenge_id), None)
+        if idx is None:
+            return jsonify({'error': 'Challenge not found'}), 404
+        
+        challenges_data['challenges'][idx] = challenge_data
+        return jsonify({'success': True, 'challenge': challenge_data})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/challenges/<challenge_id>', methods=['DELETE'])
+@require_admin_auth
+def delete_challenge(challenge_id):
+    """Delete a challenge (Admin)"""
+    try:
+        original_count = len(challenges_data['challenges'])
+        challenges_data['challenges'] = [c for c in challenges_data['challenges'] if c['id'] != challenge_id]
+        if len(challenges_data['challenges']) == original_count:
+            return jsonify({'error': 'Challenge not found'}), 404
+        
+        return jsonify({'success': True})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

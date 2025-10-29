@@ -13,6 +13,8 @@ import Leaderboards from './components/Leaderboards';
 import HikePlanner from './components/HikePlanner';
 import TermsAndConditions from './components/TermsAndConditions';
 import PrivacyPolicy from './components/PrivacyPolicy';
+import AdminPanel from './components/AdminPanel';
+import Challenges from './components/Challenges';
 import Footer from './components/Footer';
 
 function App() {
@@ -99,6 +101,14 @@ function App() {
 
           {currentView === 'privacy' && (
             <PrivacyPolicy onBack={goBack} />
+          )}
+
+          {currentView === 'admin' && (
+            <AdminPanel onNavigate={navigate} />
+          )}
+
+          {currentView === 'challenges' && (
+            <Challenges onNavigate={navigate} />
           )}
         </main>
 

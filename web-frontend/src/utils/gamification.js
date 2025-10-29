@@ -401,3 +401,15 @@ export function getLeaderboardData() {
 export function getBadgeById(badgeId) {
   return Object.values(BADGES).find(b => b.id === badgeId);
 }
+
+// Award XP directly (for challenges, bonuses, etc.)
+export function awardXP(xpAmount) {
+  const userData = getUserGamificationData();
+  userData.xp += xpAmount;
+  
+  const newLevel = calculateLevel(userData.xp);
+  userData.level = newLevel.level;
+  
+  saveGamificationData(userData);
+  return userData;
+}
