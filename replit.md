@@ -34,7 +34,7 @@ The design system employs a premium dark alpine theme with glassmorphism effects
 
 ### Feature Specifications
 - **Core Pages:** Home, Catalog, Recommendations, Trail Detail, User Profile, Saved Trails, Settings, Leaderboards, and Hike Planner.
-- **Trail Data:** Enhanced schema includes taglines, galleries, thumbnails, tags, and GPS coordinates for categorization and tracking.
+- **Trail Data:** Enhanced schema includes taglines, galleries, thumbnails, wallpaper (hero image), photos (comma-separated URLs), videos (comma-separated URLs), tags, and GPS coordinates for categorization and tracking.
 - **Responsiveness:** All components and pages are designed to be mobile-responsive.
 - **Accessibility:** Features like ARIA labels and focus management are integrated.
 
