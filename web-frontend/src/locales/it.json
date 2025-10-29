@@ -210,7 +210,15 @@
     "googleLoginFailed": "Accesso Google fallito. Riprova.",
     "tooManyRequests": "Troppi tentativi. Riprova più tardi.",
     "userDisabled": "Questo account è stato disabilitato. Contatta il supporto.",
-    "networkError": "Errore di rete. Controlla la connessione e riprova."
+    "networkError": "Errore di rete. Controlla la connessione e riprova.",
+    "forgotPassword": "Password dimenticata?",
+    "resetEmailLabel": "Email per il reset della password",
+    "resetEmailRequired": "Inserisci il tuo indirizzo email per reimpostare la password.",
+    "resetEmailSent": "Email di reset password inviata! Controlla la tua casella di posta e la cartella spam. La consegna dell'email potrebbe richiedere fino a 30-60 minuti per alcuni provider. Segui le istruzioni nell'email per reimpostare la password.",
+    "sendingReset": "Invio...",
+    "sendResetEmail": "Invia Email di Reset",
+    "resetEmailFailed": "Impossibile inviare l'email di reset. Riprova.",
+    "backToLogin": "Torna al login"
   },
   "subscription": {
     "title": "Scegli il Tuo Piano",
@@ -434,7 +442,7 @@
     "policyChanges": "Modifiche alla Politica",
     "privacyCommitment": "Il Nostro Impegno per la Privacy"
   },
-  "safety": {
+  "safetyDisclaimer": {
     "title": "Disclaimer di Sicurezza",
     "preparingFor": "Preparazione per l'escursione",
     "beforeYouStart": "Prima di Iniziare",

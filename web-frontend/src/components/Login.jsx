@@ -77,7 +77,7 @@ function Login({ onClose, switchToSignup }) {
     e.preventDefault();
 
     if (!email) {
-      setError('Te rog introdu adresa de email pentru resetarea parolei.');
+      setError(t('auth.resetEmailRequired'));
       return;
     }
 
@@ -86,20 +86,20 @@ function Login({ onClose, switchToSignup }) {
       setSuccess('');
       setLoading(true);
       await resetPassword(email);
-      setSuccess('Email de resetare parolă trimis! Verifică inbox-ul și urmează instrucțiunile.');
-      // Keep reset form visible with success message for 3 seconds, then return to login
+      setSuccess(t('auth.resetEmailSent'));
+      // Keep reset form visible with success message for 5 seconds, then return to login
       setTimeout(() => {
         setShowResetPassword(false);
         setSuccess('');
-      }, 3000);
+      }, 5000);
     } catch (error) {
       console.error('Password reset error:', error);
       if (error.code === 'auth/user-not-found') {
-        setError('Nu există cont cu această adresă de email.');
+        setError(t('auth.userNotFound'));
       } else if (error.code === 'auth/invalid-email') {
-        setError('Adresa de email este invalidă.');
+        setError(t('auth.invalidEmail'));
       } else {
-        setError('Eroare la trimiterea email-ului. Încearcă din nou.');
+        setError(t('auth.resetEmailFailed'));
       }
     } finally {
       setLoading(false);
@@ -152,7 +152,7 @@ function Login({ onClose, switchToSignup }) {
                 className="auth-link"
                 style={{ fontSize: '14px', textDecoration: 'underline' }}
               >
-                Ai uitat parola?
+                {t('auth.forgotPassword')}
               </button>
             </div>
 
@@ -163,19 +163,19 @@ function Login({ onClose, switchToSignup }) {
         ) : (
           <form onSubmit={handleResetPassword} className="auth-form">
             <div className="form-group">
-              <label htmlFor="email">Email pentru resetare parolă</label>
+              <label htmlFor="email">{t('auth.resetEmailLabel')}</label>
               <input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="adresa@email.com"
+                placeholder={t('auth.emailPlaceholder')}
                 disabled={loading}
               />
             </div>
 
             <button type="submit" className="auth-submit" disabled={loading}>
-              {loading ? 'Se trimite...' : 'Trimite email de resetare'}
+              {loading ? t('auth.sendingReset') : t('auth.sendResetEmail')}
             </button>
 
             <div style={{ textAlign: 'center', marginTop: '16px' }}>
@@ -185,7 +185,7 @@ function Login({ onClose, switchToSignup }) {
                 className="auth-link"
                 style={{ fontSize: '14px' }}
               >
-                Înapoi la login
+                {t('auth.backToLogin')}
               </button>
             </div>
           </form>

@@ -210,7 +210,15 @@
     "googleLoginFailed": "Google sign-in failed. Please try again.",
     "tooManyRequests": "Too many attempts. Please try again later.",
     "userDisabled": "This account has been disabled. Please contact support.",
-    "networkError": "Network error. Please check your connection and try again."
+    "networkError": "Network error. Please check your connection and try again.",
+    "forgotPassword": "Forgot password?",
+    "resetEmailLabel": "Email for password reset",
+    "resetEmailRequired": "Please enter your email address to reset your password.",
+    "resetEmailSent": "Password reset email sent! Check your inbox and spam folder. Email delivery may take up to 30-60 minutes for some email providers. Follow the instructions in the email to reset your password.",
+    "sendingReset": "Sending...",
+    "sendResetEmail": "Send Reset Email",
+    "resetEmailFailed": "Failed to send reset email. Please try again.",
+    "backToLogin": "Back to login"
   },
   "subscription": {
     "title": "Choose Your Plan",
@@ -434,7 +442,7 @@
     "policyChanges": "Policy Changes",
     "privacyCommitment": "Our Privacy Commitment"
   },
-  "safety": {
+  "safetyDisclaimer": {
     "title": "Safety Disclaimer",
     "preparingFor": "Preparing to hike",
     "beforeYouStart": "Before You Start",

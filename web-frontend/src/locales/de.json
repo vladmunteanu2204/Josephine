@@ -210,7 +210,15 @@
     "googleLoginFailed": "Google-Anmeldung fehlgeschlagen. Bitte erneut versuchen.",
     "tooManyRequests": "Zu viele Versuche. Bitte später erneut versuchen.",
     "userDisabled": "Dieses Konto wurde deaktiviert. Bitte kontaktieren Sie den Support.",
-    "networkError": "Netzwerkfehler. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut."
+    "networkError": "Netzwerkfehler. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+    "forgotPassword": "Passwort vergessen?",
+    "resetEmailLabel": "E-Mail für Passwortzurücksetzung",
+    "resetEmailRequired": "Bitte geben Sie Ihre E-Mail-Adresse ein, um Ihr Passwort zurückzusetzen.",
+    "resetEmailSent": "E-Mail zur Passwortzurücksetzung gesendet! Überprüfen Sie Ihren Posteingang und Spam-Ordner. Die E-Mail-Zustellung kann bei einigen Anbietern bis zu 30-60 Minuten dauern. Folgen Sie den Anweisungen in der E-Mail, um Ihr Passwort zurückzusetzen.",
+    "sendingReset": "Wird gesendet...",
+    "sendResetEmail": "Reset-E-Mail senden",
+    "resetEmailFailed": "Fehler beim Senden der Reset-E-Mail. Bitte versuchen Sie es erneut.",
+    "backToLogin": "Zurück zum Login"
   },
   "subscription": {
     "title": "Wähle Deinen Plan",
@@ -434,7 +442,7 @@
     "policyChanges": "Richtlinienänderungen",
     "privacyCommitment": "Unser Datenschutz-Engagement"
   },
-  "safety": {
+  "safetyDisclaimer": {
     "title": "Sicherheitshinweis",
     "preparingFor": "Vorbereitung für die Wanderung",
     "beforeYouStart": "Bevor Sie Beginnen",

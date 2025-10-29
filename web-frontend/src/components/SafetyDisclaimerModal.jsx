@@ -16,61 +16,61 @@ function SafetyDisclaimerModal({ onAccept, onCancel, trailName }) {
     <div className="modal-overlay">
       <div className="safety-modal">
         <div className="modal-header">
-          <h2 className="modal-title">⚠️ {t('safety.title')}</h2>
+          <h2 className="modal-title">⚠️ {t('safetyDisclaimer.title')}</h2>
         </div>
 
         <div className="modal-content">
           <div className="trail-info">
-            <p className="preparing-for">{t('safety.preparingFor')}</p>
+            <p className="preparing-for">{t('safetyDisclaimer.preparingFor')}</p>
             <p className="trail-name-highlight">{trailName}</p>
           </div>
 
           <div className="safety-checklist">
-            <h3>{t('safety.beforeYouStart')}</h3>
+            <h3>{t('safetyDisclaimer.beforeYouStart')}</h3>
             
             <div className="checklist-item">
               <span className="icon">🌤️</span>
               <div>
-                <strong>{t('safety.checkWeather')}</strong>
-                <p>{t('safety.checkWeatherDesc')}</p>
+                <strong>{t('safetyDisclaimer.checkWeather')}</strong>
+                <p>{t('safetyDisclaimer.checkWeatherDesc')}</p>
               </div>
             </div>
 
             <div className="checklist-item">
               <span className="icon">📱</span>
               <div>
-                <strong>{t('safety.informSomeone')}</strong>
-                <p>{t('safety.informSomeoneDesc')}</p>
+                <strong>{t('safetyDisclaimer.informSomeone')}</strong>
+                <p>{t('safetyDisclaimer.informSomeoneDesc')}</p>
               </div>
             </div>
 
             <div className="checklist-item">
               <span className="icon">🎒</span>
               <div>
-                <strong>{t('safety.properEquipment')}</strong>
-                <p>{t('safety.properEquipmentDesc')}</p>
+                <strong>{t('safetyDisclaimer.properEquipment')}</strong>
+                <p>{t('safetyDisclaimer.properEquipmentDesc')}</p>
               </div>
             </div>
 
             <div className="checklist-item">
               <span className="icon">🗺️</span>
               <div>
-                <strong>{t('safety.backupNavigation')}</strong>
-                <p>{t('safety.backupNavigationDesc')}</p>
+                <strong>{t('safetyDisclaimer.backupNavigation')}</strong>
+                <p>{t('safetyDisclaimer.backupNavigationDesc')}</p>
               </div>
             </div>
 
             <div className="checklist-item">
               <span className="icon">💪</span>
               <div>
-                <strong>{t('safety.knowLimits')}</strong>
-                <p>{t('safety.knowLimitsDesc')}</p>
+                <strong>{t('safetyDisclaimer.knowLimits')}</strong>
+                <p>{t('safetyDisclaimer.knowLimitsDesc')}</p>
               </div>
             </div>
           </div>
 
           <div className="emergency-info">
-            <h3>🆘 {t('safety.emergencyNumbers')}</h3>
+            <h3>🆘 {t('safetyDisclaimer.emergencyNumbers')}</h3>
             <div className="emergency-numbers">
               <div className="emergency-number">
                 <strong>Europe:</strong> 112
@@ -85,8 +85,8 @@ function SafetyDisclaimerModal({ onAccept, onCancel, trailName }) {
           </div>
 
           <div className="disclaimer-box">
-            <h3>{t('safety.disclaimer')}</h3>
-            <p>{t('safety.disclaimerText')}</p>
+            <h3>{t('safetyDisclaimer.disclaimer')}</h3>
+            <p>{t('safetyDisclaimer.disclaimerText')}</p>
           </div>
 
           <div className="acceptance-checkbox">
@@ -96,7 +96,7 @@ function SafetyDisclaimerModal({ onAccept, onCancel, trailName }) {
                 checked={accepted}
                 onChange={(e) => setAccepted(e.target.checked)}
               />
-              <span>{t('safety.iUnderstand')}</span>
+              <span>{t('safetyDisclaimer.iUnderstand')}</span>
             </label>
           </div>
         </div>
@@ -110,7 +110,7 @@ function SafetyDisclaimerModal({ onAccept, onCancel, trailName }) {
             onClick={handleAccept}
             disabled={!accepted}
           >
-            {t('safety.startHike')}
+            {t('safetyDisclaimer.startHike')}
           </button>
         </div>
       </div>
