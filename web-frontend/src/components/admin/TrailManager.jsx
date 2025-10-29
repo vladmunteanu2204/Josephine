@@ -25,6 +25,9 @@ function TrailManager({ adminPassword }) {
     description: '',
     thumbnail: '',
     image_url: '',
+    wallpaper: '',
+    photos: '',
+    videos: '',
     tags: [],
     interests: [],
     best_season: [],
@@ -32,6 +35,10 @@ function TrailManager({ adminPassword }) {
     dog_friendly: false,
     coordinates: null
   });
+  
+  // Temporary string states for comma-separated inputs
+  const [tagsInput, setTagsInput] = useState('');
+  const [seasonsInput, setSeasonsInput] = useState('');
 
   useEffect(() => {
     loadTrails();
@@ -54,8 +61,14 @@ function TrailManager({ adminPassword }) {
       ...trail,
       tags: trail.tags || trail.interests || [],
       interests: trail.interests || trail.tags || [],
-      best_season: trail.best_season || []
+      best_season: trail.best_season || [],
+      wallpaper: trail.wallpaper || '',
+      photos: trail.photos || '',
+      videos: trail.videos || ''
     });
+    // Set the string inputs for editing
+    setTagsInput((trail.tags || []).join(', '));
+    setSeasonsInput((trail.best_season || []).join(', '));
     setShowCreateForm(false);
   };
 
@@ -65,6 +78,8 @@ function TrailManager({ adminPassword }) {
     setSelectedFile(null);
     setGpxData(null);
     setPreview(null);
+    setTagsInput('');
+    setSeasonsInput('');
     setFormData({
       id: '',
       name: '',
@@ -76,6 +91,9 @@ function TrailManager({ adminPassword }) {
       description: '',
       thumbnail: '',
       image_url: '',
+      wallpaper: '',
+      photos: '',
+      videos: '',
       tags: [],
       interests: [],
       best_season: [],
@@ -140,12 +158,23 @@ function TrailManager({ adminPassword }) {
 
   const handleSave = async () => {
     try {
+      // Convert string inputs to arrays
+      const tagsArray = tagsInput.split(',').map(item => item.trim()).filter(item => item);
+      const seasonsArray = seasonsInput.split(',').map(item => item.trim()).filter(item => item);
+      
+      const trailData = {
+        ...formData,
+        tags: tagsArray,
+        interests: tagsArray,
+        best_season: seasonsArray
+      };
+      
       const headers = { 'X-Admin-Password': adminPassword };
       if (editingTrail) {
-        await axios.put(`/api/admin/trails/${editingTrail}`, formData, { headers });
+        await axios.put(`/api/admin/trails/${editingTrail}`, trailData, { headers });
         alert('Trail updated successfully!');
       } else {
-        await axios.post('/api/admin/trails', formData, { headers });
+        await axios.post('/api/admin/trails', trailData, { headers });
         alert('Trail created successfully!');
       }
       setEditingTrail(null);
@@ -174,11 +203,6 @@ function TrailManager({ adminPassword }) {
   const handleCancel = () => {
     setEditingTrail(null);
     setShowCreateForm(false);
-  };
-
-  const handleArrayInput = (field, value) => {
-    const array = value.split(',').map(item => item.trim()).filter(item => item);
-    setFormData({ ...formData, [field]: array });
   };
 
   if (loading) {
@@ -402,11 +426,44 @@ function TrailManager({ adminPassword }) {
               </div>
 
               <div className="form-group">
+                <label>Wallpaper URL</label>
+                <input
+                  type="text"
+                  value={formData.wallpaper}
+                  onChange={(e) => setFormData({ ...formData, wallpaper: e.target.value })}
+                  placeholder="https://..."
+                />
+                <small style={{ opacity: 0.7, fontSize: '12px' }}>Background/hero image for the trail</small>
+              </div>
+
+              <div className="form-group">
+                <label>Photos URLs (comma-separated)</label>
+                <input
+                  type="text"
+                  value={formData.photos}
+                  onChange={(e) => setFormData({ ...formData, photos: e.target.value })}
+                  placeholder="https://photo1.jpg, https://photo2.jpg"
+                />
+                <small style={{ opacity: 0.7, fontSize: '12px' }}>Photo gallery images</small>
+              </div>
+
+              <div className="form-group">
+                <label>Videos URLs (comma-separated)</label>
+                <input
+                  type="text"
+                  value={formData.videos}
+                  onChange={(e) => setFormData({ ...formData, videos: e.target.value })}
+                  placeholder="https://video1.mp4, https://video2.mp4"
+                />
+                <small style={{ opacity: 0.7, fontSize: '12px' }}>Video gallery files</small>
+              </div>
+
+              <div className="form-group">
                 <label>Tags (comma-separated)</label>
                 <input
                   type="text"
-                  value={formData.tags.join(', ')}
-                  onChange={(e) => handleArrayInput('tags', e.target.value)}
+                  value={tagsInput}
+                  onChange={(e) => setTagsInput(e.target.value)}
                   placeholder="panoramic, alpine lakes, via ferrata"
                 />
               </div>
@@ -415,8 +472,8 @@ function TrailManager({ adminPassword }) {
                 <label>Best Seasons (comma-separated)</label>
                 <input
                   type="text"
-                  value={formData.best_season.join(', ')}
-                  onChange={(e) => handleArrayInput('best_season', e.target.value)}
+                  value={seasonsInput}
+                  onChange={(e) => setSeasonsInput(e.target.value)}
                   placeholder="June, July, August, September"
                 />
               </div>
