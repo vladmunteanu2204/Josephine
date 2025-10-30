@@ -3,6 +3,8 @@
 ## Overview
 Alpenvia is a production-ready, premium multilingual hiking platform for the South Tyrol and Trentino Alps. Its core purpose is to provide smart trail recommendations, comprehensive user reviews, and full internationalization (EN/IT/DE). The platform features an immersive dark alpine-inspired glassmorphic UI, designed for optimal viewing in Replit's browser preview. The project aims to offer a high-quality, curated hiking experience based on verified trail data.
 
+**See [ROADMAP.md](./ROADMAP.md) for complete development roadmap and phase plan (68% complete - Phase 17A).**
+
 ## User Preferences
 - Must be previewable in Replit web browser (not mobile-only)
 - Use only local database for recommendations (no OpenAI)
