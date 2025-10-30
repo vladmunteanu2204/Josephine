@@ -1,18 +1,21 @@
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
-import LanguageSwitcher from './LanguageSwitcher';
+import LanguageBottomSheet from './LanguageBottomSheet';
+import HamburgerMenu from './HamburgerMenu';
 import Login from './Login';
 import Signup from './Signup';
 import UserMenuPortal from './UserMenuPortal';
 import './Header.css';
 
 function Header({ currentView, setCurrentView }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { currentUser, logout } = useAuth();
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showLanguageSheet, setShowLanguageSheet] = useState(false);
+  const [showHamburgerMenu, setShowHamburgerMenu] = useState(false);
   const avatarButtonRef = useRef(null);
 
   const handleLogout = async () => {
@@ -61,6 +64,15 @@ function Header({ currentView, setCurrentView }) {
     }
   };
 
+  // Get current language label
+  const getCurrentLanguageLabel = () => {
+    const lang = i18n.language.toLowerCase();
+    if (lang.startsWith('en')) return 'EN';
+    if (lang.startsWith('it')) return 'IT';
+    if (lang.startsWith('de')) return 'DE';
+    return 'EN';
+  };
+
   return (
     <>
       <header className="header">
@@ -70,7 +82,8 @@ function Header({ currentView, setCurrentView }) {
             <span className="logo-text">Alpenvia</span>
           </div>
           
-          <nav className="nav">
+          {/* Desktop Navigation */}
+          <nav className="nav desktop-nav">
             <button 
               className={`nav-link ${currentView === 'home' ? 'active' : ''}`}
               onClick={() => setCurrentView('home')}
@@ -98,13 +111,22 @@ function Header({ currentView, setCurrentView }) {
           </nav>
 
           <div className="header-actions">
-            <LanguageSwitcher />
+            {/* Language Selector Button */}
+            <button 
+              className="language-btn"
+              onClick={() => setShowLanguageSheet(true)}
+              aria-label="Select language"
+            >
+              <span className="language-icon">🌐</span>
+              <span className="language-label">{getCurrentLanguageLabel()}</span>
+              <span className="language-arrow">▼</span>
+            </button>
             
             {currentUser ? (
               <>
                 <button 
                   ref={avatarButtonRef}
-                  className="user-menu-btn"
+                  className={`user-menu-btn ${currentUser ? 'logged-in' : ''}`}
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   aria-label="User menu"
                   aria-expanded={showUserMenu}
@@ -112,7 +134,7 @@ function Header({ currentView, setCurrentView }) {
                   <div className="user-avatar">
                     {getInitials(currentUser.displayName || currentUser.email)}
                   </div>
-                  <span className="user-name-header">
+                  <span className="user-name-header desktop-only">
                     {currentUser.displayName || currentUser.email?.split('@')[0]}
                   </span>
                 </button>
@@ -127,7 +149,7 @@ function Header({ currentView, setCurrentView }) {
                 />
               </>
             ) : (
-              <div className="auth-buttons">
+              <div className="auth-buttons desktop-only">
                 <button 
                   className="auth-btn login-btn"
                   onClick={() => setShowLogin(true)}
@@ -142,9 +164,32 @@ function Header({ currentView, setCurrentView }) {
                 </button>
               </div>
             )}
+
+            {/* Hamburger Menu Button */}
+            <button 
+              className="hamburger-btn"
+              onClick={() => setShowHamburgerMenu(true)}
+              aria-label="Open menu"
+            >
+              <span className="hamburger-icon">☰</span>
+            </button>
           </div>
         </div>
       </header>
+
+      {/* Language Bottom Sheet */}
+      <LanguageBottomSheet 
+        isOpen={showLanguageSheet}
+        onClose={() => setShowLanguageSheet(false)}
+      />
+
+      {/* Hamburger Menu */}
+      <HamburgerMenu
+        isOpen={showHamburgerMenu}
+        onClose={() => setShowHamburgerMenu(false)}
+        currentView={currentView}
+        setCurrentView={setCurrentView}
+      />
 
       {showLogin && (
         <Login 
