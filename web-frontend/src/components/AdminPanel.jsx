@@ -5,6 +5,10 @@ import axios from 'axios';
 import TrailManager from './admin/TrailManager';
 import ReviewsModeration from './admin/ReviewsModeration';
 import ChallengesManager from './admin/ChallengesManager';
+import UserPlansManager from './UserPlansManager';
+import UserManagement from './UserManagement';
+import TrailAnalytics from './TrailAnalytics';
+import GamificationStats from './GamificationStats';
 import './AdminPanel.css';
 
 const ADMIN_EMAIL = 'vladmunteanu2204@gmail.com';
@@ -90,13 +94,13 @@ function AdminPanel({ onNavigate }) {
             className={`admin-tab ${activeTab === 'trails' ? 'active' : ''}`}
             onClick={() => setActiveTab('trails')}
           >
-            🗺️ Trail Management
+            🗺️ Trails
           </button>
           <button
             className={`admin-tab ${activeTab === 'reviews' ? 'active' : ''}`}
             onClick={() => setActiveTab('reviews')}
           >
-            💬 Reviews Moderation
+            💬 Reviews
           </button>
           <button
             className={`admin-tab ${activeTab === 'challenges' ? 'active' : ''}`}
@@ -104,12 +108,40 @@ function AdminPanel({ onNavigate }) {
           >
             🏆 Challenges
           </button>
+          <button
+            className={`admin-tab ${activeTab === 'plans' ? 'active' : ''}`}
+            onClick={() => setActiveTab('plans')}
+          >
+            📅 User Plans
+          </button>
+          <button
+            className={`admin-tab ${activeTab === 'users' ? 'active' : ''}`}
+            onClick={() => setActiveTab('users')}
+          >
+            👥 Users
+          </button>
+          <button
+            className={`admin-tab ${activeTab === 'analytics' ? 'active' : ''}`}
+            onClick={() => setActiveTab('analytics')}
+          >
+            📊 Analytics
+          </button>
+          <button
+            className={`admin-tab ${activeTab === 'gamification' ? 'active' : ''}`}
+            onClick={() => setActiveTab('gamification')}
+          >
+            🎮 Gamification
+          </button>
         </div>
 
         <div className="admin-content">
           {activeTab === 'trails' && <TrailManager adminPassword={adminPassword} />}
           {activeTab === 'reviews' && <ReviewsModeration adminPassword={adminPassword} />}
           {activeTab === 'challenges' && <ChallengesManager adminPassword={adminPassword} />}
+          {activeTab === 'plans' && <UserPlansManager adminPassword={adminPassword} />}
+          {activeTab === 'users' && <UserManagement adminPassword={adminPassword} />}
+          {activeTab === 'analytics' && <TrailAnalytics adminPassword={adminPassword} />}
+          {activeTab === 'gamification' && <GamificationStats adminPassword={adminPassword} />}
         </div>
       </div>
     </div>

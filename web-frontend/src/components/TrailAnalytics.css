@@ -1,0 +1,174 @@
+.trail-analytics {
+  padding: 20px;
+}
+
+.analytics-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.metric-card {
+  background: linear-gradient(135deg, rgba(212, 165, 116, 0.1) 0%, rgba(255, 255, 255, 0.03) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 165, 116, 0.2);
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 48px rgba(212, 165, 116, 0.2);
+}
+
+.metric-value {
+  font-size: 40px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #D4A574 0%, #E6C59F 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.metric-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.sort-controls label {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+.sort-select {
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sort-select:hover {
+  border-color: #D4A574;
+}
+
+.sort-select:focus {
+  outline: none;
+  border-color: #D4A574;
+  box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+}
+
+.trails-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.trail-analytics-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.trail-analytics-card:hover {
+  transform: translateX(4px);
+  border-color: rgba(212, 165, 116, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.rank-badge {
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  background: linear-gradient(135deg, #D4A574 0%, #E6C59F 100%);
+  color: #0A0A0A;
+  font-weight: 800;
+  font-size: 16px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
+}
+
+.trail-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.trail-name {
+  margin: 0;
+  font-size: 20px;
+  color: white;
+}
+
+.difficulty-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: white;
+}
+
+.trail-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+}
+
+.stat-icon {
+  font-size: 24px;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #D4A574;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+  .metric-value {
+    font-size: 32px;
+  }
+  
+  .trail-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

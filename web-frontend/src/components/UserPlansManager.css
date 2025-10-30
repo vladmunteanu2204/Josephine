@@ -1,0 +1,136 @@
+.user-plans-manager {
+  padding: 20px;
+}
+
+.section-description {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 24px;
+}
+
+.filters-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filter-input {
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  min-width: 200px;
+}
+
+.filter-input:focus {
+  outline: none;
+  border-color: #D4A574;
+}
+
+.clear-filters-btn {
+  padding: 10px 20px;
+  background: rgba(212, 165, 116, 0.1);
+  border: 1px solid #D4A574;
+  border-radius: 8px;
+  color: #D4A574;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.clear-filters-btn:hover {
+  background: rgba(212, 165, 116, 0.2);
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.plan-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.plan-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(212, 165, 116, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.plan-header {
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
+}
+
+.plan-header h3 {
+  margin: 0 0 8px 0;
+  color: #D4A574;
+  font-size: 18px;
+}
+
+.plan-user {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+}
+
+.plan-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.detail-row .label {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.trails-list {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.trails-list strong {
+  color: #D4A574;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.trails-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.trails-list li {
+  padding: 4px 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+}
+
+.trails-list li:before {
+  content: '→ ';
+  color: #D4A574;
+}
+
+.loading-state,
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: rgba(255, 255, 255, 0.5);
+}
