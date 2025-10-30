@@ -1,0 +1,334 @@
+{
+  "trails": [
+    {
+      "id": "alta-via-1",
+      "name": "Alta Via 1 - Classic Dolomites Trek",
+      "description": "The most famous multi-day trek in the Dolomites, traversing stunning mountain landscapes from north to south through the heart of the Dolomites UNESCO World Heritage site.",
+      "type": "point-to-point",
+      "duration_days": 5,
+      "duration_nights": 4,
+      "total_distance_km": 78,
+      "total_elevation_gain_m": 6200,
+      "total_elevation_loss_m": 6400,
+      "difficulty": "moderate",
+      "best_season_start": "06-15",
+      "best_season_end": "09-30",
+      "region": "Dolomites",
+      "hero_image": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "photos": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800",
+        "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800"
+      ],
+      "highlights": [
+        "Traverse the legendary Dolomites peaks",
+        "Stay in authentic mountain rifugios",
+        "Experience sunrise and sunset at high altitude",
+        "Cross dramatic mountain passes",
+        "Immerse in alpine culture and cuisine"
+      ],
+      "tags": ["multi-day", "hut-to-hut", "dolomites", "classic-route", "alpine"],
+      "rifugio_ids": ["bolzano-hutte", "puez-hutte"],
+      "stages": [
+        {
+          "stage_number": 1,
+          "name": "Lago di Braies to Rifugio Sennes",
+          "description": "Begin your Dolomites adventure from the iconic Lago di Braies, climbing through alpine meadows to reach Rifugio Sennes with panoramic views.",
+          "distance_km": 12.5,
+          "elevation_gain_m": 850,
+          "elevation_loss_m": 200,
+          "estimated_duration_hours": 5.5,
+          "difficulty": "moderate",
+          "start_point": {
+            "name": "Lago di Braies",
+            "lat": 46.6972,
+            "lon": 12.0854,
+            "elevation_m": 1496
+          },
+          "end_point": {
+            "name": "Rifugio Sennes",
+            "lat": 46.6428,
+            "lon": 12.0142,
+            "elevation_m": 2116
+          },
+          "overnight_rifugio_id": null,
+          "overnight_rifugio_name": "Rifugio Sennes",
+          "overnight_rifugio_details": {
+            "name": "Rifugio Sennes",
+            "altitude": 2116,
+            "beds": 60,
+            "contact": "+39 0474 501057",
+            "facilities": ["meals", "showers", "wifi"]
+          },
+          "waypoints": [
+            {
+              "name": "Lago di Braies",
+              "type": "start",
+              "lat": 46.6972,
+              "lon": 12.0854,
+              "elevation_m": 1496
+            },
+            {
+              "name": "Fodara Vedla",
+              "type": "checkpoint",
+              "lat": 46.6652,
+              "lon": 12.0543,
+              "elevation_m": 1980
+            },
+            {
+              "name": "Rifugio Sennes",
+              "type": "rifugio",
+              "lat": 46.6428,
+              "lon": 12.0142,
+              "elevation_m": 2116
+            }
+          ],
+          "highlights": [
+            "Stunning views of Lago di Braies",
+            "Alpine meadows filled with wildflowers",
+            "First glimpse of the Sennes plateau"
+          ],
+          "photos": [
+            "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600"
+          ]
+        },
+        {
+          "stage_number": 2,
+          "name": "Rifugio Sennes to Rifugio Fanes",
+          "description": "Traverse the scenic Sennes plateau before descending to the emerald Lago di Fanes and the cozy Rifugio Fanes.",
+          "distance_km": 14.2,
+          "elevation_gain_m": 650,
+          "elevation_loss_m": 850,
+          "estimated_duration_hours": 5,
+          "difficulty": "moderate",
+          "start_point": {
+            "name": "Rifugio Sennes",
+            "lat": 46.6428,
+            "lon": 12.0142,
+            "elevation_m": 2116
+          },
+          "end_point": {
+            "name": "Rifugio Fanes",
+            "lat": 46.6131,
+            "lon": 11.9872,
+            "elevation_m": 2060
+          },
+          "overnight_rifugio_id": null,
+          "overnight_rifugio_name": "Rifugio Fanes",
+          "overnight_rifugio_details": {
+            "name": "Rifugio Fanes",
+            "altitude": 2060,
+            "beds": 48,
+            "contact": "+39 0474 501097",
+            "facilities": ["meals", "showers"]
+          },
+          "waypoints": [
+            {
+              "name": "Passo Sennes",
+              "type": "pass",
+              "lat": 46.6322,
+              "lon": 12.0015,
+              "elevation_m": 2424
+            },
+            {
+              "name": "Lago di Fanes",
+              "type": "lake",
+              "lat": 46.6165,
+              "lon": 11.9925,
+              "elevation_m": 2115
+            }
+          ],
+          "highlights": [
+            "Crossing the high Passo Sennes",
+            "Stunning emerald Lago di Fanes",
+            "Wildlife spotting opportunities"
+          ],
+          "photos": [
+            "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=600"
+          ]
+        },
+        {
+          "stage_number": 3,
+          "name": "Rifugio Fanes to Rifugio Lavarella",
+          "description": "An easier day through the beautiful Fanes valley, following streams and alpine pastures to Rifugio Lavarella.",
+          "distance_km": 11.8,
+          "elevation_gain_m": 520,
+          "elevation_loss_m": 480,
+          "estimated_duration_hours": 4.5,
+          "difficulty": "easy",
+          "start_point": {
+            "name": "Rifugio Fanes",
+            "lat": 46.6131,
+            "lon": 11.9872,
+            "elevation_m": 2060
+          },
+          "end_point": {
+            "name": "Rifugio Lavarella",
+            "lat": 46.5892,
+            "lon": 11.9715,
+            "elevation_m": 2042
+          },
+          "overnight_rifugio_id": null,
+          "overnight_rifugio_name": "Rifugio Lavarella",
+          "overnight_rifugio_details": {
+            "name": "Rifugio Lavarella",
+            "altitude": 2042,
+            "beds": 55,
+            "contact": "+39 0474 501159",
+            "facilities": ["meals", "showers", "wifi"]
+          },
+          "waypoints": [
+            {
+              "name": "Alpe di Fanes",
+              "type": "meadow",
+              "lat": 46.6012,
+              "lon": 11.9793,
+              "elevation_m": 2050
+            }
+          ],
+          "highlights": [
+            "Gentle valley walking",
+            "Marmot spotting",
+            "Peaceful alpine streams"
+          ],
+          "photos": [
+            "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600"
+          ]
+        },
+        {
+          "stage_number": 4,
+          "name": "Rifugio Lavarella to Rifugio Scotoni",
+          "description": "Climb to the dramatic Forcella Lavarella pass with breathtaking views, then descend to Rifugio Scotoni beneath the towering Tofane peaks.",
+          "distance_km": 16.5,
+          "elevation_gain_m": 1180,
+          "elevation_loss_m": 1320,
+          "estimated_duration_hours": 7,
+          "difficulty": "challenging",
+          "start_point": {
+            "name": "Rifugio Lavarella",
+            "lat": 46.5892,
+            "lon": 11.9715,
+            "elevation_m": 2042
+          },
+          "end_point": {
+            "name": "Rifugio Scotoni",
+            "lat": 46.5412,
+            "lon": 11.9985,
+            "elevation_m": 1985
+          },
+          "overnight_rifugio_id": null,
+          "overnight_rifugio_name": "Rifugio Scotoni",
+          "overnight_rifugio_details": {
+            "name": "Rifugio Scotoni",
+            "altitude": 1985,
+            "beds": 42,
+            "contact": "+39 0436 2939",
+            "facilities": ["meals", "showers"]
+          },
+          "waypoints": [
+            {
+              "name": "Forcella Lavarella",
+              "type": "pass",
+              "lat": 46.5712,
+              "lon": 11.9815,
+              "elevation_m": 2462
+            },
+            {
+              "name": "Vallon Bianco",
+              "type": "valley",
+              "lat": 46.5555,
+              "lon": 11.9895,
+              "elevation_m": 2200
+            }
+          ],
+          "highlights": [
+            "Dramatic high mountain pass",
+            "360° panoramic views",
+            "Views of the Tofane massif"
+          ],
+          "photos": [
+            "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600"
+          ]
+        },
+        {
+          "stage_number": 5,
+          "name": "Rifugio Scotoni to Cortina d'Ampezzo",
+          "description": "Final descent through forests and meadows, arriving in the famous resort town of Cortina d'Ampezzo - celebrate your Alta Via 1 completion!",
+          "distance_km": 13.0,
+          "elevation_gain_m": 320,
+          "elevation_loss_m": 1100,
+          "estimated_duration_hours": 4.5,
+          "difficulty": "moderate",
+          "start_point": {
+            "name": "Rifugio Scotoni",
+            "lat": 46.5412,
+            "lon": 11.9985,
+            "elevation_m": 1985
+          },
+          "end_point": {
+            "name": "Cortina d'Ampezzo",
+            "lat": 46.5369,
+            "lon": 12.1357,
+            "elevation_m": 1224
+          },
+          "overnight_rifugio_id": null,
+          "overnight_rifugio_name": null,
+          "overnight_rifugio_details": null,
+          "waypoints": [
+            {
+              "name": "Ra Valles",
+              "type": "viewpoint",
+              "lat": 46.5392,
+              "lon": 12.0542,
+              "elevation_m": 1650
+            },
+            {
+              "name": "Cortina d'Ampezzo",
+              "type": "town",
+              "lat": 46.5369,
+              "lon": 12.1357,
+              "elevation_m": 1224
+            }
+          ],
+          "highlights": [
+            "Forest trails with mountain views",
+            "Arriving in historic Cortina",
+            "Celebration and well-deserved rest"
+          ],
+          "photos": [
+            "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=600"
+          ]
+        }
+      ],
+      "equipment_checklist": [
+        "40-50L backpack",
+        "Sleeping bag liner",
+        "Hiking boots (broken in)",
+        "Trekking poles",
+        "Rain jacket and pants",
+        "Warm layers (fleece, down jacket)",
+        "Extra socks and underwear",
+        "Headlamp with extra batteries",
+        "Power bank and charging cables",
+        "Toiletries and medications",
+        "Cash for rifugios (€200-300)",
+        "Rifugio booking confirmations",
+        "First aid kit",
+        "Sunscreen and sunglasses",
+        "Water bottles (2L capacity)",
+        "Snacks and energy bars"
+      ],
+      "booking_tips": [
+        "Book all rifugios at least 2-3 weeks in advance, especially in July-August",
+        "Confirm bookings a few days before starting",
+        "Bring cash - not all rifugios accept cards",
+        "Half-board (dinner + breakfast) is recommended at rifugios",
+        "Check weather forecast before starting each stage"
+      ],
+      "status": "published",
+      "created_at": "2025-01-15T10:00:00Z",
+      "updated_at": "2025-01-15T10:00:00Z"
+    }
+  ]
+}

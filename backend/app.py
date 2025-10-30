@@ -40,6 +40,7 @@ def require_admin_auth(f):
     return decorated_function
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MULTI_DAY_TRAILS_FILE = os.path.join(BASE_DIR, 'backend', 'data', 'multi_day_trails.json')
 
 def load_trail_segments():
     """Load trail segments from the mock database"""
@@ -1171,6 +1172,167 @@ def load_completed_hikes():
             return json.load(f)
     except FileNotFoundError:
         return {'hikes': []}
+
+# ============================================
+# Multi-Day Trails Endpoints
+# ============================================
+
+def load_multi_day_trails():
+    """Load multi-day trails from JSON file"""
+    try:
+        with open(MULTI_DAY_TRAILS_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {'trails': []}
+    except Exception as e:
+        print(f"Error loading multi-day trails: {e}")
+        return {'trails': []}
+
+def save_multi_day_trails(data):
+    """Save multi-day trails to JSON file"""
+    with open(MULTI_DAY_TRAILS_FILE, 'w', encoding='utf-8') as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+
+@app.route('/api/multi-day-trails', methods=['GET'])
+def get_multi_day_trails():
+    """Get all published multi-day trails with filtering"""
+    try:
+        data = load_multi_day_trails()
+        trails = data.get('trails', [])
+        
+        # Filter to only published trails for non-admin users
+        trails = [t for t in trails if t.get('status') == 'published']
+        
+        # Apply filters
+        difficulty = request.args.get('difficulty')
+        region = request.args.get('region')
+        duration_min = request.args.get('duration_min', type=int)
+        duration_max = request.args.get('duration_max', type=int)
+        trail_type = request.args.get('type')
+        
+        if difficulty:
+            trails = [t for t in trails if t.get('difficulty') == difficulty]
+        if region:
+            trails = [t for t in trails if t.get('region') == region]
+        if duration_min:
+            trails = [t for t in trails if t.get('duration_days', 0) >= duration_min]
+        if duration_max:
+            trails = [t for t in trails if t.get('duration_days', 0) <= duration_max]
+        if trail_type:
+            trails = [t for t in trails if t.get('type') == trail_type]
+        
+        return jsonify({'trails': trails})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/multi-day-trails/<trail_id>', methods=['GET'])
+def get_multi_day_trail(trail_id):
+    """Get a single multi-day trail by ID"""
+    try:
+        data = load_multi_day_trails()
+        trail = next((t for t in data.get('trails', []) if t['id'] == trail_id), None)
+        
+        if not trail:
+            return jsonify({'error': 'Trail not found'}), 404
+        
+        # Only show published trails to non-admin users
+        if trail.get('status') != 'published':
+            return jsonify({'error': 'Trail not found'}), 404
+        
+        return jsonify(trail)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/multi-day-trails', methods=['GET'])
+@require_admin_auth
+def admin_get_all_multi_day_trails():
+    """Get all multi-day trails (including drafts) for admin"""
+    try:
+        data = load_multi_day_trails()
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/multi-day-trails', methods=['POST'])
+@require_admin_auth
+def admin_create_multi_day_trail():
+    """Create a new multi-day trail (Admin)"""
+    try:
+        new_trail = request.json
+        data = load_multi_day_trails()
+        
+        # Validate required fields
+        required_fields = ['id', 'name', 'description', 'type', 'duration_days', 'difficulty', 'region']
+        for field in required_fields:
+            if field not in new_trail:
+                return jsonify({'error': f'Missing required field: {field}'}), 400
+        
+        # Check for duplicate ID
+        if any(t['id'] == new_trail['id'] for t in data['trails']):
+            return jsonify({'error': 'Trail ID already exists'}), 400
+        
+        # Set timestamps
+        from datetime import datetime
+        timestamp = datetime.utcnow().isoformat() + 'Z'
+        new_trail['created_at'] = timestamp
+        new_trail['updated_at'] = timestamp
+        
+        # Set default status
+        if 'status' not in new_trail:
+            new_trail['status'] = 'draft'
+        
+        data['trails'].append(new_trail)
+        save_multi_day_trails(data)
+        
+        return jsonify(new_trail), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/multi-day-trails/<trail_id>', methods=['PUT'])
+@require_admin_auth
+def admin_update_multi_day_trail(trail_id):
+    """Update a multi-day trail (Admin)"""
+    try:
+        updated_trail = request.json
+        data = load_multi_day_trails()
+        
+        trail_index = next((i for i, t in enumerate(data['trails']) if t['id'] == trail_id), None)
+        
+        if trail_index is None:
+            return jsonify({'error': 'Trail not found'}), 404
+        
+        # Update timestamp
+        from datetime import datetime
+        updated_trail['updated_at'] = datetime.utcnow().isoformat() + 'Z'
+        
+        # Preserve created_at
+        updated_trail['created_at'] = data['trails'][trail_index].get('created_at')
+        
+        data['trails'][trail_index] = updated_trail
+        save_multi_day_trails(data)
+        
+        return jsonify(updated_trail)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/multi-day-trails/<trail_id>', methods=['DELETE'])
+@require_admin_auth
+def admin_delete_multi_day_trail(trail_id):
+    """Delete a multi-day trail (Admin)"""
+    try:
+        data = load_multi_day_trails()
+        
+        trail_index = next((i for i, t in enumerate(data['trails']) if t['id'] == trail_id), None)
+        
+        if trail_index is None:
+            return jsonify({'error': 'Trail not found'}), 404
+        
+        deleted_trail = data['trails'].pop(trail_index)
+        save_multi_day_trails(data)
+        
+        return jsonify({'message': 'Trail deleted successfully', 'trail': deleted_trail})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/admin/analytics/users', methods=['GET'])
 @require_admin_auth
