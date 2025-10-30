@@ -21,6 +21,30 @@
   --z-modal: 4000;
 }
 
+/* Sticky header - prevent margin collapsing */
+header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-navbar);
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+
+/* Prevent gaps under header */
+main,
+.page-wrap,
+.hero-section,
+.page-hero {
+  margin-top: 0 !important;
+}
+
+/* Ensure first child doesn't add stray margin */
+main > *:first-child,
+.page-wrap > *:first-child {
+  margin-top: 0 !important;
+}
+
 * {
   box-sizing: border-box;
 }

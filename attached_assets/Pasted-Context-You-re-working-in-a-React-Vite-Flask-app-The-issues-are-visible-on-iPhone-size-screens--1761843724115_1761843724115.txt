@@ -1,0 +1,153 @@
+Context
+You’re working in a React (Vite) + Flask app. The issues are visible on iPhone-size screens (390×844). Fix them without breaking desktop. Use CSS variables and iOS safe-area insets. Do not introduce new libraries.
+
+Goals (in this order)
+
+Center “Explore Your Path” scroll cue at the bottom of the Home hero.
+
+Always show the Hiking Stats bar on the tracking screen as soon as tracking starts (even before distance > 0), positioned above the map.
+
+Remove the unintended vertical gap between the header and the first hero section on all pages.
+
+0) Locate files (don’t guess)
+
+Search and open the exact files before editing:
+
+web-frontend/src/components/Home.jsx|tsx|css
+
+web-frontend/src/components/Tracking.jsx|tsx|css (or HikeTracking, ActiveHike, etc.)
+
+web-frontend/src/components/Header.jsx|tsx|css
+
+Any page CSS that defines hero sections: TrailDetail.css, Profile.css, TrailCatalog.css, SavedTrails.css, etc.
+Use ripgrep:
+
+rg -n "Explore Your Path|scroll-cue|Start Hike|isTracking|hike-stats|hero" web-frontend/src/components -S
+
+1) Center “Explore Your Path” (Home hero)
+
+Home.css – enforce positioning
+
+/* Home.css */
+.hero-section {
+  position: relative;
+}
+
+/* The scroll hint under the hero headline */
+.scroll-cue {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  letter-spacing: .5px;
+  opacity: .9;
+}
+
+/* Ensure no parent clips it */
+.hero-section,
+.hero-section * {
+  overflow: visible;
+}
+
+
+If the cue is currently centered with margins, remove those margins and rely on the absolute positioning above.
+
+Acceptance for (1):
+
+On 390×844, the cue is horizontally centered and visually sits ~20px above the bottom safe area.
+
+2) Hiking Stats bar doesn’t show during tracking
+
+Root cause to fix:
+The component is likely rendered only when distance > 0 or after GPS points exist. It must render when isTracking === true.
+
+Tracking.jsx – render logic
+Find where the stats are conditionally rendered. Replace any condition like:
+
+{stats.distance > 0 && <HikeStats .../>}
+
+
+with:
+
+{isTracking && <HikeStats stats={stats} progress={progress} />}
+
+
+Tracking.css – fixed overlay above Mapbox
+Add (or update) a fixed, non-clipped overlay:
+
+/* Tracking.css */
+.hike-stats {
+  position: fixed;
+  top: calc(var(--header-h, 64px) + env(safe-area-inset-top, 0px) + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3000;                 /* above map and map controls */
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 12px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: rgba(20,20,20,.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: none;          /* taps fall through to map */
+}
+.hike-stats .stat { text-align: center; }
+.hike-stats .stat strong { display:block; font-weight:700; }
+.hike-stats .stat span { opacity:.8; font-size:.85rem; }
+
+
+Map container must not cover the bar. Ensure the map wrapper doesn’t have a higher z-index:
+
+.map-container { z-index: 1; }
+
+
+Acceptance for (2):
+
+Tap “Start Hike” → stats bar appears immediately (Distance 0.0 km, Duration 00:00, Progress 0% is fine).
+
+It stays visible above the map and under the header. No flicker on zoom/pan.
+
+3) Remove unwanted gap between header and hero
+
+Cause: margin collapsing / inconsistent page paddings under a sticky header.
+
+index.css (global) – standardize header + page top padding
+
+:root { --header-h: 64px; }
+
+/* Sticky header */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  margin: 0;        /* prevent margin-collapsing artifacts */
+  padding: 0;
+}
+
+/* First section under header across the app */
+main, .page-wrap, .hero-section, .page-hero {
+  margin-top: 0 !important;
+  padding-top: calc(var(--header-h) + env(safe-area-inset-top, 0px));
+}
+
+/* Ensure the very first child doesn’t add stray margin */
+main > *:first-child,
+.page-wrap > *:first-child {
+  margin-top: 0 !important;
+}
+
+
+Check Header.css
+Remove/avoid overflow:hidden on the header; it can clip content and create visual artifacts with sticky:
+
+header { overflow: visible; }
+
+
+Acceptance for (3):
+
+On Home and Trail Detail, there is no extra blank band; hero aligns cleanly under the header across breakpoints.
