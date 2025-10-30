@@ -745,7 +745,23 @@ function ActiveHikeTracker({ trail, onEnd }) {
       </div>
 
       {/* Floating Stats Panel */}
-      <div className="floating-stats-panel" style={{ zIndex: 99999, display: 'flex', position: 'fixed', top: 0, left: 0, right: 0 }}>
+      <div className="floating-stats-panel" style={{ 
+        zIndex: 99999, 
+        display: 'flex', 
+        position: 'fixed', 
+        top: 0, 
+        left: 0, 
+        right: 0,
+        background: 'linear-gradient(135deg, #2d4a3e 0%, #4a7c9e 100%)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        padding: 'calc(env(safe-area-inset-top, 0px) + 10px) 12px 10px',
+        borderBottom: '3px solid #d4a574',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.6)',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        gap: '6px'
+      }}>
         <div className="stat-row">
           <span>🥾</span>
           <span>{(stats.distance / 1000).toFixed(1)}km</span>
