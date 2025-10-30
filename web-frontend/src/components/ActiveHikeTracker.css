@@ -65,7 +65,7 @@
   box-shadow: 0 2px 12px rgba(239, 68, 68, 0.6), 0 0 0 2px rgba(239, 68, 68, 0.3);
 }
 
-.floating-stats-panel {
+.active-hike-tracker .floating-stats-panel {
   position: fixed;
   top: 0;
   left: 0;
@@ -75,9 +75,9 @@
   -webkit-backdrop-filter: blur(10px);
   padding: calc(env(safe-area-inset-top, 0px) + 10px) 12px 10px;
   border-bottom: 3px solid #d4a574;
-  z-index: 99999;
+  z-index: 99999 !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-  display: flex;
+  display: flex !important;
   justify-content: space-around;
   align-items: center;
   gap: 6px;
@@ -113,7 +113,7 @@
 
 /* Mobile portrait mode - horizontal compact layout */
 @media (max-width: 768px) {
-  .floating-stats-panel {
+  .active-hike-tracker .floating-stats-panel {
     padding: 8px 8px;
     gap: 4px;
   }
@@ -133,7 +133,7 @@
 }
 
 @media (max-width: 480px) {
-  .floating-stats-panel {
+  .active-hike-tracker .floating-stats-panel {
     padding: 6px 6px;
     gap: 3px;
   }
@@ -295,7 +295,7 @@
 }
 
 @media (max-width: 768px) {
-  .floating-stats-panel {
+  .active-hike-tracker .floating-stats-panel {
     padding: 10px 8px;
     gap: 4px;
   }
@@ -355,7 +355,7 @@
 
 /* Extra small screens - very compact layout */
 @media (max-width: 480px) {
-  .floating-stats-panel {
+  .active-hike-tracker .floating-stats-panel {
     padding: 8px 4px;
     gap: 2px;
   }

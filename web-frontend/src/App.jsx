@@ -60,7 +60,7 @@ function App() {
         <AuthProvider>
           <Header currentView={currentView} setCurrentView={setCurrentView} />
         
-        <main className="main-content">
+        <main className={`main-content ${currentView === 'detail' ? 'trail-detail-view' : ''}`}>
           {currentView === 'home' && (
             <Home 
               setCurrentView={setCurrentView}
