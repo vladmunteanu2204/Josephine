@@ -1,6 +1,6 @@
 # 🏔️ Alpenvia Development Roadmap
 
-## Project Status: Phase 17G Complete (42%)
+## Project Status: Phase 17H Complete (43%)
 
 **Vision:** "Strava meets Lonely Mountain Journal" — an emotional, cinematic alpine experience where every achievement feels like a story of its own.
 
@@ -331,10 +331,12 @@
 
 ---
 
-### **Phase 17H: Mobile Header & Hero Redesign** 📱 🆕
+### **Phase 17H: Mobile Header & Hero Redesign** ✅ 📱
 **Goal:** Transform app from "functional but flat" to "an elegant, cinematic gateway into the mountains"
 
 **Design Philosophy:** *"Minimalist, dark, and atmospheric — blending seamlessly with the alpine theme."*
+
+**Status:** ✅ Complete
 
 #### **Current Problems**
 
