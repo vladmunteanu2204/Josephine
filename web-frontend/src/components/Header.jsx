@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import LanguageBottomSheet from './LanguageBottomSheet';
@@ -7,6 +7,8 @@ import Login from './Login';
 import Signup from './Signup';
 import UserMenuPortal from './UserMenuPortal';
 import './Header.css';
+
+const BUILD_VERSION = 'v10';
 
 function Header({ currentView, setCurrentView }) {
   const { t, i18n } = useTranslation();
@@ -17,6 +19,10 @@ function Header({ currentView, setCurrentView }) {
   const [showLanguageSheet, setShowLanguageSheet] = useState(false);
   const [showHamburgerMenu, setShowHamburgerMenu] = useState(false);
   const avatarButtonRef = useRef(null);
+
+  useEffect(() => {
+    console.log(`🏔️ Alpenvia Build Version: ${BUILD_VERSION} - ${new Date().toISOString()}`);
+  }, []);
 
   const handleLogout = async () => {
     try {
