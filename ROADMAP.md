@@ -1,6 +1,6 @@
 # 🏔️ Alpenvia Development Roadmap
 
-## Project Status: Phase 18 Complete (42%)
+## Project Status: Phase 18 Complete (41%)
 
 **Vision:** "Strava meets Lonely Mountain Journal" — an emotional, cinematic alpine experience where every achievement feels like a story of its own.
 
@@ -507,6 +507,209 @@ Make the hike page a living alpine story — not just a technical info sheet.
    - Every interaction feels intentional
    - Smooth, polished animations
    - User feels the mountain calling
+
+---
+
+### **Phase 17H: Mobile Header & Hero Redesign** 📱 🆕
+**Goal:** Transform app from "functional but flat" to "an elegant, cinematic gateway into the mountains"
+
+**Design Philosophy:** *"Minimalist, dark, and atmospheric — blending seamlessly with the alpine theme."*
+
+#### **Current Problems**
+
+**Issues with Current Design:**
+- 🌍 Language flags sit awkwardly on top — look like debug placeholders, not integrated UI
+- 🧭 Navigation bar feels heavy and detached from hero
+- 🧱 Visual hierarchy unclear — too many boxy buttons in small space
+- 📱 Immersion lost — flat layout, no depth, no mountain feel
+- 🕹️ Tap targets too close — risk of accidental clicks on mobile
+
+**Goal:** Header that feels immersive, clean, and native to Alpenvia experience with fluid hierarchy and integrated design.
+
+#### **Mobile Header Structure Redesign**
+
+| Element | Current State | Redesigned Solution | Rationale |
+|---------|--------------|---------------------|-----------|
+| 🏔️ **Logo** | Standard size, static | Smaller (32-36px height), left-aligned, entrance fade animation | Feels premium and cinematic |
+| 🌐 **Language Selector** | Flag buttons on top (intrusive) | Dropdown icon (🌐 or "EN ▼") → bottom sheet with flags + names | Saves space, looks professional |
+| 👤 **User Icon** | Standard profile icon | Circular with subtle glow when logged in | Visually balanced |
+| ☰ **Navigation** | Static nav links (heavy) | Slide-out hamburger menu with all nav items | Modern mobile UX standard |
+
+**Result:** Minimalist top bar, visually balanced, immersive (similar to AllTrails/Komoot mobile UI)
+
+#### **Hero Section Redesign**
+
+| Element | Current State | Redesigned Solution | Description |
+|---------|--------------|---------------------|-------------|
+| 🌄 **Background** | Static image | Gradient-blurred mountain image (dark → light amber), parallax motion | Instant alpine atmosphere |
+| ✨ **Headline** | Standard text | Larger responsive font (30-34px), gradient text effect | Cinematic feeling |
+| 📝 **Subtext** | Standard description | Smaller, semi-transparent white, max 2 lines | Improved readability |
+| 🔘 **CTA Buttons** | Horizontal layout | Stacked vertically with soft shadows, icon + text, motion feedback | Easier tap area, elegant |
+| 🧭 **Scroll Cue** | None | Subtle "↓ Scroll to explore" animation with mountain icon | Invites engagement |
+
+#### **Interactivity & Motion Design**
+
+| Microinteraction | Implementation | Impact |
+|------------------|----------------|--------|
+| **Language dropdown animation** | Slides smoothly from top, fades flags in | Feels native & modern |
+| **Button press feedback** | Soft amber ripple glow on tap | Polished, tactile feel |
+| **Hero parallax** | Background moves slower than foreground on scroll | Adds depth & immersion |
+| **Logo fade on scroll** | Logo fades slightly when scrolling down | Elegant cinematic touch |
+| **Menu slide** | Hamburger menu slides in from right with blur backdrop | Smooth, professional |
+| **Tap targets** | Minimum 44x44px touch areas with spacing | Prevents accidental taps |
+
+#### **Color Palette**
+
+```css
+/* Dark Alpine Theme */
+--bg-primary: linear-gradient(180deg, #0A0A0A 0%, #112B26 100%);
+--accent-amber: #D4A574;
+--accent-hover: #E6C59F;
+--text-primary: #FFFFFF;
+--text-secondary: rgba(255, 255, 255, 0.7);
+--shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.4);
+--glow-logged-in: rgba(212, 165, 116, 0.3);
+```
+
+#### **Responsive Breakpoints**
+
+- **Mobile Portrait:** 320-480px (stacked layout, simplified parallax)
+- **Mobile Landscape:** 481-768px (adjusted spacing)
+- **Tablet:** 769-1024px (hybrid layout)
+- **Desktop:** 1025px+ (full parallax, enhanced effects)
+
+#### **Optional Enhancements**
+
+**Dynamic Theme Shift:**
+- Header color adapts based on scroll position
+- Dark/opaque in hero section
+- Translucent/blurred when scrolled down
+- Smooth color transition
+
+**Persistent Bottom Navigation (PWA):**
+- Small floating nav bar at bottom
+- Icons: 🏠 Home / 🗺️ Explore / 📅 Planner / 👤 Profile
+- Active state with glow effect
+- Smooth haptic feedback (iOS)
+
+**Seasonal Header Accents:**
+- Winter: Subtle snowflake particles
+- Spring: Gentle pollen drift
+- Summer: Warm light rays
+- Autumn: Falling leaf motion
+- Toggle in settings (default: on)
+
+**AI Assistant Shortcut:**
+- Floating bubble icon at bottom-right
+- "Ask Alpenvia" quick help button
+- Opens chat for recommendations/help
+- Pulsing animation when idle
+
+#### **Implementation Details**
+
+**Language Bottom Sheet:**
+```javascript
+// When user taps 🌐 icon
+- Backdrop blur overlay (rgba(0,0,0,0.6))
+- Sheet slides up from bottom
+- Contains:
+  - Header: "Select Language"
+  - Flag grid with labels:
+    🇬🇧 English
+    🇮🇹 Italiano
+    🇩🇪 Deutsch
+  - Selected language has glow border
+- Tap outside to dismiss
+- Smooth spring animation
+```
+
+**Hamburger Menu:**
+```javascript
+// When user taps ☰ icon
+- Menu slides in from right (300ms ease-out)
+- Backdrop blur (rgba(10,10,10,0.8))
+- Menu items:
+  - Home
+  - Smart Recommendations
+  - Trail Catalog
+  - Rifugios
+  - Hike Planner
+  - Challenges
+  - Profile
+  - Settings
+- Each item: icon + label
+- Dividers between sections
+- Logout at bottom (if logged in)
+```
+
+**Hero Parallax:**
+```javascript
+// Scroll-based parallax
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY;
+  heroBackground.style.transform = `translateY(${scrolled * 0.5}px)`;
+  heroContent.style.transform = `translateY(${scrolled * 0.2}px)`;
+  logo.style.opacity = 1 - (scrolled / 300);
+});
+```
+
+#### **Accessibility Considerations**
+
+- **Reduced Motion:** Respect `prefers-reduced-motion` media query
+- **Touch Targets:** Minimum 44x44px for all interactive elements
+- **Contrast Ratios:** WCAG AA compliant (4.5:1 minimum)
+- **Screen Readers:** Proper ARIA labels for all icons
+- **Keyboard Navigation:** Full keyboard support for menu
+- **Focus Indicators:** Visible focus rings with amber glow
+
+#### **Before/After Comparison**
+
+**Before:**
+- "Functional, but flat. A collection of boxes."
+- Language flags prominently displayed
+- Heavy navigation taking up space
+- No depth or atmosphere
+- Cluttered visual hierarchy
+
+**After:**
+- "An elegant, cinematic gateway into the mountains — minimalist, dark, and atmospheric."
+- Clean top bar with dropdown language selector
+- Slide-out menu for navigation
+- Parallax hero with depth
+- Clear visual hierarchy
+- Immersive alpine experience from first tap
+
+#### **User Flow Example**
+
+1. **App Opens**
+   - Hero fades in with parallax background
+   - Logo appears with subtle animation
+   - Gradient headline draws attention
+   - Scroll cue invites exploration
+
+2. **Change Language**
+   - Tap 🌐 icon in header
+   - Bottom sheet slides up smoothly
+   - Select language with flag + label
+   - Sheet dismisses, content updates
+
+3. **Open Navigation**
+   - Tap ☰ hamburger menu
+   - Menu slides in from right with blur backdrop
+   - Tap menu item → smooth page transition
+   - Menu dismisses automatically
+
+4. **Scroll Hero**
+   - Background moves slower (parallax depth)
+   - Logo fades elegantly
+   - Header becomes translucent
+   - Content comes into view
+
+5. **Tap CTA Button**
+   - Amber ripple animation on press
+   - Smooth transition to destination
+   - Haptic feedback (mobile)
+   - Professional, polished feel
 
 ---
 
@@ -1288,17 +1491,18 @@ Each level tied to real alpine regions with descriptions
 ## 🏆 **Feature Highlights**
 
 ### **Unique Differentiators:**
-1. **Cinematic Trail Detail Pages** - Immersive parallax heroes, animated elevation profiles, 3D galleries 🎬
-2. **Admin-Curated Checkpoints** - Personal touch for every trail with rifugio integration
-3. **Cinematic Gamification** - Animated badges, sound design, story-based levels
-4. **Comprehensive Rifugio Ecosystem** - Full hut database, bookings, reviews, partnerships
-5. **Hut-to-Hut Planning** - Multi-day trek support with rifugio integration
-6. **Smart Availability System** - Real-time rifugio open/closed status
-7. **WhatsApp Booking** - Instant booking inquiries via WhatsApp
-8. **Emergency GPS Sharing** - Safety-first approach with nearby rifugio alerts
-9. **Co-op Achievements** - Social without being overwhelming
-10. **Post-Hike Summaries** - Beautiful trip recaps with colored elevation maps
-11. **Offline Hut Navigator** - Complete offline access to rifugio data
+1. **Cinematic Mobile Experience** - Minimalist header, parallax hero, slide-out menu, bottom sheet language selector 📱
+2. **Cinematic Trail Detail Pages** - Immersive parallax heroes, animated elevation profiles, 3D galleries 🎬
+3. **Admin-Curated Checkpoints** - Personal touch for every trail with rifugio integration
+4. **Cinematic Gamification** - Animated badges, sound design, story-based levels
+5. **Comprehensive Rifugio Ecosystem** - Full hut database, bookings, reviews, partnerships
+6. **Hut-to-Hut Planning** - Multi-day trek support with rifugio integration
+7. **Smart Availability System** - Real-time rifugio open/closed status
+8. **WhatsApp Booking** - Instant booking inquiries via WhatsApp
+9. **Emergency GPS Sharing** - Safety-first approach with nearby rifugio alerts
+10. **Co-op Achievements** - Social without being overwhelming
+11. **Post-Hike Summaries** - Beautiful trip recaps with colored elevation maps
+12. **Offline Hut Navigator** - Complete offline access to rifugio data
 
 ### **Complete User Journey:**
 **Discover** → Browse trails and rifugios  
@@ -1327,5 +1531,5 @@ Each level tied to real alpine regions with descriptions
 
 **Last Updated:** October 30, 2025  
 **Project Start:** October 2025  
-**Completion:** 42% (18 of 43 phases)  
-**Total Phases:** 43 (expanded from 39)
+**Completion:** 41% (18 of 44 phases)  
+**Total Phases:** 44 (expanded from 39)
