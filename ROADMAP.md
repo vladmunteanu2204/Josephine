@@ -1,6 +1,6 @@
 # 🏔️ Alpenvia Development Roadmap
 
-## Project Status: Phase 18 Complete (41%)
+## Project Status: Phase 17G Complete (42%)
 
 **Vision:** "Strava meets Lonely Mountain Journal" — an emotional, cinematic alpine experience where every achievement feels like a story of its own.
 
@@ -111,51 +111,35 @@
 - Background sync readiness
 - Add to home screen functionality
 
+### **Phase 17D: UX Polish & Onboarding** ✅
+- Toast notification system with alpine glassmorphic design
+- First-launch onboarding wizard (4 slides: discovery, GPS, gamification, planning)
+- Custom PWA splash screen with aurora gradient
+- GPS auto-pause detection (60s threshold, auto-resume)
+- Admin checkpoint CRUD in TrailManager
+- GPS proximity alerts for checkpoints
+- Post-hike celebration modal with badges and checkpoints
+- Complete i18n (EN/IT/DE) for all new features
+
+### **Phase 17G: Trail Detail Page - Cinematic Experience** ✅ 🎬
+**Design Philosophy:** "Opening the door of an alpine refuge — quiet, glowing, and full of promise"
+- Hero section with parallax scrolling and fade-in animations
+- Difficulty badge with colored tags (Easy🟢/Moderate🟠/Hard🔴)
+- Stats bar transformed into glassmorphism cards with glowing icons
+- Staggered pop-in animations using Intersection Observer
+- Dynamic SVG elevation profile with progressive line drawing
+- Gradient fill elevation chart (green→yellow→red)
+- Start Hike CTA with pulse breathing animation
+- Animated Save/Favorite toggle with localStorage persistence
+- Toast notifications for save/unsave actions
+- Scroll-triggered animations with viewport detection
+- Responsive design with mobile breakpoints
+- Full accessibility with prefers-reduced-motion support
+- Complete i18n (EN/DE/IT) for all cinematic features
+
 ---
 
 ## 🚧 **UPCOMING PHASES**
-
-### **Phase 17D: UX Polish & Onboarding** 🆕
-**Goal:** Smooth first-time experience and polished feedback system
-
-#### **First-Launch Onboarding**
-- Welcome wizard: "How Alpenvia Works"
-- 3-4 slide tutorial highlighting:
-  - Trail discovery and recommendations
-  - GPS tracking with live stats
-  - Gamification (badges, levels, challenges)
-  - Planning multi-day trips
-  - Rifugio directory and hut-to-hut routes
-- Skip option for returning users
-- Never show again preference
-
-#### **Success Feedback System**
-- Toast/snackbar notifications for all user actions:
-  - "Trail saved successfully" ✓
-  - "Review submitted" ✓
-  - "Badge unlocked!" 🎖️
-  - "Challenge completed!" 🏆
-  - "Hike plan saved" ✓
-  - "Rifugio inquiry sent" ✓
-  - "Bookmark added" ✓
-- Consistent positioning and timing
-- Color-coded by action type (success, info, warning)
-- Alpine-themed animations
-
-#### **PWA Splash Screen**
-- Custom loading screen for PWA launch
-- Alpine-themed animation
-- App logo with mountain silhouette
-- Smooth transition to main app
-
-#### **GPS Auto-Pause**
-- Detect stationary position (>60 seconds)
-- Automatically pause tracking
-- Visual indicator: "Paused - Taking a break?"
-- Resume on movement detection
-- Prevent false elevation/distance accumulation
-
----
 
 ### **Phase 17E: Dynamic Checkpoints & Trip Summary** 🆕
 **Goal:** Admin-controlled waypoints with proximity alerts + cinematic post-hike summary
@@ -344,169 +328,6 @@
 - Fallback to standard inquiry form if WhatsApp unavailable
 
 ---
-
-### **Phase 17G: Trail Detail Page - Cinematic Experience** 🎬 🆕
-**Goal:** Transform trail detail pages into immersive alpine stories
-
-**Design Philosophy:** *"Opening the door of an alpine refuge — quiet, glowing, and full of promise."*
-
-#### **Core UX Objectives**
-Make the hike page a living alpine story — not just a technical info sheet.
-
-**Goals:**
-- **Emotion** → Make the user feel the hike before even starting it
-- **Clarity** → All technical data is instantly readable
-- **Motivation** → User wants to save, plan, or start the hike
-- **Continuity** → From discovery → action → memory (save or track)
-
-#### **Visual Design Enhancements**
-
-**Hero Section:**
-- Full-screen parallax hero with depth motion scrolling
-- Title fade-in animation (e.g., "Rise above Tirolo")
-- Subtle ambient mountain sound when loaded (optional)
-  - Wind whisper, distant cowbells, or alpine breeze
-  - Mute toggle in corner
-- Dark alpine overlay gradient (deep green → amber) for readability & atmosphere
-- Difficulty badge with colored tag + mountain icon:
-  - Easy 🟢 (green)
-  - Moderate 🟠 (orange)
-  - Hard 🔴 (red)
-
-**Stats Bar Transformation:**
-- Replace flat stats bar with elevated glassmorphism cards
-- Semi-transparent frosted glass effect
-- Glowing icons for each stat (distance, elevation, duration)
-- Animate on scroll with "pop-in" effect
-- Staggered entrance animation (cards appear one by one)
-
-**Gallery Section:**
-- Horizontal scroll carousel (Instagram-style)
-- 3D zoom hover effect on images
-- Smooth momentum scrolling
-- Tap to expand full-screen lightbox
-- Lazy loading with blur-up placeholders
-
-**Elevation Profile:**
-- Dynamic SVG animation with progressive line drawing
-- Gradient fill from green (valleys) → yellow (mid) → red (peaks)
-- Animate on scroll: chart draws as user scrolls down
-- Interactive hover showing altitude at any point
-- Distance markers along x-axis
-- Elevation markers on y-axis
-
-#### **Interactive Experience Enhancements**
-
-**Start Hike CTA:**
-- Big central "Start this Hike" button with pulse breathing animation
-- Clean, direct action flow
-- When pressed: smooth fade transition
-  - Background fades out
-  - Live map overlay fades in
-  - Immersive GPS tracking screen appears
-- Button disabled if GPS unavailable (with tooltip)
-
-**💾 Save / Favorite Toggle:**
-- Animated bookmark icon with smooth state transitions
-- Fill animation when saved
-- State persistence synced to Firebase
-- Haptic feedback on mobile (if supported)
-- Toast confirmation: "Trail saved!"
-- Encourages returning users
-
-**📅 Plan this Hike:**
-- Opens inline calendar widget (no page navigation)
-- Calendar picker directly integrated in page
-- Linked to Hike Planner system
-- Seamless planning integration
-- Pre-fills trail data in planner
-- "Add to my trip" flow
-
-**💬 User Reviews Carousel:**
-- Horizontally scrollable snippet cards
-- Show recent reviews with star ratings
-- Quote format: *"Great trail for sunrise!"*
-- User avatar + name + date
-- Adds authenticity & social proof
-- Tap to expand full review
-- Link to all reviews section
-
-**🏞️ AR/VR Preview (Future):**
-- 360° panoramic preview from drone imagery
-- AI-generated panorama of summit view
-- WebXR integration for VR headsets
-- Optional immersive preview mode
-- Emotional engagement layer
-
-#### **Immersion & Micro-Animations**
-
-| Type | Description | Effect |
-|------|-------------|--------|
-| **Scroll Parallax** | Background moves slower than content | Simulates depth of landscape |
-| **Elevation Animation** | Chart draws progressively as user scrolls | Builds anticipation |
-| **Hike Card Motion** | Cards slide subtly upward when scrolling | Makes browsing feel alive |
-| **CTA Button Pulse** | Subtle breathing animation on "Start Hike" | Encourages action |
-| **Transition to Tracking** | Fade out background → fade in live map | Seamless mode switch |
-| **Stats Pop-in** | Cards appear with scale + fade animation | Draws attention to data |
-| **Gallery Momentum** | Smooth physics-based scrolling | Natural, responsive feel |
-| **Review Carousel** | Horizontal scroll with snap points | Easy browsing |
-
-#### **Technical Implementation Details**
-
-**Parallax System:**
-- Use CSS `transform: translateZ()` for depth layers
-- Background layer moves at 0.5x scroll speed
-- Content layer at 1x scroll speed
-- Foreground elements at 1.2x for depth
-- Optimized with `will-change` for performance
-
-**Animation Performance:**
-- Use `requestAnimationFrame` for smooth 60fps
-- Intersection Observer for scroll-triggered animations
-- GPU-accelerated transforms (translate3d, scale)
-- Lazy load animations only when in viewport
-- Debounced scroll listeners
-
-**Responsive Design:**
-- Mobile: Simplified parallax (reduced motion)
-- Tablet: Full effects enabled
-- Desktop: Enhanced depth with more layers
-- Touch-friendly carousel controls
-- Reduced motion mode for accessibility
-
-**Accessibility:**
-- `prefers-reduced-motion` media query support
-- Keyboard navigation for all interactive elements
-- ARIA labels for dynamic content
-- Focus management for modal transitions
-- Screen reader announcements for state changes
-
-#### **User Flow Example**
-
-1. **Land on Trail Detail Page**
-   - Full-screen hero fades in with parallax effect
-   - Ambient mountain sound plays softly (if enabled)
-   - Title appears with elegant fade-in
-
-2. **Scroll Down**
-   - Stats cards pop in one by one
-   - Elevation profile draws progressively
-   - Reviews carousel comes into view
-
-3. **Interact with Gallery**
-   - Horizontal scroll through photos
-   - 3D zoom on hover (desktop)
-   - Tap to view full-screen lightbox
-
-4. **Take Action**
-   - Click "Start this Hike" → smooth transition to GPS tracking
-   - Click bookmark → animated save with toast confirmation
-   - Click "Plan this Hike" → inline calendar appears
-
-5. **Immersive Experience**
-   - Every interaction feels intentional
-   - Smooth, polished animations
-   - User feels the mountain calling
 
 ---
 
