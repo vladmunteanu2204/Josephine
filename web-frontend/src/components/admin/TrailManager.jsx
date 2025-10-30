@@ -34,12 +34,23 @@ function TrailManager({ adminPassword }) {
     best_season: [],
     trail_type: 'loop',
     dog_friendly: false,
-    coordinates: null
+    coordinates: null,
+    checkpoints: []
   });
   
   // Temporary string states for comma-separated inputs
   const [tagsInput, setTagsInput] = useState('');
   const [seasonsInput, setSeasonsInput] = useState('');
+  const [showCheckpointForm, setShowCheckpointForm] = useState(false);
+  const [editingCheckpointIndex, setEditingCheckpointIndex] = useState(null);
+  const [checkpointFormData, setCheckpointFormData] = useState({
+    name: '',
+    type: 'poi',
+    description: '',
+    coordinates: [0, 0],
+    alert_distance: 200,
+    photo: ''
+  });
 
   useEffect(() => {
     loadTrails();
@@ -65,7 +76,8 @@ function TrailManager({ adminPassword }) {
       best_season: trail.best_season || [],
       wallpaper: trail.wallpaper || '',
       photos: trail.photos || '',
-      videos: trail.videos || ''
+      videos: trail.videos || '',
+      checkpoints: trail.checkpoints || []
     });
     // Set the string inputs for editing
     setTagsInput((trail.tags || []).join(', '));
@@ -721,6 +733,251 @@ function TrailManager({ adminPassword }) {
                   Dog Friendly
                 </label>
               </div>
+            </div>
+
+            <div className="form-divider"></div>
+
+            {/* Checkpoints Section */}
+            <div className="checkpoints-section">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                <h3 style={{ margin: 0, color: '#4ade80' }}>📍 Trail Checkpoints</h3>
+                <button 
+                  type="button"
+                  className="btn-add-checkpoint"
+                  onClick={() => {
+                    setShowCheckpointForm(true);
+                    setEditingCheckpointIndex(null);
+                    setCheckpointFormData({
+                      name: '',
+                      type: 'poi',
+                      description: '',
+                      coordinates: formData.coordinates && formData.coordinates.length > 0 
+                        ? [formData.coordinates[0][0], formData.coordinates[0][1]] 
+                        : [0, 0],
+                      alert_distance: 200,
+                      photo: ''
+                    });
+                  }}
+                  style={{
+                    padding: '8px 16px',
+                    background: 'linear-gradient(135deg, #4ade80, #22c55e)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '14px'
+                  }}
+                >
+                  ➕ Add Checkpoint
+                </button>
+              </div>
+
+              {formData.checkpoints && formData.checkpoints.length > 0 && (
+                <div className="checkpoints-list" style={{ marginBottom: '15px' }}>
+                  {formData.checkpoints.map((checkpoint, index) => (
+                    <div key={index} style={{
+                      padding: '12px',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      borderRadius: '8px',
+                      marginBottom: '10px',
+                      border: '1px solid rgba(255, 255, 255, 0.1)'
+                    }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '4px' }}>
+                            {checkpoint.type === 'summit' ? '⛰️' : checkpoint.type === 'refuge' ? '🏠' : '📍'} {checkpoint.name}
+                          </div>
+                          {checkpoint.description && (
+                            <div style={{ fontSize: '13px', opacity: 0.8, marginBottom: '6px' }}>{checkpoint.description}</div>
+                          )}
+                          <div style={{ fontSize: '12px', opacity: 0.6 }}>
+                            📏 Alert Distance: {checkpoint.alert_distance}m | 
+                            🗺️ Coords: [{checkpoint.coordinates[0].toFixed(4)}, {checkpoint.coordinates[1].toFixed(4)}]
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditingCheckpointIndex(index);
+                              setCheckpointFormData(checkpoint);
+                              setShowCheckpointForm(true);
+                            }}
+                            style={{
+                              padding: '6px 12px',
+                              background: 'rgba(59, 130, 246, 0.2)',
+                              border: '1px solid rgba(59, 130, 246, 0.4)',
+                              borderRadius: '4px',
+                              color: '#60a5fa',
+                              cursor: 'pointer',
+                              fontSize: '12px'
+                            }}
+                          >
+                            ✏️ Edit
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = formData.checkpoints.filter((_, i) => i !== index);
+                              setFormData({ ...formData, checkpoints: updated });
+                            }}
+                            style={{
+                              padding: '6px 12px',
+                              background: 'rgba(239, 68, 68, 0.2)',
+                              border: '1px solid rgba(239, 68, 68, 0.4)',
+                              borderRadius: '4px',
+                              color: '#f87171',
+                              cursor: 'pointer',
+                              fontSize: '12px'
+                            }}
+                          >
+                            🗑️ Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {showCheckpointForm && (
+                <div style={{
+                  padding: '16px',
+                  background: 'rgba(74, 222, 128, 0.1)',
+                  border: '1px solid rgba(74, 222, 128, 0.3)',
+                  borderRadius: '8px',
+                  marginBottom: '15px'
+                }}>
+                  <h4 style={{ marginTop: 0, marginBottom: '12px', color: '#4ade80' }}>
+                    {editingCheckpointIndex !== null ? 'Edit Checkpoint' : 'New Checkpoint'}
+                  </h4>
+                  <div className="form-grid">
+                    <div className="form-group">
+                      <label>Checkpoint Name *</label>
+                      <input
+                        type="text"
+                        value={checkpointFormData.name}
+                        onChange={(e) => setCheckpointFormData({ ...checkpointFormData, name: e.target.value })}
+                        placeholder="Rifugio Auronzo"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Type</label>
+                      <select
+                        value={checkpointFormData.type}
+                        onChange={(e) => setCheckpointFormData({ ...checkpointFormData, type: e.target.value })}
+                      >
+                        <option value="poi">Point of Interest</option>
+                        <option value="summit">Summit/Peak</option>
+                        <option value="refuge">Refuge/Hut</option>
+                        <option value="viewpoint">Viewpoint</option>
+                        <option value="waterfall">Waterfall</option>
+                        <option value="lake">Lake</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Latitude *</label>
+                      <input
+                        type="number"
+                        step="0.000001"
+                        value={checkpointFormData.coordinates[1]}
+                        onChange={(e) => setCheckpointFormData({ 
+                          ...checkpointFormData, 
+                          coordinates: [checkpointFormData.coordinates[0], parseFloat(e.target.value)] 
+                        })}
+                        placeholder="46.6186"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Longitude *</label>
+                      <input
+                        type="number"
+                        step="0.000001"
+                        value={checkpointFormData.coordinates[0]}
+                        onChange={(e) => setCheckpointFormData({ 
+                          ...checkpointFormData, 
+                          coordinates: [parseFloat(e.target.value), checkpointFormData.coordinates[1]] 
+                        })}
+                        placeholder="12.3027"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Alert Distance (meters)</label>
+                      <input
+                        type="number"
+                        value={checkpointFormData.alert_distance}
+                        onChange={(e) => setCheckpointFormData({ ...checkpointFormData, alert_distance: parseInt(e.target.value) })}
+                        placeholder="200"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Photo URL (optional)</label>
+                      <input
+                        type="text"
+                        value={checkpointFormData.photo}
+                        onChange={(e) => setCheckpointFormData({ ...checkpointFormData, photo: e.target.value })}
+                        placeholder="https://..."
+                      />
+                    </div>
+                    <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                      <label>Description</label>
+                      <textarea
+                        value={checkpointFormData.description}
+                        onChange={(e) => setCheckpointFormData({ ...checkpointFormData, description: e.target.value })}
+                        placeholder="Brief description of this checkpoint..."
+                        rows="2"
+                      />
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: '10px', marginTop: '12px' }}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!checkpointFormData.name.trim()) {
+                          alert('Please enter a checkpoint name');
+                          return;
+                        }
+                        const updated = [...(formData.checkpoints || [])];
+                        if (editingCheckpointIndex !== null) {
+                          updated[editingCheckpointIndex] = checkpointFormData;
+                        } else {
+                          updated.push(checkpointFormData);
+                        }
+                        setFormData({ ...formData, checkpoints: updated });
+                        setShowCheckpointForm(false);
+                        setEditingCheckpointIndex(null);
+                      }}
+                      style={{
+                        padding: '8px 16px',
+                        background: 'linear-gradient(135deg, #4ade80, #22c55e)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '6px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {editingCheckpointIndex !== null ? 'Update Checkpoint' : 'Add Checkpoint'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowCheckpointForm(false);
+                        setEditingCheckpointIndex(null);
+                      }}
+                      style={{
+                        padding: '8px 16px',
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        color: 'white',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '6px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="form-actions">

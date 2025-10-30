@@ -9,42 +9,42 @@ function OnboardingWizard({ onComplete }) {
   const slides = [
     {
       icon: '🏔️',
-      title: t('onboarding.slide1.title') || 'Discover Alpine Trails',
-      description: t('onboarding.slide1.description') || 'Explore curated hiking routes across South Tyrol and Trentino. Get personalized recommendations based on your preferences.',
+      title: t('onboarding.slide1.title'),
+      description: t('onboarding.slide1.description'),
       features: [
-        t('onboarding.slide1.feature1') || 'Smart trail recommendations',
-        t('onboarding.slide1.feature2') || 'Detailed route information',
-        t('onboarding.slide1.feature3') || 'Interactive maps with Mapbox'
+        t('onboarding.slide1.feature1'),
+        t('onboarding.slide1.feature2'),
+        t('onboarding.slide1.feature3')
       ]
     },
     {
       icon: '📍',
-      title: t('onboarding.slide2.title') || 'GPS Tracking & Safety',
-      description: t('onboarding.slide2.description') || 'Track your hikes in real-time with live GPS tracking. Stay safe with weather alerts and checkpoint notifications.',
+      title: t('onboarding.slide2.title'),
+      description: t('onboarding.slide2.description'),
       features: [
-        t('onboarding.slide2.feature1') || 'Real-time position tracking',
-        t('onboarding.slide2.feature2') || 'Automatic stats calculation',
-        t('onboarding.slide2.feature3') || 'Weather & safety alerts'
+        t('onboarding.slide2.feature1'),
+        t('onboarding.slide2.feature2'),
+        t('onboarding.slide2.feature3')
       ]
     },
     {
       icon: '🏆',
-      title: t('onboarding.slide3.title') || 'Achievements & Gamification',
-      description: t('onboarding.slide3.description') || 'Earn badges, level up, and compete on leaderboards. Every hike tells your alpine story.',
+      title: t('onboarding.slide3.title'),
+      description: t('onboarding.slide3.description'),
       features: [
-        t('onboarding.slide3.feature1') || 'Unlock 18+ unique badges',
-        t('onboarding.slide3.feature2') || 'Climb 10 experience levels',
-        t('onboarding.slide3.feature3') || 'Join monthly leaderboards'
+        t('onboarding.slide3.feature1'),
+        t('onboarding.slide3.feature2'),
+        t('onboarding.slide3.feature3')
       ]
     },
     {
       icon: '📋',
-      title: t('onboarding.slide4.title') || 'Plan Your Adventures',
-      description: t('onboarding.slide4.description') || 'Create multi-day itineraries with our hike planner. Save trails, plan equipment, and get personalized safety tips.',
+      title: t('onboarding.slide4.title'),
+      description: t('onboarding.slide4.description'),
       features: [
-        t('onboarding.slide4.feature1') || 'Multi-day trip planning',
-        t('onboarding.slide4.feature2') || 'Dynamic equipment checklists',
-        t('onboarding.slide4.feature3') || 'Save & export itineraries'
+        t('onboarding.slide4.feature1'),
+        t('onboarding.slide4.feature2'),
+        t('onboarding.slide4.feature3')
       ]
     }
   ];
@@ -81,7 +81,7 @@ function OnboardingWizard({ onComplete }) {
       <div className="onboarding-container glass-card">
         {/* Skip button */}
         <button className="onboarding-skip" onClick={handleSkip} aria-label={t('onboarding.skip')}>
-          {t('onboarding.skip') || 'Skip'}
+          {t('onboarding.skip')}
         </button>
 
         {/* Slide content */}
@@ -107,7 +107,7 @@ function OnboardingWizard({ onComplete }) {
               key={index}
               className={`progress-dot ${index === currentSlide ? 'active' : ''} ${index < currentSlide ? 'completed' : ''}`}
               onClick={() => setCurrentSlide(index)}
-              aria-label={`${t('onboarding.goToSlide') || 'Go to slide'} ${index + 1}`}
+              aria-label={`${t('onboarding.goToSlide')} ${index + 1}`}
             />
           ))}
         </div>
@@ -120,7 +120,7 @@ function OnboardingWizard({ onComplete }) {
             disabled={currentSlide === 0}
             aria-label={t('onboarding.previous')}
           >
-            {t('onboarding.previous') || 'Previous'}
+            {t('onboarding.previous')}
           </button>
           <button
             className="btn-onboarding btn-onboarding-primary"
@@ -128,8 +128,8 @@ function OnboardingWizard({ onComplete }) {
             aria-label={currentSlide === slides.length - 1 ? t('onboarding.getStarted') : t('onboarding.next')}
           >
             {currentSlide === slides.length - 1 
-              ? (t('onboarding.getStarted') || 'Get Started')
-              : (t('onboarding.next') || 'Next')
+              ? t('onboarding.getStarted')
+              : t('onboarding.next')
             }
           </button>
         </div>

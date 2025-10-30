@@ -579,5 +579,67 @@
     "firstAid": "Kenne Erste Hilfe-Grundlagen und trage ein Set",
     "alpineWarningTitle": "Warnung Alpine Umgebung",
     "alpineWarningText": "Bergwetter kann sich schnell ändern. Sei immer auf plötzliche Temperaturabfälle, Wind und Niederschläge vorbereitet. Höhe kann die körperliche Leistung und das Urteilsvermögen beeinträchtigen. Kenne die Anzeichen von Höhenkrankheit und Unterkühlung."
+  },
+  "onboarding": {
+    "skip": "Überspringen",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "getStarted": "Los geht's",
+    "goToSlide": "Zu Folie gehen",
+    "slide1": {
+      "title": "Alpine Wanderwege Entdecken",
+      "description": "Erkunde kuratierte Wanderwege in Südtirol und Trentino. Erhalte personalisierte Empfehlungen basierend auf deinen Vorlieben.",
+      "feature1": "Intelligente Routenempfehlungen",
+      "feature2": "Detaillierte Routeninformationen",
+      "feature3": "Interaktive Karten mit Mapbox"
+    },
+    "slide2": {
+      "title": "GPS-Tracking & Sicherheit",
+      "description": "Verfolge deine Wanderungen in Echtzeit mit Live-GPS-Tracking. Bleibe sicher mit Wetterwarnungen und Checkpoint-Benachrichtigungen.",
+      "feature1": "Echtzeit-Positionsverfolgung",
+      "feature2": "Automatische Statistikberechnung",
+      "feature3": "Wetter- und Sicherheitswarnungen"
+    },
+    "slide3": {
+      "title": "Erfolge & Gamification",
+      "description": "Sammle Abzeichen, steige auf und trete in Bestenlisten an. Jede Wanderung erzählt deine alpine Geschichte.",
+      "feature1": "Schalte 18+ einzigartige Abzeichen frei",
+      "feature2": "Erklimme 10 Erfahrungsstufen",
+      "feature3": "Nimm an monatlichen Bestenlisten teil"
+    },
+    "slide4": {
+      "title": "Plane Deine Abenteuer",
+      "description": "Erstelle mehrtägige Routen mit unserem Wanderplaner. Speichere Routen, plane Ausrüstung und erhalte personalisierte Sicherheitstipps.",
+      "feature1": "Mehrtägige Reiseplanung",
+      "feature2": "Dynamische Ausrüstungschecklisten",
+      "feature3": "Speichern & Exportieren von Routen"
+    }
+  },
+  "celebration": {
+    "congratulations": "GLÜCKWUNSCH!",
+    "hikeCompleted": "Du hast die Wanderung abgeschlossen!",
+    "distance": "Distanz",
+    "elevation": "Höhe",
+    "time": "Zeit",
+    "experience": "Erfahrung",
+    "newBadges": "Neue Abzeichen Erhalten!",
+    "viewProfile": "Profil & Statistiken Ansehen",
+    "checkpointsReached": "Checkpoints Erreicht"
+  },
+  "splash": {
+    "tagline": "Premium Alpine Wandern",
+    "footer": "Angetrieben von Leidenschaft für die Alpen"
+  },
+  "gps": {
+    "checkpointAheadToast": "{{icon}} {{name}} - {{distance}}m entfernt",
+    "checkpointReachedToast": "{{icon}} {{name}}",
+    "checkpointAheadNotification": "{{icon}} {{name}} voraus",
+    "checkpointAheadNotificationBody": "{{distance}}m bis {{name}}",
+    "checkpointReachedNotification": "{{icon}} Checkpoint Erreicht!",
+    "checkpointReachedNotificationBody": "Du hast {{name}} erreicht!",
+    "trackingPaused": "Tracking Auto-Pausiert",
+    "trackingResumed": "Tracking Fortgesetzt",
+    "noMovementDetected": "Keine Bewegung erkannt. Tracking wird fortgesetzt, wenn du dich bewegst.",
+    "movementDetected": "Bewegung erkannt, deine Wanderung wird weiter verfolgt"
   }
 }

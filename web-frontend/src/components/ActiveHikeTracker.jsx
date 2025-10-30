@@ -4,6 +4,7 @@ import Map, { Source, Layer, Marker, NavigationControl } from 'react-map-gl';
 import SafetyDisclaimerModal from './SafetyDisclaimerModal';
 import CelebrationModal from './CelebrationModal';
 import { checkNewBadges } from '../utils/gamification';
+import { useToast } from '../contexts/ToastContext';
 import './ActiveHikeTracker.css';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -16,6 +17,7 @@ const POI_ALERT_DISTANCES = [500, 200]; // Alert at 500m and 200m
 
 function ActiveHikeTracker({ trail, onEnd }) {
   const { t } = useTranslation();
+  const toast = useToast();
   const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [isTracking, setIsTracking] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -31,6 +33,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
   });
   const [offTrailWarning, setOffTrailWarning] = useState(false);
   const [alertedPOIs, setAlertedPOIs] = useState(new Set());
+  const [visitedCheckpoints, setVisitedCheckpoints] = useState([]);
   const [shareLink, setShareLink] = useState(null);
   const [completedHikeData, setCompletedHikeData] = useState(null);
   
@@ -188,6 +191,62 @@ function ActiveHikeTracker({ trail, onEnd }) {
     });
   };
 
+  // Check checkpoint proximity and send alerts
+  const checkCheckpointProximity = (position) => {
+    const checkpoints = trail.checkpoints;
+    if (!checkpoints || !Array.isArray(checkpoints) || checkpoints.length === 0) return;
+
+    checkpoints.forEach((checkpoint, index) => {
+      const distance = calculateDistance(
+        position.latitude,
+        position.longitude,
+        checkpoint.coordinates[1],
+        checkpoint.coordinates[0]
+      );
+
+      const alertDist = checkpoint.alert_distance || 200;
+      const checkpointKey = `checkpoint-${index}-${alertDist}`;
+      
+      // Alert at configured distance
+      if (distance <= alertDist && distance > alertDist - 50 && !alertedPOIs.has(checkpointKey)) {
+        const icon = checkpoint.type === 'summit' ? '⛰️' : checkpoint.type === 'refuge' ? '🏠' : '📍';
+        const roundedDistance = Math.round(distance);
+        toast.info(t('gps.checkpointAheadToast', { icon, name: checkpoint.name, distance: roundedDistance }));
+        sendNotification(
+          t('gps.checkpointAheadNotification', { icon, name: checkpoint.name }),
+          t('gps.checkpointAheadNotificationBody', { name: checkpoint.name, distance: roundedDistance })
+        );
+        setAlertedPOIs(prev => new Set([...prev, checkpointKey]));
+      }
+
+      // Arrival notification and tracking
+      const arrivalKey = `checkpoint-${index}-arrival`;
+      if (distance <= 30 && !alertedPOIs.has(arrivalKey)) {
+        const icon = checkpoint.type === 'summit' ? '⛰️' : checkpoint.type === 'refuge' ? '🏠' : '📍';
+        toast.success(t('gps.checkpointReachedToast', { icon, name: checkpoint.name }));
+        sendNotification(
+          t('gps.checkpointReachedNotification', { icon }),
+          t('gps.checkpointReachedNotificationBody', { name: checkpoint.name })
+        );
+        setAlertedPOIs(prev => new Set([...prev, arrivalKey]));
+        
+        // Track visited checkpoint
+        setVisitedCheckpoints(prev => {
+          if (!prev.find(c => c.index === index)) {
+            return [...prev, {
+              index,
+              name: checkpoint.name,
+              type: checkpoint.type,
+              timestamp: Date.now(),
+              coordinates: checkpoint.coordinates
+            }];
+          }
+          return prev;
+        });
+      }
+    });
+  };
+
   // Handle GPS position update
   const handlePositionUpdate = (position) => {
     const { latitude, longitude, altitude, speed } = position.coords;
@@ -220,7 +279,8 @@ function ActiveHikeTracker({ trail, onEnd }) {
           console.log('Movement detected, auto-resuming tracking');
           setIsPaused(false);
           autoPausedRef.current = false;
-          sendNotification('Tracking Resumed', 'Movement detected, continuing your hike tracking');
+          toast.info(`▶️ ${t('gps.trackingResumed')}`);
+          sendNotification(t('gps.trackingResumed'), t('gps.movementDetected'));
         }
       }
     } else {
@@ -237,7 +297,8 @@ function ActiveHikeTracker({ trail, onEnd }) {
         console.log('No movement detected for 60 seconds, auto-pausing tracking');
         setIsPaused(true);
         autoPausedRef.current = true;
-        sendNotification('Tracking Auto-Paused', 'No movement detected. Tracking will resume when you start moving.');
+        toast.warning(`⏸️ ${t('gps.trackingPaused')}`);
+        sendNotification(t('gps.trackingPaused'), t('gps.noMovementDetected'));
       }
     }
 
@@ -330,6 +391,9 @@ function ActiveHikeTracker({ trail, onEnd }) {
 
       // Check POI proximity
       checkPOIProximity(position.coords);
+      
+      // Check checkpoint proximity
+      checkCheckpointProximity(position.coords);
     }
   };
 
@@ -486,6 +550,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
       start_time: new Date(startTimeRef.current).toISOString(),
       end_time: new Date().toISOString(),
       gps_track: gpsTrack,
+      visited_checkpoints: visitedCheckpoints,
       stats: {
         distance_km: stats.distance / 1000,
         elevation_gain_m: stats.elevation,

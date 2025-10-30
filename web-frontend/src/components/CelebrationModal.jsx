@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import './CelebrationModal.css';
 
 function CelebrationModal({ hikeData, gamification, onClose }) {
+  const { t } = useTranslation();
   const [showConfetti, setShowConfetti] = useState(true);
   const [animationPhase, setAnimationPhase] = useState('entering');
 
@@ -61,8 +63,8 @@ function CelebrationModal({ hikeData, gamification, onClose }) {
 
         {/* Congratulations Message */}
         <div className="congrats-message">
-          <h1 className="congrats-title">🎉 CONGRATULATIONS! 🎉</h1>
-          <p className="congrats-subtitle">You've completed the hike!</p>
+          <h1 className="congrats-title">🎉 {t('celebration.congratulations')} 🎉</h1>
+          <p className="congrats-subtitle">{t('celebration.hikeCompleted')}</p>
           <p className="trail-name">{hikeData.trail_name}</p>
         </div>
 
@@ -71,23 +73,23 @@ function CelebrationModal({ hikeData, gamification, onClose }) {
           <div className="stat-card">
             <div className="stat-icon">🥾</div>
             <div className="stat-value">{formatDistance(hikeData.stats.distance_km)}</div>
-            <div className="stat-label">Distance</div>
+            <div className="stat-label">{t('celebration.distance')}</div>
           </div>
           <div className="stat-card">
             <div className="stat-icon">⛰️</div>
             <div className="stat-value">{Math.round(hikeData.stats.elevation_gain_m)}m</div>
-            <div className="stat-label">Elevation</div>
+            <div className="stat-label">{t('celebration.elevation')}</div>
           </div>
           <div className="stat-card">
             <div className="stat-icon">⏱️</div>
             <div className="stat-value">{formatDuration(hikeData.stats.duration_hours * 3600)}</div>
-            <div className="stat-label">Time</div>
+            <div className="stat-label">{t('celebration.time')}</div>
           </div>
           {xpGained > 0 && (
             <div className="stat-card xp-card">
               <div className="stat-icon">⭐</div>
               <div className="stat-value">+{xpGained} XP</div>
-              <div className="stat-label">Experience</div>
+              <div className="stat-label">{t('celebration.experience')}</div>
             </div>
           )}
         </div>
@@ -95,7 +97,7 @@ function CelebrationModal({ hikeData, gamification, onClose }) {
         {/* Badges Earned */}
         {newBadges.length > 0 && (
           <div className="badges-earned">
-            <h3>🏆 New Badges Earned!</h3>
+            <h3>🏆 {t('celebration.newBadges')}</h3>
             <div className="badge-list">
               {newBadges.map((badge, idx) => (
                 <div key={idx} className="badge-item">
@@ -107,10 +109,28 @@ function CelebrationModal({ hikeData, gamification, onClose }) {
           </div>
         )}
 
+        {/* Checkpoints Visited */}
+        {hikeData.visited_checkpoints && hikeData.visited_checkpoints.length > 0 && (
+          <div className="checkpoints-visited">
+            <h3>📍 {t('celebration.checkpointsReached')} ({hikeData.visited_checkpoints.length})</h3>
+            <div className="checkpoint-list">
+              {hikeData.visited_checkpoints.map((checkpoint, idx) => {
+                const icon = checkpoint.type === 'summit' ? '⛰️' : checkpoint.type === 'refuge' ? '🏠' : '📍';
+                return (
+                  <div key={idx} className="checkpoint-item">
+                    <span className="checkpoint-icon">{icon}</span>
+                    <span className="checkpoint-name">{checkpoint.name}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Close Button */}
         <button className="celebration-close-btn" onClick={onClose}>
           <span className="btn-icon">📊</span>
-          View Profile & Stats
+          {t('celebration.viewProfile')}
         </button>
       </div>
     </div>

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import './SplashScreen.css';
 
 function SplashScreen({ onComplete }) {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [fadeOut, setFadeOut] = useState(false);
 
@@ -45,7 +47,7 @@ function SplashScreen({ onComplete }) {
         <div className="splash-logo">
           <div className="logo-icon">🏔️</div>
           <h1 className="logo-text">Alpenvia</h1>
-          <p className="logo-tagline">Premium Alpine Hiking</p>
+          <p className="logo-tagline">{t('splash.tagline')}</p>
         </div>
 
         <div className="splash-loader">
@@ -61,7 +63,7 @@ function SplashScreen({ onComplete }) {
       </div>
 
       <div className="splash-footer">
-        <p className="splash-footer-text">Powered by passion for the Alps</p>
+        <p className="splash-footer-text">{t('splash.footer')}</p>
       </div>
     </div>
   );

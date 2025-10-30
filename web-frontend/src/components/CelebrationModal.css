@@ -343,6 +343,69 @@
   color: white;
 }
 
+/* Checkpoints Visited */
+.checkpoints-visited {
+  background: rgba(74, 222, 128, 0.15);
+  border: 2px solid rgba(74, 222, 128, 0.4);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  z-index: 2;
+  position: relative;
+  animation: checkpoint-reveal 0.8s ease 1.2s backwards;
+}
+
+@keyframes checkpoint-reveal {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.checkpoints-visited h3 {
+  text-align: center;
+  color: #4ade80;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.checkpoint-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.checkpoint-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(74, 222, 128, 0.1);
+  padding: 0.75rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  border-left: 3px solid rgba(74, 222, 128, 0.5);
+}
+
+.checkpoint-item:hover {
+  background: rgba(74, 222, 128, 0.2);
+  transform: translateX(8px);
+  border-left-color: #4ade80;
+}
+
+.checkpoint-icon {
+  font-size: 1.5rem;
+}
+
+.checkpoint-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+}
+
 /* Close Button */
 .celebration-close-btn {
   width: 100%;

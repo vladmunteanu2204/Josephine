@@ -580,6 +580,68 @@
     "alpineWarningTitle": "Alpine Environment Warning",
     "alpineWarningText": "Mountain weather can change rapidly. Always be prepared for sudden temperature drops, wind, and precipitation. Altitude can affect physical performance and judgment. Know the signs of altitude sickness and hypothermia."
   },
+  "onboarding": {
+    "skip": "Skip",
+    "previous": "Previous",
+    "next": "Next",
+    "getStarted": "Get Started",
+    "goToSlide": "Go to slide",
+    "slide1": {
+      "title": "Discover Alpine Trails",
+      "description": "Explore curated hiking routes across South Tyrol and Trentino. Get personalized recommendations based on your preferences.",
+      "feature1": "Smart trail recommendations",
+      "feature2": "Detailed route information",
+      "feature3": "Interactive maps with Mapbox"
+    },
+    "slide2": {
+      "title": "GPS Tracking & Safety",
+      "description": "Track your hikes in real-time with live GPS tracking. Stay safe with weather alerts and checkpoint notifications.",
+      "feature1": "Real-time position tracking",
+      "feature2": "Automatic stats calculation",
+      "feature3": "Weather & safety alerts"
+    },
+    "slide3": {
+      "title": "Achievements & Gamification",
+      "description": "Earn badges, level up, and compete on leaderboards. Every hike tells your alpine story.",
+      "feature1": "Unlock 18+ unique badges",
+      "feature2": "Climb 10 experience levels",
+      "feature3": "Join monthly leaderboards"
+    },
+    "slide4": {
+      "title": "Plan Your Adventures",
+      "description": "Create multi-day itineraries with our hike planner. Save trails, plan equipment, and get personalized safety tips.",
+      "feature1": "Multi-day trip planning",
+      "feature2": "Dynamic equipment checklists",
+      "feature3": "Save & export itineraries"
+    }
+  },
+  "celebration": {
+    "congratulations": "CONGRATULATIONS!",
+    "hikeCompleted": "You've completed the hike!",
+    "distance": "Distance",
+    "elevation": "Elevation",
+    "time": "Time",
+    "experience": "Experience",
+    "newBadges": "New Badges Earned!",
+    "viewProfile": "View Profile & Stats",
+    "checkpointsReached": "Checkpoints Reached"
+  },
+  "splash": {
+    "tagline": "Premium Alpine Hiking",
+    "footer": "Powered by passion for the Alps"
+  },
+  "gps": {
+    "checkpointAheadToast": "{{icon}} {{name}} - {{distance}}m away",
+    "checkpointReachedToast": "{{icon}} {{name}}",
+    "checkpointAheadNotification": "{{icon}} {{name}} ahead",
+    "checkpointAheadNotificationBody": "{{distance}}m until {{name}}",
+    "checkpointReachedNotification": "{{icon}} Checkpoint Reached!",
+    "checkpointReachedNotificationBody": "You've reached {{name}}!",
+    "trackingPaused": "Tracking Auto-Paused",
+    "trackingResumed": "Tracking Resumed",
+    "noMovementDetected": "No movement detected. Tracking will resume when you start moving.",
+    "movementDetected": "Movement detected, continuing your hike tracking"
+  },
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",

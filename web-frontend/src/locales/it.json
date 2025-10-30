@@ -579,5 +579,67 @@
     "firstAid": "Conosci il pronto soccorso di base e porta un kit",
     "alpineWarningTitle": "Avviso Ambiente Alpino",
     "alpineWarningText": "Il tempo in montagna può cambiare rapidamente. Preparati sempre a cali improvvisi di temperatura, vento e precipitazioni. L'altitudine può influenzare le prestazioni fisiche e il giudizio. Conosci i segni del mal di montagna e dell'ipotermia."
+  },
+  "onboarding": {
+    "skip": "Salta",
+    "previous": "Indietro",
+    "next": "Avanti",
+    "getStarted": "Inizia",
+    "goToSlide": "Vai alla diapositiva",
+    "slide1": {
+      "title": "Scopri Sentieri Alpini",
+      "description": "Esplora percorsi escursionistici curati in Alto Adige e Trentino. Ricevi consigli personalizzati in base alle tue preferenze.",
+      "feature1": "Raccomandazioni intelligenti dei sentieri",
+      "feature2": "Informazioni dettagliate sul percorso",
+      "feature3": "Mappe interattive con Mapbox"
+    },
+    "slide2": {
+      "title": "Tracciamento GPS & Sicurezza",
+      "description": "Traccia le tue escursioni in tempo reale con il tracciamento GPS live. Rimani al sicuro con avvisi meteo e notifiche dei checkpoint.",
+      "feature1": "Tracciamento della posizione in tempo reale",
+      "feature2": "Calcolo automatico delle statistiche",
+      "feature3": "Avvisi meteo e di sicurezza"
+    },
+    "slide3": {
+      "title": "Obiettivi & Gamification",
+      "description": "Ottieni badge, sali di livello e competi nelle classifiche. Ogni escursione racconta la tua storia alpina.",
+      "feature1": "Sblocca 18+ badge unici",
+      "feature2": "Scala 10 livelli di esperienza",
+      "feature3": "Partecipa alle classifiche mensili"
+    },
+    "slide4": {
+      "title": "Pianifica le Tue Avventure",
+      "description": "Crea itinerari di più giorni con il nostro pianificatore di escursioni. Salva sentieri, pianifica l'attrezzatura e ricevi consigli di sicurezza personalizzati.",
+      "feature1": "Pianificazione viaggi di più giorni",
+      "feature2": "Liste attrezzatura dinamiche",
+      "feature3": "Salva & esporta itinerari"
+    }
+  },
+  "celebration": {
+    "congratulations": "CONGRATULAZIONI!",
+    "hikeCompleted": "Hai completato l'escursione!",
+    "distance": "Distanza",
+    "elevation": "Elevazione",
+    "time": "Tempo",
+    "experience": "Esperienza",
+    "newBadges": "Nuovi Badge Ottenuti!",
+    "viewProfile": "Visualizza Profilo & Statistiche",
+    "checkpointsReached": "Checkpoint Raggiunti"
+  },
+  "splash": {
+    "tagline": "Escursioni Alpine Premium",
+    "footer": "Alimentato dalla passione per le Alpi"
+  },
+  "gps": {
+    "checkpointAheadToast": "{{icon}} {{name}} - {{distance}}m di distanza",
+    "checkpointReachedToast": "{{icon}} {{name}}",
+    "checkpointAheadNotification": "{{icon}} {{name}} avanti",
+    "checkpointAheadNotificationBody": "{{distance}}m fino a {{name}}",
+    "checkpointReachedNotification": "{{icon}} Checkpoint Raggiunto!",
+    "checkpointReachedNotificationBody": "Hai raggiunto {{name}}!",
+    "trackingPaused": "Tracking Auto-Pausato",
+    "trackingResumed": "Tracking Ripreso",
+    "noMovementDetected": "Nessun movimento rilevato. Il tracking riprenderà quando ti muoverai.",
+    "movementDetected": "Movimento rilevato, continua il tracking della tua escursione"
   }
 }
