@@ -16,12 +16,16 @@ import TermsAndConditions from './components/TermsAndConditions';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import AdminPanel from './components/AdminPanel';
 import Challenges from './components/Challenges';
+import OnboardingWizard from './components/OnboardingWizard';
 import Footer from './components/Footer';
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
   const [previousView, setPreviousView] = useState('home');
   const [selectedTrail, setSelectedTrail] = useState(null);
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    return !localStorage.getItem('onboardingCompleted');
+  });
 
   const viewTrail = (trail) => {
     setPreviousView(currentView);
@@ -115,6 +119,10 @@ function App() {
         </main>
 
         <Footer setCurrentView={setCurrentView} />
+        
+        {showOnboarding && (
+          <OnboardingWizard onComplete={() => setShowOnboarding(false)} />
+        )}
         </AuthProvider>
       </ToastProvider>
     </div>
