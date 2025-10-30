@@ -1,18 +1,27 @@
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
-import LanguageSwitcher from './LanguageSwitcher';
+import HamburgerMenu from './HamburgerMenu';
+import LanguageBottomSheet from './LanguageBottomSheet';
 import Login from './Login';
 import Signup from './Signup';
 import UserMenuPortal from './UserMenuPortal';
 import './Header.css';
 
+const languageLabels = {
+  en: 'EN',
+  it: 'IT',
+  de: 'DE'
+};
+
 function Header({ currentView, setCurrentView }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { currentUser, logout } = useAuth();
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showHamburger, setShowHamburger] = useState(false);
+  const [showLanguageSheet, setShowLanguageSheet] = useState(false);
   const avatarButtonRef = useRef(null);
 
   const handleLogout = async () => {
@@ -35,7 +44,7 @@ function Header({ currentView, setCurrentView }) {
       case 'profile':
         setCurrentView('profile');
         break;
-      case 'saved':
+      case 'savedTrails':
         setCurrentView('savedTrails');
         break;
       case 'challenges':
@@ -53,6 +62,15 @@ function Header({ currentView, setCurrentView }) {
       case 'settings':
         setCurrentView('settings');
         break;
+      case 'home':
+        setCurrentView('home');
+        break;
+      case 'recommendations':
+        setCurrentView('recommendations');
+        break;
+      case 'catalog':
+        setCurrentView('catalog');
+        break;
       case 'logout':
         handleLogout();
         break;
@@ -61,90 +79,89 @@ function Header({ currentView, setCurrentView }) {
     }
   };
 
+  const getCurrentLanguageLabel = () => {
+    const currentLang = i18n.language.split('-')[0];
+    return languageLabels[currentLang] || 'EN';
+  };
+
   return (
     <>
-      <header className="header">
-        <div className="container header-content">
-          <div className="logo" onClick={() => setCurrentView('home')}>
-            <span className="logo-icon">🏔️</span>
-            <span className="logo-text">Alpenvia</span>
+      <header className="header header-mobile-redesign">
+        <div className="container header-content-mobile">
+          <div className="logo logo-mobile" onClick={() => setCurrentView('home')}>
+            <span className="logo-icon logo-icon-mobile">🏔️</span>
+            <span className="logo-text logo-text-mobile">Alpenvia</span>
           </div>
           
-          <nav className="nav">
-            <button 
-              className={`nav-link ${currentView === 'home' ? 'active' : ''}`}
-              onClick={() => setCurrentView('home')}
+          <div className="header-actions-mobile">
+            <button
+              className="header-icon-btn language-btn-mobile"
+              onClick={() => setShowLanguageSheet(true)}
+              aria-label={t('language.selectLanguage')}
+              title={t('language.selectLanguage')}
             >
-              {t('nav.home')}
+              <span className="language-icon">🌐</span>
+              <span className="language-label-mobile">{getCurrentLanguageLabel()}</span>
+              <span className="language-chevron">▼</span>
             </button>
-            <button 
-              className={`nav-link ${currentView === 'recommendations' ? 'active' : ''}`}
-              onClick={() => setCurrentView('recommendations')}
-            >
-              {t('nav.smartRecommendations')}
-            </button>
-            <button 
-              className={`nav-link ${currentView === 'catalog' ? 'active' : ''}`}
-              onClick={() => setCurrentView('catalog')}
-            >
-              {t('nav.trailCatalog')}
-            </button>
-            <button 
-              className={`nav-link ${currentView === 'planner' ? 'active' : ''}`}
-              onClick={() => setCurrentView('planner')}
-            >
-              {t('nav.hikePlanner')}
-            </button>
-          </nav>
-
-          <div className="header-actions">
-            <LanguageSwitcher />
             
             {currentUser ? (
-              <>
-                <button 
-                  ref={avatarButtonRef}
-                  className="user-menu-btn"
-                  onClick={() => setShowUserMenu(!showUserMenu)}
-                  aria-label="User menu"
-                  aria-expanded={showUserMenu}
-                >
-                  <div className="user-avatar">
-                    {getInitials(currentUser.displayName || currentUser.email)}
-                  </div>
-                  <span className="user-name-header">
-                    {currentUser.displayName || currentUser.email?.split('@')[0]}
-                  </span>
-                </button>
-
-                <UserMenuPortal
-                  isOpen={showUserMenu}
-                  onClose={() => setShowUserMenu(false)}
-                  anchorRef={avatarButtonRef}
-                  userEmail={currentUser.email}
-                  isAdmin={currentUser.email === 'vladmunteanu2204@gmail.com'}
-                  onNavigate={handleMenuNavigation}
-                />
-              </>
+              <button 
+                ref={avatarButtonRef}
+                className="header-icon-btn user-btn-mobile"
+                onClick={() => setShowUserMenu(!showUserMenu)}
+                aria-label="User menu"
+                aria-expanded={showUserMenu}
+              >
+                <div className="user-avatar user-avatar-mobile">
+                  {getInitials(currentUser.displayName || currentUser.email)}
+                </div>
+              </button>
             ) : (
-              <div className="auth-buttons">
-                <button 
-                  className="auth-btn login-btn"
-                  onClick={() => setShowLogin(true)}
-                >
-                  {t('auth.login')}
-                </button>
-                <button 
-                  className="auth-btn signup-btn"
-                  onClick={() => setShowSignup(true)}
-                >
-                  {t('auth.signup')}
-                </button>
-              </div>
+              <button 
+                className="header-icon-btn auth-btn-mobile"
+                onClick={() => setShowLogin(true)}
+                aria-label={t('auth.login')}
+              >
+                <span className="auth-icon">👤</span>
+              </button>
+            )}
+
+            <button
+              className="header-icon-btn hamburger-btn-mobile"
+              onClick={() => setShowHamburger(true)}
+              aria-label={t('menu.navigation')}
+              aria-expanded={showHamburger}
+            >
+              <span className="hamburger-icon">☰</span>
+            </button>
+
+            {currentUser && (
+              <UserMenuPortal
+                isOpen={showUserMenu}
+                onClose={() => setShowUserMenu(false)}
+                anchorRef={avatarButtonRef}
+                userEmail={currentUser.email}
+                isAdmin={currentUser.email === 'vladmunteanu2204@gmail.com'}
+                onNavigate={handleMenuNavigation}
+              />
             )}
           </div>
         </div>
       </header>
+
+      <HamburgerMenu
+        isOpen={showHamburger}
+        onClose={() => setShowHamburger(false)}
+        currentView={currentView}
+        onNavigate={handleMenuNavigation}
+        onLogout={handleLogout}
+      />
+
+      <LanguageBottomSheet
+        isOpen={showLanguageSheet}
+        onClose={() => setShowLanguageSheet(false)}
+      />
 
       {showLogin && (
         <Login 

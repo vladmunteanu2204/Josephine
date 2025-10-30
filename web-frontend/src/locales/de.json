@@ -38,7 +38,14 @@
     "title": "Entdecke Alpines Wandern",
     "subtitle": "Geprüfte Wanderwege in Südtirol & Trentino, kuratiert für jeden Abenteurer",
     "exploreYourPath": "Erkunde Deinen Weg",
-    "tagline": "Wo Berge auf Abenteuer treffen"
+    "tagline": "Wo Berge auf Abenteuer treffen",
+    "scrollToExplore": "Scrollen um zu erkunden"
+  },
+  "menu": {
+    "navigation": "Navigation"
+  },
+  "language": {
+    "selectLanguage": "Sprache Auswählen"
   },
   "home": {
     "smartRecommendations": "Smarte Empfehlungen",

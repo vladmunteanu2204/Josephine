@@ -38,7 +38,14 @@
     "title": "Scopri l'Escursionismo Alpino",
     "subtitle": "Sentieri verificati in Alto Adige e Trentino, selezionati per ogni avventuriero",
     "exploreYourPath": "Esplora il Tuo Percorso",
-    "tagline": "Dove le montagne incontrano l'avventura"
+    "tagline": "Dove le montagne incontrano l'avventura",
+    "scrollToExplore": "Scorri per esplorare"
+  },
+  "menu": {
+    "navigation": "Navigazione"
+  },
+  "language": {
+    "selectLanguage": "Seleziona Lingua"
   },
   "home": {
     "smartRecommendations": "Raccomandazioni Intelligenti",

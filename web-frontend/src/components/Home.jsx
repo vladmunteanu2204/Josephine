@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import FeaturedCarousel from './FeaturedCarousel';
@@ -12,6 +12,7 @@ function Home({ setCurrentView, viewTrail }) {
   const [featuredTrails, setFeaturedTrails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [scrollY, setScrollY] = useState(0);
+  const heroRef = useRef(null);
 
   useEffect(() => {
     loadFeaturedTrails();
@@ -48,38 +49,73 @@ function Home({ setCurrentView, viewTrail }) {
     setCurrentView('catalog');
   };
 
+  const handleScrollToContent = () => {
+    const contentElement = document.querySelector('.home-content');
+    if (contentElement) {
+      contentElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const logoOpacity = Math.max(0, 1 - (scrollY / 300));
+  const preferReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   return (
     <div className="home-page">
-      {/* Parallax Hero Section */}
-      <div className="hero-parallax">
+      {/* Enhanced Cinematic Parallax Hero Section */}
+      <div className="hero-parallax-redesign" ref={heroRef}>
         <div 
-          className="hero-layer hero-bg"
-          style={{ transform: `translateY(${scrollY * 0.5}px)` }}
+          className="hero-layer hero-bg-redesign"
+          style={!preferReducedMotion ? { transform: `translateY(${scrollY * 0.5}px)` } : {}}
         ></div>
         <div 
-          className="hero-layer hero-mountains-back"
-          style={{ transform: `translateY(${scrollY * 0.3}px)` }}
+          className="hero-layer hero-mountains-back-redesign"
+          style={!preferReducedMotion ? { transform: `translateY(${scrollY * 0.3}px)` } : {}}
         ></div>
         <div 
-          className="hero-layer hero-mountains-front"
-          style={{ transform: `translateY(${scrollY * 0.15}px)` }}
+          className="hero-layer hero-mountains-front-redesign"
+          style={!preferReducedMotion ? { transform: `translateY(${scrollY * 0.15}px)` } : {}}
+        ></div>
+        <div 
+          className="hero-overlay-redesign"
+          style={!preferReducedMotion ? { opacity: logoOpacity } : {}}
         ></div>
         
-        <div className="hero-content-wrapper">
-          <div className="container hero-content">
-            <h1 className="hero-title-large" style={{ transform: `translateY(${scrollY * 0.1}px)` }}>
+        <div className="hero-content-wrapper-redesign">
+          <div className="container hero-content-redesign">
+            <h1 
+              className="hero-title-redesign" 
+              style={!preferReducedMotion ? { transform: `translateY(${scrollY * 0.1}px)` } : {}}
+            >
               {t('hero.title')}
             </h1>
-            <p className="hero-subtitle-large" style={{ transform: `translateY(${scrollY * 0.12}px)` }}>
+            <p 
+              className="hero-subtitle-redesign" 
+              style={!preferReducedMotion ? { transform: `translateY(${scrollY * 0.12}px)` } : {}}
+            >
               {t('hero.subtitle')}
             </p>
-            <div className="hero-cta-buttons" style={{ transform: `translateY(${scrollY * 0.08}px)` }}>
-              <button className="hero-btn-primary" onClick={() => setCurrentView('recommendations')}>
-                ✨ {t('home.smartRecommendations')}
+            <div 
+              className="hero-cta-buttons-redesign" 
+              style={!preferReducedMotion ? { transform: `translateY(${scrollY * 0.08}px)` } : {}}
+            >
+              <button className="hero-btn-primary-redesign" onClick={() => setCurrentView('recommendations')}>
+                <span className="hero-btn-icon">✨</span>
+                <span className="hero-btn-text">{t('home.smartRecommendations')}</span>
               </button>
-              <button className="hero-btn-secondary" onClick={() => setCurrentView('catalog')}>
-                🗺️ {t('home.browseTrailCatalog')}
+              <button className="hero-btn-secondary-redesign" onClick={() => setCurrentView('catalog')}>
+                <span className="hero-btn-icon">🗺️</span>
+                <span className="hero-btn-text">{t('home.browseTrailCatalog')}</span>
               </button>
+            </div>
+            
+            <div 
+              className="hero-scroll-cue"
+              onClick={handleScrollToContent}
+              style={!preferReducedMotion ? { opacity: Math.max(0, 1 - (scrollY / 200)) } : {}}
+            >
+              <span className="scroll-cue-icon">🏔️</span>
+              <span className="scroll-cue-text">{t('hero.scrollToExplore')}</span>
+              <span className="scroll-cue-arrow">↓</span>
             </div>
           </div>
         </div>

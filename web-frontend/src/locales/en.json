@@ -38,7 +38,14 @@
     "title": "Discover Alpine Hiking",
     "subtitle": "Verified trails in South Tyrol & Trentino, curated for every adventurer",
     "exploreYourPath": "Explore Your Path",
-    "tagline": "Where mountains meet adventure"
+    "tagline": "Where mountains meet adventure",
+    "scrollToExplore": "Scroll to explore"
+  },
+  "menu": {
+    "navigation": "Navigation"
+  },
+  "language": {
+    "selectLanguage": "Select Language"
   },
   "home": {
     "smartRecommendations": "Smart Recommendations",
