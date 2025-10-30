@@ -9,7 +9,7 @@ import ActiveHikeTracker from './ActiveHikeTracker';
 import WeatherWidget from './WeatherWidget';
 import './TrailDetail.css';
 
-function TrailDetail({ trail, onBack }) {
+function TrailDetail({ trail, onBack, setIsGPSActive }) {
   const { t } = useTranslation();
   const toast = useToast();
   const [fullTrail, setFullTrail] = useState(trail);
@@ -50,6 +50,13 @@ function TrailDetail({ trail, onBack }) {
       setIsSaved(savedTrails.includes(fullTrail.id));
     }
   }, [fullTrail]);
+
+  // Cleanup: Reset GPS state when component unmounts
+  useEffect(() => {
+    return () => {
+      if (setIsGPSActive) setIsGPSActive(false);
+    };
+  }, [setIsGPSActive]);
 
   // Parallax scroll effect
   useEffect(() => {
@@ -197,6 +204,7 @@ function TrailDetail({ trail, onBack }) {
 
   const handleHikeEnd = (hikeData) => {
     setIsHikeActive(false);
+    if (setIsGPSActive) setIsGPSActive(false);
     if (hikeData) {
       toast.success(`Hike completed! Distance: ${hikeData.stats.distance_km.toFixed(2)}km, Duration: ${hikeData.stats.duration_hours.toFixed(1)}h`, 5000);
     }
@@ -349,7 +357,10 @@ function TrailDetail({ trail, onBack }) {
         <div className="start-hike-section">
           <button 
             className="btn-start-hike btn-pulse"
-            onClick={() => setIsHikeActive(true)}
+            onClick={() => {
+              setIsHikeActive(true);
+              if (setIsGPSActive) setIsGPSActive(true);
+            }}
           >
             <span className="btn-icon">🥾</span>
             <span className="btn-text">{t('trail.startHike')}</span>

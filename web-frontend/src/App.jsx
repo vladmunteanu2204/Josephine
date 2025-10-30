@@ -28,6 +28,7 @@ function App() {
   const [showOnboarding, setShowOnboarding] = useState(() => {
     return !localStorage.getItem('onboardingCompleted');
   });
+  const [isGPSActive, setIsGPSActive] = useState(false);
 
   const viewTrail = (trail) => {
     setPreviousView(currentView);
@@ -58,7 +59,7 @@ function App() {
     <div className="app">
       <ToastProvider>
         <AuthProvider>
-          <Header currentView={currentView} setCurrentView={setCurrentView} />
+          {!isGPSActive && <Header currentView={currentView} setCurrentView={setCurrentView} />}
         
         <main className="main-content">
           {currentView === 'home' && (
@@ -80,6 +81,7 @@ function App() {
             <TrailDetail 
               trail={selectedTrail}
               onBack={goBack}
+              setIsGPSActive={setIsGPSActive}
             />
           )}
 
