@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file, send_from_directory
+from flask import Flask, request, jsonify, send_file, send_from_directory, make_response
 from flask_cors import CORS
 import os
 import json
@@ -820,6 +820,26 @@ def serve_media(filename):
     except Exception as e:
         print(f"Serve error: {str(e)}")
         return jsonify({'error': f'File retrieval failed: {str(e)}'}), 500
+
+@app.route('/sw.js')
+def service_worker():
+    """Serve service worker with no-cache headers"""
+    if not app.static_folder:
+        return jsonify({'error': 'Frontend not available'}), 503
+    resp = make_response(send_from_directory(app.static_folder, 'sw.js'))
+    resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    resp.headers['Pragma'] = 'no-cache'
+    resp.headers['Expires'] = '0'
+    return resp
+
+@app.after_request
+def add_cache_headers(resp):
+    """Add no-cache headers to HTML responses to prevent stale cached versions"""
+    if resp.mimetype == 'text/html':
+        resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        resp.headers['Pragma'] = 'no-cache'
+        resp.headers['Expires'] = '0'
+    return resp
 
 # Serve React frontend (catch-all route for SPA)
 @app.route('/', defaults={'path': ''})

@@ -1,0 +1,164 @@
+Context:
+We’re debugging Alpenvia’s mobile UI and build cache issues.
+The same UI bugs persist across devices even after multiple edits, which strongly suggests that the old cached PWA/service worker version is still being served.
+We need to:
+1️⃣ Guarantee that new deployments always load the latest version.
+2️⃣ Fix UI gaps and stats rendering only after confirming the cache is clean.
+
+🧹 Step 1 — Full cache + SW cleanup logic
+
+Edit the frontend service worker (web-frontend/public/sw.js) to include a versioned cache name and automatic invalidation of old versions.
+Make these exact edits:
+
+// sw.js
+const SW_VERSION = 'v10'; // bump this each deployment
+const STATIC_CACHE = `static-${SW_VERSION}`;
+
+self.addEventListener('install', event => {
+  self.skipWaiting();
+  event.waitUntil(
+    caches.open(STATIC_CACHE).then(cache => cache.addAll(['/']))
+  );
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil((async () => {
+    const names = await caches.keys();
+    await Promise.all(
+      names.filter(n => !n.includes(SW_VERSION)).map(n => caches.delete(n))
+    );
+    await self.clients.claim();
+  })());
+});
+
+
+Then ensure no stale SW stays in cache.
+
+⚙️ Step 2 — Force immediate SW update + reload
+
+In web-frontend/src/main.jsx or index.jsx, ensure the SW registration triggers a reload on version change:
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').then(reg => {
+    reg.update(); // check for new SW on load
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      window.location.reload();
+    });
+  });
+}
+
+🧾 Step 3 — Prevent caching of sw.js and index.html
+
+In the Flask backend (backend/app.py), add this logic:
+
+from flask import make_response, send_from_directory
+
+@app.route('/sw.js')
+def service_worker():
+    resp = make_response(send_from_directory('../web-frontend/dist', 'sw.js'))
+    resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    return resp
+
+@app.after_request
+def add_cache_headers(resp):
+    if resp.mimetype == 'text/html':
+        resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    return resp
+
+
+✅ This ensures browsers never reuse stale HTML or SW files.
+
+🧭 Step 4 — Add a visible build identifier
+
+In vite.config.js or .env, create a variable:
+
+VITE_BUILD_VERSION=v10-$(date +%s)
+
+
+In the React footer (or top-right of UI), print it temporarily for debug:
+
+const build = import.meta.env.VITE_BUILD_VERSION;
+console.log("Running build:", build);
+
+
+When Vlad refreshes, he should always see the new version printed — confirming he’s on the latest build.
+
+📱 Step 5 — Clear existing stale caches on device
+
+Create a one-time debug button or dev-console snippet that executes this:
+
+(async () => {
+  const regs = await navigator.serviceWorker.getRegistrations();
+  for (const r of regs) await r.unregister();
+  if ('caches' in window) {
+    const names = await caches.keys();
+    await Promise.all(names.map(n => caches.delete(n)));
+  }
+  location.reload(true);
+})();
+
+
+That fully clears any residual SW or cache on Safari and Chrome.
+
+🧱 Step 6 — Fix the three UI issues after ensuring clean cache
+
+1️⃣ Center “Explore Your Path” scroll cue
+
+In Home.css, use absolute centering:
+
+.scroll-cue {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+}
+
+
+2️⃣ Tracking Stats Bar not visible during hike
+
+Ensure in Tracking.jsx:
+
+{isTracking && <HikeStats stats={stats} progress={progress} />}
+
+
+And add:
+
+.hike-stats {
+  position: fixed;
+  top: calc(var(--header-h, 64px) + env(safe-area-inset-top, 0px) + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3000;
+  background: rgba(20, 20, 20, 0.7);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 8px 14px;
+}
+
+
+3️⃣ Gap between header and hero section
+
+Standardize in index.css:
+
+:root { --header-h: 64px; }
+header { position: sticky; top: 0; z-index: 1000; margin: 0; padding: 0; overflow: visible; }
+main, .page-hero, .hero-section {
+  margin-top: 0 !important;
+  padding-top: calc(var(--header-h) + env(safe-area-inset-top, 0px));
+}
+
+✅ Step 7 — Verification checklist (Agent must confirm)
+
+After deployment:
+
+Open DevTools → Application → Service Workers → “Update on reload” checked.
+
+Reload the site: confirm console prints “Running build: v10…”.
+
+Confirm:
+
+“Explore Your Path” is centered.
+
+Stats bar appears immediately after tapping “Start Hike”.
+
+No visual gap under header on Home or Trail pages.
