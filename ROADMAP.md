@@ -1,6 +1,6 @@
 # 🏔️ Alpenvia Development Roadmap
 
-## Project Status: Phase 17G Complete (42%)
+## Project Status: Phase 17H Complete (43%)
 
 **Vision:** "Strava meets Lonely Mountain Journal" — an emotional, cinematic alpine experience where every achievement feels like a story of its own.
 
@@ -136,6 +136,50 @@
 - Responsive design with mobile breakpoints
 - Full accessibility with prefers-reduced-motion support
 - Complete i18n (EN/DE/IT) for all cinematic features
+
+### **Phase 17H: Mobile Header & Hero Redesign** ✅ 📱
+**Design Philosophy:** "Minimalist, dark, and atmospheric" — optimized for mobile-first experiences
+- **LanguageBottomSheet Component**:
+  - Slide-up animation with backdrop blur
+  - Flag grid layout with language names
+  - Portal rendering for proper stacking
+  - Dialog role with aria-modal for accessibility
+  - Escape key handler and auto-focus on close button
+- **HamburgerMenu Component**:
+  - Slide-in drawer from right with spring animation
+  - Complete navigation menu (home, recommendations, catalog, planner)
+  - User section (profile, saved trails, challenges, leaderboards, settings)
+  - Admin section (visible only for vladmunteanu2204@gmail.com)
+  - Logout functionality with proper state management
+  - Portal rendering with full accessibility features
+- **Header Redesign**:
+  - Mobile-first design with responsive logo sizing (24px-36px)
+  - Language dropdown button (🌐 icon + label + arrow)
+  - Hamburger menu icon (☰) for mobile/tablet navigation
+  - Desktop nav hidden on ≤1024px, hamburger shown instead
+  - Desktop-only auth buttons and user name visible on >1024px
+  - User avatar glow effect for logged-in state
+- **Hero Section Enhancements**:
+  - Scroll cue animation with fade effect (↓ "Explore Your Path" 🏔️)
+  - Stacked CTA buttons on mobile (vertical layout)
+  - Responsive typography (32px-72px headlines)
+  - Enhanced gradient backgrounds with parallax motion
+  - Minimum tap targets (44x44px) for accessibility
+- **Microinteractions**:
+  - Button press feedback with scale transform
+  - Ripple effects on CTA button taps
+  - Smooth animations with cubic-bezier easing
+- **Responsive Breakpoints**:
+  - Mobile Portrait: ≤480px (smallest logo, stacked layout)
+  - Mobile Landscape: 481-768px (medium sizing)
+  - Tablet: 769-1024px (desktop nav hidden, hamburger shown)
+  - Desktop: >1024px (full desktop layout with all elements)
+- **Accessibility**:
+  - prefers-reduced-motion support for all animations
+  - ARIA labels and roles on all interactive elements
+  - Keyboard navigation (Escape key closes modals)
+  - Focus management (auto-focus on modal open)
+  - Proper semantic HTML structure
 
 ---
 
