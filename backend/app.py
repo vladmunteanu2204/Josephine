@@ -841,6 +841,281 @@ def track_trail_save():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+# Rifugio Management
+def load_rifugios():
+    """Load rifugios from JSON file"""
+    rifugios_path = os.path.join(BASE_DIR, 'data', 'rifugios.json')
+    try:
+        with open(rifugios_path, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return []
+
+def save_rifugios(rifugios_data):
+    """Save rifugios to JSON file"""
+    rifugios_path = os.path.join(BASE_DIR, 'data', 'rifugios.json')
+    with open(rifugios_path, 'w') as f:
+        json.dump(rifugios_data, f, indent=2)
+
+def load_booking_inquiries():
+    """Load booking inquiries from JSON file"""
+    inquiries_path = os.path.join(BASE_DIR, 'data', 'booking_inquiries.json')
+    try:
+        with open(inquiries_path, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return []
+
+def save_booking_inquiries(inquiries_data):
+    """Save booking inquiries to JSON file"""
+    inquiries_path = os.path.join(BASE_DIR, 'data', 'booking_inquiries.json')
+    with open(inquiries_path, 'w') as f:
+        json.dump(inquiries_data, f, indent=2)
+
+def get_rifugio_status(rifugio):
+    """Determine current status of rifugio based on dates"""
+    from datetime import datetime, timedelta
+    
+    today = datetime.now().date()
+    opening_season = rifugio.get('opening_season', {})
+    
+    try:
+        start_date_str = opening_season.get('start_date', '')
+        end_date_str = opening_season.get('end_date', '')
+        
+        if not start_date_str or not end_date_str:
+            # Bivacco or always open
+            if rifugio.get('type') == 'bivacco':
+                return 'open'
+            return rifugio.get('status', 'closed')
+        
+        start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+        end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+        
+        # Check special closures
+        special_closures = rifugio.get('special_closures', [])
+        for closure in special_closures:
+            closure_start = datetime.strptime(closure['start'], '%Y-%m-%d').date()
+            closure_end = datetime.strptime(closure['end'], '%Y-%m-%d').date()
+            if closure_start <= today <= closure_end:
+                return 'closed'
+        
+        # Check if currently in season
+        if start_date <= today <= end_date:
+            return 'open'
+        
+        # Check if opening soon (within 2 weeks)
+        two_weeks = timedelta(days=14)
+        if start_date > today and (start_date - today) <= two_weeks:
+            return 'opening_soon'
+        
+        return 'closed'
+    except:
+        return rifugio.get('status', 'closed')
+
+@app.route('/api/rifugios', methods=['GET'])
+def get_rifugios():
+    """Get all rifugios with optional filtering"""
+    try:
+        rifugios = load_rifugios()
+        
+        # Get query parameters for filtering
+        type_filter = request.args.get('type')  # rifugio, malga, bivacco
+        region_filter = request.args.get('region')
+        min_altitude = request.args.get('min_altitude', type=int)
+        max_altitude = request.args.get('max_altitude', type=int)
+        status_filter = request.args.get('status')  # open, closed, opening_soon
+        search_query = request.args.get('search', '').lower()
+        
+        # Apply filters
+        filtered_rifugios = rifugios
+        
+        if type_filter:
+            filtered_rifugios = [r for r in filtered_rifugios if r.get('type') == type_filter]
+        
+        if region_filter:
+            filtered_rifugios = [r for r in filtered_rifugios if r.get('region') == region_filter]
+        
+        if min_altitude is not None:
+            filtered_rifugios = [r for r in filtered_rifugios if r.get('altitude', 0) >= min_altitude]
+        
+        if max_altitude is not None:
+            filtered_rifugios = [r for r in filtered_rifugios if r.get('altitude', 0) <= max_altitude]
+        
+        if search_query:
+            filtered_rifugios = [
+                r for r in filtered_rifugios 
+                if search_query in r.get('name', '').lower() or 
+                   search_query in r.get('region', '').lower() or
+                   search_query in r.get('description', '').lower()
+            ]
+        
+        # Update status for each rifugio
+        for rifugio in filtered_rifugios:
+            rifugio['current_status'] = get_rifugio_status(rifugio)
+        
+        # Apply status filter after calculating current status
+        if status_filter:
+            filtered_rifugios = [r for r in filtered_rifugios if r.get('current_status') == status_filter]
+        
+        return jsonify({'rifugios': filtered_rifugios})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/rifugios/<rifugio_id>', methods=['GET'])
+def get_rifugio_detail(rifugio_id):
+    """Get detailed information for a single rifugio"""
+    try:
+        rifugios = load_rifugios()
+        rifugio = next((r for r in rifugios if r['id'] == rifugio_id), None)
+        
+        if not rifugio:
+            return jsonify({'error': 'Rifugio not found'}), 404
+        
+        # Add current status
+        rifugio['current_status'] = get_rifugio_status(rifugio)
+        
+        return jsonify(rifugio)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/booking-inquiries', methods=['POST'])
+def submit_booking_inquiry():
+    """Submit a booking inquiry for a rifugio"""
+    try:
+        data = request.json
+        
+        # Validate required fields
+        required_fields = ['rifugio_id', 'rifugio_name', 'name', 'email', 'check_in', 'check_out', 'adults']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'error': f'Missing required field: {field}'}), 400
+        
+        # Load and prepare inquiry
+        inquiries = load_booking_inquiries()
+        
+        inquiry = {
+            'id': f"inq-{len(inquiries) + 1:04d}",
+            'rifugio_id': data['rifugio_id'],
+            'rifugio_name': data['rifugio_name'],
+            'user_name': data['name'],
+            'user_email': data['email'],
+            'user_phone': data.get('phone', ''),
+            'check_in': data['check_in'],
+            'check_out': data['check_out'],
+            'adults': data['adults'],
+            'children': data.get('children', 0),
+            'meal_preference': data.get('meal_preference', 'half_board'),
+            'special_requests': data.get('special_requests', ''),
+            'dogs': data.get('dogs', False),
+            'status': 'pending',
+            'created_at': datetime.utcnow().isoformat() + 'Z',
+            'contact_method': data.get('contact_method', 'email')
+        }
+        
+        inquiries.append(inquiry)
+        save_booking_inquiries(inquiries)
+        
+        # TODO: Send email/WhatsApp notification
+        # For now, just log the inquiry
+        print(f"Booking inquiry submitted: {inquiry['id']} for {inquiry['rifugio_name']}")
+        
+        return jsonify({
+            'success': True,
+            'inquiry_id': inquiry['id'],
+            'message': 'Your booking inquiry has been submitted successfully!'
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/booking-inquiries', methods=['GET'])
+@require_admin_auth
+def get_all_booking_inquiries():
+    """Get all booking inquiries (Admin)"""
+    try:
+        inquiries = load_booking_inquiries()
+        
+        # Sort by date (newest first)
+        inquiries.sort(key=lambda x: x.get('created_at', ''), reverse=True)
+        
+        return jsonify({'inquiries': inquiries})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/rifugios', methods=['POST'])
+@require_admin_auth
+def create_rifugio():
+    """Create new rifugio (Admin)"""
+    try:
+        data = request.json
+        rifugios = load_rifugios()
+        
+        # Generate ID
+        new_id = f"rif-{len(rifugios) + 1:03d}"
+        
+        rifugio = {
+            'id': data.get('id', new_id),
+            'name': data['name'],
+            'type': data.get('type', 'rifugio'),
+            'region': data['region'],
+            'altitude': data['altitude'],
+            'coordinates': data['coordinates'],
+            'contact': data.get('contact', {}),
+            'facilities': data.get('facilities', {}),
+            'description': data.get('description', ''),
+            'access_info': data.get('access_info', ''),
+            'opening_season': data.get('opening_season', {}),
+            'prices': data.get('prices', {}),
+            'photos': data.get('photos', []),
+            'status': data.get('status', 'seasonal'),
+            'special_closures': data.get('special_closures', []),
+            'created_at': datetime.utcnow().isoformat() + 'Z',
+            'updated_at': datetime.utcnow().isoformat() + 'Z'
+        }
+        
+        rifugios.append(rifugio)
+        save_rifugios(rifugios)
+        
+        return jsonify({'success': True, 'rifugio': rifugio})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/rifugios/<rifugio_id>', methods=['PUT'])
+@require_admin_auth
+def update_rifugio(rifugio_id):
+    """Update rifugio (Admin)"""
+    try:
+        data = request.json
+        rifugios = load_rifugios()
+        
+        rifugio_index = next((i for i, r in enumerate(rifugios) if r['id'] == rifugio_id), None)
+        if rifugio_index is None:
+            return jsonify({'error': 'Rifugio not found'}), 404
+        
+        # Update fields
+        rifugios[rifugio_index].update(data)
+        rifugios[rifugio_index]['updated_at'] = datetime.utcnow().isoformat() + 'Z'
+        
+        save_rifugios(rifugios)
+        
+        return jsonify({'success': True, 'rifugio': rifugios[rifugio_index]})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/rifugios/<rifugio_id>', methods=['DELETE'])
+@require_admin_auth
+def delete_rifugio(rifugio_id):
+    """Delete rifugio (Admin)"""
+    try:
+        rifugios = load_rifugios()
+        
+        rifugios = [r for r in rifugios if r['id'] != rifugio_id]
+        save_rifugios(rifugios)
+        
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/admin/analytics/trails', methods=['GET'])
 @require_admin_auth
 def get_trail_analytics():

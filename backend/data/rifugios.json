@@ -1,0 +1,229 @@
+[
+  {
+    "id": "rif-001",
+    "name": "Rifugio Bolzano",
+    "type": "rifugio",
+    "region": "South Tyrol",
+    "altitude": 2457,
+    "coordinates": {
+      "lat": 46.5267,
+      "lng": 10.6889
+    },
+    "contact": {
+      "phone": "+39 0471 612024",
+      "email": "info@rifugiobolzano.it",
+      "website": "https://www.rifugiobolzano.it",
+      "whatsapp": "+39 333 1234567"
+    },
+    "facilities": {
+      "beds": 120,
+      "showers": true,
+      "meals": true,
+      "wifi": false,
+      "dogs": true,
+      "payment_methods": ["cash", "card"]
+    },
+    "description": "Historic alpine refuge located in the heart of the Catinaccio group, offering stunning views of the Rosengarten massif. Traditional South Tyrolean hospitality with home-cooked meals and comfortable accommodation.",
+    "access_info": "Accessible from Carezza Lake via trail 541 (2.5 hours) or from Tires via trail 584 (3 hours). Well-marked paths suitable for experienced hikers.",
+    "opening_season": {
+      "start_date": "2025-06-15",
+      "end_date": "2025-09-30"
+    },
+    "prices": {
+      "overnight": 45,
+      "breakfast": 12,
+      "dinner": 25,
+      "half_board": 70
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800",
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+    ],
+    "status": "seasonal",
+    "special_closures": [],
+    "created_at": "2025-01-15T10:00:00Z",
+    "updated_at": "2025-10-30T20:00:00Z"
+  },
+  {
+    "id": "rif-002",
+    "name": "Rifugio Plose",
+    "type": "rifugio",
+    "region": "South Tyrol",
+    "altitude": 2446,
+    "coordinates": {
+      "lat": 46.7322,
+      "lng": 11.6594
+    },
+    "contact": {
+      "phone": "+39 0472 520660",
+      "email": "info@rifugioplose.com",
+      "website": "https://www.rifugioplose.com",
+      "whatsapp": "+39 335 7654321"
+    },
+    "facilities": {
+      "beds": 80,
+      "showers": true,
+      "meals": true,
+      "wifi": true,
+      "dogs": false,
+      "payment_methods": ["cash", "card", "bancomat"]
+    },
+    "description": "Modern mountain hut on Plose summit with panoramic 360° views of the Dolomites. Accessible by cable car for families and hikers of all levels. Known for exceptional cuisine and sunset dinners.",
+    "access_info": "Cable car from Bressanone/Brixen (20 minutes) or hiking from Sant'Andrea (4 hours). Multiple trails available for various skill levels.",
+    "opening_season": {
+      "start_date": "2025-05-20",
+      "end_date": "2025-10-15"
+    },
+    "prices": {
+      "overnight": 55,
+      "breakfast": 15,
+      "dinner": 30,
+      "half_board": 80
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800",
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+    ],
+    "status": "open",
+    "special_closures": [],
+    "created_at": "2025-01-20T12:00:00Z",
+    "updated_at": "2025-10-30T20:00:00Z"
+  },
+  {
+    "id": "mal-001",
+    "name": "Malga Fane",
+    "type": "malga",
+    "region": "South Tyrol",
+    "altitude": 1739,
+    "coordinates": {
+      "lat": 46.9144,
+      "lng": 11.6736
+    },
+    "contact": {
+      "phone": "+39 0472 546015",
+      "email": "info@malgafane.it",
+      "website": "https://www.malgafane.it",
+      "whatsapp": ""
+    },
+    "facilities": {
+      "beds": 0,
+      "showers": false,
+      "meals": true,
+      "wifi": false,
+      "dogs": true,
+      "payment_methods": ["cash"]
+    },
+    "description": "Authentic alpine dairy farm (malga) in a picturesque mountain village. Famous for traditional South Tyrolean cuisine and homemade dairy products. Day visits only - no overnight accommodation.",
+    "access_info": "Easy 1-hour walk from Valles/Vals parking area. Family-friendly trail through forests and meadows.",
+    "opening_season": {
+      "start_date": "2025-06-01",
+      "end_date": "2025-09-20"
+    },
+    "prices": {
+      "overnight": 0,
+      "breakfast": 0,
+      "dinner": 0,
+      "half_board": 0
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800"
+    ],
+    "status": "seasonal",
+    "special_closures": [],
+    "created_at": "2025-01-25T14:00:00Z",
+    "updated_at": "2025-10-30T20:00:00Z"
+  },
+  {
+    "id": "biv-001",
+    "name": "Bivacco Latemar",
+    "type": "bivacco",
+    "region": "Trentino",
+    "altitude": 2842,
+    "coordinates": {
+      "lat": 46.3972,
+      "lng": 11.5906
+    },
+    "contact": {
+      "phone": "",
+      "email": "",
+      "website": "",
+      "whatsapp": ""
+    },
+    "facilities": {
+      "beds": 9,
+      "showers": false,
+      "meals": false,
+      "wifi": false,
+      "dogs": true,
+      "payment_methods": []
+    },
+    "description": "Emergency shelter (bivouac) in the Latemar range. Unmanned, always open. Basic accommodation for alpinists and experienced hikers. Bring your own food, sleeping bag, and emergency supplies.",
+    "access_info": "Challenging alpine route from Passo Costalunga via ferrata sections (5 hours). Experienced hikers with via ferrata equipment only.",
+    "opening_season": {
+      "start_date": "2025-01-01",
+      "end_date": "2025-12-31"
+    },
+    "prices": {
+      "overnight": 0,
+      "breakfast": 0,
+      "dinner": 0,
+      "half_board": 0
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+    ],
+    "status": "open",
+    "special_closures": [],
+    "created_at": "2025-02-01T16:00:00Z",
+    "updated_at": "2025-10-30T20:00:00Z"
+  },
+  {
+    "id": "rif-003",
+    "name": "Rifugio Lagazuoi",
+    "type": "rifugio",
+    "region": "Dolomites",
+    "altitude": 2752,
+    "coordinates": {
+      "lat": 46.5311,
+      "lng": 12.0056
+    },
+    "contact": {
+      "phone": "+39 0436 867303",
+      "email": "info@lagazuoi.com",
+      "website": "https://www.lagazuoi.com",
+      "whatsapp": "+39 340 1234567"
+    },
+    "facilities": {
+      "beds": 45,
+      "showers": true,
+      "meals": true,
+      "wifi": true,
+      "dogs": false,
+      "payment_methods": ["cash", "card"]
+    },
+    "description": "Historic WWI refuge with museum, offering breathtaking views of the Dolomites. Accessible by cable car or challenging hike. Experience alpine history while enjoying modern comforts and gourmet cuisine.",
+    "access_info": "Lagazuoi cable car from Passo Falzarego (10 minutes) or via ferrata routes for experienced climbers (3-4 hours).",
+    "opening_season": {
+      "start_date": "2025-12-01",
+      "end_date": "2025-04-15"
+    },
+    "prices": {
+      "overnight": 65,
+      "breakfast": 18,
+      "dinner": 35,
+      "half_board": 95
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800",
+      "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800"
+    ],
+    "status": "closed",
+    "special_closures": [],
+    "created_at": "2025-02-05T18:00:00Z",
+    "updated_at": "2025-10-30T20:00:00Z"
+  }
+]
