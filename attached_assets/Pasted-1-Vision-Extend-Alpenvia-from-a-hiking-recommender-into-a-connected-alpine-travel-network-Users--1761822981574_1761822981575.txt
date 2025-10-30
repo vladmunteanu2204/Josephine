@@ -1,0 +1,48 @@
+1️⃣ Vision
+
+Extend Alpenvia from a hiking recommender into a connected alpine travel network.
+Users will be able to discover, plan, and book stays in mountain huts (rifugios), malghe, and bivouacs — or generate complete multi-day hut-to-hut itineraries powered by AI.
+
+This adds three layers of value:
+
+🗺️ Exploration Layer: a discoverable database of huts and malghe.
+
+🏠 Accommodation Layer: each hut has a detailed profile page with live info.
+
+🤖 Experience Layer: smart route generator and booking assistant.
+
+2️⃣ Core Components
+Module	Description	Priority
+Rifugios Directory	Centralized database with all huts, malghe, and bivouacs in South Tyrol & Trentino.	🔥 High
+Hut Detail Pages	Each entry has a full profile: description, altitude, photos, facilities, contact info, open/closed status, and direct booking form.	🔥 High
+Hut-to-Hut Route Planner	AI-based multi-day itinerary generator that builds routes connecting selected huts.	🔥 High
+Smart Availability Layer	Displays if a hut is currently open, based on scraped data or manual admin updates.	🟠 Medium
+Inquiry/Booking System	Integrated contact form → sends booking requests directly to the hut’s email or WhatsApp.	🔥 High
+User Reviews & Ratings	Allow users to leave feedback on huts (cleanliness, food, staff, etc.).	🟠 Medium
+Interactive Map Layer	Mapbox overlay showing hut icons, filters (region, altitude, dog-friendly, season).	🟢 Low
+Integration with Trails	Huts link to nearby trails, so users can jump from a hike detail to a nearby hut.	🟠 Medium
+Offline Support	Allow caching of hut data and GPX routes for hut-to-hut users.	🟢 Low
+3️⃣ Hut Profile Design (User View)
+
+Each rifugio page should feel like a mini experience hub, not a static info card.
+
+Section	Description	Example
+🏞️ Hero Banner	Background photo + name + elevation (e.g. Rifugio Puez – 2475 m).	“A cozy alpine refuge overlooking Val Gardena.”
+📅 Opening Period	Seasonal availability (e.g. June – September or Open all year).	Live badge: 🟢 Open / 🔴 Closed
+🥾 Access Info	Linked to nearest trail(s) + estimated hiking time.	“2h from Selva di Val Gardena via Trail #14.”
+🍝 Facilities & Meals	List of amenities (rooms, showers, meals, dogs allowed, payment methods).	“Dormitory beds, hot meals, Wi-Fi, dog-friendly.”
+📸 Gallery	User & admin photos. Supports lazy-loading.	Carousel with 5–10 curated images.
+📍 Map & Directions	Embedded Mapbox view + offline fallback (static image).	“View route from your location.”
+✉️ Booking Form	Inquiry form → sends structured email (“Stay request: June 15–16, 2 adults, 1 dog”).	Optional: connect via WhatsApp API.
+💬 Reviews	User comments & ratings.	“Great food, friendly hosts, stunning sunrise view.”
+4️⃣ Admin CMS Additions (Phase 24 Extension)
+
+Your admin backend can handle huts similar to trails, but with added fields and automation hooks:
+
+Feature	Description
+Rifugio Database Management	Add/edit huts with metadata: type (rifugio/malga/bivacco), altitude, region, seasonality.
+Availability Scheduler	Update open/closed dates manually or via connected APIs (e.g., Alpine Club data).
+Auto Status Checker	Cron job pings official hut pages to update open/closed status automatically.
+Booking Requests Monitor	Dashboard with all user inquiries and reply tracking.
+AI Summary Generator	Auto-write hut descriptions from metadata & reviews (“Perched above Val di Fassa, this cozy refuge offers homemade polenta and panoramic views.”).
+Integration with Route Planner	Admin can link huts to nearby trail nodes for hut-to-hut routing.
