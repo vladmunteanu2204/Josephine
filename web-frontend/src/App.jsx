@@ -16,6 +16,7 @@ import TermsAndConditions from './components/TermsAndConditions';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import AdminPanel from './components/AdminPanel';
 import Challenges from './components/Challenges';
+import SplashScreen from './components/SplashScreen';
 import OnboardingWizard from './components/OnboardingWizard';
 import Footer from './components/Footer';
 
@@ -23,6 +24,7 @@ function App() {
   const [currentView, setCurrentView] = useState('home');
   const [previousView, setPreviousView] = useState('home');
   const [selectedTrail, setSelectedTrail] = useState(null);
+  const [showSplash, setShowSplash] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(() => {
     return !localStorage.getItem('onboardingCompleted');
   });
@@ -120,8 +122,12 @@ function App() {
 
         <Footer setCurrentView={setCurrentView} />
         
-        {showOnboarding && (
+        {!showSplash && showOnboarding && (
           <OnboardingWizard onComplete={() => setShowOnboarding(false)} />
+        )}
+
+        {showSplash && (
+          <SplashScreen onComplete={() => setShowSplash(false)} />
         )}
         </AuthProvider>
       </ToastProvider>
