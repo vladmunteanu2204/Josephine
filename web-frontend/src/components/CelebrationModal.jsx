@@ -26,12 +26,14 @@ function CelebrationModal({ hikeData, gamification, onClose }) {
 
   const newBadges = gamification?.newBadges || [];
   const xpGained = gamification?.xpGained || 0;
+  const completionPercentage = hikeData.completionPercentage || 0;
+  const isFullCompletion = completionPercentage >= 100;
 
   return (
     <div className="celebration-overlay">
       <div className={`celebration-modal ${animationPhase}`}>
-        {/* Confetti effect */}
-        {showConfetti && (
+        {/* Confetti effect - only for full completion */}
+        {showConfetti && isFullCompletion && (
           <div className="confetti-container">
             {[...Array(50)].map((_, i) => (
               <div 
@@ -63,9 +65,20 @@ function CelebrationModal({ hikeData, gamification, onClose }) {
 
         {/* Congratulations Message */}
         <div className="congrats-message">
-          <h1 className="congrats-title">🎉 {t('celebration.congratulations')} 🎉</h1>
-          <p className="congrats-subtitle">{t('celebration.hikeCompleted')}</p>
-          <p className="trail-name">{hikeData.trail_name}</p>
+          {isFullCompletion ? (
+            <>
+              <h1 className="congrats-title">🎉 {t('celebration.congratulations')} 🎉</h1>
+              <p className="congrats-subtitle">{t('celebration.hikeCompleted')}</p>
+              <p className="trail-name">{hikeData.trail_name}</p>
+            </>
+          ) : (
+            <>
+              <h1 className="congrats-title">🥾 {t('celebration.niceEffort')} 🥾</h1>
+              <p className="congrats-subtitle">{t('celebration.partialHike', { percentage: completionPercentage })}</p>
+              <p className="trail-name">{hikeData.trail_name}</p>
+              <p className="partial-message">{t('celebration.maybeNextTime')}</p>
+            </>
+          )}
         </div>
 
         {/* Stats Summary */}

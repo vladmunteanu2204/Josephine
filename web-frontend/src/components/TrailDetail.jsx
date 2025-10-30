@@ -152,19 +152,50 @@ function TrailDetail({ trail, onBack }) {
     if (!fullTrail.coordinates || fullTrail.coordinates.length < 2) return [];
     
     const points = [];
-    const totalDistance = fullTrail.distance_km || 10;
-    const elevationGain = fullTrail.elevation_gain_m || 500;
-    const numPoints = Math.min(fullTrail.coordinates.length, 50);
+    const coords = fullTrail.coordinates;
+    const numPoints = Math.min(coords.length, 50);
+    const step = Math.max(1, Math.floor(coords.length / numPoints));
     
-    for (let i = 0; i < numPoints; i++) {
-      const progress = i / (numPoints - 1);
-      const distance = progress * totalDistance;
-      const baseElevation = 1000;
-      const elevation = baseElevation + Math.sin(progress * Math.PI) * elevationGain;
+    let cumulativeDistance = 0;
+    
+    for (let i = 0; i < coords.length; i += step) {
+      const coord = coords[i];
+      const elevation = coord[2] || coord.elevation || 0; // GPX elevation is 3rd element or .elevation property
+      
+      // Calculate cumulative distance using Haversine formula
+      if (i > 0) {
+        const prevCoord = coords[i - step] || coords[i - 1];
+        const [lon1, lat1] = prevCoord;
+        const [lon2, lat2] = coord;
+        
+        const R = 6371; // Earth radius in km
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                  Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        cumulativeDistance += R * c;
+      }
       
       points.push({
-        distance: distance.toFixed(1),
+        distance: cumulativeDistance.toFixed(1),
         elevation: Math.round(elevation)
+      });
+    }
+    
+    // If no elevation data in coordinates, fallback to synthetic data
+    if (points.every(p => p.elevation === 0)) {
+      const totalDistance = fullTrail.distance_km || 10;
+      const elevationGain = fullTrail.elevation_gain_m || 500;
+      return points.map((p, i) => {
+        const progress = i / (points.length - 1);
+        const baseElevation = 1000;
+        const elevation = baseElevation + Math.sin(progress * Math.PI) * elevationGain;
+        return {
+          distance: (progress * totalDistance).toFixed(1),
+          elevation: Math.round(elevation)
+        };
       });
     }
     
@@ -222,7 +253,7 @@ function TrailDetail({ trail, onBack }) {
         onClick={handleSaveToggle}
         aria-label={isSaved ? t('trail.unsaveTrail') : t('trail.saveTrail')}
       >
-        <span className="save-icon">{isSaved ? '📌' : '📍'}</span>
+        <span className="save-icon">{isSaved ? '❤️' : '🤍'}</span>
       </button>
 
       <div className="detail-hero" ref={heroRef}>
@@ -238,12 +269,12 @@ function TrailDetail({ trail, onBack }) {
         <div className="detail-hero-content hero-fade-in">
           <div className="hero-top-row">
             <span className="region-badge">{fullTrail.region}</span>
-            <span className="difficulty-badge-hero" style={{ 
-              backgroundColor: getDifficultyColor(fullTrail.difficulty),
-              boxShadow: `0 0 30px ${getDifficultyColor(fullTrail.difficulty)}60`
-            }}>
-              {getDifficultyIcon(fullTrail.difficulty)} {fullTrail.difficulty}
-            </span>
+          </div>
+          <div className="difficulty-badge-hero" style={{ 
+            backgroundColor: getDifficultyColor(fullTrail.difficulty),
+            boxShadow: `0 0 30px ${getDifficultyColor(fullTrail.difficulty)}60`
+          }}>
+            {getDifficultyIcon(fullTrail.difficulty)} {fullTrail.difficulty}
           </div>
           <h1 className="hero-title">{fullTrail.name}</h1>
           <p className="hero-tagline">

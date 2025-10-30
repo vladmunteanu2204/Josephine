@@ -14,6 +14,7 @@ const AUTO_PAUSE_THRESHOLD = 60000; // 60 seconds (1 minute)
 const MOVEMENT_THRESHOLD = 10; // 10 meters minimum to consider as movement
 const OFF_TRAIL_DISTANCE = 30; // meters
 const POI_ALERT_DISTANCES = [500, 200]; // Alert at 500m and 200m
+const OFF_TRAIL_NOTIFICATION_COOLDOWN = 30000; // 30 seconds between off-trail notifications
 
 function ActiveHikeTracker({ trail, onEnd }) {
   const { t } = useTranslation();
@@ -46,6 +47,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
   const intervalRef = useRef(null);
   const elevationGainBufferRef = useRef(0); // Accumulate positive elevation changes
   const elevationLossBufferRef = useRef(0); // Accumulate negative elevation changes
+  const lastOffTrailNotificationRef = useRef(0); // Track last off-trail notification time
 
   // Convert coordinates to GeoJSON route if needed
   const trailRoute = trail.route || (trail.coordinates ? {
@@ -378,14 +380,22 @@ function ActiveHikeTracker({ trail, onEnd }) {
         const distToTrail = distanceToTrail(newPoint, trail.coordinates || trailRoute.geometry.coordinates);
         if (distToTrail > OFF_TRAIL_DISTANCE) {
           if (!offTrailWarning) {
+            setOffTrailWarning(true);
+          }
+          // Throttle notifications - only send once every 30 seconds
+          const now = Date.now();
+          if (now - lastOffTrailNotificationRef.current > OFF_TRAIL_NOTIFICATION_COOLDOWN) {
             sendNotification(
               'Off Trail Alert',
               'You are off the trail. Please return to the highlighted route.'
             );
-            setOffTrailWarning(true);
+            lastOffTrailNotificationRef.current = now;
           }
         } else {
-          setOffTrailWarning(false);
+          if (offTrailWarning) {
+            setOffTrailWarning(false);
+            lastOffTrailNotificationRef.current = 0; // Reset cooldown when back on trail
+          }
         }
       }
 
@@ -570,6 +580,8 @@ function ActiveHikeTracker({ trail, onEnd }) {
     }
 
     // Check for badges and award XP
+    const completionPercentage = Math.min(100, Math.round((stats.distance / 1000 / trail.distance_km) * 100));
+    
     const gamificationData = {
       distance: stats.distance,
       elevation: stats.elevation,
@@ -577,13 +589,17 @@ function ActiveHikeTracker({ trail, onEnd }) {
       trailId: trail.id,
       startTime: startTimeRef.current,
       endTime: Date.now(),
-      completed: !autoEnded
+      completed: completionPercentage >= 100 && !autoEnded
     };
     
     const gamificationResult = checkNewBadges(gamificationData);
     
     // Show celebration modal instead of immediately calling onEnd
-    const completeData = { ...hikeData, gamification: gamificationResult };
+    const completeData = { 
+      ...hikeData, 
+      gamification: gamificationResult,
+      completionPercentage
+    };
     setCompletedHikeData(completeData);
     setShowCelebration(true);
   };
