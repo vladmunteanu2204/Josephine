@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 9999;
+  z-index: 20000;
   background: #000;
 }
 
@@ -72,9 +72,10 @@
   right: 0;
   background: linear-gradient(135deg, #2d4a3e 0%, #4a7c9e 100%);
   backdrop-filter: blur(10px);
-  padding: 12px 16px;
+  -webkit-backdrop-filter: blur(10px);
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px 12px;
   border-bottom: 3px solid #d4a574;
-  z-index: 10001;
+  z-index: 20010;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: space-around;
@@ -128,7 +129,7 @@
   flex-wrap: wrap;
   justify-content: center;
   max-width: 90%;
-  z-index: 10000;
+  z-index: 20005;
 }
 
 .control-btn {
