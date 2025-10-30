@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import { AuthProvider } from './contexts/AuthContext';
+import { ToastProvider } from './contexts/ToastContext';
 import Header from './components/Header';
 import Home from './components/Home';
 import SmartRecommendations from './components/SmartRecommendations';
@@ -49,8 +50,9 @@ function App() {
 
   return (
     <div className="app">
-      <AuthProvider>
-        <Header currentView={currentView} setCurrentView={setCurrentView} />
+      <ToastProvider>
+        <AuthProvider>
+          <Header currentView={currentView} setCurrentView={setCurrentView} />
         
         <main className="main-content">
           {currentView === 'home' && (
@@ -113,7 +115,8 @@ function App() {
         </main>
 
         <Footer setCurrentView={setCurrentView} />
-      </AuthProvider>
+        </AuthProvider>
+      </ToastProvider>
     </div>
   );
 }
