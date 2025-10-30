@@ -65,33 +65,6 @@
           "timestamp": 1761504920742
         }
       ]
-    },
-    {
-      "id": "hike-20251030133801",
-      "trail_id": "hochmuth_tirolo",
-      "trail_name": "Hochmuth Trail (Muth\u00f6fe Route)",
-      "start_time": "2025-10-30T13:37:24.922Z",
-      "end_time": "2025-10-30T13:38:01.890Z",
-      "stats": {
-        "distance_km": 0,
-        "elevation_gain_m": 0,
-        "duration_hours": 0.0022222222222222222,
-        "auto_ended": false
-      },
-      "gps_track": [
-        {
-          "lat": 46.6812928,
-          "lon": 11.1280128,
-          "alt": 0,
-          "timestamp": 1761831451258
-        },
-        {
-          "lat": 46.6812928,
-          "lon": 11.1280128,
-          "alt": 0,
-          "timestamp": 1761831453198
-        }
-      ]
     }
   ]
 }

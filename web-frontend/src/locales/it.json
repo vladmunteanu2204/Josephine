@@ -625,9 +625,6 @@
   "celebration": {
     "congratulations": "CONGRATULAZIONI!",
     "hikeCompleted": "Hai completato l'escursione!",
-    "niceEffort": "Ottimo Sforzo!",
-    "partialHike": "Hai completato il {{percentage}}% del percorso",
-    "maybeNextTime": "Magari la prossima volta completerai l'intero percorso!",
     "distance": "Distanza",
     "elevation": "Elevazione",
     "time": "Tempo",

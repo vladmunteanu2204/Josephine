@@ -1,25 +1,40 @@
-const SW_VERSION = 'v10';
-const STATIC_CACHE = `static-${SW_VERSION}`;
+self.__SW_VERSION = 'v9';
 
-self.addEventListener('install', event => {
-  console.log(`[SW] Installing ${SW_VERSION}...`);
-  self.skipWaiting();
+const CACHE_NAME = 'alpenvia-v9';
+const STATIC_CACHE = 'alpenvia-static-v9';
+const DYNAMIC_CACHE = 'alpenvia-dynamic-v9';
+
+const STATIC_ASSETS = [
+  '/',
+  '/index.html',
+  '/manifest.json'
+];
+
+self.addEventListener('install', (event) => {
+  console.log('[SW] Installing service worker...');
   event.waitUntil(
-    caches.open(STATIC_CACHE).then(cache => cache.addAll(['/']))
+    caches.open(STATIC_CACHE)
+      .then(cache => {
+        console.log('[SW] Caching static assets');
+        return cache.addAll(STATIC_ASSETS);
+      })
+      .catch(err => console.log('[SW] Cache error:', err))
   );
+  self.skipWaiting();
 });
 
-self.addEventListener('activate', event => {
-  console.log(`[SW] Activating ${SW_VERSION}...`);
-  event.waitUntil((async () => {
-    const names = await caches.keys();
-    console.log(`[SW] Deleting old caches:`, names.filter(n => !n.includes(SW_VERSION)));
-    await Promise.all(
-      names.filter(n => !n.includes(SW_VERSION)).map(n => caches.delete(n))
-    );
-    await self.clients.claim();
-    console.log(`[SW] ${SW_VERSION} is now active`);
-  })());
+self.addEventListener('activate', (event) => {
+  console.log('[SW] Activating service worker...');
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames
+          .filter(name => name !== STATIC_CACHE && name !== DYNAMIC_CACHE)
+          .map(name => caches.delete(name))
+      );
+    })
+  );
+  self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {

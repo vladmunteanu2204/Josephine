@@ -73,7 +73,7 @@ function Home({ setCurrentView, viewTrail }) {
             <p className="hero-subtitle-large" style={{ transform: `translateY(${scrollY * 0.12}px)` }}>
               {t('hero.subtitle')}
             </p>
-            <div className="hero-cta-buttons" style={{ transform: `translateY(${scrollY * 0.08}px)`, marginBottom: '120px' }}>
+            <div className="hero-cta-buttons" style={{ transform: `translateY(${scrollY * 0.08}px)` }}>
               <button className="hero-btn-primary" onClick={() => setCurrentView('recommendations')}>
                 ✨ {t('home.smartRecommendations')}
               </button>
@@ -82,14 +82,6 @@ function Home({ setCurrentView, viewTrail }) {
               </button>
             </div>
           </div>
-          
-          {/* Scroll Cue - positioned relative to wrapper, not container */}
-          {scrollY < 100 && (
-            <div className="scroll-cue" style={{ opacity: 1 - (scrollY / 100) }}>
-              <span className="scroll-text">↓ {t('hero.exploreYourPath')}</span>
-              <span className="scroll-icon">🏔️</span>
-            </div>
-          )}
         </div>
       </div>
 
