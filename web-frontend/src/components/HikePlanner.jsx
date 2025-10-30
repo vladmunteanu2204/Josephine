@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useToast } from '../contexts/ToastContext';
+import { useAuth } from '../contexts/AuthContext';
 import EquipmentChecklist from './EquipmentChecklist';
 import SafetyTips from './SafetyTips';
 import './HikePlanner.css';
@@ -11,6 +12,7 @@ const API_URL = '/api';
 function HikePlanner({ onNavigate }) {
   const { t } = useTranslation();
   const toast = useToast();
+  const { currentUser } = useAuth();
   const [trails, setTrails] = useState([]);
   const [selectedTrails, setSelectedTrails] = useState([]);
   const [startDate, setStartDate] = useState('');
@@ -81,7 +83,7 @@ function HikePlanner({ onNavigate }) {
     return Object.keys(difficulties).find(key => difficulties[key] === maxDiff);
   };
 
-  const saveItinerary = () => {
+  const saveItinerary = async () => {
     if (!itineraryName.trim()) {
       toast.warning(t('planner.nameRequired'));
       return;
@@ -97,9 +99,26 @@ function HikePlanner({ onNavigate }) {
       ...calculateTotals()
     };
 
+    // Save to localStorage for offline support
     const updated = [...savedItineraries, newItinerary];
     localStorage.setItem('alpenvia_hike_plans', JSON.stringify(updated));
     setSavedItineraries(updated);
+
+    // Save to backend if user is logged in
+    if (currentUser && currentUser.email) {
+      try {
+        await axios.post(`${API_URL}/hike-plans`, {
+          ...newItinerary,
+          user_email: currentUser.email,
+          user_name: currentUser.displayName || currentUser.email.split('@')[0]
+        });
+        console.log('Plan saved to backend');
+      } catch (error) {
+        console.error('Error saving plan to backend:', error);
+        // Still show success since it's saved locally
+      }
+    }
+
     setShowSaveModal(false);
     setItineraryName('');
     toast.success(t('planner.saved') || 'Hike plan saved successfully!');
