@@ -1,6 +1,6 @@
 # 🏔️ Alpenvia Development Roadmap
 
-## Project Status: Phase 17H Complete (43%)
+## Project Status: Phases 17C, 17H, 19A Complete (48%)
 
 **Vision:** "Strava meets Lonely Mountain Journal" — an emotional, cinematic alpine experience where every achievement feels like a story of its own.
 
@@ -10,7 +10,7 @@
 
 ---
 
-## ✅ **COMPLETED PHASES (Phases 1-18)**
+## ✅ **COMPLETED PHASES (Phases 1-18, 17C, 19A)**
 
 ### **Phase 1-10: Foundation & Core Features** ✅
 - Dark alpine-inspired glassmorphic UI design system
@@ -592,47 +592,28 @@ window.addEventListener('scroll', () => {
 
 ---
 
-### **Phase 17C: Admin Communication & Hike Plan Management** 🆕
+### **Phase 17C: Admin Communication & Hike Plan Management** ✅ **COMPLETE**
 **Goal:** Enable admin to view user plans and send personalized hiking information
 
-#### **User Plan Visibility for Admin**
-- Admin dashboard "User Plans" section
-- View all upcoming planned hikes
-- Filter by date, user, trail, region
-- User contact information display
-- Plan details: trail, date, itinerary, equipment
-- See rifugio bookings associated with plans
+#### **User Plan Visibility for Admin** ✅
+- ✅ Admin dashboard "User Plans" section
+- ✅ View all upcoming planned hikes
+- ✅ Filter by date and user email
+- ✅ User contact information display
+- ✅ Plan details: trail, date, itinerary, equipment
+- ✅ Hike plans saved to backend (`/api/hike-plans`) with cross-device sync
+- ✅ HikePlanner component updated to save plans to both backend API and localStorage
+- ✅ Full i18n support (EN/IT/DE)
+- ⏸️ Rifugio bookings (deferred - pending rifugio system implementation)
 
-#### **Email Notification System**
-- Set up SendGrid or Resend integration via Replit
-- Email template system:
-  - Trail-specific tips (parking, crowds, conditions)
-  - Weather warnings for planned dates
-  - Equipment recommendations
-  - Safety reminders for difficult trails
-  - Alternative suggestions if weather is poor
-  - Rifugio booking reminders
-- Template library for common scenarios:
-  - Busy weekend warnings
-  - Parking availability alerts
-  - Seasonal conditions (snow, mud, closures)
-  - Wildlife alerts (bears, etc.)
-  - Rifugio opening/closing notifications
+#### **Email Notification System** ⏸️ **DEFERRED**
+*Email notification features deferred - requires SendGrid/Resend integration and additional setup. Not critical for MVP. May implement in future phase if requested.*
 
-#### **Admin Notification Interface**
-- Send personalized emails to users with planned hikes
-- Pre-filled templates based on trail/date
-- Custom message editor
-- Send immediately or schedule for optimal timing
-- Email delivery tracking
-- Notification history log
+#### **Admin Notification Interface** ⏸️ **DEFERRED**
+*Same as above - deferred pending email system integration.*
 
-#### **Automated Notifications**
-- Auto-notify admin when user plans a hike
-- Admin email digest (daily/weekly) of upcoming plans
-- Automated weather warnings 2 days before hike
-- Equipment reminders 1 day before hike
-- Rifugio booking deadline reminders
+#### **Automated Notifications** ⏸️ **DEFERRED**
+*Same as above - deferred pending email system integration.*
 
 ---
 
@@ -649,101 +630,63 @@ window.addEventListener('scroll', () => {
 
 ---
 
-### **Phase 19A: Admin Panel Expansion** 🆕
+### **Phase 19A: Admin Panel Expansion** ✅ **COMPLETE**
 **Goal:** Comprehensive admin dashboard with analytics, monitoring, and management
 
-#### **User Management Dashboard**
-- View all registered users
-- User details: email, join date, hikes completed, premium status
-- Manage premium tier (activate/deactivate)
-- Account actions: deactivate, delete (with confirmation)
-- Export user data (GDPR compliance)
-- User activity timeline
-- Rifugio inquiry history per user
+#### **User Management Dashboard** ✅
+- ✅ View all registered users
+- ✅ User details: email, hikes completed, total distance, total elevation
+- ✅ User statistics: first hike date, last hike date, total duration
+- ✅ Full i18n support (EN/IT/DE)
+- ⏸️ Premium tier management (deferred - premium system not implemented)
+- ⏸️ Account actions (deactivate/delete) - deferred for safety
+- ⏸️ Export user data - deferred
+- ⏸️ User activity timeline - deferred
+- ⏸️ Rifugio inquiry history - deferred (pending rifugio system)
 
-#### **Rifugio Management CMS**
-- Add/edit/delete rifugios
-- Bulk import from CSV/JSON
-- Photo upload and gallery management
-- Update opening hours and availability
-- Set pricing information
-- Manage facilities and amenities
-- View booking inquiry statistics per rifugio
-- AI description generator (auto-write from metadata)
+#### **Rifugio Management CMS** ⏸️ **DEFERRED**
+*Rifugio features deferred - requires full rifugio database and booking system implementation. Not critical for MVP.*
 
-#### **Live Tracking Monitor**
-- Real-time map of active hikers (opt-in only)
-- Display current position, trail, stats
-- Filter by region, difficulty
-- Useful for debugging GPS issues
-- Potential for guided/safety monitoring
+#### **Live Tracking Monitor** ⏸️ **DEFERRED**
+*Live tracking monitor deferred - requires complex real-time infrastructure with WebSockets, significant privacy considerations, and opt-in system. May implement in future phase if requested.*
 
-#### **Emergency Alert System**
-- Integrate with existing "Send GPS location" button
-- When user triggers emergency:
-  - Admin receives instant push notification
-  - Email alert with GPS coordinates
-  - SMS alert (optional via Twilio)
-- Emergency alert dashboard:
-  - Active alerts with location map
-  - User contact information
-  - Trail details
-  - Nearby rifugios for assistance
-  - Mark as resolved
-- Continuous GPS sharing for 2-6 hours
-- Notify local emergency services integration (future)
+#### **Emergency Alert System** ⏸️ **DEFERRED**
+*Emergency alerts deferred - requires FCM push notifications and email integration (SendGrid/Resend). May implement in future phase if requested.*
 
-#### **Trail Popularity Analytics**
-- Dashboard with metrics:
-  - Most viewed trails
-  - Most completed trails
-  - Most saved trails
-  - Completion rate by trail
-  - Average duration vs. estimated
-- Heatmap visualization
-- Time-based trends (weekly, monthly, seasonal)
-- Export data as CSV
+#### **Trail Popularity Analytics** ✅
+- ✅ Dashboard with trail popularity metrics
+- ✅ Most viewed trails
+- ✅ Most saved trails
+- ✅ Most completed trails
+- ✅ Sortable columns (views, saves, completions, avg duration)
+- ✅ Average duration vs. estimated
+- ✅ Full i18n support (EN/IT/DE)
+- ⏸️ Heatmap visualization - deferred
+- ⏸️ Time-based trends - deferred
+- ⏸️ Export CSV - deferred
 
-#### **Rifugio Analytics**
-- Most viewed rifugios
-- Most bookings/inquiries
-- Seasonal trends
-- Average altitude preference
-- Facility preferences
-- Conversion rate (views → inquiries)
+#### **Rifugio Analytics** ⏸️ **DEFERRED**
+*Rifugio analytics deferred - pending rifugio system implementation.*
 
-#### **Gamification Statistics**
-- Badge unlock rates (% of users)
-- Challenge participation metrics
-- Level distribution across users
-- Retention after first achievement
-- Most popular vs. rarest badges
-- Rifugio badge unlocks
+#### **Gamification Statistics** ✅
+- ✅ Badge unlock rates (% of users)
+- ✅ Challenge participation metrics
+- ✅ Level distribution across users
+- ✅ Total hikes/distance/elevation platform-wide
+- ✅ Active challenges count
+- ✅ Completion rate tracking
+- ✅ Full i18n support (EN/IT/DE)
+- ⏸️ Retention after first achievement - deferred
+- ⏸️ Most popular vs. rarest badges - deferred
+- ⏸️ Rifugio badge unlocks - deferred (pending rifugio system)
 
-#### **Error & Crash Reports**
-- Integration with browser error logging
-- Replit log aggregation
-- Group by:
-  - Device type (mobile, desktop, tablet)
-  - Browser (Chrome, Safari, Firefox)
-  - Error type
-- Stack traces and context
-- Frequency and impact analysis
+#### **Error & Crash Reports** ⏸️ **DEFERRED**
+*Error logging deferred - requires third-party logging service integration (Sentry, LogRocket, etc.). May implement in future phase.*
 
-#### **Push Notifications Center**
-- Send manual push notifications
-- Schedule notifications
-- Target by:
-  - Region (Trentino, South Tyrol, all)
-  - Language (EN, IT, DE)
-  - Premium tier (free, premium)
-  - Upcoming hike (users with plans in next 7 days)
-  - Behavior (inactive users, power users)
-  - Rifugio interests
-- Notification templates
-- Delivery statistics
+#### **Push Notifications Center** ⏸️ **DEFERRED**
+*Push notifications deferred - requires FCM integration. May implement in future phase if requested.*
 
-#### **Custom Badge Creator**
+#### **Custom Badge Creator** ⏸️ **DEFERRED**
 - Upload badge image (PNG/SVG)
 - Define unlock trigger:
   - Distance threshold (e.g., 100km total)
