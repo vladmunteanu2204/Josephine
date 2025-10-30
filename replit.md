@@ -33,9 +33,10 @@ The design system employs a premium dark alpine theme with glassmorphism effects
 - **Admin Panel:** Secure interface for trail management (with GPX upload), review moderation, challenges creation, user plan management, user management, trail analytics, and gamification statistics. Protected by custom authentication.
 - **Media Storage:** Replit Object Storage integration for persistent media file hosting with automatic compression (WebP for images, H.264 for videos).
 - **Challenges System:** User-facing challenges with progress tracking, XP rewards, and integration with the gamification system.
+- **Rifugio Directory:** Comprehensive alpine hut database with browse/filter interface, detail pages with facilities/pricing/contact, and booking inquiry system with email delivery. Supports rifugio, malga, and bivacco types with seasonal status tracking (open/closed/opening soon).
 
 ### Feature Specifications
-- **Core Pages:** Home, Catalog, Recommendations, Trail Detail, User Profile, Saved Trails, Settings, Leaderboards, and Hike Planner.
+- **Core Pages:** Home, Catalog, Recommendations, Trail Detail, User Profile, Saved Trails, Settings, Leaderboards, Hike Planner, Rifugios Directory, and Rifugio Detail.
 - **Trail Data:** Enhanced schema including taglines, galleries, thumbnails, wallpaper, photos, videos, tags, and GPS coordinates.
 - **Responsiveness:** All components are mobile-responsive.
 - **Accessibility:** ARIA labels and focus management integrated.
@@ -43,7 +44,7 @@ The design system employs a premium dark alpine theme with glassmorphism effects
 ### System Design Choices
 - **Backend:** Flask API (Python).
 - **Frontend:** React 18 web application built with Vite.
-- **Database:** Local JSON files (`trails.json`, `reviews.json`, `plans.json`, `user_analytics.json`) for data storage.
+- **Database:** Local JSON files (`trails.json`, `reviews.json`, `plans.json`, `user_analytics.json`, `rifugios.json`, `booking_inquiries.json`) for data storage.
 - **API URL Handling:** Dynamically constructed for cross-environment compatibility.
 - **Port Configuration:** Development: Frontend on 5000, Backend on 8000. Production: Single Flask server on 5000.
 - **Deployment Configuration:** Autoscale deployment with `npm run build` and `npm run start` commands. Flask serves built React app.

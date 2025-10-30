@@ -183,8 +183,8 @@
 
 ---
 
-### **Phase 17F-1: Rifugios & Malgas Directory - Foundation** 🆕 🏔️
-**Goal:** Build comprehensive database and browsing experience for alpine huts
+### **Phase 17F-1: Rifugios & Malgas Directory - Foundation** ✅ 🏔️
+**Goal:** Build comprehensive database and browsing experience for alpine huts **COMPLETE**
 
 #### **Rifugio Database Structure**
 - Backend PostgreSQL tables (integrated with Phase 17B migration):
@@ -263,8 +263,8 @@
 
 ---
 
-### **Phase 17F-2: Smart Availability & Advanced Booking** 🆕 🏔️
-**Goal:** Real-time hut status + seamless booking experience
+### **Phase 17F-2: Smart Availability & Advanced Booking** ✅ 🏔️
+**Goal:** Real-time hut status + seamless booking experience **COMPLETE**
 
 #### **Smart Availability System**
 - Manual admin updates:
