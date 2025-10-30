@@ -1,0 +1,39 @@
+Core UX Objectives
+Make the hike page a living alpine story — not just a technical info sheet.
+🎯 Goals:
+
+Emotion → make the user feel the hike before even starting it.
+
+Clarity → all technical data is instantly readable.
+
+Motivation → user wants to save, plan, or start the hike.
+
+Continuity → from discovery → action → memory (save or track).
+
+Visual Design Enhancements
+Hero Section :Full-screen Parallax Hero with depth motion and title fade-in (“Rise above Tirolo”).
+Subtle ambient mountain sound when loaded (optional).
+Overlay Gradient : Add a dark alpine gradient (deep green → amber) for readability & atmosphere.
+Stats Bar : Replace with elevated glassmorphism cards (semi-transparent, glowing icons).
+Animate on scroll (“pop-in” effect).
+Difficulty Badge Add colored difficulty tag + small mountain icon (Easy 🟢, Moderate 🟠, Hard 🔴).
+Gallery section : Create a horizontal scroll gallery (like Instagram carousel) with 3D zoom hover.
+Elevation Profile: Dynamic SVG animation when loading — progressive drawing of the elevation line.
+Interactive Experience Enhancements
+Start Hike CTA Big central “Start this Hike” button → transitions to immersive tracking screen. Clean, direct action flow.
+💾 Save / Favorite Toggle Animated bookmark icon with state persistence (sync to Firebase). Encourages returning users.
+📅 Plan this Hike Opens calendar widget directly in page (linked to Hike Planner system). Seamless planning integration.
+💬 User Reviews Carousel Horizontally scrollable snippet cards (“Great trail for sunrise!”). Adds authenticity & social proof.
+🏞️ AR/VR Preview (Future) 360° preview from drone image or AI-generated panorama (optional). Emotional engagement layer.
+
+mmersion & Micro-Animations
+Type Description Example
+Scroll Parallax Background moves slower than content. Simulates depth of landscape.
+Elevation Animation Chart draws as user scrolls down. Builds anticipation.
+Hike Card Motion When scrolling, cards slide subtly upward. Makes browsing feel alive.
+CTA Button Pulse Subtle breathing animation when hike is not started yet. Encourages action.
+Transition to Tracking Mode When “Start Hike” is pressed, fade out background → fade in live map overlay.
+
+Hike Detail Page Should Feel Like:
+
+“Opening the door of an alpine refuge — quiet, glowing, and full of promise.”
