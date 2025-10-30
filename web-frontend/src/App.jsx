@@ -18,6 +18,8 @@ import AdminPanel from './components/AdminPanel';
 import Challenges from './components/Challenges';
 import Rifugios from './components/Rifugios';
 import RifugioDetail from './components/RifugioDetail';
+import MultiDayTrails from './components/MultiDayTrails';
+import MultiDayTrailDetail from './components/MultiDayTrailDetail';
 import SplashScreen from './components/SplashScreen';
 import OnboardingWizard from './components/OnboardingWizard';
 import Footer from './components/Footer';
@@ -27,6 +29,7 @@ function App() {
   const [previousView, setPreviousView] = useState('home');
   const [selectedTrail, setSelectedTrail] = useState(null);
   const [selectedRifugio, setSelectedRifugio] = useState(null);
+  const [selectedMultiDayTrail, setSelectedMultiDayTrail] = useState(null);
   const [showSplash, setShowSplash] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(() => {
     return !localStorage.getItem('onboardingCompleted');
@@ -40,7 +43,7 @@ function App() {
   };
 
   const navigate = (view, param = null) => {
-    if (view === 'detail' || view === 'rifugio-detail') {
+    if (view === 'detail' || view === 'rifugio-detail' || view === 'multiday-detail') {
       setPreviousView(currentView);
     }
     
@@ -50,6 +53,8 @@ function App() {
         setSelectedTrail({ id: param });
       } else if (view === 'rifugio-detail') {
         setSelectedRifugio(param);
+      } else if (view === 'multiday-detail') {
+        setSelectedMultiDayTrail(param);
       }
     } else {
       setCurrentView(view);
@@ -132,6 +137,14 @@ function App() {
 
           {currentView === 'rifugio-detail' && selectedRifugio && (
             <RifugioDetail rifugioId={selectedRifugio} onNavigate={navigate} />
+          )}
+
+          {currentView === 'multiday-trails' && (
+            <MultiDayTrails onNavigate={navigate} />
+          )}
+
+          {currentView === 'multiday-detail' && selectedMultiDayTrail && (
+            <MultiDayTrailDetail trailId={selectedMultiDayTrail} onNavigate={navigate} />
           )}
         </main>
 

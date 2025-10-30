@@ -29,7 +29,7 @@ function MultiDayTrailsManager({ adminPassword }) {
       setTrails(response.data.trails || []);
       setError(null);
     } catch (err) {
-      setError('Failed to load multi-day trails: ' + err.message);
+      setError(t('admin.failedToLoadMultiDay') + ': ' + err.message);
     } finally {
       setLoading(false);
     }
@@ -69,7 +69,7 @@ function MultiDayTrailsManager({ adminPassword }) {
     try {
       // Validate required fields
       if (!editingTrail.id || !editingTrail.name) {
-        setError('Trail ID and Name are required');
+        setError(t('admin.trailIdRequired'));
         return;
       }
 
@@ -89,12 +89,12 @@ function MultiDayTrailsManager({ adminPassword }) {
         await axios.post(`${API_URL}/api/admin/multi-day-trails`, trailToSave, {
           headers: { 'X-Admin-Password': adminPassword }
         });
-        setSuccessMessage('Trail created successfully!');
+        setSuccessMessage(t('admin.trailCreatedSuccess'));
       } else {
         await axios.put(`${API_URL}/api/admin/multi-day-trails/${editingTrail.id}`, trailToSave, {
           headers: { 'X-Admin-Password': adminPassword }
         });
-        setSuccessMessage('Trail updated successfully!');
+        setSuccessMessage(t('admin.trailUpdatedSuccess'));
       }
 
       await fetchTrails();
@@ -102,12 +102,12 @@ function MultiDayTrailsManager({ adminPassword }) {
       setIsCreating(false);
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (err) {
-      setError('Failed to save trail: ' + err.message);
+      setError(t('admin.failedToSaveTrail') + ': ' + err.message);
     }
   };
 
   const handleDelete = async (trailId) => {
-    if (!confirm('Are you sure you want to delete this multi-day trail? This cannot be undone.')) {
+    if (!confirm(t('admin.confirmDelete'))) {
       return;
     }
 
@@ -115,11 +115,11 @@ function MultiDayTrailsManager({ adminPassword }) {
       await axios.delete(`${API_URL}/api/admin/multi-day-trails/${trailId}`, {
         headers: { 'X-Admin-Password': adminPassword }
       });
-      setSuccessMessage('Trail deleted successfully!');
+      setSuccessMessage(t('admin.trailDeletedSuccess'));
       await fetchTrails();
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (err) {
-      setError('Failed to delete trail: ' + err.message);
+      setError(t('admin.failedToDeleteTrail') + ': ' + err.message);
     }
   };
 
@@ -174,15 +174,15 @@ function MultiDayTrailsManager({ adminPassword }) {
   };
 
   if (loading) {
-    return <div className="multiday-manager-loading">Loading multi-day trails...</div>;
+    return <div className="multiday-manager-loading">{t('admin.loadingMultiDayTrails')}</div>;
   }
 
   return (
     <div className="multiday-trails-manager">
       <div className="multiday-header">
-        <h2>🏔️ Multi-Day Trails Management</h2>
+        <h2>🏔️ {t('multiday.availableTrails')}</h2>
         <button className="create-btn" onClick={handleCreateNew}>
-          + Create New Trail
+          + {t('admin.createNewTrail')}
         </button>
       </div>
 
@@ -205,20 +205,20 @@ function MultiDayTrailsManager({ adminPassword }) {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Name</th>
-                <th>Days</th>
-                <th>Stages</th>
-                <th>Difficulty</th>
-                <th>Region</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th>{t('admin.trailName')}</th>
+                <th>{t('multiday.days')}</th>
+                <th>{t('multiday.stages')}</th>
+                <th>{t('multiday.difficulty')}</th>
+                <th>{t('multiday.region')}</th>
+                <th>{t('admin.status')}</th>
+                <th>{t('common.actions', 'Actions')}</th>
               </tr>
             </thead>
             <tbody>
               {trails.length === 0 ? (
                 <tr>
                   <td colSpan="8" style={{ textAlign: 'center', padding: '40px' }}>
-                    No multi-day trails yet. Create your first one!
+                    {t('admin.noTrailsYet')}
                   </td>
                 </tr>
               ) : (
@@ -230,21 +230,21 @@ function MultiDayTrailsManager({ adminPassword }) {
                     <td>{trail.stages?.length || 0}</td>
                     <td>
                       <span className={`difficulty-badge ${trail.difficulty}`}>
-                        {trail.difficulty}
+                        {t(`difficulty.${trail.difficulty}`, trail.difficulty)}
                       </span>
                     </td>
                     <td>{trail.region}</td>
                     <td>
                       <span className={`status-badge ${trail.status}`}>
-                        {trail.status}
+                        {t(`admin.${trail.status}`, trail.status)}
                       </span>
                     </td>
                     <td className="actions">
                       <button onClick={() => { setEditingTrail(trail); setIsCreating(false); }}>
-                        ✏️ Edit
+                        ✏️ {t('admin.edit')}
                       </button>
                       <button onClick={() => handleDelete(trail.id)} className="delete-btn">
-                        🗑️ Delete
+                        🗑️ {t('admin.delete')}
                       </button>
                     </td>
                   </tr>
@@ -258,13 +258,13 @@ function MultiDayTrailsManager({ adminPassword }) {
       {editingTrail && (
         <div className="trail-editor">
           <div className="editor-header">
-            <h3>{isCreating ? 'Create New Multi-Day Trail' : `Editing: ${editingTrail.name}`}</h3>
+            <h3>{isCreating ? t('admin.createNewMultiDay') : `${t('admin.editing')}: ${editingTrail.name}`}</h3>
             <div className="editor-actions">
               <button onClick={handleSave} className="save-btn">
-                💾 Save Trail
+                💾 {t('admin.saveTrail')}
               </button>
               <button onClick={() => { setEditingTrail(null); setIsCreating(false); }} className="cancel-btn">
-                Cancel
+                {t('admin.cancel')}
               </button>
             </div>
           </div>
@@ -272,37 +272,37 @@ function MultiDayTrailsManager({ adminPassword }) {
           <div className="editor-sections">
             {/* Basic Info Section */}
             <div className="editor-section">
-              <h4>📋 Basic Information</h4>
+              <h4>📋 {t('admin.basicInfo')}</h4>
               <div className="form-grid">
                 <div className="form-group">
-                  <label>Trail ID *</label>
+                  <label>{t('admin.trailId')} *</label>
                   <input
                     type="text"
                     value={editingTrail.id}
                     onChange={(e) => updateField('id', e.target.value)}
                     disabled={!isCreating}
-                    placeholder="e.g., alta-via-1"
+                    placeholder={t('admin.trailIdPlaceholder')}
                   />
                 </div>
                 <div className="form-group">
-                  <label>Trail Name *</label>
+                  <label>{t('admin.trailName')} *</label>
                   <input
                     type="text"
                     value={editingTrail.name}
                     onChange={(e) => updateField('name', e.target.value)}
-                    placeholder="e.g., Alta Via 1 - Classic Dolomites Trek"
+                    placeholder={t('admin.trailNamePlaceholder')}
                   />
                 </div>
                 <div className="form-group">
-                  <label>Type</label>
+                  <label>{t('admin.type')}</label>
                   <select value={editingTrail.type} onChange={(e) => updateField('type', e.target.value)}>
-                    <option value="point-to-point">Point to Point</option>
-                    <option value="loop">Loop</option>
-                    <option value="out-and-back">Out and Back</option>
+                    <option value="point-to-point">{t('admin.pointToPoint')}</option>
+                    <option value="loop">{t('admin.loop')}</option>
+                    <option value="out-and-back">{t('admin.outAndBack')}</option>
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Duration (Days)</label>
+                  <label>{t('admin.durationDays')}</label>
                   <input
                     type="number"
                     value={editingTrail.duration_days}
@@ -311,7 +311,7 @@ function MultiDayTrailsManager({ adminPassword }) {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Duration (Nights)</label>
+                  <label>{t('admin.durationNights')}</label>
                   <input
                     type="number"
                     value={editingTrail.duration_nights}
@@ -320,48 +320,48 @@ function MultiDayTrailsManager({ adminPassword }) {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Difficulty</label>
+                  <label>{t('multiday.difficulty')}</label>
                   <select value={editingTrail.difficulty} onChange={(e) => updateField('difficulty', e.target.value)}>
-                    <option value="easy">Easy</option>
-                    <option value="moderate">Moderate</option>
-                    <option value="challenging">Challenging</option>
-                    <option value="expert">Expert</option>
+                    <option value="easy">{t('difficulty.easy')}</option>
+                    <option value="moderate">{t('difficulty.moderate')}</option>
+                    <option value="challenging">{t('difficulty.challenging')}</option>
+                    <option value="expert">{t('difficulty.expert')}</option>
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Region</label>
+                  <label>{t('multiday.region')}</label>
                   <input
                     type="text"
                     value={editingTrail.region}
                     onChange={(e) => updateField('region', e.target.value)}
-                    placeholder="e.g., Dolomites"
+                    placeholder={t('admin.regionPlaceholder')}
                   />
                 </div>
                 <div className="form-group">
-                  <label>Status</label>
+                  <label>{t('admin.status')}</label>
                   <select value={editingTrail.status} onChange={(e) => updateField('status', e.target.value)}>
-                    <option value="draft">Draft</option>
-                    <option value="published">Published</option>
+                    <option value="draft">{t('admin.draft')}</option>
+                    <option value="published">{t('admin.published')}</option>
                   </select>
                 </div>
               </div>
               <div className="form-group">
-                <label>Description</label>
+                <label>{t('admin.description')}</label>
                 <textarea
                   value={editingTrail.description}
                   onChange={(e) => updateField('description', e.target.value)}
                   rows="4"
-                  placeholder="Detailed description of the multi-day trek..."
+                  placeholder={t('admin.descriptionPlaceholder')}
                 />
               </div>
             </div>
 
             {/* Media Section */}
             <div className="editor-section">
-              <h4>🖼️ Media</h4>
+              <h4>🖼️ {t('admin.media')}</h4>
               <div className="form-grid">
                 <div className="form-group">
-                  <label>Hero Image URL</label>
+                  <label>{t('admin.heroImageUrl')}</label>
                   <input
                     type="text"
                     value={editingTrail.hero_image}
@@ -370,7 +370,7 @@ function MultiDayTrailsManager({ adminPassword }) {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Thumbnail URL</label>
+                  <label>{t('admin.thumbnailUrl')}</label>
                   <input
                     type="text"
                     value={editingTrail.thumbnail}
@@ -384,33 +384,33 @@ function MultiDayTrailsManager({ adminPassword }) {
             {/* Stages Section */}
             <div className="editor-section">
               <div className="section-header">
-                <h4>🥾 Trail Stages ({editingTrail.stages?.length || 0})</h4>
+                <h4>🥾 {t('admin.trailStages')} ({editingTrail.stages?.length || 0})</h4>
                 <button onClick={handleAddStage} className="add-stage-btn">
-                  + Add Stage
+                  + {t('admin.addStage')}
                 </button>
               </div>
 
               {editingTrail.stages?.map((stage, index) => (
                 <div key={index} className="stage-card">
                   <div className="stage-header">
-                    <h5>Stage {stage.stage_number}: {stage.name || 'Unnamed'}</h5>
+                    <h5>{t('admin.stage')} {stage.stage_number}: {stage.name || t('admin.unnamed')}</h5>
                     <button onClick={() => handleRemoveStage(index)} className="remove-stage-btn">
-                      🗑️ Remove
+                      🗑️ {t('admin.remove')}
                     </button>
                   </div>
 
                   <div className="form-grid">
                     <div className="form-group">
-                      <label>Stage Name</label>
+                      <label>{t('admin.stageName')}</label>
                       <input
                         type="text"
                         value={stage.name}
                         onChange={(e) => updateStage(index, 'name', e.target.value)}
-                        placeholder="e.g., Lago di Braies to Rifugio Sennes"
+                        placeholder={t('admin.stagePlaceholder')}
                       />
                     </div>
                     <div className="form-group">
-                      <label>Distance (km)</label>
+                      <label>{t('admin.distanceKm')}</label>
                       <input
                         type="number"
                         step="0.1"
@@ -419,7 +419,7 @@ function MultiDayTrailsManager({ adminPassword }) {
                       />
                     </div>
                     <div className="form-group">
-                      <label>Elevation Gain (m)</label>
+                      <label>{t('admin.elevationGainM')}</label>
                       <input
                         type="number"
                         value={stage.elevation_gain_m}
@@ -427,7 +427,7 @@ function MultiDayTrailsManager({ adminPassword }) {
                       />
                     </div>
                     <div className="form-group">
-                      <label>Elevation Loss (m)</label>
+                      <label>{t('admin.elevationLossM')}</label>
                       <input
                         type="number"
                         value={stage.elevation_loss_m}
@@ -435,7 +435,7 @@ function MultiDayTrailsManager({ adminPassword }) {
                       />
                     </div>
                     <div className="form-group">
-                      <label>Duration (hours)</label>
+                      <label>{t('admin.durationHours')}</label>
                       <input
                         type="number"
                         step="0.5"
@@ -444,35 +444,35 @@ function MultiDayTrailsManager({ adminPassword }) {
                       />
                     </div>
                     <div className="form-group">
-                      <label>Difficulty</label>
+                      <label>{t('multiday.difficulty')}</label>
                       <select
                         value={stage.difficulty}
                         onChange={(e) => updateStage(index, 'difficulty', e.target.value)}
                       >
-                        <option value="easy">Easy</option>
-                        <option value="moderate">Moderate</option>
-                        <option value="challenging">Challenging</option>
-                        <option value="expert">Expert</option>
+                        <option value="easy">{t('difficulty.easy')}</option>
+                        <option value="moderate">{t('difficulty.moderate')}</option>
+                        <option value="challenging">{t('difficulty.challenging')}</option>
+                        <option value="expert">{t('difficulty.expert')}</option>
                       </select>
                     </div>
                     <div className="form-group full-width">
-                      <label>Overnight Rifugio Name</label>
+                      <label>{t('admin.overnightRifugioName')}</label>
                       <input
                         type="text"
                         value={stage.overnight_rifugio_name}
                         onChange={(e) => updateStage(index, 'overnight_rifugio_name', e.target.value)}
-                        placeholder="e.g., Rifugio Sennes"
+                        placeholder={t('admin.overnightRifugioPlaceholder')}
                       />
                     </div>
                   </div>
 
                   <div className="form-group">
-                    <label>Stage Description</label>
+                    <label>{t('admin.stageDescription')}</label>
                     <textarea
                       value={stage.description}
                       onChange={(e) => updateStage(index, 'description', e.target.value)}
                       rows="3"
-                      placeholder="Describe this stage of the trek..."
+                      placeholder={t('admin.stageDescriptionPlaceholder')}
                     />
                   </div>
                 </div>
@@ -480,29 +480,29 @@ function MultiDayTrailsManager({ adminPassword }) {
 
               {(!editingTrail.stages || editingTrail.stages.length === 0) && (
                 <div className="empty-stages">
-                  No stages yet. Click "Add Stage" to create the first day of your multi-day trek!
+                  {t('admin.noStagesYet')}
                 </div>
               )}
             </div>
 
             {/* Summary Section */}
             <div className="editor-section stats-section">
-              <h4>📊 Trail Summary (Auto-calculated from stages)</h4>
+              <h4>📊 {t('admin.trailSummary')}</h4>
               <div className="stats-grid">
                 <div className="stat-card">
-                  <div className="stat-label">Total Distance</div>
+                  <div className="stat-label">{t('admin.totalDistance')}</div>
                   <div className="stat-value">
                     {editingTrail.stages?.reduce((sum, s) => sum + (parseFloat(s.distance_km) || 0), 0).toFixed(1)} km
                   </div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-label">Total Elevation Gain</div>
+                  <div className="stat-label">{t('admin.totalElevationGain')}</div>
                   <div className="stat-value">
                     {editingTrail.stages?.reduce((sum, s) => sum + (parseInt(s.elevation_gain_m) || 0), 0)} m
                   </div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-label">Total Elevation Loss</div>
+                  <div className="stat-label">{t('admin.totalElevationLoss')}</div>
                   <div className="stat-value">
                     {editingTrail.stages?.reduce((sum, s) => sum + (parseInt(s.elevation_loss_m) || 0), 0)} m
                   </div>
