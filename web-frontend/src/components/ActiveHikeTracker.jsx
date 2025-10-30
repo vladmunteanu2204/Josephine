@@ -9,6 +9,8 @@ import './ActiveHikeTracker.css';
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 const GPS_UPDATE_INTERVAL = 20000; // 20 seconds
 const INACTIVITY_TIMEOUT = 6 * 60 * 60 * 1000; // 6 hours
+const AUTO_PAUSE_THRESHOLD = 60000; // 60 seconds (1 minute)
+const MOVEMENT_THRESHOLD = 10; // 10 meters minimum to consider as movement
 const OFF_TRAIL_DISTANCE = 30; // meters
 const POI_ALERT_DISTANCES = [500, 200]; // Alert at 500m and 200m
 
@@ -35,6 +37,8 @@ function ActiveHikeTracker({ trail, onEnd }) {
   const watchIdRef = useRef(null);
   const startTimeRef = useRef(null);
   const lastMoveTimeRef = useRef(null);
+  const lastPositionForMovementRef = useRef(null); // Track position for movement detection
+  const autoPausedRef = useRef(false); // Track if auto-paused
   const wakeLockRef = useRef(null);
   const intervalRef = useRef(null);
   const elevationGainBufferRef = useRef(0); // Accumulate positive elevation changes
@@ -195,7 +199,47 @@ function ActiveHikeTracker({ trail, onEnd }) {
     };
 
     setCurrentPosition(newPoint);
-    lastMoveTimeRef.current = Date.now();
+
+    // Check for movement (for auto-pause detection)
+    let hasMoved = false;
+    if (lastPositionForMovementRef.current) {
+      const distanceMoved = calculateDistance(
+        lastPositionForMovementRef.current.lat,
+        lastPositionForMovementRef.current.lon,
+        latitude,
+        longitude
+      );
+      
+      if (distanceMoved > MOVEMENT_THRESHOLD) {
+        hasMoved = true;
+        lastMoveTimeRef.current = Date.now();
+        lastPositionForMovementRef.current = newPoint;
+        
+        // Auto-resume if was auto-paused
+        if (autoPausedRef.current && isPaused) {
+          console.log('Movement detected, auto-resuming tracking');
+          setIsPaused(false);
+          autoPausedRef.current = false;
+          sendNotification('Tracking Resumed', 'Movement detected, continuing your hike tracking');
+        }
+      }
+    } else {
+      // First position, initialize
+      lastPositionForMovementRef.current = newPoint;
+      lastMoveTimeRef.current = Date.now();
+      hasMoved = true;
+    }
+
+    // Auto-pause detection: if no significant movement for 60+ seconds and not manually paused
+    if (!hasMoved && !isPaused && !autoPausedRef.current) {
+      const timeSinceLastMove = Date.now() - lastMoveTimeRef.current;
+      if (timeSinceLastMove > AUTO_PAUSE_THRESHOLD) {
+        console.log('No movement detected for 60 seconds, auto-pausing tracking');
+        setIsPaused(true);
+        autoPausedRef.current = true;
+        sendNotification('Tracking Auto-Paused', 'No movement detected. Tracking will resume when you start moving.');
+      }
+    }
 
     if (!isPaused) {
       // Update GPS track and calculate stats using the previous track value
@@ -346,6 +390,13 @@ function ActiveHikeTracker({ trail, onEnd }) {
   // Pause/Resume tracking
   const togglePause = () => {
     setIsPaused(!isPaused);
+    // Clear auto-pause state when user manually pauses/resumes
+    autoPausedRef.current = false;
+    // Reset movement tracking when resuming
+    if (isPaused && currentPosition) {
+      lastPositionForMovementRef.current = currentPosition;
+      lastMoveTimeRef.current = Date.now();
+    }
   };
 
   // Generate emergency share link
