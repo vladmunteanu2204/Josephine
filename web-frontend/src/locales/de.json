@@ -105,7 +105,14 @@
     "mediaGallery": "Mediengalerie",
     "photo": "Foto",
     "noPhotos": "Keine Fotos für diesen Wanderweg verfügbar",
-    "noVideos": "Noch keine Videos verfügbar. Schauen Sie bald wieder vorbei!"
+    "noVideos": "Noch keine Videos verfügbar. Schauen Sie bald wieder vorbei!",
+    "saveTrail": "Route speichern",
+    "unsaveTrail": "Von Gespeicherten entfernen",
+    "trailSaved": "Route gespeichert!",
+    "trailUnsaved": "Route aus Gespeicherten entfernt",
+    "elevationProfile": "Höhenprofil",
+    "startHike": "Diese Wanderung starten",
+    "gpsTrackingFeatures": "GPS-Tracking mit Sicherheitsfunktionen"
   },
   "catalog": {
     "title": "Wanderwege-Katalog",

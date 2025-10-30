@@ -105,7 +105,14 @@
     "mediaGallery": "Galleria Multimediale",
     "photo": "Foto",
     "noPhotos": "Nessuna foto disponibile per questo sentiero",
-    "noVideos": "Nessun video disponibile ancora. Torna presto!"
+    "noVideos": "Nessun video disponibile ancora. Torna presto!",
+    "saveTrail": "Salva sentiero",
+    "unsaveTrail": "Rimuovi dai salvati",
+    "trailSaved": "Sentiero salvato!",
+    "trailUnsaved": "Sentiero rimosso dai salvati",
+    "elevationProfile": "Profilo Altimetrico",
+    "startHike": "Inizia questa Escursione",
+    "gpsTrackingFeatures": "Tracciamento GPS con funzioni di sicurezza"
   },
   "catalog": {
     "title": "Catalogo Sentieri",

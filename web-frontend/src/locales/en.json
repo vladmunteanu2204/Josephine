@@ -105,7 +105,14 @@
     "mediaGallery": "Media Gallery",
     "photo": "Photo",
     "noPhotos": "No photos available for this trail",
-    "noVideos": "No videos available yet. Check back soon!"
+    "noVideos": "No videos available yet. Check back soon!",
+    "saveTrail": "Save trail",
+    "unsaveTrail": "Remove from saved",
+    "trailSaved": "Trail saved!",
+    "trailUnsaved": "Trail removed from saved",
+    "elevationProfile": "Elevation Profile",
+    "startHike": "Start this Hike",
+    "gpsTrackingFeatures": "GPS tracking with safety features"
   },
   "catalog": {
     "title": "Trail Catalog",

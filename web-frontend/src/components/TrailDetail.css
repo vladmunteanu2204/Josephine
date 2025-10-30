@@ -2,6 +2,54 @@
   background: linear-gradient(180deg, #0a0a0a 0%, #0f0f0f 100%);
   min-height: 100vh;
   padding-bottom: 80px;
+  position: relative;
+}
+
+/* Save/Favorite Button */
+.save-trail-btn {
+  position: fixed;
+  top: 100px;
+  right: 40px;
+  z-index: 1000;
+  background: linear-gradient(145deg, rgba(36, 36, 36, 0.9), rgba(26, 26, 26, 0.7));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.save-trail-btn:hover {
+  transform: scale(1.1) rotate(5deg);
+  border-color: rgba(212, 165, 116, 0.3);
+  box-shadow: 0 6px 30px rgba(212, 165, 116, 0.3);
+}
+
+.save-trail-btn.saved {
+  background: linear-gradient(145deg, rgba(212, 165, 116, 0.3), rgba(212, 165, 116, 0.2));
+  border-color: rgba(212, 165, 116, 0.5);
+}
+
+.save-icon {
+  font-size: 28px;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 2px 8px rgba(212, 165, 116, 0.4));
+}
+
+.save-trail-btn.saved .save-icon {
+  animation: bookmarkBounce 0.6s ease-out;
+}
+
+@keyframes bookmarkBounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3) rotate(10deg); }
 }
 
 .back-button {
@@ -42,6 +90,8 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
+  will-change: transform;
+  transition: transform 0.1s linear;
 }
 
 .detail-hero-overlay {
@@ -567,5 +617,295 @@
   .review-form select {
     min-height: 48px;
     font-size: 16px;
+  }
+}
+
+/* Hero Fade-in Animation */
+.hero-fade-in {
+  animation: heroFadeIn 1s ease-out;
+}
+
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hero Top Row */
+.hero-top-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* Difficulty Badge in Hero */
+.difficulty-badge-hero {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 24px;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.difficulty-badge-hero:hover {
+  transform: scale(1.05);
+}
+
+/* Stats Grid Animations */
+.stats-animated {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.stats-animated.animated-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stats-animated.animated-in .stat-glass-card {
+  animation: statPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  opacity: 0;
+}
+
+@keyframes statPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Glowing Icon Effect */
+.stat-icon-glow {
+  animation: iconGlow 3s ease-in-out infinite;
+}
+
+@keyframes iconGlow {
+  0%, 100% {
+    filter: drop-shadow(0 4px 12px rgba(212, 165, 116, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 4px 20px rgba(212, 165, 116, 0.6));
+  }
+}
+
+/* Elevation Profile Section */
+.elevation-profile-section {
+  margin-bottom: 60px;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.elevation-profile-section.animated-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.elevation-chart-container {
+  background: linear-gradient(145deg, rgba(36, 36, 36, 0.4), rgba(26, 26, 26, 0.3));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 32px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.elevation-chart {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 2px 8px rgba(212, 165, 116, 0.2));
+}
+
+.elevation-line {
+  stroke-dasharray: 2000;
+  stroke-dashoffset: 2000;
+  animation: drawLine 2s ease-out forwards;
+}
+
+.elevation-area {
+  opacity: 0;
+  animation: fadeInArea 1.5s ease-out 0.5s forwards;
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fadeInArea {
+  to {
+    opacity: 1;
+  }
+}
+
+.elevation-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding: 0 10px;
+}
+
+.elevation-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+}
+
+/* Pulse Animation for Start Hike Button */
+.btn-pulse {
+  animation: buttonPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes buttonPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 8px 32px rgba(212, 165, 116, 0.4),
+                0 0 60px rgba(212, 165, 116, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 12px 40px rgba(212, 165, 116, 0.5),
+                0 0 80px rgba(212, 165, 116, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+}
+
+.btn-pulse:hover {
+  animation: none;
+  transform: translateY(-4px) scale(1.05);
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .detail-hero-image {
+    transform: none !important;
+    transition: none !important;
+  }
+  
+  .hero-fade-in {
+    animation: none;
+  }
+  
+  .stats-animated,
+  .elevation-profile-section {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  
+  .stat-glass-card {
+    animation: none !important;
+  }
+  
+  .elevation-line,
+  .elevation-area {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+    opacity: 1 !important;
+  }
+  
+  .btn-pulse {
+    animation: none !important;
+  }
+  
+  .stat-icon-glow {
+    animation: none !important;
+  }
+  
+  .save-trail-btn.saved .save-icon {
+    animation: none !important;
+  }
+}
+
+/* Mobile Responsive Design */
+@media screen and (max-width: 768px) {
+  .save-trail-btn {
+    top: 80px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .save-icon {
+    font-size: 24px;
+  }
+  
+  .hero-title {
+    font-size: 40px;
+  }
+  
+  .hero-tagline {
+    font-size: 16px;
+  }
+  
+  .detail-hero-content {
+    padding: 40px 24px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  
+  .stat-value {
+    font-size: 32px;
+  }
+  
+  .stat-icon {
+    font-size: 36px;
+  }
+  
+  .elevation-chart-container {
+    padding: 20px;
+  }
+  
+  .hero-top-row {
+    gap: 12px;
+  }
+  
+  .difficulty-badge-hero {
+    font-size: 13px;
+    padding: 8px 16px;
+  }
+  
+  .btn-start-hike {
+    padding: 1.5rem 2rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .detail-container {
+    padding: 0 20px;
+  }
+  
+  .hero-title {
+    font-size: 32px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
   }
 }
