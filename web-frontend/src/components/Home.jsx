@@ -81,15 +81,15 @@ function Home({ setCurrentView, viewTrail }) {
                 🗺️ {t('home.browseTrailCatalog')}
               </button>
             </div>
-            
-            {/* Scroll Cue */}
-            {scrollY < 100 && (
-              <div className="scroll-cue" style={{ opacity: 1 - (scrollY / 100) }}>
-                <span className="scroll-text">↓ {t('hero.exploreYourPath')}</span>
-                <span className="scroll-icon">🏔️</span>
-              </div>
-            )}
           </div>
+          
+          {/* Scroll Cue - positioned relative to wrapper, not container */}
+          {scrollY < 100 && (
+            <div className="scroll-cue" style={{ opacity: 1 - (scrollY / 100) }}>
+              <span className="scroll-text">↓ {t('hero.exploreYourPath')}</span>
+              <span className="scroll-icon">🏔️</span>
+            </div>
+          )}
         </div>
       </div>
 
