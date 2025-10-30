@@ -16,6 +16,8 @@ import TermsAndConditions from './components/TermsAndConditions';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import AdminPanel from './components/AdminPanel';
 import Challenges from './components/Challenges';
+import Rifugios from './components/Rifugios';
+import RifugioDetail from './components/RifugioDetail';
 import SplashScreen from './components/SplashScreen';
 import OnboardingWizard from './components/OnboardingWizard';
 import Footer from './components/Footer';
@@ -24,6 +26,7 @@ function App() {
   const [currentView, setCurrentView] = useState('home');
   const [previousView, setPreviousView] = useState('home');
   const [selectedTrail, setSelectedTrail] = useState(null);
+  const [selectedRifugio, setSelectedRifugio] = useState(null);
   const [showSplash, setShowSplash] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(() => {
     return !localStorage.getItem('onboardingCompleted');
@@ -36,15 +39,17 @@ function App() {
     setCurrentView('detail');
   };
 
-  const navigate = (view, trailId = null) => {
-    if (view === 'detail') {
+  const navigate = (view, param = null) => {
+    if (view === 'detail' || view === 'rifugio-detail') {
       setPreviousView(currentView);
     }
     
-    if (trailId) {
+    if (param) {
       setCurrentView(view);
       if (view === 'detail') {
-        setSelectedTrail({ id: trailId });
+        setSelectedTrail({ id: param });
+      } else if (view === 'rifugio-detail') {
+        setSelectedRifugio(param);
       }
     } else {
       setCurrentView(view);
@@ -119,6 +124,14 @@ function App() {
 
           {currentView === 'challenges' && (
             <Challenges onNavigate={navigate} />
+          )}
+
+          {currentView === 'rifugios' && (
+            <Rifugios onNavigate={navigate} />
+          )}
+
+          {currentView === 'rifugio-detail' && selectedRifugio && (
+            <RifugioDetail rifugioId={selectedRifugio} onNavigate={navigate} />
           )}
         </main>
 

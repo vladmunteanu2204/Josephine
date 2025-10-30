@@ -35,6 +35,7 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
     { key: 'home', icon: '🏠', label: t('nav.home') },
     { key: 'recommendations', icon: '✨', label: t('nav.smartRecommendations') },
     { key: 'catalog', icon: '🗺️', label: t('nav.trailCatalog') },
+    { key: 'rifugios', icon: '🏔️', label: t('nav.rifugios') },
     { key: 'planner', icon: '📅', label: t('nav.hikePlanner') }
   ];
 
