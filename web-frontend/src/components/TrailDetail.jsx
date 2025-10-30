@@ -243,7 +243,7 @@ function TrailDetail({ trail, onBack }) {
   }
 
   return (
-    <div className="trail-detail">
+    <div className="trail-detail" style={{ paddingTop: 0 }}>
       <button className="back-button" onClick={onBack}>
         ← {t('trail.backToTrails')}
       </button>

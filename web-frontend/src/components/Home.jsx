@@ -73,7 +73,7 @@ function Home({ setCurrentView, viewTrail }) {
             <p className="hero-subtitle-large" style={{ transform: `translateY(${scrollY * 0.12}px)` }}>
               {t('hero.subtitle')}
             </p>
-            <div className="hero-cta-buttons" style={{ transform: `translateY(${scrollY * 0.08}px)` }}>
+            <div className="hero-cta-buttons" style={{ transform: `translateY(${scrollY * 0.08}px)`, marginBottom: '120px' }}>
               <button className="hero-btn-primary" onClick={() => setCurrentView('recommendations')}>
                 ✨ {t('home.smartRecommendations')}
               </button>
