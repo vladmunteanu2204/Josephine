@@ -9,6 +9,7 @@ import UserPlansManager from './UserPlansManager';
 import UserManagement from './UserManagement';
 import TrailAnalytics from './TrailAnalytics';
 import GamificationStats from './GamificationStats';
+import MultiDayTrailsManager from './admin/MultiDayTrailsManager';
 import './AdminPanel.css';
 
 const ADMIN_EMAIL = 'vladmunteanu2204@gmail.com';
@@ -97,6 +98,12 @@ function AdminPanel({ onNavigate }) {
             🗺️ Trails
           </button>
           <button
+            className={`admin-tab ${activeTab === 'multiday' ? 'active' : ''}`}
+            onClick={() => setActiveTab('multiday')}
+          >
+            🏔️ Multi-Day Trails
+          </button>
+          <button
             className={`admin-tab ${activeTab === 'reviews' ? 'active' : ''}`}
             onClick={() => setActiveTab('reviews')}
           >
@@ -136,6 +143,7 @@ function AdminPanel({ onNavigate }) {
 
         <div className="admin-content">
           {activeTab === 'trails' && <TrailManager adminPassword={adminPassword} />}
+          {activeTab === 'multiday' && <MultiDayTrailsManager adminPassword={adminPassword} />}
           {activeTab === 'reviews' && <ReviewsModeration adminPassword={adminPassword} />}
           {activeTab === 'challenges' && <ChallengesManager adminPassword={adminPassword} />}
           {activeTab === 'plans' && <UserPlansManager adminPassword={adminPassword} />}
