@@ -4,7 +4,7 @@
   padding-bottom: 80px;
   position: relative;
   margin-top: -80px;
-  padding-top: 80px;
+  padding-top: 0;
 }
 
 /* Save/Favorite Button */
@@ -63,7 +63,7 @@
   border-radius: 12px;
   font-size: 15px;
   font-weight: 600;
-  margin: 16px 24px 0;
+  margin: 80px 24px 0;
   display: inline-block;
   border: 1px solid rgba(255, 255, 255, 0.08);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -83,7 +83,7 @@
   position: relative;
   min-height: min(700px, 70svh);
   height: auto;
-  margin-top: -80px;
+  margin-top: 0;
   margin-bottom: -2px;
   overflow: hidden;
 }

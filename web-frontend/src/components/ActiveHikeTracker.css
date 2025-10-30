@@ -73,9 +73,9 @@
   background: linear-gradient(135deg, #2d4a3e 0%, #4a7c9e 100%);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  padding: calc(var(--safe-top, 0px) + 10px) 12px 10px;
+  padding: calc(env(safe-area-inset-top, 0px) + 10px) 12px 10px;
   border-bottom: 3px solid #d4a574;
-  z-index: 10002;
+  z-index: 99999;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: space-around;
