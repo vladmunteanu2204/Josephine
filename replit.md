@@ -3,7 +3,7 @@
 ## Overview
 Alpenvia is a production-ready, premium multilingual hiking platform for the South Tyrol and Trentino Alps. Its core purpose is to provide smart trail recommendations, comprehensive user reviews, and full internationalization (EN/IT/DE). The platform features an immersive dark alpine-inspired glassmorphic UI with cinematic trail detail pages, designed for optimal viewing in Replit's browser preview. The project aims to offer a high-quality, curated hiking experience based on verified trail data.
 
-**See [ROADMAP.md](./ROADMAP.md) for complete development roadmap and phase plan (42% complete - Phase 17G of 44 phases).**
+**See [ROADMAP.md](./ROADMAP.md) for complete development roadmap and phase plan (43% complete - Phase 17H of 44 phases).**
 
 ## User Preferences
 - Must be previewable in Replit web browser (not mobile-only)
@@ -16,6 +16,8 @@ Alpenvia consists of a Flask backend API and a React web-frontend.
 
 ### UI/UX Decisions
 The design system employs a premium dark alpine theme with glassmorphism effects, featuring frosted glass cards and backdrop blur. It incorporates dramatic hero sections with mountain silhouettes and aurora gradients, enhanced shadows for layered depth, and glowing accent colors. Smooth animations, micro-interactions, premium typography with text shadows, and topographic patterns contribute to an immersive user experience.
+
+**Mobile Header & Hero (Phase 17H):** Minimalist mobile-first UI transformation featuring: HamburgerMenu component with slide-out navigation from right (300ms ease-out, backdrop blur rgba(10,10,10,0.8)); LanguageBottomSheet with flag grid selector replacing top-bar flags; redesigned Header with smaller logo (32-36px), language dropdown icon (🌐), user icon with amber glow when logged in, all with 44x44px minimum touch targets; enhanced Home hero with gradient-blurred background (dark→amber), larger responsive headline (30-34px) with gradient text effect, stacked vertical CTAs, parallax motion (background 0.5x, content 0.2x), and scroll cue with animated mountain icon. Microinteractions include logo fade on scroll, button press feedback with amber ripple, smooth spring animations, and full prefers-reduced-motion support. Design philosophy: "Minimalist, dark, and atmospheric — blending seamlessly with the alpine theme." All new UI elements fully internationalized across EN/IT/DE.
 
 ### Technical Implementations
 - **Internationalization (i18n):** Full support for English, Italian, and German using `i18next` with browser language detection, covering all pages and over 400 translation strings including gamification, weather, and planning features.
