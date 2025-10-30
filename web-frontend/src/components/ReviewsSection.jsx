@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import { useToast } from '../contexts/ToastContext';
 import './ReviewsSection.css';
 
 const API_URL = '/api';
 
 function ReviewsSection({ trailId }) {
   const { t } = useTranslation();
+  const toast = useToast();
   const [reviews, setReviews] = useState([]);
   const [statistics, setStatistics] = useState({ average_rating: 0, total_reviews: 0 });
   const [loading, setLoading] = useState(true);
@@ -38,6 +40,7 @@ function ReviewsSection({ trailId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.user_name.trim() || !formData.comment.trim()) {
+      toast.warning(t('trail.reviewFieldsRequired') || 'Please fill in all required fields');
       return;
     }
 
@@ -54,8 +57,10 @@ function ReviewsSection({ trailId }) {
 
       setFormData({ user_name: '', rating: 5, comment: '' });
       setShowForm(false);
+      toast.success(t('trail.reviewSubmitted') || 'Thank you for your review!');
     } catch (error) {
       console.error('Error submitting review:', error);
+      toast.error(t('trail.reviewError') || 'Failed to submit review. Please try again.');
     } finally {
       setSubmitting(false);
     }

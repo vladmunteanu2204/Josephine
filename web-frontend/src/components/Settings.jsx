@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import './Settings.css';
 
 function Settings({ onNavigate }) {
   const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
+  const toast = useToast();
   const [settings, setSettings] = useState({
     language: i18n.language || 'en',
     units: localStorage.getItem('units') || 'metric',
@@ -41,7 +43,7 @@ function Settings({ onNavigate }) {
   const handleDeleteAccount = () => {
     if (window.confirm(t('settings.deleteAccountConfirm'))) {
       // In a real app, this would call a backend API to delete the account
-      alert(t('settings.deleteAccountNote'));
+      toast.info(t('settings.deleteAccountNote'));
     }
   };
 

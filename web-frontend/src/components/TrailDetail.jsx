@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import { useToast } from '../contexts/ToastContext';
 import ReviewsSection from './ReviewsSection';
 import TrailMap from './TrailMap';
 import MediaGallery from './MediaGallery';
@@ -10,6 +11,7 @@ import './TrailDetail.css';
 
 function TrailDetail({ trail, onBack }) {
   const { t } = useTranslation();
+  const toast = useToast();
   const [fullTrail, setFullTrail] = useState(trail);
   const [loading, setLoading] = useState(false);
   const [isHikeActive, setIsHikeActive] = useState(false);
@@ -93,7 +95,7 @@ function TrailDetail({ trail, onBack }) {
   const handleHikeEnd = (hikeData) => {
     setIsHikeActive(false);
     if (hikeData) {
-      alert(`Hike completed! Distance: ${hikeData.stats.distance_km.toFixed(2)}km, Duration: ${hikeData.stats.duration_hours.toFixed(1)}h. GPX file downloaded.`);
+      toast.success(`Hike completed! Distance: ${hikeData.stats.distance_km.toFixed(2)}km, Duration: ${hikeData.stats.duration_hours.toFixed(1)}h`, 5000);
     }
   };
 

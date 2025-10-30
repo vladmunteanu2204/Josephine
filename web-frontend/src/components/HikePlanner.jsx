@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import { useToast } from '../contexts/ToastContext';
 import EquipmentChecklist from './EquipmentChecklist';
 import SafetyTips from './SafetyTips';
 import './HikePlanner.css';
@@ -9,6 +10,7 @@ const API_URL = '/api';
 
 function HikePlanner({ onNavigate }) {
   const { t } = useTranslation();
+  const toast = useToast();
   const [trails, setTrails] = useState([]);
   const [selectedTrails, setSelectedTrails] = useState([]);
   const [startDate, setStartDate] = useState('');
@@ -81,7 +83,7 @@ function HikePlanner({ onNavigate }) {
 
   const saveItinerary = () => {
     if (!itineraryName.trim()) {
-      alert(t('planner.nameRequired'));
+      toast.warning(t('planner.nameRequired'));
       return;
     }
 
@@ -100,6 +102,7 @@ function HikePlanner({ onNavigate }) {
     setSavedItineraries(updated);
     setShowSaveModal(false);
     setItineraryName('');
+    toast.success(t('planner.saved') || 'Hike plan saved successfully!');
   };
 
   const loadItinerary = (itinerary) => {
@@ -138,7 +141,7 @@ function HikePlanner({ onNavigate }) {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(exportText);
-    alert(t('planner.copied'));
+    toast.success(t('planner.copied'));
   };
 
   const { totalDistance, totalElevation, totalDuration } = calculateTotals();

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import { useToast } from '../contexts/ToastContext';
 import { getUserGamificationData, awardXP } from '../utils/gamification';
 import './Challenges.css';
 
 function Challenges({ onNavigate }) {
   const { t } = useTranslation();
+  const toast = useToast();
   const [challenges, setChallenges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null);
@@ -47,7 +49,7 @@ function Challenges({ onNavigate }) {
 
   const claimReward = (challenge) => {
     awardXP(challenge.reward_xp);
-    alert(`Congratulations! You've earned ${challenge.reward_xp} XP for completing ${challenge.name}!`);
+    toast.challenge(`Congratulations! You've earned ${challenge.reward_xp} XP for completing ${challenge.name}!`);
     setUserData(getUserGamificationData());
   };
 

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import { useToast } from '../contexts/ToastContext';
 import './SmartRecommendations.css';
 
 const API_URL = '/api';
 
 function SmartRecommendations({ viewTrail }) {
   const { t } = useTranslation();
+  const toast = useToast();
   const [step, setStep] = useState(1);
   const [duration, setDuration] = useState(3);
   const [difficulty, setDifficulty] = useState('medium');
@@ -75,8 +77,10 @@ function SmartRecommendations({ viewTrail }) {
     let newSaved;
     if (isSaved) {
       newSaved = savedTrailIds.filter(id => id !== trail.id);
+      toast.info(t('recommendations.trailUnsaved') || `${trail.name} removed from saved trails`);
     } else {
       newSaved = [...savedTrailIds, trail.id];
+      toast.success(t('recommendations.trailSaved') || `${trail.name} saved!`);
     }
     
     setSavedTrailIds(newSaved);
