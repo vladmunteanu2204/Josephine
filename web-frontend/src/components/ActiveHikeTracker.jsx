@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Map, { Source, Layer, Marker, NavigationControl } from 'react-map-gl';
 import SafetyDisclaimerModal from './SafetyDisclaimerModal';
 import CelebrationModal from './CelebrationModal';
+import TripSummary from './TripSummary';
 import { checkNewBadges } from '../utils/gamification';
 import { useToast } from '../contexts/ToastContext';
 import './ActiveHikeTracker.css';
@@ -23,6 +24,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
   const [isPaused, setIsPaused] = useState(false);
   const [isEnding, setIsEnding] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [showTripSummary, setShowTripSummary] = useState(false);
   const [gpsTrack, setGpsTrack] = useState([]);
   const [currentPosition, setCurrentPosition] = useState(null);
   const [stats, setStats] = useState({
@@ -97,6 +99,31 @@ function ActiveHikeTracker({ trail, onEnd }) {
       if ('vibrate' in navigator) {
         navigator.vibrate([200, 100, 200]);
       }
+    }
+  };
+
+  // Play mountain bell sound (optional audio cue for checkpoints)
+  const playMountainBell = () => {
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      // Bell-like frequencies (fundamental + harmonics)
+      oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+      oscillator.type = 'sine';
+
+      // Envelope: quick attack, slow decay
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1.5);
+
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 1.5);
+    } catch (error) {
+      console.log('Audio playback not supported:', error);
     }
   };
 
@@ -216,6 +243,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
           t('gps.checkpointAheadNotification', { icon, name: checkpoint.name }),
           t('gps.checkpointAheadNotificationBody', { name: checkpoint.name, distance: roundedDistance })
         );
+        playMountainBell(); // Play sound cue
         setAlertedPOIs(prev => new Set([...prev, checkpointKey]));
       }
 
@@ -228,6 +256,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
           t('gps.checkpointReachedNotification', { icon }),
           t('gps.checkpointReachedNotificationBody', { name: checkpoint.name })
         );
+        playMountainBell(); // Play sound cue for arrival
         setAlertedPOIs(prev => new Set([...prev, arrivalKey]));
         
         // Track visited checkpoint
@@ -590,13 +619,24 @@ function ActiveHikeTracker({ trail, onEnd }) {
   
   // Handle celebration close
   const handleCelebrationClose = () => {
+    setShowCelebration(false);
+    setShowTripSummary(true); // Show trip summary after celebration
+  };
+
+  const handleTripSummaryClose = () => {
     // Export GPX automatically
     if (gpsTrack.length > 0) {
       exportGPX();
     }
     
-    setShowCelebration(false);
+    setShowTripSummary(false);
     onEnd(completedHikeData);
+  };
+
+  const handleAddReview = () => {
+    setShowTripSummary(false);
+    // Navigate to add review (will be handled by parent)
+    onEnd({ ...completedHikeData, showReviewForm: true });
   };
 
   // Cleanup on unmount
@@ -790,6 +830,15 @@ function ActiveHikeTracker({ trail, onEnd }) {
           hikeData={completedHikeData}
           gamification={completedHikeData.gamification}
           onClose={handleCelebrationClose}
+        />
+      )}
+
+      {/* Trip Summary */}
+      {showTripSummary && completedHikeData && (
+        <TripSummary
+          hikeData={completedHikeData}
+          onClose={handleTripSummaryClose}
+          onAddReview={handleAddReview}
         />
       )}
     </div>
