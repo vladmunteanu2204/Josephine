@@ -1,61 +1,165 @@
 # Alpenvia 🏔️
 
-A premium hiking web app for the South Tyrol and Trentino Alps regions, featuring smart trail recommendations, verified routes, and immersive dark alpine-inspired design.
+**A premium multilingual hiking platform for the South Tyrol and Trentino Alps**
 
-## 🌟 Features
+*"Strava meets Lonely Mountain Journal" — an emotional, cinematic alpine experience where every achievement feels like a story of its own.*
 
-### Core Features
-- **🏠 Home Dashboard** - Dark immersive UI with alpine-inspired design and featured trail
-- **✨ Smart Recommendations** - Multi-step wizard for personalized trail suggestions from verified routes
-- **📚 Trail Catalog** - Browse all verified trails with filtering by difficulty
-- **📍 Detailed Trail Pages** - Hero images, stats, points of interest, and comprehensive descriptions
-- **🗺️ Verified Routes Only** - All trails curated and verified for South Tyrol & Trentino Alps
+[![Made with React](https://img.shields.io/badge/React-18-61DAFB?logo=react)](https://reactjs.org/)
+[![Flask](https://img.shields.io/badge/Flask-3.0-000000?logo=flask)](https://flask.palletsprojects.com/)
+[![i18n](https://img.shields.io/badge/i18n-EN%20%7C%20IT%20%7C%20DE-blue)](https://www.i18next.com/)
+[![PWA](https://img.shields.io/badge/PWA-Ready-5A0FC8)](https://web.dev/progressive-web-apps/)
 
-### Design System
-- **Dark Theme** - Deep grays (#0a0a0a), forest greens, amber accents (#d4a574)
-- **Typography** - Clear hierarchy with bold headings and readable body text
-- **Responsive Layout** - Works perfectly in Replit's web preview
+---
+
+## 🌟 Overview
+
+Alpenvia is a production-ready hiking platform featuring:
+- ✨ **Smart trail recommendations** based on verified routes
+- 🏔️ **Comprehensive rifugio (alpine hut) directory** with booking system
+- 🥾 **Multi-day hut-to-hut trekking** with stage-by-stage planning
+- 📍 **Real-time GPS tracking** with checkpoint alerts
+- 🎮 **Gamification system** with badges, XP levels, and challenges
+- 🌦️ **Weather integration** with hiking suitability scoring
+- 🗺️ **Interactive maps** powered by Mapbox GL
+- 🌍 **Full internationalization** (English, Italian, German)
+- 📱 **Progressive Web App** with offline support
+- 🎨 **Dark alpine-inspired glassmorphic UI** with cinematic design
+
+---
+
+## 🎯 Key Features
+
+### Trail Discovery & Planning
+- **Smart Recommendations** - Personalized trail suggestions based on preferences
+- **Verified Routes** - Curated trails for South Tyrol & Trentino Alps
+- **Trail Catalog** - Browse with advanced filters (difficulty, region, features)
+- **Detailed Trail Pages** - Cinematic design with parallax scrolling, elevation profiles, POIs
+- **Multi-Day Treks** - Plan hut-to-hut adventures with stage-by-stage breakdown
+- **Hike Planner** - Multi-day itinerary builder with equipment checklists
+
+### Alpine Hut Ecosystem
+- **Rifugio Directory** - Comprehensive database of alpine huts (rifugios, malgas, bivaccos)
+- **Smart Filtering** - Filter by type, region, altitude, facilities, availability
+- **Detailed Hut Pages** - Facilities, pricing, contact info, seasonal status
+- **Booking System** - Inquiry forms with email delivery to rifugio operators
+- **Integrated Experience** - Seamless connection between trails and rifugios
+
+### GPS & Tracking
+- **Live GPS Tracking** - Real-time position updates every 20 seconds
+- **Checkpoint Alerts** - Proximity notifications for POIs and rifugios
+- **Stats Dashboard** - Live distance, elevation, duration, progress tracking
+- **Auto-pause Detection** - Intelligent pause/resume for breaks
+- **Celebration Modals** - 3D confetti animations on hike completion
+- **Hike History** - All completed hikes saved to profile
+
+### Gamification & Social
+- **Badge System** - 18 achievement badges (distance, peaks, trails)
+- **XP & Levels** - 10 progression tiers (Beginner → Legend of the Alps)
+- **Challenges** - Admin-created events with XP rewards
+- **Leaderboards** - Monthly and all-time rankings (opt-in)
+- **User Profiles** - Stats dashboard with total distance, elevation, hikes
+
+### Weather & Safety
+- **OpenWeatherMap Integration** - Current conditions + 7-day forecasts
+- **Suitability Scoring** - AI-powered hiking safety recommendations
+- **Weather Alerts** - Real-time warnings for dangerous conditions
+- **Safety Disclaimers** - Legal protection before GPS tracking
+
+### Admin Panel
+- **Trail Management** - Create/edit trails, upload GPX routes
+- **Rifugio CMS** - Manage alpine hut database
+- **Multi-Day Trail Builder** - Visual stage creator with per-day details
+- **User Management** - View all users, stats, analytics
+- **Review Moderation** - Approve/reject user reviews
+- **Challenge Creation** - Design and deploy gamification events
+- **Analytics Dashboard** - Trail popularity, user engagement metrics
+- **Booking Monitor** - Track rifugio booking inquiries
+
+---
 
 ## 🛠 Tech Stack
 
-### Web Frontend (React + Vite)
-- **React 18** - Modern React with hooks
-- **Vite** - Lightning-fast development server
-- **Axios** - API communication
-- **CSS3** - Custom styling with CSS variables
+### Frontend
+- **React 18** - Modern hooks-based architecture
+- **Vite** - Lightning-fast build tool and dev server
+- **i18next** - Full internationalization (EN/IT/DE)
+- **Mapbox GL** - Interactive trail and POI maps
+- **Firebase Auth** - Secure user authentication (email + Google OAuth)
+- **Axios** - HTTP client for API communication
+- **CSS3** - Custom dark alpine glassmorphic design system
 
-### Backend (Flask)
-- **Flask** - Lightweight Python web framework
-- **Smart Recommendation Engine** - Local scoring algorithm over verified trails database
+### Backend
+- **Flask** - Python web framework (Python 3.11+)
 - **Flask-CORS** - Cross-origin resource sharing
-- **JSON Database** - Mock trail data with 4 authentic South Tyrol trails
+- **JSON Database** - Local data storage (trails, rifugios, reviews, bookings, multi-day trails)
+- **OpenWeatherMap API** - Weather data integration
+- **Pillow** - Image processing and compression
+- **Replit Object Storage** - Persistent media file hosting
+
+### Infrastructure
+- **Progressive Web App** - Service worker with offline caching
+- **Responsive Design** - Mobile-first, works on all devices
+- **Component-based Navigation** - Custom state-machine routing
+- **localStorage Persistence** - User preferences, saved trails, gamification data
+
+---
 
 ## 📁 Project Structure
 
 ```
 alpenvia/
-├── backend/                    # Flask API server (port 8000)
-│   ├── app.py                 # Main Flask application with API endpoints
-│   └── requirements.txt       # Python dependencies
-├── web-frontend/              # React web app (port 5000)
+├── backend/                    # Flask API (port 8000 dev, 5000 prod)
+│   ├── app.py                 # Main application with all API endpoints
+│   ├── requirements.txt       # Python dependencies
+│   └── data/                  # JSON databases
+│       ├── trails.json        # Trail catalog
+│       ├── reviews.json       # User reviews
+│       ├── plans.json         # Hike plans
+│       ├── user_analytics.json # User stats
+│       ├── rifugios.json      # Alpine huts directory
+│       ├── booking_inquiries.json # Rifugio booking requests
+│       └── multi_day_trails.json # Multi-day trek database
+├── web-frontend/              # React app (port 5000)
 │   ├── src/
-│   │   ├── components/        # Reusable UI components
-│   │   │   ├── Header.jsx
+│   │   ├── components/        # React components
 │   │   │   ├── Home.jsx
 │   │   │   ├── SmartRecommendations.jsx
 │   │   │   ├── TrailCatalog.jsx
-│   │   │   └── TrailDetail.jsx
-│   │   ├── App.jsx            # Main app component
-│   │   ├── main.jsx           # React entry point
-│   │   └── index.css          # Global styles
-│   ├── index.html             # HTML template
-│   ├── vite.config.js         # Vite configuration
-│   └── package.json           # Node dependencies
-├── data/                       # Mock trail database
-│   ├── trails.json            # Complete trail database (4 South Tyrol trails)
-│   └── trail_segments.json    # Trail segments for recommendations
-└── README.md                  # This file
+│   │   │   ├── TrailDetail.jsx
+│   │   │   ├── Rifugios.jsx
+│   │   │   ├── RifugioDetail.jsx
+│   │   │   ├── MultiDayTrails.jsx
+│   │   │   ├── MultiDayTrailDetail.jsx
+│   │   │   ├── Profile.jsx
+│   │   │   ├── Challenges.jsx
+│   │   │   ├── Leaderboards.jsx
+│   │   │   ├── HikePlanner.jsx
+│   │   │   ├── AdminPanel.jsx
+│   │   │   └── admin/
+│   │   │       ├── TrailManager.jsx
+│   │   │       ├── RifugioManager.jsx
+│   │   │       ├── MultiDayTrailsManager.jsx
+│   │   │       └── ...
+│   │   ├── contexts/         # React contexts
+│   │   │   ├── AuthContext.jsx
+│   │   │   └── ToastContext.jsx
+│   │   ├── locales/          # i18n translations
+│   │   │   ├── en.json
+│   │   │   ├── it.json
+│   │   │   └── de.json
+│   │   ├── App.jsx           # Main app component
+│   │   └── main.jsx          # Entry point
+│   ├── public/
+│   │   ├── manifest.json     # PWA manifest
+│   │   └── sw.js            # Service worker
+│   ├── vite.config.js        # Vite configuration
+│   └── package.json          # Node dependencies
+├── replit.md                 # Project state documentation
+├── ROADMAP.md               # Development roadmap
+└── README.md                # This file
 ```
+
+---
 
 ## 🚀 Getting Started
 
@@ -64,243 +168,242 @@ alpenvia/
 - Node.js 18+
 - npm or yarn
 
-### Quick Start (Replit)
+### Development (Replit)
 
-Both servers are already running in Replit:
-- **Web Frontend**: Port 5000 (visible in preview)
-- **Backend API**: Port 8000 (console only)
+Both workflows are pre-configured:
+- **Frontend**: `http://localhost:5000` (visible in preview)
+- **Backend API**: `http://localhost:8000`
 
-Just open the preview to see the app! 🎉
+Just click **Run** to start both servers! 🎉
 
 ### Local Development
 
-1. **Start the Backend:**
+1. **Start Backend:**
    ```bash
    cd backend
    pip install -r requirements.txt
    python app.py
    ```
-   Backend runs on `http://localhost:8000`
 
-2. **Start the Frontend:**
+2. **Start Frontend:**
    ```bash
    cd web-frontend
    npm install
    npm run dev
    ```
-   Frontend runs on `http://localhost:5000`
 
-3. **Open in browser:**
+3. **Open browser:**
    Navigate to `http://localhost:5000`
+
+---
 
 ## 🔗 API Endpoints
 
-### Health Check
-```
-GET /api/health
-```
-Returns API health status.
+### Core Trails
+- `GET /api/health` - Health check
+- `GET /api/trails` - Get all trails (filter by difficulty)
+- `GET /api/trails/:id` - Get trail details
+- `GET /api/trails/:id/reviews` - Get trail reviews
+- `POST /api/trails/:id/reviews` - Submit review
+- `POST /api/ai/recommend` - Get smart recommendations
 
-**Response:**
-```json
-{
-  "ok": true,
-  "service": "alpenvia",
-  "status": "healthy"
-}
-```
+### Rifugios (Alpine Huts)
+- `GET /api/rifugios` - Get all rifugios (filter by type, region, facilities)
+- `GET /api/rifugios/:id` - Get rifugio details
+- `POST /api/rifugios/booking-inquiry` - Submit booking inquiry
 
-### Get All Trails
-```
-GET /api/trails?difficulty=medium
-```
-Fetch trails with optional filtering by difficulty.
+### Multi-Day Trails
+- `GET /api/multi-day-trails` - Get all multi-day treks
+- `GET /api/multi-day-trails/:id` - Get trek details
+- `POST /api/admin/multi-day-trails` - Create trek (admin only)
+- `PUT /api/admin/multi-day-trails/:id` - Update trek (admin only)
+- `DELETE /api/admin/multi-day-trails/:id` - Delete trek (admin only)
 
-**Response:**
-```json
-{
-  "trails": [...],
-  "count": 4
-}
-```
+### User & Analytics
+- `GET /api/user-analytics/:firebase_uid` - Get user stats
+- `POST /api/user-analytics/:firebase_uid` - Update user stats
+- `GET /api/hike-plans` - Get hike plans
+- `POST /api/hike-plans` - Create hike plan
 
-### Get Trail by ID
-```
-GET /api/trails/{trail_id}
-```
-Fetch detailed information for a specific trail.
+### Weather
+- `GET /api/weather/suitability` - Get weather + hiking suitability
 
-### Smart Recommendations (New!)
-```
-POST /api/ai/recommend
-Content-Type: application/json
+### Admin (Requires X-Admin-Password header)
+- `POST /api/admin/trails` - Create trail
+- `PUT /api/admin/trails/:id` - Update trail
+- `DELETE /api/admin/trails/:id` - Delete trail
+- `GET /api/admin/users` - Get all users
+- `GET /api/admin/analytics` - Get platform analytics
 
-{
-  "duration_hours": 4,
-  "difficulty": "medium",
-  "interests": ["alpine lakes", "panoramic views"],
-  "start_area": "Bolzano"
-}
-```
-Returns 3-5 recommended trails from verified routes based on user preferences.
-
-**Scoring Algorithm:**
-- +3 if trail difficulty matches request
-- +2 per matching interest tag
-- +2 if duration within 1 hour of request
-- +1 if loop requested and trail is loop type
-- +1 if start area matches trail region/name
-
-**Response:**
-```json
-{
-  "results": [
-    {
-      "id": "tre_cime",
-      "name": "Tre Cime di Lavaredo Loop",
-      "distance_km": 10.2,
-      "duration_hours": 4.0,
-      "elevation_gain_m": 450,
-      "difficulty": "medium",
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [[12.2975, 46.6189], ...]
-      },
-      "pois": [...],
-      "tags": ["panoramic views", "alpine lakes"],
-      "description": "One of the most iconic hikes...",
-      "thumbnail": "https://...",
-      "region": "South Tyrol",
-      "rating": 4.8,
-      "trail_type": "loop"
-    }
-  ]
-}
-```
-
-### Deprecated Endpoints
-
-#### AI Route Generation (DEPRECATED)
-```
-POST /api/trails/generate
-```
-**Returns HTTP 410 Gone:**
-```json
-{
-  "error": "route_generation_deprecated",
-  "message": "Alpenvia now recommends only verified routes from our database. Please use /api/ai/recommend for personalized trail suggestions."
-}
-```
+---
 
 ## 🎨 Design Philosophy
 
-Alpenvia features a dark, immersive design inspired by the alpine environment:
+**Dark Alpine Glassmorphism**
+- Deep blacks (#0a0a0a) and dark grays evoke evening mountains
+- Warm amber (#d4a574) represents alpine sunsets
+- Forest greens (#2d4a3e) connect to nature
+- Frosted glass cards with backdrop blur
+- Subtle shadows and glowing accents
+- Smooth animations and micro-interactions
 
-- **Background Colors**: Deep blacks (#0a0a0a) and dark grays (#1a1a1a) evoke evening mountain landscapes
-- **Accent Colors**: Warm amber (#d4a574) represents alpine sunsets, forest greens (#2d4a3e) connect to nature
-- **Typography**: Clear hierarchy ensures readability while maintaining elegance
-- **Imagery**: High-quality alpine photography creates emotional connection
+**Cinematic Experience**
+- Parallax scrolling hero sections
+- Fade-in animations with Intersection Observer
+- Dynamic elevation profile SVG drawings
+- Breathing pulse animations on CTAs
+- 3D celebration modals with confetti
 
-## 🗺️ Mock Trail Data
+**Mobile-First Responsive**
+- Minimalist hamburger navigation
+- Bottom sheets for language selection
+- Touch-optimized tap targets (44x44px)
+- Swipe gestures for carousels
+- Optimized for Replit browser preview
 
-The app includes 4 authentic South Tyrol trails:
+---
 
-1. **Tre Cime di Lavaredo Loop** - Iconic Dolomites circuit (Medium, 10.2km, 4h)
-2. **Lago di Braies Circular Trail** - Stunning turquoise lake walk (Easy, 3.5km, 1.5h)
-3. **Sentiero del Viel del Pan** - Historic WWI trail (Medium, 8.5km, 3.5h)
-4. **Alpe di Siusi Meadow Walk** - Europe's largest alpine meadow (Easy, 5.8km, 2h)
+## 🌍 Internationalization
 
-## 🔮 Architecture Changes
+Full support for 3 languages with **870+ translation strings**:
+- 🇬🇧 **English** - Primary language
+- 🇮🇹 **Italiano** - Italian
+- 🇩🇪 **Deutsch** - German
 
-### What Changed from Original Version
+**Note:** No Romanian language support (intentionally excluded per user requirements)
 
-**Removed:**
-- ❌ OpenAI API integration and dependencies
-- ❌ AI route generation endpoint
-- ❌ Replit AI Integrations usage
-- ❌ React Native mobile app (replaced with web app)
+Auto-detection based on browser language, with manual language switcher in header.
 
-**Added:**
-- ✅ Smart recommendation engine with local scoring
-- ✅ React web frontend (works in Replit preview!)
-- ✅ Verified routes only approach
-- ✅ HTTP 410 deprecation for AI generation
+---
 
-**Why the Change:**
-- **Predictability**: Verified routes only, no AI-generated content
-- **Cost**: No OpenAI API costs
-- **Preview**: Web app works in Replit's browser preview
-- **Quality**: Curated, authentic South Tyrol trails
+## 📱 Progressive Web App
 
-## 📝 Environment Variables
+- **Installable** - Add to home screen on mobile and desktop
+- **Offline Support** - Service worker with caching strategies
+- **App-like Experience** - Full-screen mode, no browser chrome
+- **Background Sync** - Ready for push notifications (future)
+- **Fast Performance** - Optimized assets and lazy loading
 
-No environment variables required! The app works out of the box.
+---
 
-## 🤝 Development Notes
+## 🔐 Authentication & Admin
 
-### Testing the API
+### User Authentication
+- **Firebase Auth** - Email/password + Google OAuth
+- **Persistent Sessions** - Auto-login on return visits
+- **Protected Routes** - User-specific features (profile, saved trails)
 
-```bash
-# Health check
-curl http://localhost:8000/api/health
+### Admin Access
+- **Email Restriction** - Only `vladmunteanu2204@gmail.com`
+- **Custom Password** - Environment variable `SESSION_SECRET`
+- **Admin Panel** - Full CMS for trails, rifugios, multi-day trails, users, analytics
 
-# Get recommendations
-curl -X POST http://localhost:8000/api/ai/recommend \
-  -H "Content-Type: application/json" \
-  -d '{
-    "duration_hours": 4,
-    "difficulty": "medium",
-    "interests": ["alpine lakes", "panoramic views"]
-  }'
+---
 
-# Get all trails
-curl http://localhost:8000/api/trails
+## 📊 Sample Data
 
-# Test deprecated endpoint (should return 410)
-curl -X POST http://localhost:8000/api/trails/generate
-```
+### Trails (10+ verified routes)
+- Tre Cime di Lavaredo Loop
+- Lago di Braies Circular Trail
+- Sentiero del Viel del Pan
+- Alpe di Siusi Meadow Walk
+- Maso Corto Glacier Trail
+- Seceda Ridge Walk
+- And more...
 
-### Building for Production
+### Rifugios (Sample alpine huts)
+- Rifugio Auronzo
+- Rifugio Bolzano
+- Rifugio Puez
+- Malga Fane
+- And more...
+
+### Multi-Day Trails
+- **Alta Via 1** - 6-day classic Dolomites trek (Lago di Braies → Belluno)
+
+---
+
+## 🚀 Deployment
+
+### Production Build
 
 ```bash
 cd web-frontend
 npm run build
 ```
 
-The built files will be in `web-frontend/dist/`
+Built files → `web-frontend/dist/`
 
-## 🚀 Deployment
+### Replit Deployment
+Use Replit's **Autoscale** deployment:
+- Build: `npm run build`
+- Run: `npm run start`
+- Single Flask server serves built React app on port 5000
 
-### Backend
-Deploy the Flask backend to your preferred Python hosting:
-- Replit Deployments
-- Heroku
-- Google Cloud Run
-- AWS Elastic Beanstalk
+### Environment Variables
+Required secrets:
+- `SESSION_SECRET` - Admin password
+- `OPENWEATHER_API_KEY` - Weather data
+- `VITE_FIREBASE_*` - Firebase config
+- `VITE_MAPBOX_TOKEN` - Mapbox API key
 
-### Frontend
-Build and deploy the static frontend to:
-- Replit Static Deployments
-- Netlify
-- Vercel
-- GitHub Pages
+---
+
+## 📝 Development Notes
+
+### Admin Password
+Default admin password is stored in `SESSION_SECRET` environment variable.
+
+### Database
+All data stored in JSON files under `backend/data/`. No SQL database required for MVP.
+
+### Navigation System
+Custom component-based navigation (no React Router). State managed via `currentView` in App.jsx.
+
+### Image Storage
+Replit Object Storage for persistent media files with automatic WebP compression.
+
+---
+
+## 🗺️ Roadmap
+
+See [ROADMAP.md](ROADMAP.md) for detailed development plan.
+
+**Current Status: 52% Complete**
+
+Completed phases include:
+- ✅ Core features, UI, and trail catalog
+- ✅ GPS tracking with checkpoint alerts
+- ✅ Gamification (badges, XP, challenges, leaderboards)
+- ✅ Weather integration with suitability scoring
+- ✅ Full internationalization (EN/IT/DE)
+- ✅ PWA capabilities
+- ✅ Admin panel with analytics
+- ✅ Rifugio directory with booking system
+- ✅ Multi-day hut-to-hut trail system
+
+**Next phases:**
+- Dynamic checkpoints & trip summaries
+- SEO optimization
+- Analytics integration
+- Enhanced gamification 2.0
+
+---
 
 ## 📄 License
 
 This project is a demonstration MVP for educational purposes.
 
+---
+
 ## 🙏 Acknowledgments
 
-- Trail data inspired by real South Tyrol hiking routes
-- Design inspired by premium outdoor apps like AllTrails and Komoot
-- No OpenAI integration required!
+- Trail data inspired by real South Tyrol and Trentino hiking routes
+- Design inspired by premium outdoor apps (AllTrails, Komoot, Strava)
+- Built for alpine hiking enthusiasts worldwide 🏔️
 
 ---
 
-**Built for alpine hiking enthusiasts** 🏔️
+**Made with ❤️ for the Dolomites**
 
-**Now featuring:**
-✓ Verified routes only
-✓ Smart local recommendations
-✓ Works in Replit preview
-✓ No API costs
+*Discover. Save. Plan. Book. Track. Review. Share.*
