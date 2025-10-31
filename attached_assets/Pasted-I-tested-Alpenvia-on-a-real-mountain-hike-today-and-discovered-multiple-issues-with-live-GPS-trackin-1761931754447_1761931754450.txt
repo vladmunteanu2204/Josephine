@@ -1,0 +1,179 @@
+I tested Alpenvia on a real mountain hike today and discovered multiple issues with live GPS tracking, checkpoint notifications, and hike persistence.
+We need to fix geospatial accuracy, notification throttling, checkpoint detection logic, elevation smoothing, progress calculation, and active hike persistence.
+
+🧩 Problems Observed (and Expected Fixes)
+1️⃣ Checkpoint notifications trigger too early
+
+Current logic fires based on straight-line distance (Haversine) between user and checkpoint.
+
+This is incorrect for hiking trails with curves, elevation, or switchbacks — user might still be hundreds of meters away along the actual path.
+
+Threshold = 200 m, but notifications arrive much earlier (likely at 400–600 m real path distance).
+
+✅ Fix
+
+Replace direct Haversine distance with polyline-projected distance along the trail.
+
+Use the existing GPX polyline (array of trail coordinates) and compute:
+
+Nearest point on trail to current location.
+
+Cumulative distance along trail to checkpoint.
+
+Trigger alert only if pathDistanceToCheckpoint ≤ 200 m.
+
+Use an efficient spatial function (findNearestPointOnLine) or precomputed segment index to avoid heavy loops.
+
+2️⃣ Continuous spam notifications near checkpoint
+
+Currently notifications fire every GPS update (≈ every second) once inside the 200 m threshold.
+
+That creates a flood of messages every second for minutes.
+
+✅ Fix
+Add throttling + hysteresis logic:
+
+Only send notification once every minimum interval (e.g. 45–60 seconds) or after moving at least 50 m since last alert.
+
+Use state variable:
+
+let lastCheckpointNotified = null;
+let lastNotificationTime = 0;
+
+
+Logic:
+
+if (checkpointId !== lastCheckpointNotified ||
+    Date.now() - lastNotificationTime > 60000 ||
+    distanceSinceLastNotification > 50) {
+    sendNotification(...);
+    lastCheckpointNotified = checkpointId;
+    lastNotificationTime = Date.now();
+}
+
+
+Add a "reachedCheckpoint" flag to prevent repeat notifications once user has entered a 30 m radius zone.
+
+3️⃣ Notifications still trigger after passing checkpoint
+
+Even after passing a checkpoint, notifications continue saying “X m to checkpoint”.
+
+✅ Fix
+
+When distance to checkpoint increases for at least two consecutive GPS updates → mark checkpoint as passed.
+
+Add a 30 m “arrival radius”. Once user enters that zone and then exits beyond 40 m, mark as completed:
+
+if (distance < 30) checkpoint.state = 'reached';
+if (checkpoint.state === 'reached' && distance > 40) checkpoint.state = 'passed';
+
+
+Suppress all further notifications for state === 'passed'.
+
+4️⃣ Elevation gain is overcounted
+
+Real elevation gain ≈ +200 m
+
+App recorded ≈ +500 m → elevation noise accumulates due to GPS jitter on mountainous terrain.
+
+Current algorithm likely adds elevation deltas even when stationary or moving horizontally (altitude noise ±5–10 m per fix).
+
+✅ Fix
+
+Implement noise threshold filter and median smoothing:
+
+const ELEVATION_THRESHOLD = 5; // meters
+const smoothElevation = medianFilter(last5AltitudeValues);
+if (Math.abs(currentAltitude - lastAltitude) > ELEVATION_THRESHOLD) {
+    totalElevationGain += Math.max(0, currentAltitude - lastAltitude);
+}
+
+
+Apply Kalman filter or rolling average for noisy sensors.
+
+Skip altitude updates if accuracy (HDOP) > 10 m.
+
+5️⃣ Lost active hike session after app minimized / reopened
+
+Near the end of the hike, I reopened Alpenvia and the app restarted — splash screen appeared, the hike session was gone.
+
+The hike data wasn’t persisted in memory or localStorage.
+
+✅ Fix
+Implement persistent active hike recovery:
+
+On every GPS update, store hikeSession in localStorage or IndexedDB:
+
+localStorage.setItem('activeHike', JSON.stringify({
+  startTime, checkpoints, stats, progress, lastPosition
+}));
+
+
+On app startup (in App.jsx or Tracking.jsx):
+
+const saved = localStorage.getItem('activeHike');
+if (saved && !isCompleted) restoreSession(JSON.parse(saved));
+
+
+Clear only when user presses “End Hike” or when hike auto-ends after 6 hours inactivity.
+
+6️⃣ Progress (percentage) reaches 100% too early
+
+The hike progress reaches 100% while still hundreds of meters from the finish point.
+
+✅ Fix
+
+Currently progress is likely computed as:
+
+progress = distanceTraveled / totalDistance;
+
+
+based on straight-line interpolation or sparse GPS points.
+
+Instead, use polyline matching:
+
+Project current position onto trail polyline → find nearest segment index → sum distance along trail up to that point.
+
+Compute progress as (distanceAlongTrail / totalTrailLength) * 100.
+
+This ensures progress reflects actual trail completion, not straight-line displacement.
+
+🧠 Additional Improvements (Optional but Recommended)
+
+Add visual “checkpoint reached” toast + sound cue (single event, not repeating).
+
+Log GPS accuracy (position.coords.accuracy) to debug misfires.
+
+Add a background color on stats bar when GPS is weak (>20 m accuracy).
+
+Save raw GPS log to localStorage for post-hike analysis.
+
+✅ Expected Deliverables
+
+After implementing fixes:
+
+Checkpoint alerts trigger only once when approaching within ~200 m actual trail distance.
+
+No spam notifications (max 1 per minute or 50 m).
+
+No post-passing alerts once user exits > 40 m away.
+
+Elevation gain matches real data within ±10%.
+
+Progress percentage remains consistent and reaches 100% near the actual end point.
+
+If app is backgrounded or temporarily closed, active hike automatically restores on next launch.
+
+🧪 Testing Instructions
+
+Simulate hike via mock GPS data with curved trail path.
+
+Log each notification trigger (distance, timestamp, checkpoint ID).
+
+Verify frequency ≤ 1/minute.
+
+Compare final stats vs real elevation/distance.
+
+Reload app mid-hike → verify session restoration.
+
+Approach and pass checkpoints → verify single alert + no post-pass spam.

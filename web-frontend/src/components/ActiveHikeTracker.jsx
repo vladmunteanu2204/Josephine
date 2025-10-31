@@ -15,6 +15,12 @@ const AUTO_PAUSE_THRESHOLD = 60000; // 60 seconds (1 minute)
 const MOVEMENT_THRESHOLD = 10; // 10 meters minimum to consider as movement
 const OFF_TRAIL_DISTANCE = 30; // meters
 const POI_ALERT_DISTANCES = [500, 200]; // Alert at 500m and 200m
+const NOTIFICATION_THROTTLE_INTERVAL = 60000; // 60 seconds between checkpoint notifications
+const NOTIFICATION_DISTANCE_THRESHOLD = 50; // 50m movement to allow new notification
+const ELEVATION_NOISE_THRESHOLD = 5; // 5m threshold to filter GPS altitude noise
+const ELEVATION_SMOOTHING_WINDOW = 5; // Use last 5 altitude readings for median filter
+const CHECKPOINT_ARRIVAL_RADIUS = 30; // meters to mark as reached
+const CHECKPOINT_PASSED_RADIUS = 40; // meters to mark as passed after reaching
 
 function ActiveHikeTracker({ trail, onEnd }) {
   const { t } = useTranslation();
@@ -48,6 +54,16 @@ function ActiveHikeTracker({ trail, onEnd }) {
   const intervalRef = useRef(null);
   const elevationGainBufferRef = useRef(0); // Accumulate positive elevation changes
   const elevationLossBufferRef = useRef(0); // Accumulate negative elevation changes
+  
+  // NEW: Enhanced checkpoint tracking with state machine
+  const checkpointStatesRef = useRef({}); // { [checkpointIndex]: { state: 'approaching'|'reached'|'passed', lastDistance: number } }
+  const lastNotificationRef = useRef({}); // { [checkpointIndex]: { time: number, position: {lat, lon} } }
+  const altitudeHistoryRef = useRef([]); // Sliding window for median filtering
+  const lastValidAltitudeRef = useRef(null); // Last validated altitude reading
+  
+  // CRITICAL FIX: Use refs for gpsTrack and stats to ensure persistence captures latest data
+  const gpsTrackRef = useRef([]);
+  const statsRef = useRef({ distance: 0, elevation: 0, duration: 0, pace: 0 });
 
   // Convert coordinates to GeoJSON route if needed
   const trailRoute = trail.route || (trail.coordinates ? {
@@ -143,6 +159,109 @@ function ActiveHikeTracker({ trail, onEnd }) {
     return R * c; // Distance in meters
   };
 
+  // Median filter for altitude smoothing
+  const medianFilter = (values) => {
+    if (values.length === 0) return 0;
+    const sorted = [...values].sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+  };
+
+  // Find nearest point on polyline and calculate distance along trail
+  const findNearestPointOnPolyline = (userLat, userLon, polylineCoords) => {
+    if (!polylineCoords || polylineCoords.length < 2) {
+      return { segmentIndex: 0, distanceToLine: Infinity, distanceAlongTrail: 0, projectedPoint: null };
+    }
+
+    let minDistanceToLine = Infinity;
+    let bestSegmentIndex = 0;
+    let bestProjectedPoint = null;
+    let distanceAlongTrail = 0;
+
+    for (let i = 0; i < polylineCoords.length - 1; i++) {
+      const [lon1, lat1] = polylineCoords[i];
+      const [lon2, lat2] = polylineCoords[i + 1];
+
+      // Project user position onto line segment
+      const dx = lon2 - lon1;
+      const dy = lat2 - lat1;
+      const segmentLength = Math.sqrt(dx * dx + dy * dy);
+      
+      if (segmentLength === 0) continue;
+
+      const t = Math.max(0, Math.min(1, 
+        ((userLon - lon1) * dx + (userLat - lat1) * dy) / (segmentLength * segmentLength)
+      ));
+
+      const projectedLon = lon1 + t * dx;
+      const projectedLat = lat1 + t * dy;
+      const distToSegment = calculateDistance(userLat, userLon, projectedLat, projectedLon);
+
+      if (distToSegment < minDistanceToLine) {
+        minDistanceToLine = distToSegment;
+        bestSegmentIndex = i;
+        bestProjectedPoint = { lat: projectedLat, lon: projectedLon };
+      }
+    }
+
+    // Calculate cumulative distance along trail up to projected point
+    for (let i = 0; i < bestSegmentIndex; i++) {
+      const [lon1, lat1] = polylineCoords[i];
+      const [lon2, lat2] = polylineCoords[i + 1];
+      distanceAlongTrail += calculateDistance(lat1, lon1, lat2, lon2);
+    }
+
+    // Add partial distance within the segment
+    if (bestProjectedPoint) {
+      const [lon1, lat1] = polylineCoords[bestSegmentIndex];
+      distanceAlongTrail += calculateDistance(lat1, lon1, bestProjectedPoint.lat, bestProjectedPoint.lon);
+    }
+
+    return {
+      segmentIndex: bestSegmentIndex,
+      distanceToLine: minDistanceToLine,
+      distanceAlongTrail,
+      projectedPoint: bestProjectedPoint
+    };
+  };
+
+  // Calculate distance along polyline to a checkpoint
+  const calculatePolylineDistanceToCheckpoint = (userLat, userLon, checkpointLat, checkpointLon, polylineCoords) => {
+    if (!polylineCoords || polylineCoords.length < 2) {
+      // Fallback to straight-line distance if no polyline
+      return calculateDistance(userLat, userLon, checkpointLat, checkpointLon);
+    }
+
+    // Find user's position on trail
+    const userProjection = findNearestPointOnPolyline(userLat, userLon, polylineCoords);
+    
+    // Find checkpoint's position on trail
+    const checkpointProjection = findNearestPointOnPolyline(checkpointLat, checkpointLon, polylineCoords);
+
+    // Calculate distance along trail between the two projections
+    const distanceAlongTrail = Math.abs(checkpointProjection.distanceAlongTrail - userProjection.distanceAlongTrail);
+
+    return distanceAlongTrail;
+  };
+
+  // Calculate progress percentage along trail
+  const calculateTrailProgress = (userLat, userLon, polylineCoords) => {
+    if (!polylineCoords || polylineCoords.length < 2) return 0;
+
+    // Calculate total trail length
+    let totalLength = 0;
+    for (let i = 0; i < polylineCoords.length - 1; i++) {
+      const [lon1, lat1] = polylineCoords[i];
+      const [lon2, lat2] = polylineCoords[i + 1];
+      totalLength += calculateDistance(lat1, lon1, lat2, lon2);
+    }
+
+    // Find user's distance along trail
+    const { distanceAlongTrail } = findNearestPointOnPolyline(userLat, userLon, polylineCoords);
+
+    return Math.min(100, Math.max(0, (distanceAlongTrail / totalLength) * 100));
+  };
+
   // Calculate distance from point to line segment (for off-trail detection)
   const distanceToTrail = (point, trailCoordinates) => {
     if (!trailCoordinates || trailCoordinates.length < 2) return Infinity;
@@ -218,24 +337,81 @@ function ActiveHikeTracker({ trail, onEnd }) {
     });
   };
 
-  // Check checkpoint proximity and send alerts
+  // Check checkpoint proximity and send alerts (IMPROVED with polyline distance and throttling)
   const checkCheckpointProximity = (position) => {
     const checkpoints = trail.checkpoints;
     if (!checkpoints || !Array.isArray(checkpoints) || checkpoints.length === 0) return;
 
+    const polylineCoords = trailRoute?.geometry?.coordinates || trail.coordinates;
+
     checkpoints.forEach((checkpoint, index) => {
-      const distance = calculateDistance(
+      // Calculate distance using polyline projection (more accurate for curved trails)
+      const distance = calculatePolylineDistanceToCheckpoint(
         position.latitude,
         position.longitude,
         checkpoint.coordinates[1],
-        checkpoint.coordinates[0]
+        checkpoint.coordinates[0],
+        polylineCoords
       );
 
+      // Initialize checkpoint state if not exists
+      if (!checkpointStatesRef.current[index]) {
+        checkpointStatesRef.current[index] = { state: 'approaching', lastDistance: Infinity };
+      }
+
+      const checkpointState = checkpointStatesRef.current[index];
       const alertDist = checkpoint.alert_distance || 200;
-      const checkpointKey = `checkpoint-${index}-${alertDist}`;
-      
-      // Alert at configured distance
-      if (distance <= alertDist && distance > alertDist - 50 && !alertedPOIs.has(checkpointKey)) {
+
+      // State machine: approaching → reached → passed
+      if (distance <= CHECKPOINT_ARRIVAL_RADIUS && checkpointState.state === 'approaching') {
+        checkpointState.state = 'reached';
+      } else if (
+        checkpointState.state === 'reached' && 
+        distance > CHECKPOINT_PASSED_RADIUS &&
+        distance > checkpointState.lastDistance // Moving away
+      ) {
+        checkpointState.state = 'passed';
+      }
+
+      // Skip notifications if checkpoint is passed
+      if (checkpointState.state === 'passed') {
+        checkpointState.lastDistance = distance;
+        return;
+      }
+
+      // Throttling logic: check if we should send notification
+      const now = Date.now();
+      const lastNotif = lastNotificationRef.current[index];
+      let shouldNotify = false;
+
+      if (!lastNotif) {
+        // First time approaching this checkpoint
+        shouldNotify = true;
+      } else {
+        // Check throttle conditions
+        const timeSinceLastNotif = now - lastNotif.time;
+        const distanceSinceLastNotif = calculateDistance(
+          position.latitude,
+          position.longitude,
+          lastNotif.position.lat,
+          lastNotif.position.lon
+        );
+
+        // Allow notification if enough time passed OR enough distance traveled
+        if (
+          timeSinceLastNotif > NOTIFICATION_THROTTLE_INTERVAL ||
+          distanceSinceLastNotif > NOTIFICATION_DISTANCE_THRESHOLD
+        ) {
+          shouldNotify = true;
+        }
+      }
+
+      // Alert when approaching (within configured alert distance)
+      if (
+        checkpointState.state === 'approaching' &&
+        distance <= alertDist &&
+        shouldNotify
+      ) {
         const icon = checkpoint.type === 'summit' ? '⛰️' : checkpoint.type === 'refuge' ? '🏠' : '📍';
         const roundedDistance = Math.round(distance);
         toast.info(t('gps.checkpointAheadToast', { icon, name: checkpoint.name, distance: roundedDistance }));
@@ -244,12 +420,16 @@ function ActiveHikeTracker({ trail, onEnd }) {
           t('gps.checkpointAheadNotificationBody', { name: checkpoint.name, distance: roundedDistance })
         );
         playMountainBell(); // Play sound cue
-        setAlertedPOIs(prev => new Set([...prev, checkpointKey]));
+
+        // Update last notification record
+        lastNotificationRef.current[index] = {
+          time: now,
+          position: { lat: position.latitude, lon: position.longitude }
+        };
       }
 
-      // Arrival notification and tracking
-      const arrivalKey = `checkpoint-${index}-arrival`;
-      if (distance <= 30 && !alertedPOIs.has(arrivalKey)) {
+      // Arrival notification (only once when first reaching)
+      if (checkpointState.state === 'reached' && !visitedCheckpoints.find(c => c.index === index)) {
         const icon = checkpoint.type === 'summit' ? '⛰️' : checkpoint.type === 'refuge' ? '🏠' : '📍';
         toast.success(t('gps.checkpointReachedToast', { icon, name: checkpoint.name }));
         sendNotification(
@@ -257,22 +437,19 @@ function ActiveHikeTracker({ trail, onEnd }) {
           t('gps.checkpointReachedNotificationBody', { name: checkpoint.name })
         );
         playMountainBell(); // Play sound cue for arrival
-        setAlertedPOIs(prev => new Set([...prev, arrivalKey]));
-        
+
         // Track visited checkpoint
-        setVisitedCheckpoints(prev => {
-          if (!prev.find(c => c.index === index)) {
-            return [...prev, {
-              index,
-              name: checkpoint.name,
-              type: checkpoint.type,
-              timestamp: Date.now(),
-              coordinates: checkpoint.coordinates
-            }];
-          }
-          return prev;
-        });
+        setVisitedCheckpoints(prev => [...prev, {
+          index,
+          name: checkpoint.name,
+          type: checkpoint.type,
+          timestamp: Date.now(),
+          coordinates: checkpoint.coordinates
+        }]);
       }
+
+      // Update last distance for trend detection
+      checkpointState.lastDistance = distance;
     });
   };
 
@@ -332,75 +509,107 @@ function ActiveHikeTracker({ trail, onEnd }) {
     }
 
     if (!isPaused) {
-      // Update GPS track and calculate stats using the previous track value
-      setGpsTrack(prev => {
-        const updatedTrack = [...prev, newPoint];
-        
-        // Calculate stats if we have at least one previous point
-        if (prev.length > 0) {
-          const lastPoint = prev[prev.length - 1];
-          const segmentDistance = calculateDistance(
-            lastPoint.lat,
-            lastPoint.lon,
-            latitude,
-            longitude
-          );
+      // CRITICAL FIX: Update refs synchronously FIRST, then update state
+      const prevTrack = gpsTrackRef.current;
+      const updatedTrack = [...prevTrack, newPoint];
+      gpsTrackRef.current = updatedTrack;
+      
+      // Calculate stats if we have at least one previous point
+      let elevationToAdd = 0;
+      let segmentDistance = 0;
+      
+      if (prevTrack.length > 0) {
+        const lastPoint = prevTrack[prevTrack.length - 1];
+        segmentDistance = calculateDistance(
+          lastPoint.lat,
+          lastPoint.lon,
+          latitude,
+          longitude
+        );
 
-          // Filter elevation noise: let opposing changes cancel each other to reject oscillations
-          // Only commit elevation gain when net positive drift exceeds 5m threshold
-          const elevationChange = altitude && lastPoint.alt ? (altitude - lastPoint.alt) : 0;
-          
-          let elevationToAdd = 0;
-          
-          if (elevationChange > 0) {
-            // Positive change: cancel any pending loss first, then add remainder to gain
-            if (elevationLossBufferRef.current > 0) {
-              const cancellation = Math.min(elevationLossBufferRef.current, elevationChange);
-              elevationLossBufferRef.current -= cancellation;
-              const netChange = elevationChange - cancellation;
-              if (netChange > 0) {
-                elevationGainBufferRef.current += netChange;
-              }
-            } else {
-              elevationGainBufferRef.current += elevationChange;
-            }
-            
-            // When accumulated gain exceeds threshold, count it and reset
-            if (elevationGainBufferRef.current >= 5) {
-              elevationToAdd = elevationGainBufferRef.current;
-              elevationGainBufferRef.current = 0;
-            }
-          } else if (elevationChange < 0) {
-            // Negative change: cancel any pending gain first, then add remainder to loss
-            const absChange = Math.abs(elevationChange);
-            if (elevationGainBufferRef.current > 0) {
-              const cancellation = Math.min(elevationGainBufferRef.current, absChange);
-              elevationGainBufferRef.current -= cancellation;
-              const netChange = absChange - cancellation;
-              if (netChange > 0) {
-                elevationLossBufferRef.current += netChange;
-              }
-            } else {
-              elevationLossBufferRef.current += absChange;
-            }
-            
-            // If accumulated loss exceeds threshold, it's a real descent - reset both buffers
-            if (elevationLossBufferRef.current >= 5) {
-              elevationGainBufferRef.current = 0;
-              elevationLossBufferRef.current = 0;
-            }
+        // IMPROVED elevation calculation with median filtering and noise threshold
+        const accuracy = position.coords.accuracy;
+        const isAccurate = !accuracy || accuracy <= 20; // Skip if accuracy > 20m
+        
+        if (altitude && isAccurate) {
+          // Add to rolling history for median filter
+          altitudeHistoryRef.current.push(altitude);
+          if (altitudeHistoryRef.current.length > ELEVATION_SMOOTHING_WINDOW) {
+            altitudeHistoryRef.current.shift();
           }
 
-          setStats(prevStats => ({
-            distance: prevStats.distance + segmentDistance,
-            elevation: prevStats.elevation + elevationToAdd,
-            duration: Math.floor((Date.now() - startTimeRef.current) / 1000),
-            pace: speed || prevStats.pace
-          }));
+          // Apply median filter to smooth GPS noise
+          const smoothedAltitude = medianFilter(altitudeHistoryRef.current);
+
+          // Only process elevation if we have valid previous altitude
+          if (lastValidAltitudeRef.current !== null) {
+            const elevationChange = smoothedAltitude - lastValidAltitudeRef.current;
+
+            // Apply noise threshold: ignore changes smaller than 5m
+            if (Math.abs(elevationChange) >= ELEVATION_NOISE_THRESHOLD) {
+              if (elevationChange > 0) {
+                // Positive change: cancel any pending loss first, then add remainder to gain
+                if (elevationLossBufferRef.current > 0) {
+                  const cancellation = Math.min(elevationLossBufferRef.current, elevationChange);
+                  elevationLossBufferRef.current -= cancellation;
+                  const netChange = elevationChange - cancellation;
+                  if (netChange > 0) {
+                    elevationGainBufferRef.current += netChange;
+                  }
+                } else {
+                  elevationGainBufferRef.current += elevationChange;
+                }
+
+                // When accumulated gain exceeds threshold, count it and reset
+                if (elevationGainBufferRef.current >= ELEVATION_NOISE_THRESHOLD) {
+                  elevationToAdd = elevationGainBufferRef.current;
+                  elevationGainBufferRef.current = 0;
+                }
+              } else if (elevationChange < 0) {
+                // Negative change: cancel any pending gain first, then add remainder to loss
+                const absChange = Math.abs(elevationChange);
+                if (elevationGainBufferRef.current > 0) {
+                  const cancellation = Math.min(elevationGainBufferRef.current, absChange);
+                  elevationGainBufferRef.current -= cancellation;
+                  const netChange = absChange - cancellation;
+                  if (netChange > 0) {
+                    elevationLossBufferRef.current += netChange;
+                  }
+                } else {
+                  elevationLossBufferRef.current += absChange;
+                }
+
+                // If accumulated loss exceeds threshold, it's a real descent - reset both buffers
+                if (elevationLossBufferRef.current >= ELEVATION_NOISE_THRESHOLD) {
+                  elevationGainBufferRef.current = 0;
+                  elevationLossBufferRef.current = 0;
+                }
+              }
+
+              // Update last valid altitude after processing
+              lastValidAltitudeRef.current = smoothedAltitude;
+            }
+          } else {
+            // First valid altitude reading
+            lastValidAltitudeRef.current = smoothedAltitude;
+          }
         }
+
+        // Update stats ref synchronously
+        const updatedStats = {
+          distance: statsRef.current.distance + segmentDistance,
+          elevation: statsRef.current.elevation + elevationToAdd,
+          duration: Math.floor((Date.now() - startTimeRef.current) / 1000),
+          pace: speed || statsRef.current.pace
+        };
+        statsRef.current = updatedStats;
         
-        return updatedTrack;
-      });
+        // Update state for UI (async is fine here)
+        setStats(updatedStats);
+      }
+      
+      // Update state for UI (async is fine here)
+      setGpsTrack(updatedTrack);
 
       // Check if off trail
       if (trail.coordinates || trailRoute?.geometry?.coordinates) {
@@ -423,7 +632,79 @@ function ActiveHikeTracker({ trail, onEnd }) {
       
       // Check checkpoint proximity
       checkCheckpointProximity(position.coords);
+
+      // IMPORTANT: Save hike session to localStorage after every GPS update (persistence fix)
+      saveHikeSession();
     }
+  };
+
+  // Save active hike session to localStorage (Fix #5: Persistence)
+  // CRITICAL FIX: Read from refs to capture latest data synchronously
+  const saveHikeSession = () => {
+    if (!isTracking || !startTimeRef.current) return;
+
+    const session = {
+      trailId: trail.id,
+      trailName: trail.name,
+      startTime: startTimeRef.current,
+      gpsTrack: gpsTrackRef.current, // Read from ref for latest data
+      currentPosition,
+      stats: statsRef.current, // Read from ref for latest data
+      visitedCheckpoints,
+      isPaused,
+      checkpointStates: checkpointStatesRef.current,
+      lastPosition: lastPositionForMovementRef.current,
+      lastMoveTime: lastMoveTimeRef.current,
+      timestamp: Date.now()
+    };
+
+    localStorage.setItem('activeHikeSession', JSON.stringify(session));
+  };
+
+  // Restore active hike session from localStorage (Fix #5: Persistence)
+  const restoreHikeSession = () => {
+    try {
+      const saved = localStorage.getItem('activeHikeSession');
+      if (!saved) return false;
+
+      const session = JSON.parse(saved);
+      
+      // Check if session is for the same trail and not too old (> 12 hours)
+      const sessionAge = Date.now() - session.timestamp;
+      if (session.trailId !== trail.id || sessionAge > 12 * 60 * 60 * 1000) {
+        localStorage.removeItem('activeHikeSession');
+        return false;
+      }
+
+      // Restore refs FIRST (synchronous)
+      startTimeRef.current = session.startTime;
+      gpsTrackRef.current = session.gpsTrack || [];
+      statsRef.current = session.stats || { distance: 0, elevation: 0, duration: 0, pace: 0 };
+      checkpointStatesRef.current = session.checkpointStates || {};
+      lastPositionForMovementRef.current = session.lastPosition;
+      lastMoveTimeRef.current = session.lastMoveTime || Date.now();
+      
+      // Then restore state (async is fine)
+      setGpsTrack(session.gpsTrack || []);
+      setCurrentPosition(session.currentPosition);
+      setStats(session.stats || { distance: 0, elevation: 0, duration: 0, pace: 0 });
+      setVisitedCheckpoints(session.visitedCheckpoints || []);
+      setIsPaused(session.isPaused || false);
+      setIsTracking(true);
+
+      console.log('✅ Active hike session restored from localStorage');
+      toast.success('🔄 Active hike restored!');
+      return true;
+    } catch (error) {
+      console.error('Failed to restore hike session:', error);
+      localStorage.removeItem('activeHikeSession');
+      return false;
+    }
+  };
+
+  // Clear active hike session from localStorage
+  const clearHikeSession = () => {
+    localStorage.removeItem('activeHikeSession');
   };
 
   // Start tracking
@@ -517,7 +798,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
 
   // Export GPX
   const exportGPX = () => {
-    if (gpsTrack.length === 0) return;
+    if (gpsTrackRef.current.length === 0) return;
 
     const gpxHeader = `<?xml version="1.0" encoding="UTF-8"?>
 <gpx version="1.1" creator="Alpenvia">
@@ -529,7 +810,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
     <name>${trail.name}</name>
     <trkseg>`;
 
-    const gpxPoints = gpsTrack.map(point => 
+    const gpxPoints = gpsTrackRef.current.map(point => 
       `      <trkpt lat="${point.lat}" lon="${point.lon}">
         <ele>${point.alt}</ele>
         <time>${new Date(point.timestamp).toISOString()}</time>
@@ -572,18 +853,18 @@ function ActiveHikeTracker({ trail, onEnd }) {
     }
     releaseWakeLock();
 
-    // Save hike data
+    // Save hike data (use refs for latest data)
     const hikeData = {
       trail_id: trail.id,
       trail_name: trail.name,
       start_time: new Date(startTimeRef.current).toISOString(),
       end_time: new Date().toISOString(),
-      gps_track: gpsTrack,
+      gps_track: gpsTrackRef.current,
       visited_checkpoints: visitedCheckpoints,
       stats: {
-        distance_km: stats.distance / 1000,
-        elevation_gain_m: stats.elevation,
-        duration_hours: stats.duration / 3600,
+        distance_km: statsRef.current.distance / 1000,
+        elevation_gain_m: statsRef.current.elevation,
+        duration_hours: statsRef.current.duration / 3600,
         auto_ended: autoEnded
       }
     };
@@ -598,11 +879,11 @@ function ActiveHikeTracker({ trail, onEnd }) {
       console.error('Failed to save hike:', error);
     }
 
-    // Check for badges and award XP
+    // Check for badges and award XP (use refs for latest data)
     const gamificationData = {
-      distance: stats.distance,
-      elevation: stats.elevation,
-      duration: stats.duration,
+      distance: statsRef.current.distance,
+      elevation: statsRef.current.elevation,
+      duration: statsRef.current.duration,
       trailId: trail.id,
       startTime: startTimeRef.current,
       endTime: Date.now(),
@@ -624,10 +905,13 @@ function ActiveHikeTracker({ trail, onEnd }) {
   };
 
   const handleTripSummaryClose = () => {
-    // Export GPX automatically
-    if (gpsTrack.length > 0) {
+    // Export GPX automatically (use ref for latest data)
+    if (gpsTrackRef.current.length > 0) {
       exportGPX();
     }
+    
+    // Clear active hike session from localStorage (Fix #5: Persistence)
+    clearHikeSession();
     
     setShowTripSummary(false);
     onEnd(completedHikeData);
@@ -638,6 +922,39 @@ function ActiveHikeTracker({ trail, onEnd }) {
     // Navigate to add review (will be handled by parent)
     onEnd({ ...completedHikeData, showReviewForm: true });
   };
+
+  // Restore active hike session on component mount (Fix #5: Persistence)
+  useEffect(() => {
+    const restored = restoreHikeSession();
+    if (restored) {
+      // Resume GPS tracking after restoration
+      requestNotificationPermission();
+      requestWakeLock();
+      
+      if ('geolocation' in navigator) {
+        console.log('Resuming GPS tracking from restored session...');
+        watchIdRef.current = navigator.geolocation.watchPosition(
+          (position) => {
+            handlePositionUpdate(position);
+          },
+          (error) => {
+            console.error('GPS Error:', error);
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 30000,
+            maximumAge: 0
+          }
+        );
+
+        intervalRef.current = setInterval(() => {
+          if (Date.now() - lastMoveTimeRef.current > INACTIVITY_TIMEOUT) {
+            endHike(true);
+          }
+        }, GPS_UPDATE_INTERVAL);
+      }
+    }
+  }, []);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -780,7 +1097,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
         </div>
         <div className="stat-row">
           <span>📊</span>
-          <span>{Math.min(100, Math.round((stats.distance / 1000 / trail.distance_km) * 100))}%</span>
+          <span>{currentPosition ? Math.round(calculateTrailProgress(currentPosition.lat, currentPosition.lon, trailRoute?.geometry?.coordinates || trail.coordinates)) : 0}%</span>
         </div>
         <div className="stat-row">
           <span>⏱️</span>
