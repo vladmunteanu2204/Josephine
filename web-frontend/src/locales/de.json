@@ -657,6 +657,26 @@
     "noMovementDetected": "Keine Bewegung erkannt. Tracking wird fortgesetzt, wenn du dich bewegst.",
     "movementDetected": "Bewegung erkannt, deine Wanderung wird weiter verfolgt"
   },
+  "tripSummary": {
+    "routeMap": "Routenkarte",
+    "lowAltitude": "Niedrige Höhe",
+    "midAltitude": "Mittlere Höhe",
+    "highAltitude": "Hohe Höhe",
+    "distance": "Distanz",
+    "elevationGain": "Höhengewinn",
+    "duration": "Dauer",
+    "hours": "Std",
+    "badgesEarned": "Abzeichen Erhalten",
+    "checkpointsVisited": "Besuchte Checkpoints",
+    "addNotes": "Notizen Hinzufügen",
+    "hideNotes": "Notizen Verbergen",
+    "notesPlaceholder": "Schreibe deine Gedanken, Erinnerungen oder Highlights dieser Wanderung...",
+    "saveNotes": "Notizen Speichern",
+    "notesSaved": "Notizen erfolgreich gespeichert!",
+    "addReview": "Bewertung Hinzufügen",
+    "exportImage": "Zusammenfassung Exportieren",
+    "close": "Schließen"
+  },
   "rifugio": {
     "title": "Almhütten & Rifugios",
     "subtitle": "Entdecken Sie authentische Bergunterkünfte in den Alpen",

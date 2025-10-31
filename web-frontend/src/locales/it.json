@@ -657,6 +657,26 @@
     "noMovementDetected": "Nessun movimento rilevato. Il tracking riprenderà quando ti muoverai.",
     "movementDetected": "Movimento rilevato, continua il tracking della tua escursione"
   },
+  "tripSummary": {
+    "routeMap": "Mappa del Percorso",
+    "lowAltitude": "Bassa Altitudine",
+    "midAltitude": "Media Altitudine",
+    "highAltitude": "Alta Altitudine",
+    "distance": "Distanza",
+    "elevationGain": "Dislivello Positivo",
+    "duration": "Durata",
+    "hours": "h",
+    "badgesEarned": "Badge Ottenuti",
+    "checkpointsVisited": "Checkpoint Visitati",
+    "addNotes": "Aggiungi Note",
+    "hideNotes": "Nascondi Note",
+    "notesPlaceholder": "Scrivi i tuoi pensieri, ricordi o momenti salienti di questa escursione...",
+    "saveNotes": "Salva Note",
+    "notesSaved": "Note salvate con successo!",
+    "addReview": "Aggiungi Recensione",
+    "exportImage": "Esporta Riepilogo",
+    "close": "Chiudi"
+  },
   "rifugio": {
     "title": "Rifugi & Malghe Alpine",
     "subtitle": "Scopri autentici alloggi di montagna nelle Alpi",

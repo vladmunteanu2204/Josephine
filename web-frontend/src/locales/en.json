@@ -657,6 +657,26 @@
     "noMovementDetected": "No movement detected. Tracking will resume when you start moving.",
     "movementDetected": "Movement detected, continuing your hike tracking"
   },
+  "tripSummary": {
+    "routeMap": "Route Map",
+    "lowAltitude": "Low Altitude",
+    "midAltitude": "Mid Altitude",
+    "highAltitude": "High Altitude",
+    "distance": "Distance",
+    "elevationGain": "Elevation Gain",
+    "duration": "Duration",
+    "hours": "h",
+    "badgesEarned": "Badges Earned",
+    "checkpointsVisited": "Checkpoints Visited",
+    "addNotes": "Add Notes",
+    "hideNotes": "Hide Notes",
+    "notesPlaceholder": "Write your thoughts, memories, or highlights from this hike...",
+    "saveNotes": "Save Notes",
+    "notesSaved": "Notes saved successfully!",
+    "addReview": "Add Review",
+    "exportImage": "Export Summary",
+    "close": "Close"
+  },
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",
