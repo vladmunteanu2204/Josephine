@@ -17,7 +17,8 @@ Alpenvia is a production-ready hiking platform featuring:
 - ✨ **Smart trail recommendations** based on verified routes
 - 🏔️ **Comprehensive rifugio (alpine hut) directory** with booking system
 - 🥾 **Multi-day hut-to-hut trekking** with stage-by-stage planning
-- 📍 **Real-time GPS tracking** with checkpoint alerts
+- 📍 **Real-time GPS tracking** with dynamic checkpoints and mountain bell alerts
+- 🎬 **Cinematic trip summaries** with altitude-gradient maps and image export
 - 🎮 **Gamification system** with badges, XP levels, and challenges
 - 🌦️ **Weather integration** with hiking suitability scoring
 - 🗺️ **Interactive maps** powered by Mapbox GL
@@ -46,10 +47,12 @@ Alpenvia is a production-ready hiking platform featuring:
 
 ### GPS & Tracking
 - **Live GPS Tracking** - Real-time position updates every 20 seconds
-- **Checkpoint Alerts** - Proximity notifications for POIs and rifugios
+- **Dynamic Checkpoints** - Admin-controlled waypoints with custom alert distances
+- **Proximity Alerts** - Mountain bell sound effects when approaching checkpoints
 - **Stats Dashboard** - Live distance, elevation, duration, progress tracking
 - **Auto-pause Detection** - Intelligent pause/resume for breaks
 - **Celebration Modals** - 3D confetti animations on hike completion
+- **Trip Summary** - Cinematic post-hike page with altitude-gradient map, stats, badges, and image export
 - **Hike History** - All completed hikes saved to profile
 
 ### Gamification & Social
@@ -67,6 +70,7 @@ Alpenvia is a production-ready hiking platform featuring:
 
 ### Admin Panel
 - **Trail Management** - Create/edit trails, upload GPX routes
+- **Checkpoint System** - Add custom waypoints with GPS coordinates, types, and alert distances
 - **Rifugio CMS** - Manage alpine hut database
 - **Multi-Day Trail Builder** - Visual stage creator with per-day details
 - **User Management** - View all users, stats, analytics
@@ -373,7 +377,7 @@ See [ROADMAP.md](ROADMAP.md) for detailed development plan.
 
 Completed phases include:
 - ✅ Core features, UI, and trail catalog
-- ✅ GPS tracking with checkpoint alerts
+- ✅ GPS tracking with checkpoint alerts and proximity notifications
 - ✅ Gamification (badges, XP, challenges, leaderboards)
 - ✅ Weather integration with suitability scoring
 - ✅ Full internationalization (EN/IT/DE)
@@ -381,12 +385,13 @@ Completed phases include:
 - ✅ Admin panel with analytics
 - ✅ Rifugio directory with booking system
 - ✅ Multi-day hut-to-hut trail system
+- ✅ Dynamic checkpoints & cinematic trip summaries
 
 **Next phases:**
-- Dynamic checkpoints & trip summaries
 - SEO optimization
 - Analytics integration
 - Enhanced gamification 2.0
+- Social sharing features
 
 ---
 
