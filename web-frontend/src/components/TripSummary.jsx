@@ -25,9 +25,12 @@ function TripSummary({ hikeData, onClose, onAddReview }) {
   const createAltitudeGradient = () => {
     if (!hikeData.gps_track || hikeData.gps_track.length < 2) return null;
 
-    const altitudes = hikeData.gps_track.map(p => p.alt);
-    const minAlt = Math.min(...altitudes);
-    const maxAlt = Math.max(...altitudes);
+    // Filter out points without altitude and check if we have enough valid altitude data
+    const validAltitudes = hikeData.gps_track.filter(p => p.alt != null && !isNaN(p.alt)).map(p => p.alt);
+    const hasAltitudeData = validAltitudes.length > hikeData.gps_track.length * 0.5; // At least 50% have altitude
+    
+    const minAlt = hasAltitudeData ? Math.min(...validAltitudes) : 0;
+    const maxAlt = hasAltitudeData ? Math.max(...validAltitudes) : 100;
 
     // Create GeoJSON with altitude-based colors
     const features = [];
@@ -35,19 +38,26 @@ function TripSummary({ hikeData, onClose, onAddReview }) {
       const p1 = hikeData.gps_track[i];
       const p2 = hikeData.gps_track[i + 1];
       
-      // Normalize altitude to 0-1 range
-      const normAlt = (p1.alt - minAlt) / (maxAlt - minAlt || 1);
+      // Skip if coordinates are invalid
+      if (!p1.lon || !p1.lat || !p2.lon || !p2.lat) continue;
       
-      // Color gradient: green (low) → yellow (mid) → red (high)
-      let color;
-      if (normAlt < 0.5) {
-        // Green to yellow
-        const t = normAlt * 2;
-        color = `rgb(${Math.round(76 + (255 - 76) * t)}, ${Math.round(175 + (193 - 175) * t)}, ${Math.round(80 + (7 - 80) * t)})`;
-      } else {
-        // Yellow to red
-        const t = (normAlt - 0.5) * 2;
-        color = `rgb(${255}, ${Math.round(193 - (193 - 68) * t)}, ${Math.round(7 - 7 * t)})`;
+      // Default color if no altitude data
+      let color = '#60a5fa'; // Default blue
+      
+      if (hasAltitudeData && p1.alt != null && !isNaN(p1.alt)) {
+        // Normalize altitude to 0-1 range
+        const normAlt = (p1.alt - minAlt) / (maxAlt - minAlt || 1);
+        
+        // Color gradient: green (low) → yellow (mid) → red (high)
+        if (normAlt < 0.5) {
+          // Green to yellow
+          const t = normAlt * 2;
+          color = `rgb(${Math.round(76 + (255 - 76) * t)}, ${Math.round(175 + (193 - 175) * t)}, ${Math.round(80 + (7 - 80) * t)})`;
+        } else {
+          // Yellow to red
+          const t = (normAlt - 0.5) * 2;
+          color = `rgb(${255}, ${Math.round(193 - (193 - 68) * t)}, ${Math.round(7 - 7 * t)})`;
+        }
       }
 
       features.push({
@@ -60,7 +70,7 @@ function TripSummary({ hikeData, onClose, onAddReview }) {
       });
     }
 
-    return { type: 'FeatureCollection', features };
+    return features.length > 0 ? { type: 'FeatureCollection', features } : null;
   };
 
   // Export summary as image
@@ -90,12 +100,12 @@ function TripSummary({ hikeData, onClose, onAddReview }) {
     ctx.textAlign = 'center';
     ctx.fillText(hikeData.trail_name, width / 2, 150);
 
-    // Stats
+    // Stats - handle both field name formats
     ctx.fillStyle = '#ffffff';
     ctx.font = '48px Arial';
-    const distance = (hikeData.stats.distance_km || 0).toFixed(1);
-    const elevation = Math.round(hikeData.stats.elevation_gain_m || 0);
-    const duration = (hikeData.stats.duration_hours || 0).toFixed(1);
+    const distance = (hikeData.stats.distance_km || hikeData.stats.distance / 1000 || 0).toFixed(1);
+    const elevation = Math.round(hikeData.stats.elevation_gain_m || hikeData.stats.elevation || 0);
+    const duration = (hikeData.stats.duration_hours || hikeData.stats.duration / 3600 || 0).toFixed(1);
     
     ctx.fillText(`${distance} km`, width / 2, 300);
     ctx.fillText(`↑ ${elevation}m`, width / 2, 400);
@@ -200,17 +210,17 @@ function TripSummary({ hikeData, onClose, onAddReview }) {
             <div className="summary-stat-card">
               <div className="stat-icon">📏</div>
               <div className="stat-label">{t('tripSummary.distance')}</div>
-              <div className="stat-value">{(hikeData.stats.distance_km || 0).toFixed(1)} km</div>
+              <div className="stat-value">{(hikeData.stats.distance_km || hikeData.stats.distance / 1000 || 0).toFixed(1)} km</div>
             </div>
             <div className="summary-stat-card">
               <div className="stat-icon">⛰️</div>
               <div className="stat-label">{t('tripSummary.elevationGain')}</div>
-              <div className="stat-value">{Math.round(hikeData.stats.elevation_gain_m || 0)} m</div>
+              <div className="stat-value">{Math.round(hikeData.stats.elevation_gain_m || hikeData.stats.elevation || 0)} m</div>
             </div>
             <div className="summary-stat-card">
               <div className="stat-icon">⏱️</div>
               <div className="stat-label">{t('tripSummary.duration')}</div>
-              <div className="stat-value">{(hikeData.stats.duration_hours || 0).toFixed(1)} {t('tripSummary.hours')}</div>
+              <div className="stat-value">{(hikeData.stats.duration_hours || hikeData.stats.duration / 3600 || 0).toFixed(1)} {t('tripSummary.hours')}</div>
             </div>
           </div>
 

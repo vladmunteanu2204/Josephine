@@ -22,7 +22,7 @@ The design system employs a premium dark alpine theme with glassmorphism effects
 - **Persistent State:** User preferences, saved trails, gamification data, and hike plans are persisted using `localStorage`.
 - **Media Galleries:** `MediaGallery` component with performance optimizations like lazy loading and progressive image loading.
 - **Interactive Maps:** `Mapbox GL` for interactive trail route visualization and POI markers.
-- **GPS Tracking:** Real-time GPS tracking with position updates, POI alerts, and live stats display.
+- **GPS Tracking:** Real-time GPS tracking with position updates, checkpoint proximity alerts with mountain bell sound, and live stats display.
 - **Progressive Web App (PWA):** Full PWA support with installable app experience, offline capability, and background sync readiness.
 - **Gamification System:** Badge/achievement system, XP/levels system, and leaderboards.
 - **Weather Integration:** OpenWeatherMap API for current conditions, forecasts, and safety alerts.
@@ -35,6 +35,7 @@ The design system employs a premium dark alpine theme with glassmorphism effects
 - **Challenges System:** User-facing challenges with progress tracking, XP rewards, and integration with the gamification system.
 - **Rifugio Directory:** Comprehensive alpine hut database with browse/filter interface, detail pages with facilities/pricing/contact, and booking inquiry system with email delivery. Supports rifugio, malga, and bivacco types with seasonal status tracking (open/closed/opening soon).
 - **Multi-Day Trails System (Hut-to-Hut):** Complete system for managing and browsing multi-day alpine treks. Admin panel includes visual stage builder with per-day details (distance, elevation, duration, difficulty, overnight rifugio). User-facing features include browse catalog with filters, detailed trail pages with day-by-day breakdown, integrated equipment checklists, and seamless rifugio booking integration. Supports point-to-point, loop, and out-and-back trail types. Fully internationalized with complete EN/IT/DE translations.
+- **Dynamic Checkpoints & Trip Summary:** Admin-controlled trail checkpoints with GPS proximity alerts and mountain bell audio cues. Cinematic post-hike trip summary page with altitude-gradient route map (green→yellow→red), stats cards, badges earned, visited checkpoints with timestamps, journal notes, and image export functionality. Fully internationalized with complete EN/IT/DE translations.
 
 ### Feature Specifications
 - **Core Pages:** Home, Catalog, Recommendations, Trail Detail, User Profile, Saved Trails, Settings, Leaderboards, Hike Planner, Rifugios Directory, Rifugio Detail, Multi-Day Trails Catalog, and Multi-Day Trail Detail.
