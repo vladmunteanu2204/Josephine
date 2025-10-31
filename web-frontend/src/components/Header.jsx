@@ -71,6 +71,12 @@ function Header({ currentView, setCurrentView }) {
       case 'catalog':
         setCurrentView('catalog');
         break;
+      case 'rifugios':
+        setCurrentView('rifugios');
+        break;
+      case 'multiday-trails':
+        setCurrentView('multiday-trails');
+        break;
       case 'logout':
         handleLogout();
         break;
