@@ -17,15 +17,25 @@
 
 /* Force Mapbox canvas to stay below stats panel */
 .tracker-map .mapboxgl-canvas-container,
-.tracker-map .mapboxgl-canvas,
-.tracker-map .mapboxgl-control-container {
+.tracker-map .mapboxgl-canvas {
   z-index: 1 !important;
+}
+
+/* Keep controls accessible but below stats */
+.tracker-map .mapboxgl-control-container {
+  z-index: 100 !important;
+}
+
+/* Ensure marker overlays appear above map but below stats */
+.tracker-map .mapboxgl-marker {
+  z-index: 500 !important;
 }
 
 .user-marker {
   position: relative;
   width: 40px;
   height: 40px;
+  z-index: 1000 !important;
 }
 
 .marker-pulse {
