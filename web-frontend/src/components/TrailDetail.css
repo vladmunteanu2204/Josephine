@@ -842,6 +842,15 @@
 
 /* Mobile Responsive Design */
 @media screen and (max-width: 768px) {
+  .detail-hero {
+    min-height: max(440px, 55svh);
+  }
+  
+  .detail-hero-image {
+    background-size: cover;
+    background-position: center;
+  }
+  
   .save-trail-btn {
     top: 80px;
     right: 20px;

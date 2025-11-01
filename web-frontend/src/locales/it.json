@@ -256,6 +256,8 @@
     "terms": "Termini di Servizio"
   },
   "profile": {
+    "title": "Profilo",
+    "savedTrails": "Sentieri Salvati",
     "user": "Utente",
     "accountInfo": "Informazioni Account",
     "displayName": "Nome Visualizzato",
@@ -285,6 +287,9 @@
     "totalElevation": "Dislivello",
     "badgesEarned": "Distintivi",
     "badges": "Conquiste e Distintivi"
+  },
+  "challenges": {
+    "title": "Sfide"
   },
   "leaderboards": {
     "title": "Classifiche",

@@ -256,6 +256,8 @@
     "terms": "Terms of Service"
   },
   "profile": {
+    "title": "Profile",
+    "savedTrails": "Saved Trails",
     "user": "User",
     "accountInfo": "Account Information",
     "displayName": "Display Name",
@@ -285,6 +287,9 @@
     "totalElevation": "Elevation",
     "badgesEarned": "Badges",
     "badges": "Achievements & Badges"
+  },
+  "challenges": {
+    "title": "Challenges"
   },
   "leaderboards": {
     "title": "Leaderboards",

@@ -224,7 +224,7 @@
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .carousel-slide {
-    height: 400px;
+    height: 450px;
   }
 
   .carousel-title {
@@ -236,7 +236,7 @@
   }
 
   .carousel-content {
-    padding: 24px;
+    padding: 24px 20px 80px 20px;
   }
 
   .carousel-stats {
@@ -252,24 +252,33 @@
     width: 44px;
     height: 44px;
     font-size: 24px;
+    top: 35%;
   }
 
   .carousel-prev {
-    left: 10px;
+    left: 8px;
   }
 
   .carousel-next {
-    right: 10px;
+    right: 8px;
+  }
+  
+  .carousel-indicators {
+    bottom: 24px;
   }
 }
 
 @media (max-width: 480px) {
   .carousel-slide {
-    height: 350px;
+    height: 420px;
   }
 
   .carousel-title {
     font-size: 24px;
+  }
+  
+  .carousel-content {
+    padding: 20px 16px 100px 16px;
   }
 
   .carousel-stats {
@@ -281,5 +290,24 @@
     width: 100%;
     padding: 14px 24px;
     font-size: 16px;
+  }
+  
+  .carousel-nav {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    top: 30%;
+  }
+  
+  .carousel-prev {
+    left: 6px;
+  }
+
+  .carousel-next {
+    right: 6px;
+  }
+  
+  .carousel-indicators {
+    bottom: 28px;
   }
 }

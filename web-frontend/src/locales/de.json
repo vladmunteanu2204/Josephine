@@ -256,6 +256,8 @@
     "terms": "Nutzungsbedingungen"
   },
   "profile": {
+    "title": "Profil",
+    "savedTrails": "Gespeicherte Wanderwege",
     "user": "Benutzer",
     "accountInfo": "Kontoinformationen",
     "displayName": "Anzeigename",
@@ -285,6 +287,9 @@
     "totalElevation": "Höhenunterschied",
     "badgesEarned": "Abzeichen",
     "badges": "Erfolge & Abzeichen"
+  },
+  "challenges": {
+    "title": "Herausforderungen"
   },
   "leaderboards": {
     "title": "Bestenlisten",
