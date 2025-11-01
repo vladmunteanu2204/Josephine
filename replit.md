@@ -22,7 +22,7 @@ The design system employs a premium dark alpine theme with glassmorphism effects
 - **Persistent State:** User preferences, saved trails, gamification data, and hike plans are persisted using `localStorage`.
 - **Media Galleries:** `MediaGallery` component with performance optimizations like lazy loading and progressive image loading.
 - **Interactive Maps:** `Mapbox GL` for interactive trail route visualization and POI markers.
-- **GPS Tracking:** Real-time GPS tracking with position updates, checkpoint proximity alerts with mountain bell sound, and live stats display. Uses React refs (isOffTrailRef, isPausedRef) synchronized with useEffect to prevent closure bugs in GPS callbacks, ensuring accurate off-trail detection without notification spam, proper stats pausing when off-trail, and alert banner clearing when returning to trail.
+- **GPS Tracking:** Real-time GPS tracking with position updates, checkpoint proximity alerts with mountain bell sound, and live stats display. Uses React refs (isOffTrailRef, isPausedRef) synchronized with useEffect to prevent closure bugs in GPS callbacks, ensuring accurate off-trail detection without notification spam, proper stats pausing when off-trail, and alert banner clearing when returning to trail. Implements anti-spam throttling for both proximity warnings (200m) and arrival notifications (30m) using synchronous ref-based tracking to prevent race conditions during async React state updates.
 - **Progressive Web App (PWA):** Full PWA support with installable app experience, offline capability, and background sync readiness.
 - **Gamification System:** Badge/achievement system, XP/levels system, and leaderboards.
 - **Weather Integration:** OpenWeatherMap API for current conditions, forecasts, and safety alerts.
@@ -51,6 +51,19 @@ The design system employs a premium dark alpine theme with glassmorphism effects
 - **API URL Handling:** Dynamically constructed for cross-environment compatibility.
 - **Port Configuration:** Development: Frontend on 5000, Backend on 8000. Production: Single Flask server on 5000.
 - **Deployment Configuration:** Autoscale deployment with `npm run build` and `npm run start` commands. Flask serves built React app.
+
+## Recent Bug Fixes & Improvements (November 2025)
+
+### Authentication
+- **Password Reset Service:** Fixed Firebase password reset functionality by adding proper `actionCodeSettings` configuration with redirect URL handling. Enhanced error handling for configuration issues and added detailed logging for troubleshooting.
+
+### GPS Tracking & Notifications
+- **Checkpoint Arrival Notification Spam:** Fixed race condition causing duplicate notifications when arriving at checkpoints. Implemented synchronous ref-based throttling (5-second guard window) to prevent notifications from firing multiple times during async React state updates. Users now receive exactly one notification per checkpoint arrival.
+- **Proximity Warning Spam:** Previously fixed similar issue for 200m proximity warnings using the same anti-spam throttling pattern.
+
+### Mobile UI
+- **Rifugios View Toggle Buttons:** Fixed mobile responsive layout where view mode buttons were truncated showing only "cata" instead of full text. Added progressive mobile breakpoints (1024px/768px/480px) with proper flexbox handling, whitespace controls, and optimized button sizing for mobile devices.
+- **Filters Sidebar Mobile:** Improved mobile responsiveness with full-width actions, stacked layouts on small screens, and optimized padding/spacing for better mobile UX.
 
 ## External Dependencies
 - **Firebase:** User authentication.
