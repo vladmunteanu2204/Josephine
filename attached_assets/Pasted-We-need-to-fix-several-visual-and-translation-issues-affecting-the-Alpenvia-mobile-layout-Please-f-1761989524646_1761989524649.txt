@@ -1,0 +1,45 @@
+We need to fix several visual and translation issues affecting the Alpenvia mobile layout.
+Please follow the list exactly and stop if you detect any regression on desktop.
+
+TASK GROUP: “Mobile Visual Polish & Translation Fixes”
+
+1️⃣ HEADER GAP FIX
+- Remove the unwanted gap between the Alpenvia header and hero sections on all pages.
+- In global CSS, ensure hero sections use:
+  padding-top: calc(var(--safe-top) + var(--header-h));
+  margin-top: 0 !important;
+- Verify no double padding from parent containers.
+
+2️⃣ SCROLL CUE ALIGNMENT
+- Center the “Scroll to explore” or “Explore your path” text horizontally in the Home hero.
+- It should be aligned to exact center (50%) using:
+  position: absolute; left: 50%; transform: translateX(-50%);
+- Test on iPhone Safari with notch safe area.
+
+3️⃣ TRAIL DETAIL HERO FIX
+- The hero image and overlay text (e.g., “Maso Corto hike”) appear visually compressed.
+- Fix image scaling to `background-size: cover; background-position: center;`
+- Use `min-height: max(440px, 55svh);` for mobile instead of vh.
+- Keep overlay text padding consistent with other pages.
+
+4️⃣ NAVIGATION TRANSLATION BUGS
+- The mobile navigation shows untranslated i18n keys: “profile.title”, “profile.savedTrails”, “challenges.title”.
+- Wrap all these labels with i18n translation calls:
+  {t('profile.title')} etc.
+- Confirm that translation keys exist in en.json, it.json, de.json files.
+
+5️⃣ HEADER ICON ALIGNMENT
+- Align globe (language), profile, and menu icons vertically centered.
+- Maintain consistent padding and spacing (12px between icons).
+- Ensure touch area ≥ 40x40 px for accessibility.
+
+6️⃣ QA & VALIDATION
+- Test on iPhone Safari, Chrome mobile, and desktop.
+- Verify: no header gap, scroll cue centered, hero proportion correct, menu text localized.
+- Check service worker version increment and force refresh app cache.
+
+After completion, reply with screenshots of:
+- Home hero (no gap, centered scroll cue)
+- Trail detail (proper hero image ratio)
+- Navigation drawer (translated text)
+- Header (aligned icons)
