@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import Icon from './Icon';
 import './UserMenuPortal.css';
 
 export default function UserMenuPortal({ 
@@ -56,14 +55,14 @@ export default function UserMenuPortal({
   if (!isOpen) return null;
 
   const menuItems = [
-    { key: 'profile', label: t('header.profile'), iconType: 'lucide', iconName: 'User' },
-    { key: 'saved', label: t('header.savedTrails'), iconType: 'lucide', iconName: 'Heart' },
-    { key: 'challenges', label: t('header.challenges'), iconType: 'lucide', iconName: 'Target' },
-    { key: 'leaderboards', label: t('header.leaderboards'), iconType: '3d', iconName: 'trophy' },
-    { key: 'planner', label: t('header.hikePlanner'), iconType: 'lucide', iconName: 'Calendar' },
-    ...(isAdmin ? [{ key: 'admin', label: t('header.adminPanel'), iconType: 'lucide', iconName: 'Settings' }] : []),
-    { key: 'settings', label: t('header.settings'), iconType: 'lucide', iconName: 'Settings' },
-    { key: 'logout', label: t('header.logout'), iconType: 'lucide', iconName: 'LogOut', danger: true }
+    { key: 'profile', label: t('header.profile'), icon: '👤' },
+    { key: 'saved', label: t('header.savedTrails'), icon: '❤️' },
+    { key: 'challenges', label: t('header.challenges'), icon: '🏆' },
+    { key: 'leaderboards', label: t('header.leaderboards'), icon: '📊' },
+    { key: 'planner', label: t('header.hikePlanner'), icon: '🗓️' },
+    ...(isAdmin ? [{ key: 'admin', label: t('header.adminPanel'), icon: '⚙️' }] : []),
+    { key: 'settings', label: t('header.settings'), icon: '⚙️' },
+    { key: 'logout', label: t('header.logout'), icon: '🚪', danger: true }
   ];
 
   return createPortal(
@@ -89,9 +88,7 @@ export default function UserMenuPortal({
               onClose();
             }}
           >
-            <span className="portal-item-icon">
-              <Icon type={item.iconType} name={item.iconName} size={18} tone="alpine" />
-            </span>
+            <span className="portal-item-icon">{item.icon}</span>
             <span className="portal-item-label">{item.label}</span>
           </button>
         ))}

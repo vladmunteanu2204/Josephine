@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
-import Icon from './Icon';
 import { useToast } from '../contexts/ToastContext';
 import './TrailCatalog.css';
 
@@ -207,14 +206,14 @@ function TrailCatalog({ viewTrail }) {
                 onClick={() => setViewMode('grid')}
                 aria-label="Grid view"
               >
-                <Icon type="lucide" name="Grid3x3" size={18} tone="neutral" />
+                ▦
               </button>
               <button
                 className={`view-btn ${viewMode === 'map' ? 'active' : ''}`}
                 onClick={() => setViewMode('map')}
                 aria-label="Map view"
               >
-                <Icon type="3d" name="compass" size={18} tone="alpine" />
+                🗺️
               </button>
             </div>
           </div>
@@ -235,7 +234,7 @@ function TrailCatalog({ viewTrail }) {
                       onClick={(e) => toggleSaveTrail(trail, e)}
                       aria-label={isTrailSaved(trail.id) ? t('recommendations.unsaveTrail') : t('recommendations.saveTrail')}
                     >
-                      <Icon type="lucide" name="Heart" size={20} tone={isTrailSaved(trail.id) ? "gold" : "neutral"} className={isTrailSaved(trail.id) ? "filled-heart" : ""} />
+                      {isTrailSaved(trail.id) ? '❤️' : '🤍'}
                     </button>
                     <img 
                       src={trail.thumbnail || trail.image_url} 

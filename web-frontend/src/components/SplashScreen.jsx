@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import Icon from './Icon';
 import './SplashScreen.css';
 
 function SplashScreen({ onComplete }) {
@@ -10,18 +9,27 @@ function SplashScreen({ onComplete }) {
 
   useEffect(() => {
     const minDisplayTime = 2000;
+    const startTime = Date.now();
 
-    // Start the timer immediately - don't wait for all resources to load
-    // This prevents the splash from getting stuck waiting for large images
-    const fadeTimer = setTimeout(() => {
-      setFadeOut(true);
+    const checkIfReady = () => {
+      const elapsed = Date.now() - startTime;
+      const remainingTime = Math.max(0, minDisplayTime - elapsed);
+
       setTimeout(() => {
-        setIsLoading(false);
-        if (onComplete) onComplete();
-      }, 800);
-    }, minDisplayTime);
+        setFadeOut(true);
+        setTimeout(() => {
+          setIsLoading(false);
+          if (onComplete) onComplete();
+        }, 800);
+      }, remainingTime);
+    };
 
-    return () => clearTimeout(fadeTimer);
+    if (document.readyState === 'complete') {
+      checkIfReady();
+    } else {
+      window.addEventListener('load', checkIfReady);
+      return () => window.removeEventListener('load', checkIfReady);
+    }
   }, [onComplete]);
 
   if (!isLoading) return null;
@@ -37,9 +45,7 @@ function SplashScreen({ onComplete }) {
 
       <div className="splash-content">
         <div className="splash-logo">
-          <div className="logo-icon">
-            <Icon type="3d" name="mountain-logo" size={80} tone="alpine" className="icon-glow" />
-          </div>
+          <div className="logo-icon">🏔️</div>
           <h1 className="logo-text">Alpenvia</h1>
           <p className="logo-tagline">{t('splash.tagline')}</p>
         </div>

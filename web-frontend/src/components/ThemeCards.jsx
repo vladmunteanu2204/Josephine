@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import Icon from './Icon';
 import './ThemeCards.css';
 
 function ThemeCards({ onThemeClick }) {
@@ -9,8 +8,7 @@ function ThemeCards({ onThemeClick }) {
   const themes = [
     {
       id: 'lakes',
-      iconType: '3d',
-      iconName: 'alpine-lake',
+      icon: '💧',
       title: t('home.themeLakes'),
       description: t('home.themeLakesDesc'),
       color: '#3b82f6',
@@ -19,8 +17,7 @@ function ThemeCards({ onThemeClick }) {
     },
     {
       id: 'peaks',
-      iconType: '3d',
-      iconName: 'mountain-logo',
+      icon: '⛰️',
       title: t('home.themePeaks'),
       description: t('home.themePeaksDesc'),
       color: '#8b5cf6',
@@ -29,8 +26,7 @@ function ThemeCards({ onThemeClick }) {
     },
     {
       id: 'forests',
-      iconType: 'lucide',
-      iconName: 'Trees',
+      icon: '🌲',
       title: t('home.themeForests'),
       description: t('home.themeForestsDesc'),
       color: '#10b981',
@@ -39,8 +35,7 @@ function ThemeCards({ onThemeClick }) {
     },
     {
       id: 'family',
-      iconType: 'lucide',
-      iconName: 'Users',
+      icon: '👨‍👩‍👧‍👦',
       title: t('home.themeFamily'),
       description: t('home.themeFamilyDesc'),
       color: '#f59e0b',
@@ -49,8 +44,7 @@ function ThemeCards({ onThemeClick }) {
     },
     {
       id: 'culture',
-      iconType: 'lucide',
-      iconName: 'Landmark',
+      icon: '🏛️',
       title: t('home.themeCulture'),
       description: t('home.themeCultureDesc'),
       color: '#ec4899',
@@ -59,8 +53,7 @@ function ThemeCards({ onThemeClick }) {
     },
     {
       id: 'loops',
-      iconType: 'lucide',
-      iconName: 'RotateCw',
+      icon: '🔄',
       title: t('home.themeLoops'),
       description: t('home.themeLoopsDesc'),
       color: '#d4a574',
@@ -86,14 +79,10 @@ function ThemeCards({ onThemeClick }) {
           >
             <div className="theme-card-bg" style={{ background: theme.gradient }}></div>
             <div className="theme-card-content">
-              <div className="theme-icon">
-                <Icon type={theme.iconType} name={theme.iconName} size={48} tone="neutral" />
-              </div>
+              <div className="theme-icon">{theme.icon}</div>
               <h3 className="theme-title">{theme.title}</h3>
               <p className="theme-description">{theme.description}</p>
-              <div className="theme-arrow">
-                <Icon type="lucide" name="ArrowRight" size={24} tone="neutral" />
-              </div>
+              <div className="theme-arrow">→</div>
             </div>
           </div>
         ))}

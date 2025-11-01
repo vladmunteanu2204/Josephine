@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
-import Icon from './Icon';
 import './HamburgerMenu.css';
 
 function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
@@ -33,19 +32,19 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
   if (!isOpen) return null;
 
   const mainMenuItems = [
-    { key: 'home', iconType: 'lucide', iconName: 'Home', label: t('nav.home') },
-    { key: 'recommendations', iconType: 'lucide', iconName: 'Sparkles', label: t('nav.smartRecommendations') },
-    { key: 'catalog', iconType: '3d', iconName: 'compass', label: t('nav.trailCatalog') },
-    { key: 'rifugios', iconType: '3d', iconName: 'mountain-logo', label: t('nav.rifugios') },
-    { key: 'planner', iconType: 'lucide', iconName: 'Calendar', label: t('nav.hikePlanner') }
+    { key: 'home', icon: '🏠', label: t('nav.home') },
+    { key: 'recommendations', icon: '✨', label: t('nav.smartRecommendations') },
+    { key: 'catalog', icon: '🗺️', label: t('nav.trailCatalog') },
+    { key: 'rifugios', icon: '🏔️', label: t('nav.rifugios') },
+    { key: 'planner', icon: '📅', label: t('nav.hikePlanner') }
   ];
 
   const userMenuItems = currentUser ? [
-    { key: 'profile', iconType: 'lucide', iconName: 'User', label: t('profile.title') },
-    { key: 'savedTrails', iconType: 'lucide', iconName: 'Heart', label: t('profile.savedTrails') },
-    { key: 'challenges', iconType: 'lucide', iconName: 'Target', label: t('challenges.title') },
-    { key: 'leaderboards', iconType: '3d', iconName: 'trophy', label: t('leaderboards.title') },
-    { key: 'settings', iconType: 'lucide', iconName: 'Settings', label: t('settings.title') }
+    { key: 'profile', icon: '👤', label: t('profile.title') },
+    { key: 'savedTrails', icon: '❤️', label: t('profile.savedTrails') },
+    { key: 'challenges', icon: '🎯', label: t('challenges.title') },
+    { key: 'leaderboards', icon: '🏆', label: t('leaderboards.title') },
+    { key: 'settings', icon: '⚙️', label: t('settings.title') }
   ] : [];
 
   const isAdmin = currentUser?.email === 'vladmunteanu2204@gmail.com';
@@ -80,7 +79,7 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
             onClick={onClose}
             aria-label={t('common.close')}
           >
-            <Icon type="lucide" name="X" size={24} tone="neutral" />
+            ✕
           </button>
         </div>
 
@@ -92,9 +91,7 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
                 className={`hamburger-item ${currentView === item.key ? 'active' : ''}`}
                 onClick={() => handleItemClick(item.key)}
               >
-                <span className="hamburger-item-icon">
-                  <Icon type={item.iconType} name={item.iconName} size={20} tone="alpine" />
-                </span>
+                <span className="hamburger-item-icon">{item.icon}</span>
                 <span className="hamburger-item-label">{item.label}</span>
                 {currentView === item.key && <span className="hamburger-item-indicator">•</span>}
               </button>
@@ -111,9 +108,7 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
                     className={`hamburger-item ${currentView === item.key ? 'active' : ''}`}
                     onClick={() => handleItemClick(item.key)}
                   >
-                    <span className="hamburger-item-icon">
-                      <Icon type={item.iconType} name={item.iconName} size={20} tone="alpine" />
-                    </span>
+                    <span className="hamburger-item-icon">{item.icon}</span>
                     <span className="hamburger-item-label">{item.label}</span>
                     {currentView === item.key && <span className="hamburger-item-indicator">•</span>}
                   </button>
@@ -130,9 +125,7 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
                   className={`hamburger-item ${currentView === 'admin' ? 'active' : ''}`}
                   onClick={() => handleItemClick('admin')}
                 >
-                  <span className="hamburger-item-icon">
-                    <Icon type="lucide" name="Lock" size={20} tone="gold" />
-                  </span>
+                  <span className="hamburger-item-icon">🔐</span>
                   <span className="hamburger-item-label">{t('admin.title')}</span>
                   {currentView === 'admin' && <span className="hamburger-item-indicator">•</span>}
                 </button>
@@ -148,9 +141,7 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
                   className="hamburger-item hamburger-logout"
                   onClick={() => handleItemClick('logout')}
                 >
-                  <span className="hamburger-item-icon">
-                    <Icon type="lucide" name="LogOut" size={20} tone="neutral" />
-                  </span>
+                  <span className="hamburger-item-icon">🚪</span>
                   <span className="hamburger-item-label">{t('auth.logout')}</span>
                 </button>
               </div>

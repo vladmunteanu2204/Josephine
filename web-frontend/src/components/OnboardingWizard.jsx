@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Icon from './Icon';
 import './OnboardingWizard.css';
 
 function OnboardingWizard({ onComplete }) {
@@ -9,8 +8,7 @@ function OnboardingWizard({ onComplete }) {
 
   const slides = [
     {
-      iconType: '3d',
-      iconName: 'mountain-logo',
+      icon: '🏔️',
       title: t('onboarding.slide1.title'),
       description: t('onboarding.slide1.description'),
       features: [
@@ -20,8 +18,7 @@ function OnboardingWizard({ onComplete }) {
       ]
     },
     {
-      iconType: 'lucide',
-      iconName: 'MapPin',
+      icon: '📍',
       title: t('onboarding.slide2.title'),
       description: t('onboarding.slide2.description'),
       features: [
@@ -31,8 +28,7 @@ function OnboardingWizard({ onComplete }) {
       ]
     },
     {
-      iconType: '3d',
-      iconName: 'trophy',
+      icon: '🏆',
       title: t('onboarding.slide3.title'),
       description: t('onboarding.slide3.description'),
       features: [
@@ -42,8 +38,7 @@ function OnboardingWizard({ onComplete }) {
       ]
     },
     {
-      iconType: 'lucide',
-      iconName: 'ClipboardList',
+      icon: '📋',
       title: t('onboarding.slide4.title'),
       description: t('onboarding.slide4.description'),
       features: [
@@ -91,18 +86,14 @@ function OnboardingWizard({ onComplete }) {
 
         {/* Slide content */}
         <div className="onboarding-slide">
-          <div className="onboarding-icon">
-            <Icon type={slide.iconType} name={slide.iconName} size={64} tone="alpine" />
-          </div>
+          <div className="onboarding-icon">{slide.icon}</div>
           <h2 className="onboarding-title">{slide.title}</h2>
           <p className="onboarding-description">{slide.description}</p>
 
           <ul className="onboarding-features">
             {slide.features.map((feature, index) => (
               <li key={index} className="onboarding-feature">
-                <span className="feature-check">
-                  <Icon type="lucide" name="Check" size={18} tone="gold" />
-                </span>
+                <span className="feature-check">✓</span>
                 <span className="feature-text">{feature}</span>
               </li>
             ))}
