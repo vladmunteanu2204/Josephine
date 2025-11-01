@@ -660,7 +660,11 @@
     "trackingPaused": "Tracking Auto-Pausiert",
     "trackingResumed": "Tracking Fortgesetzt",
     "noMovementDetected": "Keine Bewegung erkannt. Tracking wird fortgesetzt, wenn du dich bewegst.",
-    "movementDetected": "Bewegung erkannt, deine Wanderung wird weiter verfolgt"
+    "movementDetected": "Bewegung erkannt, deine Wanderung wird weiter verfolgt",
+    "offTrailAlert": "Vom Weg Abgekommen",
+    "offTrailMessage": "Sie sind vom Weg abgekommen. Statistikaufzeichnung pausiert bis Sie zur Route zurückkehren.",
+    "statsPausedMessage": "Statistikaufzeichnung pausiert. Kehren Sie zum Weg zurück, um fortzufahren.",
+    "backOnTrail": "Zurück auf dem Weg - Statistikaufzeichnung Fortgesetzt"
   },
   "tripSummary": {
     "routeMap": "Routenkarte",

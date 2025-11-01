@@ -234,6 +234,55 @@
   max-width: 80%;
 }
 
+.warning-banner.off-trail-active {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background: rgba(239, 68, 68, 0.98);
+  backdrop-filter: blur(10px);
+  animation: shake 0.5s infinite, pulse-glow 2s infinite;
+}
+
+.warning-icon {
+  font-size: 2rem;
+  line-height: 1;
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 8px 32px rgba(239, 68, 68, 0.5);
+  }
+  50% { 
+    box-shadow: 0 8px 32px rgba(239, 68, 68, 0.8), 0 0 20px rgba(239, 68, 68, 0.6);
+  }
+}
+
+.warning-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: left;
+}
+
+.warning-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.warning-message {
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 0.95;
+}
+
 @keyframes shake {
   0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
   25% { transform: translate(-50%, -50%) rotate(-2deg); }

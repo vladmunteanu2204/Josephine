@@ -40,6 +40,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
     pace: 0
   });
   const [offTrailWarning, setOffTrailWarning] = useState(false);
+  const [isOffTrail, setIsOffTrail] = useState(false);
   const [alertedPOIs, setAlertedPOIs] = useState(new Set());
   const [visitedCheckpoints, setVisitedCheckpoints] = useState([]);
   const [shareLink, setShareLink] = useState(null);
@@ -54,6 +55,9 @@ function ActiveHikeTracker({ trail, onEnd }) {
   const intervalRef = useRef(null);
   const elevationGainBufferRef = useRef(0); // Accumulate positive elevation changes
   const elevationLossBufferRef = useRef(0); // Accumulate negative elevation changes
+  const offTrailStartTimeRef = useRef(null); // Track when user went off trail
+  const totalOffTrailTimeRef = useRef(0); // Accumulate total off-trail time
+  const lastOnTrailPointRef = useRef(null); // Track last on-trail GPS point for stat calculations
   
   // NEW: Enhanced checkpoint tracking with state machine
   const checkpointStatesRef = useRef({}); // { [checkpointIndex]: { state: 'approaching'|'reached'|'passed', lastDistance: number } }
@@ -262,18 +266,13 @@ function ActiveHikeTracker({ trail, onEnd }) {
     return Math.min(100, Math.max(0, (distanceAlongTrail / totalLength) * 100));
   };
 
-  // Calculate distance from point to line segment (for off-trail detection)
+  // Calculate accurate distance from point to trail polyline (for off-trail detection)
   const distanceToTrail = (point, trailCoordinates) => {
     if (!trailCoordinates || trailCoordinates.length < 2) return Infinity;
     
-    let minDistance = Infinity;
-    for (let i = 0; i < trailCoordinates.length - 1; i++) {
-      const [lon1, lat1] = trailCoordinates[i];
-      const [lon2, lat2] = trailCoordinates[i + 1];
-      const dist = calculateDistance(point.lat, point.lon, (lat1 + lat2) / 2, (lon1 + lon2) / 2);
-      minDistance = Math.min(minDistance, dist);
-    }
-    return minDistance;
+    // Use existing findNearestPointOnPolyline for accurate projection-based distance
+    const projection = findNearestPointOnPolyline(point.lat, point.lon, trailCoordinates);
+    return projection.distanceToLine;
   };
 
   // Find next POI and distance to it
@@ -509,27 +508,62 @@ function ActiveHikeTracker({ trail, onEnd }) {
     }
 
     if (!isPaused) {
+      // Check if user is off trail FIRST (before updating any stats)
+      let currentlyOffTrail = false;
+      if (trail.coordinates || trailRoute?.geometry?.coordinates) {
+        const distToTrail = distanceToTrail(newPoint, trail.coordinates || trailRoute.geometry.coordinates);
+        currentlyOffTrail = distToTrail > OFF_TRAIL_DISTANCE;
+        
+        // Handle off-trail state transitions
+        if (currentlyOffTrail && !isOffTrail) {
+          // Just went off trail - clear last on-trail point so we don't bridge the gap when returning
+          offTrailStartTimeRef.current = Date.now();
+          lastOnTrailPointRef.current = null; // CRITICAL: Clear to prevent bridging off-trail distance
+          setIsOffTrail(true);
+          setOffTrailWarning(true);
+          sendNotification(
+            t('gps.offTrailAlert') || 'Off Trail Alert',
+            t('gps.offTrailMessage') || 'You are off the trail. Stats recording paused until you return to the route.'
+          );
+          toast.warning(`⚠️ ${t('gps.offTrailAlert') || 'Off Trail - Stats Paused'}`);
+        } else if (!currentlyOffTrail && isOffTrail) {
+          // Just returned to trail
+          if (offTrailStartTimeRef.current) {
+            const offTrailDuration = Date.now() - offTrailStartTimeRef.current;
+            totalOffTrailTimeRef.current += offTrailDuration;
+            offTrailStartTimeRef.current = null;
+          }
+          setIsOffTrail(false);
+          setOffTrailWarning(false);
+          toast.success(`✅ ${t('gps.backOnTrail') || 'Back on Trail - Stats Recording Resumed'}`);
+        }
+      }
+      
       // CRITICAL FIX: Update refs synchronously FIRST, then update state
       const prevTrack = gpsTrackRef.current;
       const updatedTrack = [...prevTrack, newPoint];
       gpsTrackRef.current = updatedTrack;
       
-      // Calculate stats if we have at least one previous point
+      // Calculate stats ONLY if on trail
       let elevationToAdd = 0;
       let segmentDistance = 0;
       
-      if (prevTrack.length > 0) {
-        const lastPoint = prevTrack[prevTrack.length - 1];
-        segmentDistance = calculateDistance(
-          lastPoint.lat,
-          lastPoint.lon,
-          latitude,
-          longitude
-        );
+      if (!currentlyOffTrail) {
+        // When on trail, use last on-trail point for calculations
+        const referencePoint = lastOnTrailPointRef.current;
+        
+        if (referencePoint) {
+          // We have a previous on-trail point - calculate distance and elevation
+          segmentDistance = calculateDistance(
+            referencePoint.lat,
+            referencePoint.lon,
+            latitude,
+            longitude
+          );
 
-        // IMPROVED elevation calculation with median filtering and noise threshold
-        const accuracy = position.coords.accuracy;
-        const isAccurate = !accuracy || accuracy <= 20; // Skip if accuracy > 20m
+          // IMPROVED elevation calculation with median filtering and noise threshold
+          const accuracy = position.coords.accuracy;
+          const isAccurate = !accuracy || accuracy <= 20; // Skip if accuracy > 20m
         
         if (altitude && isAccurate) {
           // Add to rolling history for median filter
@@ -595,37 +629,49 @@ function ActiveHikeTracker({ trail, onEnd }) {
           }
         }
 
-        // Update stats ref synchronously
+        // Calculate duration excluding off-trail time
+        let totalElapsedTime = Date.now() - startTimeRef.current;
+        let onTrailTime = totalElapsedTime - totalOffTrailTimeRef.current;
+        
+        // If currently off trail, also subtract current off-trail period
+        if (currentlyOffTrail && offTrailStartTimeRef.current) {
+          onTrailTime -= (Date.now() - offTrailStartTimeRef.current);
+        }
+        
+        // Update stats ref synchronously (ONLY when on trail)
         const updatedStats = {
           distance: statsRef.current.distance + segmentDistance,
           elevation: statsRef.current.elevation + elevationToAdd,
-          duration: Math.floor((Date.now() - startTimeRef.current) / 1000),
+          duration: Math.floor(onTrailTime / 1000),
           pace: speed || statsRef.current.pace
         };
         statsRef.current = updatedStats;
         
         // Update state for UI (async is fine here)
         setStats(updatedStats);
+        }
+        
+        // Update last on-trail point after successful stat calculation
+        lastOnTrailPointRef.current = newPoint;
+      } else if (currentlyOffTrail) {
+        // Still update duration even when off-trail, but exclude off-trail time
+        let totalElapsedTime = Date.now() - startTimeRef.current;
+        let onTrailTime = totalElapsedTime - totalOffTrailTimeRef.current;
+        
+        if (offTrailStartTimeRef.current) {
+          onTrailTime -= (Date.now() - offTrailStartTimeRef.current);
+        }
+        
+        const updatedStats = {
+          ...statsRef.current,
+          duration: Math.floor(onTrailTime / 1000)
+        };
+        statsRef.current = updatedStats;
+        setStats(updatedStats);
       }
       
       // Update state for UI (async is fine here)
       setGpsTrack(updatedTrack);
-
-      // Check if off trail
-      if (trail.coordinates || trailRoute?.geometry?.coordinates) {
-        const distToTrail = distanceToTrail(newPoint, trail.coordinates || trailRoute.geometry.coordinates);
-        if (distToTrail > OFF_TRAIL_DISTANCE) {
-          if (!offTrailWarning) {
-            sendNotification(
-              'Off Trail Alert',
-              'You are off the trail. Please return to the highlighted route.'
-            );
-            setOffTrailWarning(true);
-          }
-        } else {
-          setOffTrailWarning(false);
-        }
-      }
 
       // Check POI proximity
       checkPOIProximity(position.coords);
@@ -652,9 +698,13 @@ function ActiveHikeTracker({ trail, onEnd }) {
       stats: statsRef.current, // Read from ref for latest data
       visitedCheckpoints,
       isPaused,
+      isOffTrail,
       checkpointStates: checkpointStatesRef.current,
       lastPosition: lastPositionForMovementRef.current,
       lastMoveTime: lastMoveTimeRef.current,
+      totalOffTrailTime: totalOffTrailTimeRef.current,
+      offTrailStartTime: offTrailStartTimeRef.current,
+      lastOnTrailPoint: lastOnTrailPointRef.current,
       timestamp: Date.now()
     };
 
@@ -683,6 +733,9 @@ function ActiveHikeTracker({ trail, onEnd }) {
       checkpointStatesRef.current = session.checkpointStates || {};
       lastPositionForMovementRef.current = session.lastPosition;
       lastMoveTimeRef.current = session.lastMoveTime || Date.now();
+      totalOffTrailTimeRef.current = session.totalOffTrailTime || 0;
+      offTrailStartTimeRef.current = session.offTrailStartTime || null;
+      lastOnTrailPointRef.current = session.lastOnTrailPoint || null;
       
       // Then restore state (async is fine)
       setGpsTrack(session.gpsTrack || []);
@@ -690,6 +743,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
       setStats(session.stats || { distance: 0, elevation: 0, duration: 0, pace: 0 });
       setVisitedCheckpoints(session.visitedCheckpoints || []);
       setIsPaused(session.isPaused || false);
+      setIsOffTrail(session.isOffTrail || false);
       setIsTracking(true);
 
       console.log('✅ Active hike session restored from localStorage');
@@ -1076,7 +1130,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
               latitude={currentPosition.lat}
               anchor="center"
             >
-              <div className={`user-marker ${offTrailWarning ? 'off-trail' : ''}`}>
+              <div className={`user-marker ${isOffTrail ? 'off-trail' : ''}`}>
                 <div className="marker-pulse"></div>
                 <div className="marker-dot"></div>
               </div>
@@ -1103,9 +1157,9 @@ function ActiveHikeTracker({ trail, onEnd }) {
           <span>⏱️</span>
           <span>{Math.floor(stats.duration / 3600)}:{String(Math.floor((stats.duration % 3600) / 60)).padStart(2, '0')}</span>
         </div>
-        <div className="stat-row" style={{color: offTrailWarning ? '#ef4444' : '#4ade80'}}>
-          <span>{offTrailWarning ? '⚠️' : '✓'}</span>
-          <span>{offTrailWarning ? 'OFF' : 'ON'}</span>
+        <div className="stat-row" style={{color: isOffTrail ? '#ef4444' : '#4ade80'}}>
+          <span>{isOffTrail ? '⚠️' : '✓'}</span>
+          <span>{isOffTrail ? 'OFF' : 'ON'}</span>
         </div>
       </div>
 
@@ -1135,9 +1189,15 @@ function ActiveHikeTracker({ trail, onEnd }) {
       </div>
 
       {/* Off-trail warning banner */}
-      {offTrailWarning && (
-        <div className="warning-banner">
-          ⚠️ You are off the trail. Please return to the highlighted route.
+      {isOffTrail && (
+        <div className="warning-banner off-trail-active">
+          <div className="warning-icon">⚠️</div>
+          <div className="warning-content">
+            <div className="warning-title">{t('gps.offTrailAlert') || 'Off Trail'}</div>
+            <div className="warning-message">
+              {t('gps.statsPausedMessage') || 'Stats recording paused. Return to trail to resume.'}
+            </div>
+          </div>
         </div>
       )}
 
