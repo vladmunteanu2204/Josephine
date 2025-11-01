@@ -68,6 +68,19 @@ function ActiveHikeTracker({ trail, onEnd }) {
   // CRITICAL FIX: Use refs for gpsTrack and stats to ensure persistence captures latest data
   const gpsTrackRef = useRef([]);
   const statsRef = useRef({ distance: 0, elevation: 0, duration: 0, pace: 0 });
+  
+  // CRITICAL FIX: Use refs for off-trail and paused state to fix GPS callback closure bug
+  const isOffTrailRef = useRef(false);
+  const isPausedRef = useRef(false);
+  
+  // Sync refs with state to fix closure bug in GPS callback
+  useEffect(() => {
+    isOffTrailRef.current = isOffTrail;
+  }, [isOffTrail]);
+  
+  useEffect(() => {
+    isPausedRef.current = isPaused;
+  }, [isPaused]);
 
   // Convert coordinates to GeoJSON route if needed
   const trailRoute = trail.route || (trail.coordinates ? {
@@ -479,8 +492,8 @@ function ActiveHikeTracker({ trail, onEnd }) {
         lastMoveTimeRef.current = Date.now();
         lastPositionForMovementRef.current = newPoint;
         
-        // Auto-resume if was auto-paused
-        if (autoPausedRef.current && isPaused) {
+        // Auto-resume if was auto-paused (READ FROM REF to get current state)
+        if (autoPausedRef.current && isPausedRef.current) {
           console.log('Movement detected, auto-resuming tracking');
           setIsPaused(false);
           autoPausedRef.current = false;
@@ -495,8 +508,8 @@ function ActiveHikeTracker({ trail, onEnd }) {
       hasMoved = true;
     }
 
-    // Auto-pause detection: if no significant movement for 60+ seconds and not manually paused
-    if (!hasMoved && !isPaused && !autoPausedRef.current) {
+    // Auto-pause detection: if no significant movement for 60+ seconds and not manually paused (READ FROM REF)
+    if (!hasMoved && !isPausedRef.current && !autoPausedRef.current) {
       const timeSinceLastMove = Date.now() - lastMoveTimeRef.current;
       if (timeSinceLastMove > AUTO_PAUSE_THRESHOLD) {
         console.log('No movement detected for 60 seconds, auto-pausing tracking');
@@ -507,16 +520,18 @@ function ActiveHikeTracker({ trail, onEnd }) {
       }
     }
 
-    if (!isPaused) {
+    // READ FROM REF to get current paused state
+    if (!isPausedRef.current) {
       // Check if user is off trail FIRST (before updating any stats)
       let currentlyOffTrail = false;
       if (trail.coordinates || trailRoute?.geometry?.coordinates) {
         const distToTrail = distanceToTrail(newPoint, trail.coordinates || trailRoute.geometry.coordinates);
         currentlyOffTrail = distToTrail > OFF_TRAIL_DISTANCE;
         
-        // Handle off-trail state transitions
-        if (currentlyOffTrail && !isOffTrail) {
+        // Handle off-trail state transitions (READ FROM REF to get current state - fixes notification spam)
+        if (currentlyOffTrail && !isOffTrailRef.current) {
           // Just went off trail - clear last on-trail point so we don't bridge the gap when returning
+          console.log('🔴 OFF TRAIL: User went off trail');
           offTrailStartTimeRef.current = Date.now();
           lastOnTrailPointRef.current = null; // CRITICAL: Clear to prevent bridging off-trail distance
           setIsOffTrail(true);
@@ -526,8 +541,9 @@ function ActiveHikeTracker({ trail, onEnd }) {
             t('gps.offTrailMessage') || 'You are off the trail. Stats recording paused until you return to the route.'
           );
           toast.warning(`⚠️ ${t('gps.offTrailAlert') || 'Off Trail - Stats Paused'}`);
-        } else if (!currentlyOffTrail && isOffTrail) {
+        } else if (!currentlyOffTrail && isOffTrailRef.current) {
           // Just returned to trail
+          console.log('✅ BACK ON TRAIL: User returned to trail');
           if (offTrailStartTimeRef.current) {
             const offTrailDuration = Date.now() - offTrailStartTimeRef.current;
             totalOffTrailTimeRef.current += offTrailDuration;

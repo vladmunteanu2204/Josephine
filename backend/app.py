@@ -403,13 +403,24 @@ def save_hike():
     try:
         hike_data = request.json
         
-        hikes_path = os.path.join(BASE_DIR, 'data', 'completed_hikes.json')
+        if not hike_data:
+            print("❌ No hike data received")
+            return jsonify({'error': 'No hike data provided'}), 400
+        
+        data_dir = os.path.join(BASE_DIR, 'data')
+        hikes_path = os.path.join(data_dir, 'completed_hikes.json')
+        
+        # Ensure data directory exists
+        os.makedirs(data_dir, exist_ok=True)
+        print(f"✅ Data directory ensured: {data_dir}")
         
         # Load existing hikes or create new structure
         if os.path.exists(hikes_path):
+            print(f"📂 Loading existing hikes from: {hikes_path}")
             with open(hikes_path, 'r') as f:
                 hikes = json.load(f)
         else:
+            print(f"📝 Creating new hikes file: {hikes_path}")
             hikes = {'hikes': []}
         
         # Add new hike
@@ -420,19 +431,27 @@ def save_hike():
             'start_time': hike_data.get('start_time'),
             'end_time': hike_data.get('end_time'),
             'stats': hike_data.get('stats'),
-            'gps_track': hike_data.get('gps_track', [])
+            'gps_track': hike_data.get('gps_track', []),
+            'visited_checkpoints': hike_data.get('visited_checkpoints', [])
         }
         
         hikes['hikes'].append(hike_entry)
+        print(f"✅ Added hike: {hike_entry['id']} for trail: {hike_entry['trail_name']}")
         
         # Save back to file
         with open(hikes_path, 'w') as f:
             json.dump(hikes, f, indent=2)
         
+        print(f"💾 Saved {len(hikes['hikes'])} total hikes to: {hikes_path}")
+        
         return jsonify({'success': True, 'hike_id': hike_entry['id']})
     
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        error_msg = f"Error saving hike: {str(e)}"
+        print(f"❌ {error_msg}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': error_msg}), 500
 
 @app.route('/api/hikes', methods=['GET'])
 def get_hikes():
