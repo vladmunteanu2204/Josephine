@@ -72,7 +72,10 @@
     "themeLoops": "Sentieri ad Anello",
     "themeLoopsDesc": "Percorsi circolari che tornano al punto di partenza",
     "featuredTrails": "Sentieri in Evidenza",
-    "exploreTrail": "Esplora Sentiero"
+    "exploreTrail": "Esplora Sentiero",
+    "previousTrail": "Sentiero Precedente",
+    "nextTrail": "Sentiero Successivo",
+    "goTo": "Vai a"
   },
   "trail": {
     "distance": "Distanza",

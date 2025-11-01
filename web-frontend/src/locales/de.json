@@ -72,7 +72,10 @@
     "themeLoops": "Rundwanderwege",
     "themeLoopsDesc": "Kreisförmige Routen, die zum Ausgangspunkt zurückkehren",
     "featuredTrails": "Highlight-Wanderwege",
-    "exploreTrail": "Wanderweg Erkunden"
+    "exploreTrail": "Wanderweg Erkunden",
+    "previousTrail": "Vorheriger Wanderweg",
+    "nextTrail": "Nächster Wanderweg",
+    "goTo": "Gehe zu"
   },
   "trail": {
     "distance": "Entfernung",

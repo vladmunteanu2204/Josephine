@@ -40,68 +40,81 @@ function FeaturedCarousel({ trails, onViewTrail }) {
     <div className="featured-carousel">
       <div className="carousel-container">
         <div className="carousel-slide">
-          <img 
-            src={currentTrail.image_url} 
-            alt={`${currentTrail.name} - ${currentTrail.region}`}
-            className="carousel-background-image"
-          />
-          <div className="carousel-overlay"></div>
-          <div className="carousel-content">
-            <span className="region-badge-carousel">{currentTrail.region}</span>
-            <h2 className="carousel-title">{currentTrail.name}</h2>
-            <p className="carousel-tagline">{currentTrail.tagline}</p>
+          <div className="carousel-hero-section">
+            <img 
+              src={currentTrail.image_url} 
+              alt={`${currentTrail.name} - ${currentTrail.region}`}
+              className="carousel-hero-image"
+            />
+            <div className="carousel-hero-gradient"></div>
+            <span className="region-badge-floating">{currentTrail.region}</span>
             
-            <div className="carousel-stats">
-              <div className="carousel-stat">
-                <span className="stat-icon">📏</span>
-                <span>{currentTrail.distance_km} km</span>
-              </div>
-              <div className="carousel-stat">
-                <span className="stat-icon">⏱️</span>
-                <span>{currentTrail.duration_hours}h</span>
-              </div>
-              <div className="carousel-stat">
-                <span className="stat-icon">⛰️</span>
-                <span>{currentTrail.elevation_gain_m}m</span>
-              </div>
-              <div className="carousel-stat">
-                <span className={`difficulty-badge-carousel badge-${currentTrail.difficulty}`}>
-                  {t(`catalog.${currentTrail.difficulty}`)}
-                </span>
-              </div>
-            </div>
-
-            <button className="carousel-cta" onClick={() => onViewTrail(currentTrail)}>
-              {t('home.exploreTrail')} →
+            <button 
+              className="carousel-nav carousel-prev" 
+              onClick={prevSlide}
+              aria-label={t('home.previousTrail') || 'Previous trail'}
+            >
+              ‹
+            </button>
+            <button 
+              className="carousel-nav carousel-next" 
+              onClick={nextSlide}
+              aria-label={t('home.nextTrail') || 'Next trail'}
+            >
+              ›
             </button>
           </div>
 
-          <button 
-            className="carousel-nav carousel-prev" 
-            onClick={prevSlide}
-            aria-label="Previous trail"
-          >
-            ‹
-          </button>
-          <button 
-            className="carousel-nav carousel-next" 
-            onClick={nextSlide}
-            aria-label="Next trail"
-          >
-            ›
-          </button>
-        </div>
+          <div className="carousel-glass-panel">
+            <div className="carousel-info">
+              <h2 className="carousel-title">{currentTrail.name}</h2>
+              <p className="carousel-tagline">{currentTrail.tagline}</p>
+            </div>
+            
+            <div className="carousel-stats-grid">
+              <div className="stat-chip">
+                <span className="stat-icon">📏</span>
+                <div className="stat-content">
+                  <span className="stat-value">{currentTrail.distance_km}</span>
+                  <span className="stat-unit">km</span>
+                </div>
+              </div>
+              <div className="stat-chip">
+                <span className="stat-icon">⏱️</span>
+                <div className="stat-content">
+                  <span className="stat-value">{currentTrail.duration_hours}</span>
+                  <span className="stat-unit">h</span>
+                </div>
+              </div>
+              <div className="stat-chip">
+                <span className="stat-icon">⛰️</span>
+                <div className="stat-content">
+                  <span className="stat-value">{currentTrail.elevation_gain_m}</span>
+                  <span className="stat-unit">m</span>
+                </div>
+              </div>
+              <div className={`stat-chip difficulty-chip difficulty-${currentTrail.difficulty}`}>
+                <span className="difficulty-label">{t(`catalog.${currentTrail.difficulty}`)}</span>
+              </div>
+            </div>
 
-        <div className="carousel-indicators">
-          {trails.map((trail, index) => (
-            <button
-              key={index}
-              className={`indicator ${index === currentIndex ? 'active' : ''}`}
-              onClick={() => goToSlide(index)}
-              aria-label={`Go to ${trail.name}`}
-            />
-          ))}
+            <button className="carousel-cta-pill" onClick={() => onViewTrail(currentTrail)}>
+              <span className="cta-text">{t('home.exploreTrail')}</span>
+              <span className="cta-arrow">→</span>
+            </button>
+          </div>
         </div>
+      </div>
+
+      <div className="carousel-aurora-indicators">
+        {trails.map((trail, index) => (
+          <button
+            key={index}
+            className={`aurora-dot ${index === currentIndex ? 'active' : ''}`}
+            onClick={() => goToSlide(index)}
+            aria-label={`${t('home.goTo') || 'Go to'} ${trail.name}`}
+          />
+        ))}
       </div>
     </div>
   );

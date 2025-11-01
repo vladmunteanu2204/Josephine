@@ -72,7 +72,10 @@
     "themeLoops": "Loop Trails",
     "themeLoopsDesc": "Circular routes returning to the start",
     "featuredTrails": "Featured Trails",
-    "exploreTrail": "Explore Trail"
+    "exploreTrail": "Explore Trail",
+    "previousTrail": "Previous Trail",
+    "nextTrail": "Next Trail",
+    "goTo": "Go to"
   },
   "trail": {
     "distance": "Distance",
