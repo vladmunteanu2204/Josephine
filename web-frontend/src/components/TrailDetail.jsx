@@ -19,7 +19,6 @@ function TrailDetail({ trail, onBack, setIsGPSActive }) {
   const [isSaved, setIsSaved] = useState(false);
   const heroRef = useRef(null);
   const statsRef = useRef(null);
-  const elevationRef = useRef(null);
 
   useEffect(() => {
     // If trail only has an ID, fetch the full trail data
@@ -95,7 +94,6 @@ function TrailDetail({ trail, onBack, setIsGPSActive }) {
     const observer = new IntersectionObserver(observerCallback, observerOptions);
 
     if (statsRef.current) observer.observe(statsRef.current);
-    if (elevationRef.current) observer.observe(elevationRef.current);
 
     return () => observer.disconnect();
   }, [fullTrail]);
@@ -155,29 +153,6 @@ function TrailDetail({ trail, onBack, setIsGPSActive }) {
     setIsSaved(!isSaved);
   };
 
-  const generateElevationProfile = () => {
-    if (!fullTrail.coordinates || fullTrail.coordinates.length < 2) return [];
-    
-    const points = [];
-    const totalDistance = fullTrail.distance_km || 10;
-    const elevationGain = fullTrail.elevation_gain_m || 500;
-    const numPoints = Math.min(fullTrail.coordinates.length, 50);
-    
-    for (let i = 0; i < numPoints; i++) {
-      const progress = i / (numPoints - 1);
-      const distance = progress * totalDistance;
-      const baseElevation = 1000;
-      const elevation = baseElevation + Math.sin(progress * Math.PI) * elevationGain;
-      
-      points.push({
-        distance: distance.toFixed(1),
-        elevation: Math.round(elevation)
-      });
-    }
-    
-    return points;
-  };
-
   const formatSeason = (seasons) => {
     if (!seasons) return 'Year-round';
     if (typeof seasons === 'string') return seasons;
@@ -230,7 +205,7 @@ function TrailDetail({ trail, onBack, setIsGPSActive }) {
         onClick={handleSaveToggle}
         aria-label={isSaved ? t('trail.unsaveTrail') : t('trail.saveTrail')}
       >
-        <span className="save-icon">{isSaved ? '📌' : '📍'}</span>
+        <span className="save-icon">{isSaved ? '❤️' : '🤍'}</span>
       </button>
 
       <div className="detail-hero" ref={heroRef}>
@@ -296,63 +271,6 @@ function TrailDetail({ trail, onBack, setIsGPSActive }) {
             <div className="stat-label" style={{ marginTop: '12px' }}>{t('trail.difficulty')}</div>
           </div>
         </div>
-
-        {fullTrail.coordinates && fullTrail.coordinates.length > 1 && (
-          <div className="elevation-profile-section" ref={elevationRef}>
-            <div className="section-header">
-              <h2 className="section-title">{t('trail.elevationProfile')}</h2>
-              <div className="gradient-divider"></div>
-            </div>
-            <div className="elevation-chart-container">
-              <svg className="elevation-chart" viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet">
-                <defs>
-                  <linearGradient id="elevationGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#ef4444" stopOpacity="0.8" />
-                    <stop offset="50%" stopColor="#fbbf24" stopOpacity="0.6" />
-                    <stop offset="100%" stopColor="#4ade80" stopOpacity="0.4" />
-                  </linearGradient>
-                </defs>
-                {(() => {
-                  const elevationData = generateElevationProfile();
-                  if (elevationData.length < 2) return null;
-                  
-                  const maxElevation = Math.max(...elevationData.map(p => p.elevation));
-                  const minElevation = Math.min(...elevationData.map(p => p.elevation));
-                  const range = maxElevation - minElevation || 100;
-                  
-                  const pathData = elevationData.map((point, index) => {
-                    const x = (index / (elevationData.length - 1)) * 780 + 10;
-                    const y = 190 - ((point.elevation - minElevation) / range) * 170;
-                    return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
-                  }).join(' ');
-                  
-                  return (
-                    <>
-                      <path
-                        d={`${pathData} L 790 190 L 10 190 Z`}
-                        fill="url(#elevationGradient)"
-                        className="elevation-area"
-                      />
-                      <path
-                        d={pathData}
-                        fill="none"
-                        stroke="#d4a574"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="elevation-line"
-                      />
-                    </>
-                  );
-                })()}
-              </svg>
-              <div className="elevation-axis">
-                <span className="elevation-label">0 km</span>
-                <span className="elevation-label">{fullTrail.distance_km} km</span>
-              </div>
-            </div>
-          </div>
-        )}
 
         <div className="start-hike-section">
           <button 

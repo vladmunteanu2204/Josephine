@@ -178,8 +178,6 @@
 - ✅ **Export Summary**: Canvas-based image export with trail stats
 - ✅ **Add Review**: One-tap navigation to review submission
 - ✅ Complete i18n support (EN/IT/DE)
-- ⏸️ Weather summary integration (deferred)
-- ⏸️ Photo gallery (deferred - requires camera API integration)
 
 ---
 
