@@ -174,12 +174,10 @@
 }
 
 .logo-icon {
-  width: 120px;
-  height: 120px;
-  object-fit: contain;
+  font-size: 80px;
   margin-bottom: 16px;
   animation: logoFloat 3s ease-in-out infinite, logoGlow 2s ease-in-out infinite;
-  filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.4));
+  filter: drop-shadow(0 4px 20px rgba(212, 165, 116, 0.4));
 }
 
 @keyframes logoFloat {
@@ -193,10 +191,10 @@
 
 @keyframes logoGlow {
   0%, 100% {
-    filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.4));
+    filter: drop-shadow(0 4px 20px rgba(212, 165, 116, 0.4));
   }
   50% {
-    filter: drop-shadow(0 6px 30px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(0 6px 30px rgba(212, 165, 116, 0.6));
   }
 }
 

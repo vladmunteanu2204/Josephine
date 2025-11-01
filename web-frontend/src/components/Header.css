@@ -48,16 +48,13 @@
 }
 
 .logo-icon {
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
-  transition: filter 0.3s ease, transform 0.3s ease;
+  font-size: 36px;
+  filter: drop-shadow(0 4px 12px rgba(212, 165, 116, 0.4));
+  transition: filter 0.3s ease;
 }
 
 .logo:hover .logo-icon {
-  filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.45));
-  transform: scale(1.05);
+  filter: drop-shadow(0 6px 20px rgba(212, 165, 116, 0.6));
 }
 
 .logo-text {
@@ -224,9 +221,8 @@
 }
 
 .logo-icon-mobile {
-  width: 32px;
-  height: 32px;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+  font-size: 26px;
+  filter: drop-shadow(0 3px 10px rgba(212, 165, 116, 0.4));
 }
 
 .logo-text-mobile {
@@ -281,10 +277,8 @@
 }
 
 .language-icon {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+  font-size: 17px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .language-label-mobile {
@@ -319,17 +313,14 @@
 }
 
 .auth-icon {
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+  font-size: 18px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .hamburger-icon {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1;
 }
 
 .hamburger-btn-mobile {
@@ -403,8 +394,7 @@
   }
   
   .logo-icon-mobile {
-    width: 28px;
-    height: 28px;
+    font-size: 24px;
   }
   
   .logo-text-mobile {

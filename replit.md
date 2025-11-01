@@ -15,8 +15,6 @@ Alpenvia consists of a Flask backend API and a React web-frontend.
 ### UI/UX Decisions
 The design system employs a premium dark alpine theme with glassmorphism effects, featuring frosted glass cards and backdrop blur. It incorporates dramatic hero sections with mountain silhouettes and aurora gradients, enhanced shadows for layered depth, and glowing accent colors. Smooth animations, micro-interactions, premium typography with text shadows, and topographic patterns contribute to an immersive user experience. The mobile UI is minimalist, mobile-first, and fully internationalized.
 
-**3D Icon System:** All UI icons follow a cohesive "realistic alpine" visual language with sunset/golden hour aesthetic. The complete icon suite (15 assets) features 3D-rendered mountains, UI elements, and navigation symbols with warm orange-pink gradients, consistent drop-shadow effects (0 2px 6px rgba(0,0,0,0.35)), and standardized sizing (32-48px). Icons are stored in `/web-frontend/public/assets/icons/3d/` with the naming pattern `icon-[feature]-3d.png`. This replaces all previous emoji-based icons across Header, HamburgerMenu, and SplashScreen components, creating a unified premium brand identity aligned with the alpine sunset theme.
-
 ### Technical Implementations
 - **Internationalization (i18n):** Full support for English, Italian, and German using `i18next` with browser language detection.
 - **Smart Recommendations:** A local, scoring-based algorithm provides personalized trail suggestions.
