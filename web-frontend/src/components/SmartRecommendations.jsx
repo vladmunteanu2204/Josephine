@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import Icon from './Icon';
 import { useToast } from '../contexts/ToastContext';
 import './SmartRecommendations.css';
 
@@ -32,12 +33,12 @@ function SmartRecommendations({ viewTrail }) {
   });
 
   const INTERESTS = [
-    { id: 'alpine lakes', icon: '💧', label: t('recommendations.alpineLakes') },
-    { id: 'panoramic views', icon: '🏔️', label: t('recommendations.panoramicViews') },
-    { id: 'via ferrata', icon: '🧗', label: t('recommendations.viaFerrata') },
-    { id: 'forests', icon: '🌲', label: t('recommendations.forests') },
-    { id: 'cultural routes', icon: '🏛️', label: t('recommendations.culturalRoutes') },
-    { id: 'loop', icon: '🔄', label: t('recommendations.loopTrails') },
+    { id: 'alpine lakes', iconType: '3d', iconName: 'alpine-lake', label: t('recommendations.alpineLakes') },
+    { id: 'panoramic views', iconType: '3d', iconName: 'mountain-logo', label: t('recommendations.panoramicViews') },
+    { id: 'via ferrata', iconType: 'lucide', iconName: 'Mountain', label: t('recommendations.viaFerrata') },
+    { id: 'forests', iconType: 'lucide', iconName: 'Trees', label: t('recommendations.forests') },
+    { id: 'cultural routes', iconType: 'lucide', iconName: 'Landmark', label: t('recommendations.culturalRoutes') },
+    { id: 'loop', iconType: 'lucide', iconName: 'RotateCw', label: t('recommendations.loopTrails') },
   ];
 
   const toggleInterest = (interestId) => {
@@ -175,7 +176,9 @@ function SmartRecommendations({ viewTrail }) {
                 className={`interest-card ${interests.includes(interest.id) ? 'active' : ''}`}
                 onClick={() => toggleInterest(interest.id)}
               >
-                <div className="interest-icon">{interest.icon}</div>
+                <div className="interest-icon">
+                  <Icon type={interest.iconType} name={interest.iconName} size={32} tone="alpine" />
+                </div>
                 <div className="interest-label">{interest.label}</div>
               </button>
             ))}

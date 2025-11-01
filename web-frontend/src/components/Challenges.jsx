@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import Icon from './Icon';
 import { useToast } from '../contexts/ToastContext';
 import { getUserGamificationData, awardXP } from '../utils/gamification';
 import './Challenges.css';
@@ -65,9 +66,9 @@ function Challenges({ onNavigate }) {
     <div className="challenges-page">
       <div className="challenges-header">
         <button className="back-button" onClick={() => onNavigate('home')}>
-          ← Back to Home
+          <Icon type="lucide" name="ArrowLeft" size={18} tone="neutral" /> Back to Home
         </button>
-        <h1>🏆 Active Challenges</h1>
+        <h1><Icon type="3d" name="trophy" size={32} tone="gold" style={{ verticalAlign: 'middle', marginRight: '12px' }} /> Active Challenges</h1>
         <p className="challenges-subtitle">
           Complete challenges to earn XP and unlock special badges!
         </p>
@@ -89,7 +90,7 @@ function Challenges({ onNavigate }) {
                 <div key={challenge.id} className={`challenge-card ${completed ? 'completed' : ''}`}>
                   <div className="challenge-badge">
                     <div className="badge-icon">{challenge.badge_icon}</div>
-                    {completed && <div className="completed-badge">✅ Completed</div>}
+                    {completed && <div className="completed-badge"><Icon type="lucide" name="CheckCircle2" size={16} tone="gold" style={{ marginRight: '4px', verticalAlign: 'middle' }} /> Completed</div>}
                   </div>
                   
                   <div className="challenge-content">
@@ -155,7 +156,8 @@ function Challenges({ onNavigate }) {
                     
                     {completed && (
                       <button className="claim-reward-btn" onClick={() => claimReward(challenge)}>
-                        🎁 Claim Reward
+                        <Icon type="lucide" name="Gift" size={20} tone="gold" style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+                        Claim Reward
                       </button>
                     )}
                   </div>
