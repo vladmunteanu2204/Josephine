@@ -85,7 +85,9 @@ function Login({ onClose, switchToSignup }) {
       setError('');
       setSuccess('');
       setLoading(true);
+      console.log('Attempting to send password reset email to:', email);
       await resetPassword(email);
+      console.log('Password reset email sent successfully');
       setSuccess(t('auth.resetEmailSent'));
       // Keep reset form visible with success message for 5 seconds, then return to login
       setTimeout(() => {
@@ -94,12 +96,21 @@ function Login({ onClose, switchToSignup }) {
       }, 5000);
     } catch (error) {
       console.error('Password reset error:', error);
+      console.error('Error code:', error.code);
+      console.error('Error message:', error.message);
+      
       if (error.code === 'auth/user-not-found') {
         setError(t('auth.userNotFound'));
       } else if (error.code === 'auth/invalid-email') {
         setError(t('auth.invalidEmail'));
+      } else if (error.code === 'auth/missing-continue-uri') {
+        setError('Configuration error. Please contact support.');
+      } else if (error.code === 'auth/invalid-continue-uri') {
+        setError('Configuration error. Please contact support.');
+      } else if (error.code === 'auth/unauthorized-continue-uri') {
+        setError('Configuration error. Please contact support.');
       } else {
-        setError(t('auth.resetEmailFailed'));
+        setError(t('auth.resetEmailFailed') + ' (' + error.code + ')');
       }
     } finally {
       setLoading(false);

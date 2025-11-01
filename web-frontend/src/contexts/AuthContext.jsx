@@ -79,7 +79,11 @@ export function AuthProvider({ children }) {
   }
 
   function resetPassword(email) {
-    return sendPasswordResetEmail(auth, email);
+    const actionCodeSettings = {
+      url: window.location.origin,
+      handleCodeInApp: false
+    };
+    return sendPasswordResetEmail(auth, email, actionCodeSettings);
   }
 
   async function loginWithGoogle() {
