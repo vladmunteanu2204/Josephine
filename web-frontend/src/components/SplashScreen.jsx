@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import Icon from './Icon';
 import './SplashScreen.css';
 
 function SplashScreen({ onComplete }) {
@@ -45,7 +46,9 @@ function SplashScreen({ onComplete }) {
 
       <div className="splash-content">
         <div className="splash-logo">
-          <div className="logo-icon">🏔️</div>
+          <div className="logo-icon">
+            <Icon type="3d" name="mountain-logo" size={80} tone="alpine" className="icon-glow" />
+          </div>
           <h1 className="logo-text">Alpenvia</h1>
           <p className="logo-tagline">{t('splash.tagline')}</p>
         </div>

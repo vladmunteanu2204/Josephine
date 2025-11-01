@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
+import Icon from './Icon';
 import HamburgerMenu from './HamburgerMenu';
 import LanguageBottomSheet from './LanguageBottomSheet';
 import Login from './Login';
@@ -95,7 +96,9 @@ function Header({ currentView, setCurrentView }) {
       <header className="header header-mobile-redesign">
         <div className="container header-content-mobile">
           <div className="logo logo-mobile" onClick={() => setCurrentView('home')}>
-            <span className="logo-icon logo-icon-mobile">🏔️</span>
+            <span className="logo-icon logo-icon-mobile">
+              <Icon type="3d" name="mountain-logo" size={26} tone="alpine" />
+            </span>
             <span className="logo-text logo-text-mobile">Alpenvia</span>
           </div>
           
@@ -106,9 +109,13 @@ function Header({ currentView, setCurrentView }) {
               aria-label={t('language.selectLanguage')}
               title={t('language.selectLanguage')}
             >
-              <span className="language-icon">🌐</span>
+              <span className="language-icon">
+                <Icon type="lucide" name="Globe" size={16} tone="neutral" />
+              </span>
               <span className="language-label-mobile">{getCurrentLanguageLabel()}</span>
-              <span className="language-chevron">▼</span>
+              <span className="language-chevron">
+                <Icon type="lucide" name="ChevronDown" size={12} tone="neutral" />
+              </span>
             </button>
             
             {currentUser ? (
@@ -129,7 +136,9 @@ function Header({ currentView, setCurrentView }) {
                 onClick={() => setShowLogin(true)}
                 aria-label={t('auth.login')}
               >
-                <span className="auth-icon">👤</span>
+                <span className="auth-icon">
+                  <Icon type="lucide" name="User" size={18} tone="neutral" />
+                </span>
               </button>
             )}
 

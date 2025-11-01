@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import Icon from './Icon';
 import FeaturedCarousel from './FeaturedCarousel';
 import ThemeCards from './ThemeCards';
 import './Home.css';
@@ -99,11 +100,15 @@ function Home({ setCurrentView, viewTrail }) {
               style={!preferReducedMotion ? { transform: `translateY(${scrollY * 0.08}px)` } : {}}
             >
               <button className="hero-btn-primary-redesign" onClick={() => setCurrentView('recommendations')}>
-                <span className="hero-btn-icon">✨</span>
+                <span className="hero-btn-icon">
+                  <Icon type="lucide" name="Sparkles" size={20} tone="gold" />
+                </span>
                 <span className="hero-btn-text">{t('home.smartRecommendations')}</span>
               </button>
               <button className="hero-btn-secondary-redesign" onClick={() => setCurrentView('catalog')}>
-                <span className="hero-btn-icon">🗺️</span>
+                <span className="hero-btn-icon">
+                  <Icon type="3d" name="compass" size={20} tone="alpine" />
+                </span>
                 <span className="hero-btn-text">{t('home.browseTrailCatalog')}</span>
               </button>
             </div>
@@ -113,9 +118,13 @@ function Home({ setCurrentView, viewTrail }) {
               onClick={handleScrollToContent}
               style={!preferReducedMotion ? { opacity: Math.max(0, 1 - (scrollY / 200)) } : {}}
             >
-              <span className="scroll-cue-icon">🏔️</span>
+              <span className="scroll-cue-icon">
+                <Icon type="3d" name="mountain-logo" size={24} tone="alpine" />
+              </span>
               <span className="scroll-cue-text">{t('hero.scrollToExplore')}</span>
-              <span className="scroll-cue-arrow">↓</span>
+              <span className="scroll-cue-arrow">
+                <Icon type="lucide" name="ChevronDown" size={20} tone="neutral" />
+              </span>
             </div>
           </div>
         </div>
