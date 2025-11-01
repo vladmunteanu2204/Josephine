@@ -95,7 +95,7 @@ function Header({ currentView, setCurrentView }) {
       <header className="header header-mobile-redesign">
         <div className="container header-content-mobile">
           <div className="logo logo-mobile" onClick={() => setCurrentView('home')}>
-            <span className="logo-icon logo-icon-mobile">🏔️</span>
+            <img src="/assets/icons/3d/icon-logo-3d.png" alt="" className="logo-icon logo-icon-mobile" />
             <span className="logo-text logo-text-mobile">Alpenvia</span>
           </div>
           
@@ -106,7 +106,7 @@ function Header({ currentView, setCurrentView }) {
               aria-label={t('language.selectLanguage')}
               title={t('language.selectLanguage')}
             >
-              <span className="language-icon">🌐</span>
+              <img src="/assets/icons/3d/icon-language-3d.png" alt="" className="language-icon" />
               <span className="language-label-mobile">{getCurrentLanguageLabel()}</span>
               <span className="language-chevron">▼</span>
             </button>
@@ -129,7 +129,7 @@ function Header({ currentView, setCurrentView }) {
                 onClick={() => setShowLogin(true)}
                 aria-label={t('auth.login')}
               >
-                <span className="auth-icon">👤</span>
+                <img src="/assets/icons/3d/icon-profile-3d.png" alt="" className="auth-icon" />
               </button>
             )}
 
@@ -139,7 +139,7 @@ function Header({ currentView, setCurrentView }) {
               aria-label={t('menu.navigation')}
               aria-expanded={showHamburger}
             >
-              <span className="hamburger-icon">☰</span>
+              <img src="/assets/icons/3d/icon-menu-3d.png" alt="" className="hamburger-icon" />
             </button>
 
             {currentUser && (

@@ -32,19 +32,19 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
   if (!isOpen) return null;
 
   const mainMenuItems = [
-    { key: 'home', icon: '🏠', label: t('nav.home') },
-    { key: 'recommendations', icon: '✨', label: t('nav.smartRecommendations') },
-    { key: 'catalog', icon: '🗺️', label: t('nav.trailCatalog') },
-    { key: 'rifugios', icon: '🏔️', label: t('nav.rifugios') },
-    { key: 'planner', icon: '📅', label: t('nav.hikePlanner') }
+    { key: 'home', icon: '/assets/icons/3d/icon-home-3d.png', label: t('nav.home') },
+    { key: 'recommendations', icon: '/assets/icons/3d/icon-recommendations-3d.png', label: t('nav.smartRecommendations') },
+    { key: 'catalog', icon: '/assets/icons/3d/icon-catalog-3d.png', label: t('nav.trailCatalog') },
+    { key: 'rifugios', icon: '/assets/icons/3d/icon-rifugios-3d.png', label: t('nav.rifugios') },
+    { key: 'planner', icon: '/assets/icons/3d/icon-planner-3d.png', label: t('nav.hikePlanner') }
   ];
 
   const userMenuItems = currentUser ? [
-    { key: 'profile', icon: '👤', label: t('profile.title') },
-    { key: 'savedTrails', icon: '❤️', label: t('profile.savedTrails') },
-    { key: 'challenges', icon: '🎯', label: t('challenges.title') },
-    { key: 'leaderboards', icon: '🏆', label: t('leaderboards.title') },
-    { key: 'settings', icon: '⚙️', label: t('settings.title') }
+    { key: 'profile', icon: '/assets/icons/3d/icon-profile-3d.png', label: t('profile.title') },
+    { key: 'savedTrails', icon: '/assets/icons/3d/icon-saved-3d.png', label: t('profile.savedTrails') },
+    { key: 'challenges', icon: '/assets/icons/3d/icon-challenges-3d.png', label: t('challenges.title') },
+    { key: 'leaderboards', icon: '/assets/icons/3d/icon-leaderboard-3d.png', label: t('leaderboards.title') },
+    { key: 'settings', icon: '/assets/icons/3d/icon-settings-3d.png', label: t('settings.title') }
   ] : [];
 
   const isAdmin = currentUser?.email === 'vladmunteanu2204@gmail.com';
@@ -79,7 +79,7 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
             onClick={onClose}
             aria-label={t('common.close')}
           >
-            ✕
+            <img src="/assets/icons/3d/icon-close-3d.png" alt="" className="hamburger-close-icon" />
           </button>
         </div>
 
@@ -91,7 +91,7 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
                 className={`hamburger-item ${currentView === item.key ? 'active' : ''}`}
                 onClick={() => handleItemClick(item.key)}
               >
-                <span className="hamburger-item-icon">{item.icon}</span>
+                <img src={item.icon} alt="" className="hamburger-item-icon" />
                 <span className="hamburger-item-label">{item.label}</span>
                 {currentView === item.key && <span className="hamburger-item-indicator">•</span>}
               </button>
@@ -108,7 +108,7 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
                     className={`hamburger-item ${currentView === item.key ? 'active' : ''}`}
                     onClick={() => handleItemClick(item.key)}
                   >
-                    <span className="hamburger-item-icon">{item.icon}</span>
+                    <img src={item.icon} alt="" className="hamburger-item-icon" />
                     <span className="hamburger-item-label">{item.label}</span>
                     {currentView === item.key && <span className="hamburger-item-indicator">•</span>}
                   </button>
@@ -125,7 +125,7 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
                   className={`hamburger-item ${currentView === 'admin' ? 'active' : ''}`}
                   onClick={() => handleItemClick('admin')}
                 >
-                  <span className="hamburger-item-icon">🔐</span>
+                  <img src="/assets/icons/3d/icon-admin-3d.png" alt="" className="hamburger-item-icon" />
                   <span className="hamburger-item-label">{t('admin.title')}</span>
                   {currentView === 'admin' && <span className="hamburger-item-indicator">•</span>}
                 </button>
@@ -141,7 +141,7 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
                   className="hamburger-item hamburger-logout"
                   onClick={() => handleItemClick('logout')}
                 >
-                  <span className="hamburger-item-icon">🚪</span>
+                  <img src="/assets/icons/3d/icon-logout-3d.png" alt="" className="hamburger-item-icon" />
                   <span className="hamburger-item-label">{t('auth.logout')}</span>
                 </button>
               </div>
