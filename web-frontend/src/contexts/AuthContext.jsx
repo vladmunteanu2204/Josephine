@@ -59,7 +59,11 @@ function isMobileDevice() {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // Only start in loading state if we're potentially waiting for an OAuth redirect
+  const [loading, setLoading] = useState(() => {
+    const oauthPending = localStorage.getItem('_firebase_oauth_pending') === 'true';
+    return oauthPending;
+  });
   const [authError, setAuthError] = useState(null);
 
   async function signup(email, password, displayName) {
@@ -315,9 +319,9 @@ export function AuthProvider({ children }) {
     });
 
     // Fallback: ensure loading state clears after reasonable timeout
-    // Increased from 3s to 8s for mobile OAuth redirects which can be slower
+    // Reduced to 1.5s for better UX - only wait if actually needed for OAuth redirect
     const timeout = setTimeout(() => {
-      console.log('⏱️ 8-second timeout reached, forcing loading to false');
+      console.log('⏱️ 1.5-second timeout reached, forcing loading to false');
       
       // If OAuth was pending but we still don't have a user, clear the flags
       if (localStorage.getItem('_firebase_oauth_pending') === 'true') {
@@ -327,7 +331,7 @@ export function AuthProvider({ children }) {
       }
       
       setLoading(false);
-    }, 8000);
+    }, 1500);
 
     return () => {
       unsubscribe();

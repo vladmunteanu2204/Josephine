@@ -10,27 +10,18 @@ function SplashScreen({ onComplete }) {
 
   useEffect(() => {
     const minDisplayTime = 2000;
-    const startTime = Date.now();
 
-    const checkIfReady = () => {
-      const elapsed = Date.now() - startTime;
-      const remainingTime = Math.max(0, minDisplayTime - elapsed);
-
+    // Start the timer immediately - don't wait for all resources to load
+    // This prevents the splash from getting stuck waiting for large images
+    const fadeTimer = setTimeout(() => {
+      setFadeOut(true);
       setTimeout(() => {
-        setFadeOut(true);
-        setTimeout(() => {
-          setIsLoading(false);
-          if (onComplete) onComplete();
-        }, 800);
-      }, remainingTime);
-    };
+        setIsLoading(false);
+        if (onComplete) onComplete();
+      }, 800);
+    }, minDisplayTime);
 
-    if (document.readyState === 'complete') {
-      checkIfReady();
-    } else {
-      window.addEventListener('load', checkIfReady);
-      return () => window.removeEventListener('load', checkIfReady);
-    }
+    return () => clearTimeout(fadeTimer);
   }, [onComplete]);
 
   if (!isLoading) return null;
