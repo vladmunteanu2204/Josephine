@@ -22,7 +22,7 @@ The design system employs a premium dark alpine theme with glassmorphism effects
 - **Persistent State:** User preferences, saved trails, gamification data, and hike plans are persisted using `localStorage`.
 - **Media Galleries:** `MediaGallery` component with performance optimizations like lazy loading and progressive image loading.
 - **Interactive Maps:** `Mapbox GL` for interactive trail route visualization and POI markers.
-- **GPS Tracking:** Real-time GPS tracking with position updates, checkpoint proximity alerts with mountain bell sound, and live stats display.
+- **GPS Tracking:** Real-time GPS tracking with position updates, checkpoint proximity alerts with mountain bell sound, and live stats display. Uses React refs (isOffTrailRef, isPausedRef) synchronized with useEffect to prevent closure bugs in GPS callbacks, ensuring accurate off-trail detection without notification spam, proper stats pausing when off-trail, and alert banner clearing when returning to trail.
 - **Progressive Web App (PWA):** Full PWA support with installable app experience, offline capability, and background sync readiness.
 - **Gamification System:** Badge/achievement system, XP/levels system, and leaderboards.
 - **Weather Integration:** OpenWeatherMap API for current conditions, forecasts, and safety alerts.
