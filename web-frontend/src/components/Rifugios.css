@@ -331,16 +331,145 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .rifugios-header {
+    padding: 32px 16px;
+  }
+
   .page-title {
     font-size: 28px;
   }
-  
+
+  .page-subtitle {
+    font-size: 14px;
+  }
+
+  .rifugios-container {
+    padding: 16px;
+  }
+
+  .filters-sidebar {
+    padding: 20px 16px;
+  }
+
+  .view-controls {
+    gap: 10px;
+  }
+
+  .view-btn {
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+    min-width: 0;
+  }
+
   .rifugios-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
-  
-  .view-controls {
+
+  .rifugio-card-image {
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rifugios-header {
+    padding: 28px 16px;
+  }
+
+  .page-title {
+    font-size: 24px;
+  }
+
+  .page-subtitle {
+    font-size: 13px;
+  }
+
+  .rifugios-container {
+    padding: 12px;
+    gap: 16px;
+  }
+
+  .filters-sidebar {
+    padding: 18px 14px;
+    border-radius: 12px;
+  }
+
+  .filters-header {
     flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .filters-header h2 {
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .clear-filters-btn {
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .filter-group {
+    margin-bottom: 16px;
+  }
+
+  .view-controls {
+    gap: 8px;
+  }
+
+  .view-btn {
+    flex: 1;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .rifugios-grid {
+    gap: 16px;
+  }
+
+  .rifugio-card {
+    border-radius: 12px;
+  }
+
+  .rifugio-card-image {
+    height: 160px;
+  }
+
+  .rifugio-card-content {
+    padding: 16px;
+  }
+
+  .rifugio-name {
+    font-size: 18px;
+  }
+
+  .rifugio-meta {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    font-size: 13px;
+  }
+
+  .empty-state {
+    padding: 60px 20px;
+  }
+
+  .empty-state p {
+    font-size: 16px;
   }
 }
