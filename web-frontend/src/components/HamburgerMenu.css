@@ -84,7 +84,6 @@
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: var(--text-secondary);
-  font-size: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -92,11 +91,21 @@
   transition: all 0.3s ease;
 }
 
+.hamburger-close-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+}
+
 .hamburger-close:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: var(--text-primary);
   border-color: rgba(255, 255, 255, 0.15);
   transform: scale(1.05);
+}
+
+.hamburger-close:hover .hamburger-close-icon {
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.45));
 }
 
 .hamburger-close:focus-visible {
@@ -158,9 +167,21 @@
 }
 
 .hamburger-item-icon {
-  font-size: 22px;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
   flex-shrink: 0;
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.hamburger-item:hover .hamburger-item-icon {
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.45));
+  transform: scale(1.1);
+}
+
+.hamburger-item.active .hamburger-item-icon {
+  filter: drop-shadow(0 3px 10px rgba(212, 165, 116, 0.4));
 }
 
 .hamburger-item-label {
