@@ -442,22 +442,34 @@ function ActiveHikeTracker({ trail, onEnd }) {
 
       // Arrival notification (only once when first reaching)
       if (checkpointState.state === 'reached' && !visitedCheckpoints.find(c => c.index === index)) {
-        const icon = checkpoint.type === 'summit' ? '⛰️' : checkpoint.type === 'refuge' ? '🏠' : '📍';
-        toast.success(t('gps.checkpointReachedToast', { icon, name: checkpoint.name }));
-        sendNotification(
-          t('gps.checkpointReachedNotification', { icon }),
-          t('gps.checkpointReachedNotificationBody', { name: checkpoint.name })
-        );
-        playMountainBell(); // Play sound cue for arrival
+        // CRITICAL: Check if we already sent arrival notification (prevent spam during async state update)
+        const arrivalNotifKey = `${index}-arrival`;
+        const lastArrivalNotif = lastNotificationRef.current[arrivalNotifKey];
+        
+        if (!lastArrivalNotif || (Date.now() - lastArrivalNotif.time) > 5000) {
+          const icon = checkpoint.type === 'summit' ? '⛰️' : checkpoint.type === 'refuge' ? '🏠' : '📍';
+          toast.success(t('gps.checkpointReachedToast', { icon, name: checkpoint.name }));
+          sendNotification(
+            t('gps.checkpointReachedNotification', { icon }),
+            t('gps.checkpointReachedNotificationBody', { name: checkpoint.name })
+          );
+          playMountainBell(); // Play sound cue for arrival
 
-        // Track visited checkpoint
-        setVisitedCheckpoints(prev => [...prev, {
-          index,
-          name: checkpoint.name,
-          type: checkpoint.type,
-          timestamp: Date.now(),
-          coordinates: checkpoint.coordinates
-        }]);
+          // CRITICAL: Immediately mark notification as sent (before async state update)
+          lastNotificationRef.current[arrivalNotifKey] = {
+            time: Date.now(),
+            position: { lat: position.latitude, lon: position.longitude }
+          };
+
+          // Track visited checkpoint
+          setVisitedCheckpoints(prev => [...prev, {
+            index,
+            name: checkpoint.name,
+            type: checkpoint.type,
+            timestamp: Date.now(),
+            coordinates: checkpoint.coordinates
+          }]);
+        }
       }
 
       // Update last distance for trend detection
