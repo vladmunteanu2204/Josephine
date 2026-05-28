@@ -294,11 +294,16 @@ function TrailManager({ adminPassword }) {
       const tagsArray = tagsInput.split(',').map(item => item.trim()).filter(item => item);
       const seasonsArray = seasonsInput.split(',').map(item => item.trim()).filter(item => item);
       
+      const note = formData.josephineNote || {};
+      const hasNote = (note.en || '').trim() || (note.it || '').trim() || (note.de || '').trim();
       const trailData = {
         ...formData,
         tags: tagsArray,
         interests: tagsArray,
-        best_season: seasonsArray
+        best_season: seasonsArray,
+        josephineNote: hasNote
+          ? { en: (note.en || '').trim(), it: (note.it || '').trim(), de: (note.de || '').trim() }
+          : undefined
       };
       
       const headers = { 'X-Admin-Password': adminPassword };

@@ -307,17 +307,22 @@ function TrailDetail({ trail, onBack, setIsGPSActive }) {
           </div>
           <p className="overview-text">{fullTrail.description}</p>
 
-          {fullTrail.josephineNote && (
-            <div className="josephine-note-callout">
-              <div className="josephine-note-label">
-                <span className="josephine-note-icon">🏔️</span>
-                <span className="josephine-note-byline">{t('trail.josephineNote')}</span>
+          {(() => {
+            const note = fullTrail.josephineNote;
+            if (!note || typeof note !== 'object') return null;
+            const lang = i18n.language ? i18n.language.split('-')[0] : 'en';
+            const noteText = (note[lang] || note.en || '').trim();
+            if (!noteText) return null;
+            return (
+              <div className="josephine-note-callout">
+                <div className="josephine-note-label">
+                  <span className="josephine-note-icon">🏔️</span>
+                  <span className="josephine-note-byline">{t('trail.josephineNote')}</span>
+                </div>
+                <p className="josephine-note-text">{noteText}</p>
               </div>
-              <p className="josephine-note-text">
-                {fullTrail.josephineNote[i18n.language] || fullTrail.josephineNote.en || fullTrail.josephineNote}
-              </p>
-            </div>
-          )}
+            );
+          })()}
         </div>
 
         <div className="map-section">
