@@ -23,8 +23,9 @@ Josephine is a production-ready alpine companion platform featuring:
 - 🌦️ **Weather integration** with hiking suitability scoring
 - 🗺️ **Interactive maps** powered by Mapbox GL
 - 🌍 **Full internationalization** (English, Italian, German)
-- 📱 **Progressive Web App** with offline support
+- 📱 **Progressive Web App** with offline support and branded app icon
 - 🎨 **Dark alpine-inspired glassmorphic UI** with cinematic design
+- 💬 **Josephine's editorial voice** — warm, locally-written trail notes in every detail page
 
 ---
 
@@ -35,6 +36,7 @@ Josephine is a production-ready alpine companion platform featuring:
 - **Verified Routes** - Curated trails for South Tyrol & Trentino Alps
 - **Trail Catalog** - Browse with advanced filters (difficulty, region, features)
 - **Detailed Trail Pages** - Cinematic design with parallax scrolling, elevation profiles, POIs
+- **Josephine's Voice** - Warm editorial "Josephine says" callout on every trail and multi-day trail detail page, written in EN/IT/DE and fully editable from the admin panel
 - **Multi-Day Treks** - Plan hut-to-hut adventures with stage-by-stage breakdown
 - **Hike Planner** - Multi-day itinerary builder with equipment checklists
 
@@ -69,10 +71,10 @@ Josephine is a production-ready alpine companion platform featuring:
 - **Safety Disclaimers** - Legal protection before GPS tracking
 
 ### Admin Panel
-- **Trail Management** - Create/edit trails, upload GPX routes
+- **Trail Management** - Create/edit trails, upload GPX routes, and write Josephine editorial notes (EN/IT/DE)
 - **Checkpoint System** - Add custom waypoints with GPS coordinates, types, and alert distances
 - **Rifugio CMS** - Manage alpine hut database
-- **Multi-Day Trail Builder** - Visual stage creator with per-day details
+- **Multi-Day Trail Builder** - Visual stage creator with per-day details and Josephine editorial notes
 - **User Management** - View all users, stats, analytics
 - **Review Moderation** - Approve/reject user reviews
 - **Challenge Creation** - Design and deploy gamification events

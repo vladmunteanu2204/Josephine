@@ -32,6 +32,7 @@ The design system employs a premium dark alpine theme with glassmorphism effects
 - **Review System:** Comprehensive user review system with star ratings.
 - **Trail Catalog:** Sticky filters sidebar, live search, multi-filter support, and grid/map view toggle.
 - **Cinematic Trail Detail Pages:** Immersive design with parallax scrolling, fade-in animations, dynamic SVG elevation profile, and interactive elements.
+- **Josephine's Voice:** Each trail and multi-day trail has an optional `josephineNote` field (EN/IT/DE). A warm amber glassmorphic "Josephine says" callout renders on trail detail and multi-day trail detail pages, localized to the user's language with EN fallback. Fully editable from the admin panel.
 - **Admin Panel:** Secure interface for trail management (with GPX upload), review moderation, challenges creation, user plan management, user management, trail analytics, and gamification statistics. Protected by custom authentication.
 - **Media Storage:** Replit Object Storage integration for persistent media file hosting with automatic compression (WebP for images, H.264 for videos).
 - **Challenges System:** User-facing challenges with progress tracking, XP rewards, and integration with the gamification system.
@@ -41,8 +42,8 @@ The design system employs a premium dark alpine theme with glassmorphism effects
 
 ### Feature Specifications
 - **Core Pages:** Home, Catalog, Recommendations, Trail Detail, User Profile, Saved Trails, Settings, Leaderboards, Hike Planner, Rifugios Directory, Rifugio Detail, Multi-Day Trails Catalog, and Multi-Day Trail Detail.
-- **Trail Data:** Enhanced schema including taglines, galleries, thumbnails, wallpaper, photos, videos, tags, and GPS coordinates.
-- **Multi-Day Trail Data:** Stage-based schema with per-day distance, elevation, duration, difficulty, overnight rifugio, and descriptions. Supports trail type classification (point-to-point, loop, out-and-back).
+- **Trail Data:** Enhanced schema including taglines, galleries, thumbnails, wallpaper, photos, videos, tags, GPS coordinates, and optional `josephineNote` (EN/IT/DE).
+- **Multi-Day Trail Data:** Stage-based schema with per-day distance, elevation, duration, difficulty, overnight rifugio, and descriptions. Supports trail type classification (point-to-point, loop, out-and-back). Optional `josephineNote` (EN/IT/DE) for editorial callout on detail pages.
 - **Responsiveness:** All components are mobile-responsive.
 - **Accessibility:** ARIA labels and focus management integrated.
 
@@ -54,7 +55,19 @@ The design system employs a premium dark alpine theme with glassmorphism effects
 - **Port Configuration:** Development: Frontend on 5000, Backend on 8000. Production: Single Flask server on 5000.
 - **Deployment Configuration:** Autoscale deployment with `npm run build` and `npm run start` commands. Flask serves built React app.
 
-## Recent Bug Fixes & Improvements (November 2025)
+## Recent Changes (May 2026)
+
+### Branding
+- **App Icon & Splash Screen:** Replaced placeholder icon with a branded "J" monogram SVG (`public/icon.svg`) — dark navy circle, gold letterform, mountain peak accent. PNG icon set regenerated (192×512px). `manifest.json` updated with separate `any`/`maskable` entries. `SplashScreen.jsx` emoji replaced with inline branded SVG mark.
+
+### Editorial Voice
+- **Josephine's Trail Notes:** Added `josephineNote` (EN/IT/DE) to all 6 single-day trails in `data/trails.json`. Trail detail pages show an amber glassmorphic "Josephine says" callout below the overview text, fully localized. Empty notes are silently hidden. Admin Trail Manager has EN/IT/DE textarea fields for editing notes.
+- **Josephine's Multi-Day Trail Notes:** Same pattern applied to multi-day trails (`backend/data/multi_day_trails.json`). Alta Via 1 has a note written. `MultiDayTrailDetail.jsx` renders the callout; admin `MultiDayTrailsManager.jsx` exposes the edit fields.
+
+### Infrastructure
+- **Post-Merge Setup Script:** Created `scripts/post-merge.sh` — runs `npm install` and `pip install` automatically after task agent merges. Configured in `.replit` with a 120s timeout.
+
+## Earlier Bug Fixes & Improvements (November 2025)
 
 ### Authentication
 - **Password Reset Service:** Fixed Firebase password reset functionality by adding proper `actionCodeSettings` configuration with redirect URL handling. Enhanced error handling for configuration issues and added detailed logging for troubleshooting.

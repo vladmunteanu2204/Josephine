@@ -1,6 +1,6 @@
 # 🏔️ Josephine Development Roadmap
 
-## Project Status: Phases 17C, 17F, 17H, 19A, 19B Complete (52%)
+## Project Status: Phases 17C, 17F, 17H, 19A, 19B, 20A, 20B, 20C Complete (55%)
 
 **Vision:** "Your local companion in the mountains." — a warm, premium, human-first alpine experience crafted in the heart of South Tyrol.
 
@@ -27,7 +27,8 @@
 - Hero section: new headline/subtitle/CTA pair live and A/B tested
 
 ### Month 3 — Experience Detail
-- Josephine editorial trail notes ("Josephine says…") on every trail detail page
+- ✅ Josephine editorial trail notes ("Josephine says…") on every trail detail page
+- ✅ Josephine editorial notes on every multi-day trail detail page
 - Rifugio detail pages updated with Josephine warmth tone
 - Trip summary page: Josephine congratulations message post-hike
 - Trail photos curated with South Tyrol / Dolomite editorial quality
@@ -40,13 +41,35 @@
 
 ### Month 5 — Polish & Beta
 - Josephine portrait illustration or photography finalised
-- Custom Josephine app icon, PWA splash, and favicon set
+- ✅ Custom Josephine app icon, PWA splash, and favicon set
 - Performance audit: sub-2s LCP on mobile, image optimisation pass
 - Beta user feedback round → prioritise next 6 months
 
 ---
 
-## ✅ **COMPLETED PHASES (Phases 1-18, 17C, 17F, 17H, 19A, 19B)**
+## ✅ **COMPLETED PHASES (Phases 1-18, 17C, 17F, 17H, 19A, 19B, 20A, 20B, 20C)**
+
+### **Phase 20A: Branded App Icon & Splash Screen** ✅ *(May 2026)*
+- Branded "J" monogram SVG icon (`public/icon.svg`) — dark navy circle, gold letterform, mountain silhouette accent
+- PNG icon set regenerated at 192×192 and 512×512
+- `manifest.json` updated with separate `any` / `maskable` PWA icon entries
+- `index.html` favicon links updated (SVG + PNG + Apple touch icon)
+- `SplashScreen.jsx` emoji replaced with inline branded SVG mark
+
+### **Phase 20B: Josephine's Voice — Trail Editorial Notes** ✅ *(May 2026)*
+- `josephineNote` field (EN/IT/DE) added to all 6 trails in `data/trails.json`
+- Warm, locally-written notes authored in Josephine's first-person voice
+- Amber glassmorphic "Josephine says" callout rendered on every trail detail page
+- Callout localized to user's language with EN fallback; silently hidden when empty
+- Admin Trail Manager has EN/IT/DE textarea fields for adding/editing notes
+- i18n keys added to en/it/de locale files
+
+### **Phase 20C: Josephine's Voice — Multi-Day Trail Editorial Notes** ✅ *(May 2026)*
+- `josephineNote` field (EN/IT/DE) added to multi-day trails in `backend/data/multi_day_trails.json`
+- Alta Via 1 has a curated note written
+- `MultiDayTrailDetail.jsx` renders the same amber callout after the trek overview
+- `MultiDayTrailsManager.jsx` admin form includes EN/IT/DE note fields
+- Reuses `.josephine-note-callout` CSS class — no duplicate styles needed
 
 ### **Phase 1-10: Foundation & Core Features** ✅
 - Dark alpine-inspired glassmorphic UI design system
