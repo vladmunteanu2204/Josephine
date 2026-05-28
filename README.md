@@ -111,7 +111,7 @@ Josephine is a production-ready alpine companion platform featuring:
 ## 📁 Project Structure
 
 ```
-alpenvia/
+josephine/
 ├── backend/                    # Flask API (port 8000 dev, 5000 prod)
 │   ├── app.py                 # Main application with all API endpoints
 │   ├── requirements.txt       # Python dependencies

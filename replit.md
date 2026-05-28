@@ -12,7 +12,7 @@ Josephine is a production-ready, premium multilingual alpine companion for South
 - Verified routes only (no AI generation)
 
 ## System Architecture
-Alpenvia consists of a Flask backend API and a React web-frontend.
+Josephine consists of a Flask backend API and a React web-frontend.
 
 ### UI/UX Decisions
 The design system employs a premium dark alpine theme with glassmorphism effects, featuring frosted glass cards and backdrop blur. It incorporates dramatic hero sections with mountain silhouettes and aurora gradients, enhanced shadows for layered depth, and glowing accent colors. Smooth animations, micro-interactions, premium typography with text shadows, and topographic patterns contribute to an immersive user experience. The mobile UI is minimalist, mobile-first, and fully internationalized.

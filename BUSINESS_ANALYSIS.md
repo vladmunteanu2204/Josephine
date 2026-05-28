@@ -246,7 +246,7 @@ Josephine is a warm, premium multilingual alpine companion specifically designed
 
 **Risk: Brand Recognition**
 - **Impact:** Low - Generic name may hinder memorability
-- **Probability:** Medium - "Alpenvia" not widely recognized
+- **Probability:** Medium - "Josephine" not widely recognized
 - **Mitigation:**
   - Consistent branding across all touchpoints
   - Memorable logo and visual identity (mountain emoji + gold glow)
@@ -322,7 +322,7 @@ Josephine is a warm, premium multilingual alpine companion specifically designed
   - Generic hiking apps lack local expertise
   - Difficulty finding and booking rifugios
   - Language barriers (English speakers in Italy)
-- **Alpenvia Value Proposition:** 
+- **Josephine Value Proposition:** 
   - Curated South Tyrol/Trentino trail collection
   - Integrated rifugio booking system
   - Multilingual support (EN/IT/DE)
@@ -336,7 +336,7 @@ Josephine is a warm, premium multilingual alpine companion specifically designed
   - Existing apps lack detailed local trails
   - Want to discover new routes in home region
   - Need accurate, up-to-date rifugio information
-- **Alpenvia Value Proposition:**
+- **Josephine Value Proposition:**
   - Deep local trail catalog
   - Native language support (German, Italian)
   - Gamification encourages exploration
@@ -350,7 +350,7 @@ Josephine is a warm, premium multilingual alpine companion specifically designed
   - Generic apps lack multi-day trail support
   - Rifugio booking scattered across websites
   - Want detailed elevation profiles and technical data
-- **Alpenvia Value Proposition:**
+- **Josephine Value Proposition:**
   - Multi-day trail builder with stage-by-stage planning
   - Comprehensive rifugio directory with booking
   - Detailed trail data (GPX, elevation, checkpoints)
@@ -407,7 +407,7 @@ Josephine is a warm, premium multilingual alpine companion specifically designed
   - Limited rifugio integration
   - US-centric UX and marketing
   - Cluttered interface with ads
-- **Differentiation:** Alpenvia offers superior regional expertise, integrated rifugio booking, and premium ad-free experience
+- **Differentiation:** Josephine offers superior regional expertise, integrated rifugio booking, and premium ad-free experience
 
 **2. Komoot (Strong European Player)**
 - **Strengths:**
@@ -420,7 +420,7 @@ Josephine is a warm, premium multilingual alpine companion specifically designed
   - Freemium model with aggressive upsells
   - Limited hut-to-hut planning
   - No integrated rifugio booking
-- **Differentiation:** Alpenvia focuses on simplicity, beautiful UX, and seamless rifugio integration
+- **Differentiation:** Josephine focuses on simplicity, beautiful UX, and seamless rifugio integration
 
 **3. Outdooractive (Alpine-Focused)**
 - **Strengths:**
@@ -433,7 +433,7 @@ Josephine is a warm, premium multilingual alpine companion specifically designed
   - Dated UI/UX
   - Expensive subscription (€29.99/year)
   - Limited gamification
-- **Differentiation:** Alpenvia offers modern UI, better pricing, and social/gamification features
+- **Differentiation:** Josephine offers modern UI, better pricing, and social/gamification features
 
 **4. Bergfex (Regional Player)**
 - **Strengths:**
@@ -445,19 +445,19 @@ Josephine is a warm, premium multilingual alpine companion specifically designed
   - Limited mobile app features
   - No GPS tracking or gamification
   - Poor English support
-- **Differentiation:** Alpenvia is mobile-first, modern, and fully multilingual
+- **Differentiation:** Josephine is mobile-first, modern, and fully multilingual
 
 #### **Indirect Competitors**
 
 **5. Google Maps / Apple Maps**
 - Free, ubiquitous, but lack specialized hiking features
-- Opportunity: Most hikers use these + specialized app (Alpenvia)
+- Opportunity: Most hikers use these + specialized app (Josephine)
 
 **6. Garmin / Suunto Devices**
 - Hardware-focused, premium market (€300-600 devices)
 - Opportunity: Serve smartphone-only users
 
-#### **Competitive Advantages (Alpenvia)**
+#### **Competitive Advantages (Josephine)**
 
 1. **Regional Specialization:** Deep South Tyrol/Trentino expertise vs. generic global coverage
 2. **Rifugio Integration:** Only app with comprehensive hut booking system
@@ -793,7 +793,7 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {
       return response || fetch(event.request).then((fetchResponse) => {
-        return caches.open('alpenvia-v1').then((cache) => {
+        return caches.open('josephine-v1').then((cache) => {
           cache.put(event.request, fetchResponse.clone());
           return fetchResponse;
         });
@@ -1068,7 +1068,7 @@ self.addEventListener('fetch', (event) => {
 1. User selects rifugio, dates, guests
 2. See real-time availability (integrate rifugio APIs)
 3. Pay deposit (20-30%) via Stripe
-4. Alpenvia takes 7% commission, sends 93% to rifugio
+4. Josephine takes 7% commission, sends 93% to rifugio
 5. Full payment on arrival at rifugio
 
 **Implementation:**
@@ -1091,13 +1091,13 @@ self.addEventListener('fetch', (event) => {
 
 #### **B2B SaaS Licensing (Priority: Low, Long-Term)**
 
-**Opportunity:** License Alpenvia technology to regional tourism boards
+**Opportunity:** License Josephine technology to regional tourism boards
 
 **Use Cases:**
 
 1. **White-Label Platform:**
    - Südtirol Marketing wants branded hiking app
-   - License Alpenvia codebase for €10K-20K/year
+   - License Josephine codebase for €10K-20K/year
    - Customize with their branding, data, features
 
 2. **API Access:**
@@ -1216,7 +1216,7 @@ self.addEventListener('fetch', (event) => {
 
 ## Conclusion
 
-Alpenvia has strong potential to become the premier hiking platform for the Alps. The combination of regional specialization, premium UX, rifugio integration, and gamification creates a defensible niche that larger competitors cannot easily replicate.
+Josephine has strong potential to become the premier hiking platform for the Alps. The combination of regional specialization, premium UX, rifugio integration, and gamification creates a defensible niche that larger competitors cannot easily replicate.
 
 **Key Success Factors:**
 1. **Validate Product-Market Fit:** 500 beta users with 40%+ monthly active usage
@@ -1239,11 +1239,11 @@ Alpenvia has strong potential to become the premier hiking platform for the Alps
 5. Secure rifugio partnerships (Months 6-9)
 6. Scale to 5,000 users (Month 12)
 
-With disciplined execution and user-centric iteration, Alpenvia can achieve €500K ARR by Year 3 and become a category leader in alpine adventure platforms.
+With disciplined execution and user-centric iteration, Josephine can achieve €500K ARR by Year 3 and become a category leader in alpine adventure platforms.
 
 ---
 
 **Document Version:** 1.0  
 **Last Updated:** November 2025  
-**Author:** Alpenvia Development Team  
+**Author:** Josephine Development Team  
 **Contact:** vladmunteanu2204@gmail.com

@@ -420,7 +420,7 @@
   },
   "settings": {
     "title": "Settings",
-    "subtitle": "Customize your Alpenvia experience",
+    "subtitle": "Customize your Josephine experience",
     "saved": "Settings saved",
     "language": "Language",
     "languageDescription": "Choose your preferred language",
@@ -490,7 +490,7 @@
     "knowLimitsDesc": "Choose trails appropriate for your fitness level and experience.",
     "emergencyNumbers": "Emergency Numbers",
     "disclaimer": "Important Disclaimer",
-    "disclaimerText": "You acknowledge that hiking involves inherent risks. Alpenvia provides trail information for informational purposes only and assumes no liability for accidents, injuries, or incidents. You hike at your own risk and are solely responsible for your safety.",
+    "disclaimerText": "You acknowledge that hiking involves inherent risks. Josephine provides trail information for informational purposes only and assumes no liability for accidents, injuries, or incidents. You hike at your own risk and are solely responsible for your safety.",
     "iUnderstand": "I understand the risks and have read the safety guidelines. I am prepared for this hike and accept full responsibility for my safety.",
     "startHike": "Start Hike"
   },

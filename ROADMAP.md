@@ -10,6 +10,42 @@
 
 ---
 
+## 🗓️ **FORWARD ROADMAP — 5-Month Plan**
+
+### Month 1 — Brand & UX Foundation
+- Complete Josephine brand identity across all surfaces (name, tagline, tone of voice)
+- Josephine guide card on homepage with portrait illustration
+- 9 editorial ThemeCards ("What kind of day?") replacing generic filters
+- Nav hierarchy: demote Challenges & Leaderboards, promote Plan My Day & Explore
+- Onboarding slides rewritten with warm, human-first Josephine voice
+- Full i18n in EN / IT / DE for all new copy
+
+### Month 2 — Homepage & Plan My Day
+- "Plan My Day" wizard fully integrated with Josephine character framing
+- SmartRecommendations redesigned: fewer steps, warmer copy, Josephine supporting line
+- Featured trail card refreshed with editorial Josephine caption
+- Hero section: new headline/subtitle/CTA pair live and A/B tested
+
+### Month 3 — Experience Detail
+- Josephine editorial trail notes ("Josephine says…") on every trail detail page
+- Rifugio detail pages updated with Josephine warmth tone
+- Trip summary page: Josephine congratulations message post-hike
+- Trail photos curated with South Tyrol / Dolomite editorial quality
+
+### Month 4 — Content & Monetisation
+- Josephine Membership tier (replaces generic Premium): curated picks, early access
+- Rifugio booking inquiry uses Josephine email templates
+- Josephine seasonal content: larch autumn, spring melt, midsummer peaks
+- Partner rifugio spotlight cards on homepage
+
+### Month 5 — Polish & Beta
+- Josephine portrait illustration or photography finalised
+- Custom Josephine app icon, PWA splash, and favicon set
+- Performance audit: sub-2s LCP on mobile, image optimisation pass
+- Beta user feedback round → prioritise next 6 months
+
+---
+
 ## ✅ **COMPLETED PHASES (Phases 1-18, 17C, 17F, 17H, 19A, 19B)**
 
 ### **Phase 1-10: Foundation & Core Features** ✅
@@ -298,7 +334,7 @@
 - Template email generation:
   - Professional booking request template
   - Includes all user details
-  - Alpenvia branding + link back to app
+  - Josephine branding + link back to app
 - Confirmation tracking:
   - User receives copy of inquiry
   - "Inquiry sent successfully" toast
@@ -345,7 +381,7 @@
 - 📱 Immersion lost — flat layout, no depth, no mountain feel
 - 🕹️ Tap targets too close — risk of accidental clicks on mobile
 
-**Goal:** Header that feels immersive, clean, and native to Alpenvia experience with fluid hierarchy and integrated design.
+**Goal:** Header that feels immersive, clean, and native to Josephine experience with fluid hierarchy and integrated design.
 
 #### **Mobile Header Structure Redesign**
 
@@ -422,7 +458,7 @@
 
 **AI Assistant Shortcut:**
 - Floating bubble icon at bottom-right
-- "Ask Alpenvia" quick help button
+- "Ask Josephine" quick help button
 - Opens chat for recommendations/help
 - Pulsing animation when idle
 
@@ -892,7 +928,7 @@ Each level tied to real alpine regions with descriptions
   - 100 hikes: "Veteran Hiker"
   - 500km: "Distance Demon"
   - 10,000m elevation: "Peak Collector"
-  - All trails completed: "Alpenvia Legend"
+  - All trails completed: "Josephine Legend"
   - 20 rifugio stays: "Rifugio Regular" 🏔️
 - Custom admin-awarded titles:
   - "Community Champion"
@@ -958,7 +994,7 @@ Each level tied to real alpine regions with descriptions
   - Set pricing and facilities
   - Respond to inquiries directly in-app
   - View booking statistics
-  - Offer exclusive Alpenvia discounts
+  - Offer exclusive Josephine discounts
 - Verified badge on rifugio page
 - Direct booking integration (future)
 
@@ -1204,7 +1240,7 @@ Each level tied to real alpine regions with descriptions
 "Strava meets Lonely Mountain Journal" — an emotional, cinematic alpine experience where every achievement feels like a story of its own.
 
 ### **Ecosystem Philosophy**
-"Alpenvia evolves from a hiking planner into a living alpine ecosystem — where trails meet huts, and exploration naturally becomes connection."
+"Josephine evolves from a hiking planner into a living alpine ecosystem — where trails meet huts, and exploration naturally becomes connection."
 
 **Core Principles:**
 - Every interaction should feel rewarding and meaningful

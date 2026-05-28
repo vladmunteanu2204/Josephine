@@ -321,17 +321,19 @@
 
 @media (max-width: 540px) {
   .josephine-guide-card {
-    max-width: 340px;
+    flex-direction: column;
+    max-width: 320px;
     margin-bottom: 28px;
   }
 
   .guide-card-portrait {
-    width: 76px;
-    min-width: 76px;
+    width: 100%;
+    min-width: 0;
+    height: 72px;
   }
 
   .guide-card-body {
-    padding: 16px 14px 16px 12px;
+    padding: 16px 16px 16px 16px;
   }
 
   .guide-card-quote {
