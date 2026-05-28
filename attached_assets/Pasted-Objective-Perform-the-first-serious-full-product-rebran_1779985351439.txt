@@ -1,0 +1,589 @@
+Objective:
+Perform the first serious full-product rebrand sprint from Alpenvia to Josephine.
+
+This is not a simple rename. Reposition the app from a heavy hiking/adventure platform into a warm, premium, human alpine companion that helps people decide what beautiful mountain day to have in South Tyrol, Trentino, the Dolomites and nearby alpine regions.
+
+Product direction:
+Josephine is a friendly local alpine companion, crafted in the heart of South Tyrol, Italy.
+
+She helps users answer:
+“What kind of alpine day should I have today?”
+
+The app should feel alive, curated, local, emotional and useful.
+It should feel locally born, not generic.
+The South Tyrol origin is part of the brand trust and emotional identity.
+
+The app should not feel like AllTrails, Komoot, Outdooractive, Strava or a generic route database.
+
+Target users:
+- Tourists visiting South Tyrol / Trentino / Dolomites
+- Couples looking for a beautiful day
+- Families
+- Dog owners
+- Older visitors who want simple, clear suggestions
+- Casual hikers
+- Locals looking for curated weekend ideas
+
+Core feeling:
+Premium, warm, calm, local, elegant, trustworthy.
+Less “performance app”.
+More “local guide who knows the mountains”.
+
+Important:
+Do not create a cheap mascot.
+Do not create a childish CSS avatar.
+Do not use primitive circles/faces as a fake 3D character.
+Josephine should feel premium, cinematic and human.
+
+If no final 3D mascot/guide asset exists, create an elegant mascot-ready hero area with a polished guide card / visual placeholder that clearly expects a future premium illustration or 3D render.
+It must look intentional, premium and finished enough for a first rebrand sprint — not unfinished, childish or cheap.
+
+Files to inspect first:
+- README.md
+- ROADMAP.md
+- replit.md
+- BUSINESS_ANALYSIS.md
+- index.html
+- manifest.json if present
+- package.json if relevant for visible app metadata only
+- web-frontend/src/App.jsx
+- web-frontend/src/components/Home.jsx
+- web-frontend/src/components/Header.jsx
+- web-frontend/src/components/Footer.jsx
+- web-frontend/src/components/SplashScreen.jsx
+- web-frontend/src/components/HamburgerMenu.jsx
+- web-frontend/src/components/SmartRecommendations.jsx
+- web-frontend/src/components/TrailCatalog.jsx
+- web-frontend/src/components/TrailDetail.jsx
+- web-frontend/src/components/Rifugios.jsx
+- web-frontend/src/components/MultiDayTrails.jsx
+- web-frontend/src/components/OnboardingWizard.jsx
+- web-frontend/src/locales/en.json
+- web-frontend/src/locales/it.json
+- web-frontend/src/locales/de.json
+- main CSS files used by Home/Header/HamburgerMenu/SmartRecommendations
+
+Implementation scope:
+This sprint should update the product identity, first impression, navigation hierarchy, homepage experience and documentation.
+
+Do not rewrite the entire app.
+Do not change backend APIs.
+Do not change database schema.
+Do not change authentication.
+Do not remove existing features.
+Hide/demote features before deleting anything.
+Keep the existing technical foundation.
+
+Part 1 — Brand identity update:
+Replace visible “Alpenvia” branding with “Josephine” across:
+- Splash screen
+- Header
+- Footer
+- index.html title if applicable
+- manifest.json / PWA visible name if applicable
+- package metadata only if safe and user-visible
+- visible documentation references where appropriate
+
+Keep technical folder names unchanged unless absolutely necessary.
+Do not rename routes or components just for branding.
+
+Primary brand line:
+“Josephine”
+
+Main tagline:
+“Your local companion in the mountains.”
+
+Origin line:
+“Crafted in the heart of South Tyrol, Italy”
+
+Supporting line:
+“Beautiful alpine days, chosen with care.”
+
+Use meaning-equivalent translations:
+
+EN:
+“Crafted in the heart of South Tyrol, Italy”
+
+IT:
+“Creata nel cuore dell’Alto Adige, Italia”
+
+DE:
+“Entwickelt im Herzen Südtirols, Italien”
+
+The origin line should feel premium and authentic, not tourist-board generic.
+It should communicate that Josephine is built from local alpine experience in South Tyrol, not as a generic global hiking app.
+
+Avoid:
+- “Strava meets…”
+- “adventure platform”
+- “smart algorithm”
+- “performance”
+- “leaderboards”
+- “competitive”
+- “generic hiking platform”
+
+Part 2 — Homepage transformation:
+Transform the homepage from a feature dashboard into a warm companion-led entry point.
+
+The first screen should communicate:
+- Josephine helps you choose what to do today
+- The app is simple and human
+- The user can pick a mood/context, not start with technical filters
+- Josephine is crafted in South Tyrol and understands the local alpine experience
+
+Hero direction:
+- Premium alpine background / atmosphere
+- Soft cinematic lighting
+- Warm glassmorphic panel
+- Human guide presence
+- Clear primary CTA: “Plan My Day”
+- Secondary CTA: “Explore Places”
+- Subtle origin line: “Crafted in the heart of South Tyrol, Italy”
+- Avoid showing too many app features above the fold
+
+Hero copy EN:
+Title:
+“Your alpine day starts here”
+
+Subtitle:
+“Tell Josephine what kind of day you want — a lake, a malga, a quiet walk or a view worth remembering.”
+
+Tagline:
+“Your local companion in the mountains.”
+
+Origin line:
+“Crafted in the heart of South Tyrol, Italy”
+
+Primary CTA:
+“Plan My Day”
+
+Secondary CTA:
+“Explore Places”
+
+IT meaning:
+Title:
+“La tua giornata in montagna inizia qui”
+
+Subtitle:
+“Racconta a Josephine che giornata desideri — un lago, una malga, una passeggiata tranquilla o un panorama da ricordare.”
+
+Tagline:
+“La tua compagna locale in montagna.”
+
+Origin line:
+“Creata nel cuore dell’Alto Adige, Italia”
+
+Primary CTA:
+“Pianifica la mia giornata”
+
+Secondary CTA:
+“Esplora i luoghi”
+
+DE meaning:
+Title:
+“Dein Bergtag beginnt hier”
+
+Subtitle:
+“Sag Josephine, wonach dir heute ist — ein See, eine Alm, ein ruhiger Spaziergang oder ein Ausblick, den man nicht vergisst.”
+
+Tagline:
+“Deine lokale Begleiterin in den Bergen.”
+
+Origin line:
+“Entwickelt im Herzen Südtirols, Italien”
+
+Primary CTA:
+“Meinen Tag planen”
+
+Secondary CTA:
+“Orte entdecken”
+
+Part 3 — Josephine guide moment:
+Add a Josephine guide/companion area near the hero.
+
+This should feel like a premium brand element, not a mascot toy.
+
+Guide copy EN:
+“Let’s find the right mountain day for you.”
+
+IT:
+“Troviamo la giornata in montagna giusta per te.”
+
+DE:
+“Finden wir den passenden Bergtag für dich.”
+
+Rules for the Josephine guide/mascot area:
+- Do not create a childish cartoon.
+- Do not create a fake mascot using basic CSS shapes.
+- Do not add heavy 3D dependencies.
+- Do not use Three.js, Spline, Rive or Lottie in this sprint.
+- Create a polished asset-ready component/area that can later accept a premium 3D render or illustration.
+- If an image asset exists, use it.
+- If no image asset exists, use an elegant glassmorphic “Josephine guide card” with a subtle silhouette/portrait-ready area, atmospheric gradient, premium lighting and clear TODO comment for the final asset.
+- The placeholder must look premium and intentional.
+- Respect prefers-reduced-motion.
+- Mobile layout must remain clean.
+- Do not make the hero visually childish or gimmicky.
+
+The guide area should suggest:
+- calm expertise
+- local warmth
+- human assistance
+- premium alpine travel mood
+
+Part 4 — “What kind of day?” experience:
+Promote the existing theme/mood concept higher on the homepage.
+
+Create or refactor the homepage section around these choices:
+- Lake day
+- Malga & food
+- Easy scenic walk
+- Dog-friendly
+- Romantic view
+- Rainy day idea
+- With parents
+- Half-day escape
+- Hut-to-hut inspiration
+
+Each card should feel editorial, not like a filter chip.
+
+Each card should have:
+- warm title
+- one-line description
+- icon or visual cue
+- clear click/tap state
+- premium glassmorphic style
+- mobile-first layout
+
+Behavior:
+- If existing ThemeCards already exist, reuse/refactor them instead of duplicating.
+- If theme clicks currently only navigate without filtering, either:
+  1. implement a minimal safe mapping to existing tags/filters, or
+  2. clearly mark this as a known limitation in the response and keep the behavior stable.
+- Do not break catalog navigation.
+
+Suggested EN card copy:
+Lake day:
+“Clear water, soft light and mountain reflections.”
+
+Malga & food:
+“Cheese, dumplings, views and a slower alpine rhythm.”
+
+Easy scenic walk:
+“Beautiful without becoming a full expedition.”
+
+Dog-friendly:
+“Gentle ideas for you and your four-legged companion.”
+
+Romantic view:
+“Quiet places for golden light and shared moments.”
+
+Rainy day idea:
+“Lower-risk mountain ideas when the weather is uncertain.”
+
+With parents:
+“Comfortable, scenic and easy to explain.”
+
+Half-day escape:
+“A beautiful mountain moment without taking the whole day.”
+
+Hut-to-hut inspiration:
+“Dream a little bigger, one stage at a time.”
+
+Apply meaning-equivalent translations in IT and DE.
+
+Part 5 — Recommendation flow rename:
+Rename “Smart Recommendations” in visible UI to “Plan My Day” or “Trail Finder” depending on context.
+
+Preferred:
+- Main CTA / nav: “Plan My Day”
+- Internal flow title: “Plan My Day”
+- Supporting text: “Answer a few questions and Josephine will suggest a trail, rifugio or mountain idea.”
+
+Update i18n keys in:
+- en.json
+- it.json
+- de.json
+
+Make sure no missing translation keys appear.
+
+Avoid wording that feels too technical:
+- “Smart Recommendations”
+- “AI-powered”
+- “algorithm”
+- “platform”
+- “optimize”
+- “performance”
+
+Part 6 — Navigation hierarchy:
+Make the app feel simpler.
+
+Main navigation should prioritize:
+- Home
+- Plan My Day
+- Explore
+- Rifugios / Malgas
+- Multi-Day Ideas
+
+Demote or move to secondary/profile area:
+- Challenges
+- Leaderboards
+- Heavy gamification
+- Hike Planner if it feels like a power-user tool
+- Stats-heavy profile items
+
+Do not delete those features.
+Do not remove routes if they are still used.
+Do not break admin access.
+
+If needed, comment in code where features are intentionally demoted for the Josephine MVP.
+
+Use concise comments such as:
+“Demoted from primary navigation for Josephine MVP; feature remains available for future engagement layer.”
+
+Do not comment out large blocks of code unless necessary.
+Prefer clean conditional rendering or nav configuration changes over dead commented code.
+
+Part 7 — Onboarding tone:
+Update onboarding language so it no longer feels like a feature tour for a sports app.
+
+The onboarding should introduce:
+- choosing a mountain day
+- curated local ideas
+- rifugios/malgas
+- easy discovery
+- saved favorites
+- South Tyrol origin and local trust, if it fits naturally
+
+De-emphasize:
+- XP
+- leaderboards
+- challenges
+- performance stats
+
+If onboarding is gated by localStorage, do not force reset in this sprint unless safe.
+Mention in the response if existing users may not see the updated onboarding.
+
+Part 8 — Documentation rebrand:
+Update documentation so the repository reflects the new product direction.
+
+Update:
+- README.md
+- ROADMAP.md
+- replit.md
+- BUSINESS_ANALYSIS.md
+
+Do not just replace Alpenvia with Josephine.
+Rewrite the positioning.
+
+README.md should describe:
+Josephine as a friendly local alpine companion for curated mountain days in South Tyrol, Trentino and the Dolomites.
+
+README.md should include:
+“Crafted in the heart of South Tyrol, Italy.”
+
+ROADMAP.md should be rewritten/reframed around:
+- Month 1: Brand + UX foundation
+- Month 2: Homepage + Plan My Day
+- Month 3: Experience detail pages
+- Month 4: Content + monetization foundation
+- Month 5: Polish + beta readiness
+
+replit.md should document:
+- current technical architecture
+- new product direction
+- what is visible in MVP
+- what is demoted
+- what must not be casually deleted
+- Josephine’s South Tyrol origin as a brand trust element
+
+BUSINESS_ANALYSIS.md should be updated to:
+- remove old “Strava meets Lonely Mountain Journal” positioning
+- emphasize casual/tourist/local companion positioning
+- emphasize “Crafted in the heart of South Tyrol, Italy”
+- keep relevant market/competitor analysis
+- preserve risks around monetization, seasonality, partnerships and technical scalability
+
+Part 9 — What to keep:
+Keep these features and technical foundations:
+- React/Vite frontend
+- Flask backend
+- EN/IT/DE i18n
+- Firebase Auth
+- Mapbox
+- OpenWeatherMap
+- PWA support
+- Admin panel
+- Verified route data
+- Trail detail pages
+- Rifugio/malga/bivacco directory
+- Multi-day trail support
+- Weather suitability
+- Existing data JSON files
+- Existing backend endpoints
+
+Part 10 — What to demote/comment/avoid:
+Demote from first impression:
+- Challenges
+- Leaderboards
+- XP-heavy messaging
+- Stats-heavy profile messaging
+- GPS tracking as a primary selling point
+- “platform” language
+- “adventure” language
+- “smart algorithm” language
+
+Do not delete:
+- Challenges
+- Leaderboards
+- Gamification
+- GPS tracking
+- Hike Planner
+- Admin tools
+
+Instead:
+- hide from main nav where appropriate
+- move to user/profile/secondary menu where appropriate
+- add concise code comments only where the demotion is intentional and useful for future maintainers
+
+Part 11 — Experience detail pages:
+Do not fully redesign TrailDetail in this sprint.
+
+But update visible copy where easy and safe:
+- “Why Josephine recommends this”
+- “Perfect for”
+- “Good to know”
+- “Nearby rifugios and malgas”
+- “Dog-friendly notes” if data exists
+- “Weather for today”
+
+Do not invent data.
+If data is missing, use graceful UI copy or hide the field.
+
+Keep the route, stats, map, elevation and existing core detail functionality intact.
+
+Part 12 — Footer and trust layer:
+Update the footer to include Josephine’s local origin subtly.
+
+Footer should include:
+“Crafted in the heart of South Tyrol, Italy”
+
+Translations:
+IT:
+“Creata nel cuore dell’Alto Adige, Italia”
+
+DE:
+“Entwickelt im Herzen Südtirols, Italien”
+
+The footer should feel premium and understated.
+Do not make it loud or touristy.
+
+Part 13 — Quality bar:
+This must look premium.
+Do not add low-quality placeholders.
+Do not add childish UI.
+Do not create visual clutter.
+Do not make the app heavier without reason.
+Keep mobile experience excellent.
+Respect the existing dark alpine glassmorphic design, but make it warmer and more human.
+
+The first impression should feel:
+- curated
+- premium
+- calm
+- local
+- human
+- useful
+- emotionally memorable
+
+The first impression should not feel:
+- like a dashboard
+- like a sports tracking app
+- like a generic hiking database
+- like a childish assistant
+- like a cheap AI chatbot
+
+Part 14 — Technical constraints:
+- No new dependencies unless absolutely necessary.
+- If a dependency is needed, explain why before adding it.
+- Do not change backend APIs.
+- Do not change data schema.
+- Do not change authentication.
+- Do not break currentView navigation.
+- Do not break language switching.
+- Do not break admin panel.
+- Do not break trail/rifugio detail navigation.
+- Do not break build.
+- Do not rename major components/routes unless absolutely necessary.
+- Keep changes reviewable.
+
+Part 15 — Comments / maintainability:
+Where appropriate, add short comments explaining intentional product decisions.
+
+Use comments only for useful maintainability, for example:
+- why Challenges/Leaderboards were demoted
+- where the future premium Josephine mascot/3D asset should be inserted
+- why a guide card is used as an asset-ready placeholder
+
+Do not add excessive comments.
+Do not comment obvious code.
+Do not leave large commented-out blocks.
+
+Acceptance criteria:
+1. Visible brand is Josephine, not Alpenvia.
+2. Homepage feels like a living alpine companion, not a generic hiking dashboard.
+3. The first screen clearly invites the user to plan a mountain day.
+4. The South Tyrol origin line appears in a premium, subtle way:
+   “Crafted in the heart of South Tyrol, Italy”
+5. A premium Josephine guide/companion area exists without cheap mascot implementation.
+6. “Smart Recommendations” is no longer the main visible wording.
+7. “Plan My Day” becomes the main flow.
+8. Challenges and Leaderboards are no longer prominent in the main navigation.
+9. EN/IT/DE translations are updated consistently.
+10. README.md, ROADMAP.md, replit.md and BUSINESS_ANALYSIS.md reflect the Josephine direction.
+11. Existing backend, auth, data and admin systems remain intact.
+12. The app builds successfully.
+13. The homepage is responsive on desktop and mobile.
+14. No missing translation keys appear.
+15. No heavy 3D or animation dependency is added.
+
+Test steps:
+- Run the app.
+- Open homepage.
+- Confirm brand says Josephine.
+- Confirm hero copy and CTAs reflect the new positioning.
+- Confirm the origin line appears:
+  “Crafted in the heart of South Tyrol, Italy”
+- Confirm the Josephine guide/companion area looks premium and not childish.
+- Confirm “Plan My Day” appears instead of “Smart Recommendations”.
+- Open hamburger/menu and verify Challenges/Leaderboards are not prominent.
+- Navigate to Plan My Day.
+- Navigate to Explore / Trail Catalog.
+- Navigate to Rifugios / Malgas.
+- Navigate to a TrailDetail page.
+- Switch EN/IT/DE and verify no missing translation keys.
+- Confirm footer includes the origin line in the selected language.
+- Confirm admin access is not broken.
+- Run build and report result.
+- Check package.json and confirm no new dependency was added unless explicitly justified.
+
+Expected response:
+After completing the work, provide:
+
+1. Summary of the new Josephine product direction implemented
+2. Files changed
+3. Files intentionally not changed
+4. Navigation changes
+5. i18n keys changed/added
+6. Documentation files updated
+7. Any features demoted but not deleted
+8. Any code comments added and why
+9. Any known limitations
+10. Dependency changes, if any
+11. Build/test result
+12. Screenshots or detailed visual confirmation of:
+   - homepage desktop
+   - homepage mobile
+   - menu/navigation
+   - Plan My Day entry point
+   - footer origin line
