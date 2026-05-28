@@ -1,6 +1,6 @@
-# Alpenvia - Comprehensive Business Analysis
+# Josephine - Comprehensive Business Analysis
 
-**Vision:** "Strava meets Lonely Mountain Journal" with integrated rifugio ecosystem
+**Vision:** "Your local companion in the mountains." — warm, premium, local alpine guide with integrated rifugio ecosystem
 
 **Date:** November 2025  
 **Version:** 1.0  
@@ -20,7 +20,7 @@
 ## 1. Product Demo
 
 ### 1.1 Product Overview
-Alpenvia is a premium multilingual hiking platform specifically designed for the South Tyrol and Trentino Alps region. Unlike generic hiking apps, Alpenvia offers a curated, high-quality experience focused on verified routes, comprehensive rifugio integration, and immersive dark alpine aesthetics.
+Josephine is a warm, premium multilingual alpine companion specifically designed for the South Tyrol, Trentino and Dolomites region. Unlike generic hiking apps, Josephine offers a curated, human-first experience focused on verified local places, comprehensive rifugio integration, and immersive dark alpine aesthetics.
 
 ### 1.2 Key Features Showcase
 

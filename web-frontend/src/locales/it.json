@@ -18,7 +18,7 @@
   },
   "nav": {
     "home": "Home",
-    "smartRecommendations": "Raccomandazioni Intelligenti",
+    "smartRecommendations": "Pianifica la Mia Giornata",
     "trailCatalog": "Catalogo Sentieri",
     "rifugios": "Rifugi",
     "hikePlanner": "Pianificatore Escursioni",
@@ -36,11 +36,12 @@
     "logout": "Esci"
   },
   "hero": {
-    "title": "Scopri l'Escursionismo Alpino",
-    "subtitle": "Sentieri verificati in Alto Adige e Trentino, selezionati per ogni avventuriero",
+    "title": "La tua giornata alpina inizia qui",
+    "subtitle": "Dì a Josephine che tipo di giornata vuoi — e lei ti indirizzerà verso qualcosa di bellissimo.",
     "exploreYourPath": "Esplora il Tuo Percorso",
-    "tagline": "Dove le montagne incontrano l'avventura",
-    "scrollToExplore": "Scorri per esplorare"
+    "tagline": "Il tuo compagno locale in montagna.",
+    "scrollToExplore": "Scopri cosa c'è là fuori",
+    "originLine": "Creata nel cuore dell'Alto Adige, Italia"
   },
   "menu": {
     "navigation": "Navigazione"
@@ -49,29 +50,35 @@
     "selectLanguage": "Seleziona Lingua"
   },
   "home": {
-    "mascotPrompt": "Che giornata in montagna prepariamo oggi?",
-    "smartRecommendations": "Raccomandazioni Intelligenti",
-    "smartRecommendationsDesc": "Suggerimenti personali da percorsi verificati",
-    "browseTrailCatalog": "Sfoglia Catalogo Sentieri",
-    "browseTrailCatalogDesc": "Esplora tutti i percorsi alpini verificati",
+    "josephineGuide": "Troviamo la giornata in montagna giusta per te.",
+    "smartRecommendations": "Pianifica la Mia Giornata",
+    "smartRecommendationsDesc": "Rispondi ad alcune domande e Josephine ti suggerirà il sentiero o rifugio perfetto.",
+    "browseTrailCatalog": "Esplora i Luoghi",
+    "browseTrailCatalogDesc": "Sfoglia ogni sentiero verificato, rifugio ed esperienza in montagna.",
     "todaysFeaturedTrail": "Sentiero in Evidenza Oggi",
     "noTrailsAvailable": "Nessun sentiero disponibile",
-    "verifiedRoutes": "Tutti i percorsi verificati e selezionati per Alto Adige e Trentino",
-    "loadingRecommendation": "Caricamento raccomandazione...",
-    "exploreByTheme": "Esplora per Tema",
-    "exploreByThemeDesc": "Scopri sentieri selezionati in base ai tuoi interessi e preferenze",
-    "themeLakes": "Laghi Alpini",
-    "themeLakesDesc": "Acque cristalline che riflettono maestose vette",
-    "themePeaks": "Cime Montane",
-    "themePeaksDesc": "Viste mozzafiato dalle cime e creste",
-    "themeForests": "Sentieri Forestali",
-    "themeForestsDesc": "Passeggiate tranquille tra boschi antichi",
-    "themeFamily": "Per Famiglie",
-    "themeFamilyDesc": "Sentieri facili perfetti per tutte le età",
-    "themeCulture": "Percorsi Culturali",
-    "themeCultureDesc": "Sentieri storici e patrimonio alpino tradizionale",
-    "themeLoops": "Sentieri ad Anello",
-    "themeLoopsDesc": "Percorsi circolari che tornano al punto di partenza",
+    "verifiedRoutes": "Ogni luogo verificato e selezionato localmente per Alto Adige e Trentino",
+    "loadingRecommendation": "Caricamento...",
+    "exploreByTheme": "Che tipo di giornata?",
+    "exploreByThemeDesc": "Dì a Josephine il tuo umore e lei troverà l'esperienza alpina giusta.",
+    "themeLakeDay": "Giornata al lago",
+    "themeLakeDayDesc": "Un lago alpino tranquillo, del tipo che non smetti di fotografare.",
+    "themeMalga": "Malga & cibo",
+    "themeMalgaDesc": "Trova una baita di montagna per un piatto di speck, formaggio e strudel fatto in casa.",
+    "themeEasyWalk": "Passeggiata panoramica facile",
+    "themeEasyWalkDesc": "Un percorso dolce con viste splendide — nessuno sforzo richiesto.",
+    "themeDogFriendly": "Adatto ai cani",
+    "themeDogFriendlyDesc": "Sentieri che il tuo amico a quattro zampe amerà tanto quanto te.",
+    "themeRomantic": "Vista romantica",
+    "themeRomanticDesc": "Un crinale al tramonto o un prato alpino per due.",
+    "themeRainyDay": "Idea per giorno di pioggia",
+    "themeRainyDayDesc": "Sentieri forestali riparati, belli anche tra le nuvole.",
+    "themeParents": "Con i genitori",
+    "themeParentsDesc": "Sentieri comodi e appaganti per tutte le generazioni.",
+    "themeHalfDay": "Fuga di mezza giornata",
+    "themeHalfDayDesc": "Torna in tempo per cena — un momento alpino completo in poche ore.",
+    "themeHutToHut": "Da rifugio a rifugio",
+    "themeHutToHutDesc": "Percorsi di più giorni di rifugio in rifugio tra le Dolomiti.",
     "featuredTrails": "Sentieri in Evidenza",
     "exploreTrail": "Esplora Sentiero",
     "previousTrail": "Sentiero Precedente",
@@ -149,8 +156,9 @@
     "mapViewDesc": "La vista mappa interattiva con percorsi sarà disponibile in un futuro aggiornamento."
   },
   "recommendations": {
-    "title": "Raccomandazioni Intelligenti",
-    "subtitle": "Ottieni suggerimenti personalizzati dai nostri percorsi verificati in Alto Adige e Trentino",
+    "title": "Pianifica la Mia Giornata",
+    "subtitle": "Dì a Josephine come vuoi trascorrere la tua giornata — lei troverà il sentiero giusto per te.",
+    "supportingLine": "Rispondi ad alcune domande e Josephine ti suggerirà un sentiero, rifugio o idea in montagna.",
     "step": "Passo",
     "of": "di",
     "next": "Avanti",
@@ -253,7 +261,7 @@
     "premiumFeatures": ["Sentieri salvati illimitati", "Raccomandazioni avanzate", "Mappe offline", "Supporto prioritario", "Contenuti esclusivi", "Accesso anticipato ai nuovi sentieri"]
   },
   "footer": {
-    "madeIn": "Fatto con ❤️ in Alto Adige",
+    "madeIn": "Creata con ❤️ nel cuore dell'Alto Adige, Italia",
     "about": "Chi Siamo",
     "contact": "Contatti",
     "privacy": "Privacy Policy",
@@ -611,32 +619,32 @@
     "getStarted": "Inizia",
     "goToSlide": "Vai alla diapositiva",
     "slide1": {
-      "title": "Scopri Sentieri Alpini",
-      "description": "Esplora percorsi escursionistici curati in Alto Adige e Trentino. Ricevi consigli personalizzati in base alle tue preferenze.",
-      "feature1": "Raccomandazioni intelligenti dei sentieri",
-      "feature2": "Informazioni dettagliate sul percorso",
-      "feature3": "Mappe interattive con Mapbox"
+      "title": "Conosci Josephine",
+      "description": "Josephine è la tua guida locale amichevole per Alto Adige e Trentino. Dille che tipo di giornata alpina vuoi — e lei troverà qualcosa di bellissimo.",
+      "feature1": "Scopri sentieri, rifugi e momenti in montagna",
+      "feature2": "Consigli umani e caldi — nessun algoritmo",
+      "feature3": "Selezionato localmente per le Dolomiti"
     },
     "slide2": {
-      "title": "Tracciamento GPS & Sicurezza",
-      "description": "Traccia le tue escursioni in tempo reale con il tracciamento GPS live. Rimani al sicuro con avvisi meteo e notifiche dei checkpoint.",
-      "feature1": "Tracciamento della posizione in tempo reale",
-      "feature2": "Calcolo automatico delle statistiche",
-      "feature3": "Avvisi meteo e di sicurezza"
+      "title": "Selezione locale di cui ti puoi fidare",
+      "description": "Ogni sentiero e rifugio in Josephine è verificato e selezionato a mano in Alto Adige e Trentino. Dai sentieri sul lago alle malghe nascoste.",
+      "feature1": "Percorsi verificati da esperti locali",
+      "feature2": "Rifugi, malghe e bivacchi inclusi",
+      "feature3": "Stato stagionale e orari di apertura"
     },
     "slide3": {
-      "title": "Obiettivi & Gamification",
-      "description": "Ottieni badge, sali di livello e competi nelle classifiche. Ogni escursione racconta la tua storia alpina.",
-      "feature1": "Sblocca 18+ badge unici",
-      "feature2": "Scala 10 livelli di esperienza",
-      "feature3": "Partecipa alle classifiche mensili"
+      "title": "Salva i tuoi preferiti",
+      "description": "Salva sentieri e rifugi che ami. Costruisci il tuo piccolo atlante di luoghi alpini a cui tornare.",
+      "feature1": "Salvataggio con un tocco per sentieri e rifugi",
+      "feature2": "Dettagli sentiero disponibili offline",
+      "feature3": "Tieni traccia delle escursioni che hai fatto"
     },
     "slide4": {
-      "title": "Pianifica le Tue Avventure",
-      "description": "Crea itinerari di più giorni con il nostro pianificatore di escursioni. Salva sentieri, pianifica l'attrezzatura e ricevi consigli di sicurezza personalizzati.",
-      "feature1": "Pianificazione viaggi di più giorni",
-      "feature2": "Liste attrezzatura dinamiche",
-      "feature3": "Salva & esporta itinerari"
+      "title": "Nata in Alto Adige",
+      "description": "Josephine è nata nel cuore delle Alpi. Conosciamo queste montagne — e vogliamo aiutarti ad innamorartene anche tu.",
+      "feature1": "Origini altoatesine, anima alpina",
+      "feature2": "Disponibile in italiano, inglese e tedesco",
+      "feature3": "Inizia ad esplorare — la tua giornata in montagna ti aspetta"
     }
   },
   "celebration": {
@@ -651,8 +659,8 @@
     "checkpointsReached": "Checkpoint Raggiunti"
   },
   "splash": {
-    "tagline": "Escursioni Alpine Premium",
-    "footer": "Alimentato dalla passione per le Alpi"
+    "tagline": "Il tuo compagno di montagna locale",
+    "footer": "Creata nel cuore dell'Alto Adige, Italia"
   },
   "gps": {
     "checkpointAheadToast": "{{icon}} {{name}} - {{distance}}m di distanza",

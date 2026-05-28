@@ -106,6 +106,7 @@ function SmartRecommendations({ viewTrail }) {
       <div className="recommendations-header">
         <h1>{t('recommendations.title')}</h1>
         <p>{t('recommendations.subtitle')}</p>
+        <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)', marginTop: '8px', fontStyle: 'italic' }}>{t('recommendations.supportingLine')}</p>
       </div>
 
       {step < 4 && (

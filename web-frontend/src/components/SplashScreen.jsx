@@ -46,7 +46,7 @@ function SplashScreen({ onComplete }) {
       <div className="splash-content">
         <div className="splash-logo">
           <div className="logo-icon">🏔️</div>
-          <h1 className="logo-text">Alpenvia</h1>
+          <h1 className="logo-text">Josephine</h1>
           <p className="logo-tagline">{t('splash.tagline')}</p>
         </div>
 

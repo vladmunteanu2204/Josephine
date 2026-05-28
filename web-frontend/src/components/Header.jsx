@@ -96,7 +96,7 @@ function Header({ currentView, setCurrentView }) {
         <div className="container header-content-mobile">
           <div className="logo logo-mobile" onClick={() => setCurrentView('home')}>
             <span className="logo-icon logo-icon-mobile">🏔️</span>
-            <span className="logo-text logo-text-mobile">Alpenvia</span>
+            <span className="logo-text logo-text-mobile">Josephine</span>
           </div>
           
           <div className="header-actions-mobile">

@@ -1,7 +1,7 @@
 {
-  "name": "Alpenvia - Premium Alpine Hiking",
-  "short_name": "Alpenvia",
-  "description": "Premium multilingual hiking platform for South Tyrol and Trentino Alps with GPS tracking, trail recommendations, and gamification",
+  "name": "Josephine — Your local mountain companion",
+  "short_name": "Josephine",
+  "description": "Josephine helps you choose a beautiful alpine day in South Tyrol, Trentino and the Dolomites. Trails, rifugios and mountain moments, locally curated.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",
@@ -27,9 +27,9 @@
     "geolocation"
   ],
   "features": [
+    "Trail discovery",
+    "Rifugio directory",
     "GPS tracking",
-    "Offline maps",
-    "Trail recommendations",
-    "Gamification badges"
+    "Offline support"
   ]
 }

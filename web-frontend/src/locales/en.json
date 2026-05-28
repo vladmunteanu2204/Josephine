@@ -18,7 +18,7 @@
   },
   "nav": {
     "home": "Home",
-    "smartRecommendations": "Smart Recommendations",
+    "smartRecommendations": "Plan My Day",
     "trailCatalog": "Trail Catalog",
     "rifugios": "Rifugios",
     "hikePlanner": "Hike Planner",
@@ -36,11 +36,12 @@
     "logout": "Logout"
   },
   "hero": {
-    "title": "Discover Alpine Hiking",
-    "subtitle": "Verified trails in South Tyrol & Trentino, curated for every adventurer",
+    "title": "Your alpine day starts here",
+    "subtitle": "Tell Josephine what kind of day you want — and she'll point you to something beautiful.",
     "exploreYourPath": "Explore Your Path",
-    "tagline": "Where mountains meet adventure",
-    "scrollToExplore": "Scroll to explore"
+    "tagline": "Your local companion in the mountains.",
+    "scrollToExplore": "Discover what's out there",
+    "originLine": "Crafted in the heart of South Tyrol, Italy"
   },
   "menu": {
     "navigation": "Navigation"
@@ -49,29 +50,35 @@
     "selectLanguage": "Select Language"
   },
   "home": {
-    "mascotPrompt": "What kind of alpine day are we planning today?",
-    "smartRecommendations": "Smart Recommendations",
-    "smartRecommendationsDesc": "Personal suggestions from verified routes",
-    "browseTrailCatalog": "Browse Trail Catalog",
-    "browseTrailCatalogDesc": "Explore all verified alpine routes",
+    "josephineGuide": "Let's find the right mountain day for you.",
+    "smartRecommendations": "Plan My Day",
+    "smartRecommendationsDesc": "Answer a few questions and Josephine will suggest a perfect trail or rifugio.",
+    "browseTrailCatalog": "Explore Places",
+    "browseTrailCatalogDesc": "Browse every verified trail, rifugio and mountain experience.",
     "todaysFeaturedTrail": "Today's Featured Trail",
     "noTrailsAvailable": "No trails available",
-    "verifiedRoutes": "All routes verified and curated for South Tyrol & Trentino",
-    "loadingRecommendation": "Loading recommendation...",
-    "exploreByTheme": "Explore by Theme",
-    "exploreByThemeDesc": "Discover trails curated by your interests and preferences",
-    "themeLakes": "Alpine Lakes",
-    "themeLakesDesc": "Crystal-clear waters reflecting majestic peaks",
-    "themePeaks": "Mountain Peaks",
-    "themePeaksDesc": "Breathtaking summit views and ridge walks",
-    "themeForests": "Forest Trails",
-    "themeForestsDesc": "Peaceful walks through ancient woodlands",
-    "themeFamily": "Family Friendly",
-    "themeFamilyDesc": "Easy trails perfect for all ages",
-    "themeCulture": "Cultural Routes",
-    "themeCultureDesc": "Historic paths and traditional alpine heritage",
-    "themeLoops": "Loop Trails",
-    "themeLoopsDesc": "Circular routes returning to the start",
+    "verifiedRoutes": "Every place verified and locally curated for South Tyrol & Trentino",
+    "loadingRecommendation": "Loading...",
+    "exploreByTheme": "What kind of day?",
+    "exploreByThemeDesc": "Tell Josephine your mood and she'll find the right alpine experience.",
+    "themeLakeDay": "Lake day",
+    "themeLakeDayDesc": "A still mountain lake, the kind you can't stop photographing.",
+    "themeMalga": "Malga & food",
+    "themeMalgaDesc": "Find a mountain hut for a plate of speck, cheese and homemade strudel.",
+    "themeEasyWalk": "Easy scenic walk",
+    "themeEasyWalkDesc": "A gentle path with gorgeous views — no sweat required.",
+    "themeDogFriendly": "Dog-friendly",
+    "themeDogFriendlyDesc": "Trails your four-legged companion will love just as much as you.",
+    "themeRomantic": "Romantic view",
+    "themeRomanticDesc": "A sunset ridge or alpine meadow for two.",
+    "themeRainyDay": "Rainy day idea",
+    "themeRainyDayDesc": "Sheltered forest paths that are beautiful even in the clouds.",
+    "themeParents": "With parents",
+    "themeParentsDesc": "Comfortable, rewarding trails for all generations.",
+    "themeHalfDay": "Half-day escape",
+    "themeHalfDayDesc": "Back in time for dinner — a complete alpine moment in just a few hours.",
+    "themeHutToHut": "Hut-to-hut",
+    "themeHutToHutDesc": "Multi-day routes from rifugio to rifugio through the Dolomites.",
     "featuredTrails": "Featured Trails",
     "exploreTrail": "Explore Trail",
     "previousTrail": "Previous Trail",
@@ -149,8 +156,9 @@
     "mapViewDesc": "Interactive map view with trail routes will be available in a future update."
   },
   "recommendations": {
-    "title": "Smart Recommendations",
-    "subtitle": "Get personalized trail suggestions from our verified routes in South Tyrol & Trentino",
+    "title": "Plan My Day",
+    "subtitle": "Tell Josephine how you want to spend your day — she'll find the right trail for you.",
+    "supportingLine": "Answer a few questions and Josephine will suggest a trail, rifugio or mountain idea.",
     "step": "Step",
     "of": "of",
     "next": "Next",
@@ -253,7 +261,7 @@
     "premiumFeatures": ["Unlimited saved trails", "Advanced recommendations", "Offline maps", "Priority support", "Exclusive content", "Early access to new trails"]
   },
   "footer": {
-    "madeIn": "Made with ❤️ in South Tyrol",
+    "madeIn": "Crafted with ❤️ in South Tyrol, Italy",
     "about": "About",
     "contact": "Contact",
     "privacy": "Privacy Policy",
@@ -611,32 +619,32 @@
     "getStarted": "Get Started",
     "goToSlide": "Go to slide",
     "slide1": {
-      "title": "Discover Alpine Trails",
-      "description": "Explore curated hiking routes across South Tyrol and Trentino. Get personalized recommendations based on your preferences.",
-      "feature1": "Smart trail recommendations",
-      "feature2": "Detailed route information",
-      "feature3": "Interactive maps with Mapbox"
+      "title": "Meet Josephine",
+      "description": "Josephine is your friendly local guide for South Tyrol and Trentino. Tell her what kind of alpine day you want — and she'll find something beautiful.",
+      "feature1": "Discover trails, rifugios and local mountain moments",
+      "feature2": "Warm, human recommendations — no algorithms",
+      "feature3": "Locally curated for the Dolomites"
     },
     "slide2": {
-      "title": "GPS Tracking & Safety",
-      "description": "Track your hikes in real-time with live GPS tracking. Stay safe with weather alerts and checkpoint notifications.",
-      "feature1": "Real-time position tracking",
-      "feature2": "Automatic stats calculation",
-      "feature3": "Weather & safety alerts"
+      "title": "Local curation you can trust",
+      "description": "Every trail and rifugio in Josephine is verified and handpicked from South Tyrol and Trentino. From lakeside paths to hidden malgas.",
+      "feature1": "Verified routes by local experts",
+      "feature2": "Rifugios, malgas and bivouacs included",
+      "feature3": "Seasonal status and opening hours"
     },
     "slide3": {
-      "title": "Achievements & Gamification",
-      "description": "Earn badges, level up, and compete on leaderboards. Every hike tells your alpine story.",
-      "feature1": "Unlock 18+ unique badges",
-      "feature2": "Climb 10 experience levels",
-      "feature3": "Join monthly leaderboards"
+      "title": "Save your favourites",
+      "description": "Save trails and rifugios you love. Build your own little atlas of alpine places to return to.",
+      "feature1": "One-tap saving for trails and rifugios",
+      "feature2": "Offline-friendly trail details",
+      "feature3": "Track the hikes you've done"
     },
     "slide4": {
-      "title": "Plan Your Adventures",
-      "description": "Create multi-day itineraries with our hike planner. Save trails, plan equipment, and get personalized safety tips.",
-      "feature1": "Multi-day trip planning",
-      "feature2": "Dynamic equipment checklists",
-      "feature3": "Save & export itineraries"
+      "title": "Crafted in South Tyrol",
+      "description": "Josephine was born in the heart of the Alps. We know these mountains — and we want to help you fall in love with them too.",
+      "feature1": "South Tyrol origin, alpine soul",
+      "feature2": "Fully available in English, Italian and German",
+      "feature3": "Start exploring — your mountain day is waiting"
     }
   },
   "celebration": {
@@ -651,8 +659,8 @@
     "checkpointsReached": "Checkpoints Reached"
   },
   "splash": {
-    "tagline": "Premium Alpine Hiking",
-    "footer": "Powered by passion for the Alps"
+    "tagline": "Your local mountain companion",
+    "footer": "Crafted in the heart of South Tyrol, Italy"
   },
   "gps": {
     "checkpointAheadToast": "{{icon}} {{name}} - {{distance}}m away",

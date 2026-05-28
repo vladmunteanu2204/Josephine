@@ -18,7 +18,7 @@
   },
   "nav": {
     "home": "Home",
-    "smartRecommendations": "Smarte Empfehlungen",
+    "smartRecommendations": "Meinen Tag planen",
     "trailCatalog": "Wanderwege-Katalog",
     "rifugios": "Rifugios",
     "hikePlanner": "Wanderplaner",
@@ -36,11 +36,12 @@
     "logout": "Abmelden"
   },
   "hero": {
-    "title": "Entdecke Alpines Wandern",
-    "subtitle": "Geprüfte Wanderwege in Südtirol & Trentino, kuratiert für jeden Abenteurer",
+    "title": "Dein Bergtag beginnt hier",
+    "subtitle": "Sag Josephine, was für einen Tag du möchtest — und sie zeigt dir etwas Wunderschönes.",
     "exploreYourPath": "Erkunde Deinen Weg",
-    "tagline": "Wo Berge auf Abenteuer treffen",
-    "scrollToExplore": "Scrollen um zu erkunden"
+    "tagline": "Dein lokaler Begleiter in den Bergen.",
+    "scrollToExplore": "Entdecke was draußen wartet",
+    "originLine": "Entwickelt im Herzen Südtirols, Italien"
   },
   "menu": {
     "navigation": "Navigation"
@@ -49,29 +50,35 @@
     "selectLanguage": "Sprache Auswählen"
   },
   "home": {
-    "mascotPrompt": "Was für einen Bergtag planen wir heute?",
-    "smartRecommendations": "Smarte Empfehlungen",
-    "smartRecommendationsDesc": "Persönliche Vorschläge aus geprüften Routen",
-    "browseTrailCatalog": "Wanderwege-Katalog Durchsuchen",
-    "browseTrailCatalogDesc": "Alle geprüften alpinen Routen erkunden",
+    "josephineGuide": "Lass uns den richtigen Bergtag für dich finden.",
+    "smartRecommendations": "Meinen Tag planen",
+    "smartRecommendationsDesc": "Beantworte ein paar Fragen und Josephine schlägt dir den perfekten Wanderweg oder Rifugio vor.",
+    "browseTrailCatalog": "Orte erkunden",
+    "browseTrailCatalogDesc": "Stöbere durch jeden verifizierten Wanderweg, Rifugio und Bergmoment.",
     "todaysFeaturedTrail": "Heutiger Highlight-Wanderweg",
     "noTrailsAvailable": "Keine Wanderwege verfügbar",
-    "verifiedRoutes": "Alle Routen geprüft und kuratiert für Südtirol & Trentino",
-    "loadingRecommendation": "Empfehlung wird geladen...",
-    "exploreByTheme": "Nach Thema Erkunden",
-    "exploreByThemeDesc": "Entdecke Wanderwege nach deinen Interessen und Vorlieben",
-    "themeLakes": "Alpenseen",
-    "themeLakesDesc": "Kristallklare Gewässer, die majestätische Gipfel spiegeln",
-    "themePeaks": "Berggipfel",
-    "themePeaksDesc": "Atemberaubende Gipfelaussichten und Gratwanderungen",
-    "themeForests": "Waldwege",
-    "themeForestsDesc": "Friedliche Spaziergänge durch uralte Wälder",
-    "themeFamily": "Familienfreundlich",
-    "themeFamilyDesc": "Einfache Wanderwege perfekt für alle Altersgruppen",
-    "themeCulture": "Kulturrouten",
-    "themeCultureDesc": "Historische Pfade und traditionelles alpines Erbe",
-    "themeLoops": "Rundwanderwege",
-    "themeLoopsDesc": "Kreisförmige Routen, die zum Ausgangspunkt zurückkehren",
+    "verifiedRoutes": "Jeder Ort überprüft und lokal kuratiert für Südtirol & Trentino",
+    "loadingRecommendation": "Laden...",
+    "exploreByTheme": "Was für ein Tag soll es sein?",
+    "exploreByThemeDesc": "Sag Josephine deine Stimmung und sie findet das richtige alpine Erlebnis.",
+    "themeLakeDay": "Tag am See",
+    "themeLakeDayDesc": "Ein stiller Bergsee — der Typ, den du einfach nicht aufhören kannst zu fotografieren.",
+    "themeMalga": "Alm & Essen",
+    "themeMalgaDesc": "Finde eine Berghütte für einen Teller Speck, Käse und selbstgemachten Strudel.",
+    "themeEasyWalk": "Leichte Panoramawanderung",
+    "themeEasyWalkDesc": "Ein sanfter Pfad mit wunderschönen Aussichten — kein Schweiß nötig.",
+    "themeDogFriendly": "Hundefreundlich",
+    "themeDogFriendlyDesc": "Wanderwege, die dein vierbeiniger Begleiter genauso lieben wird wie du.",
+    "themeRomantic": "Romantischer Aussichtspunkt",
+    "themeRomanticDesc": "Ein Sonnenuntergangs-Grat oder eine alpine Wiese zu zweit.",
+    "themeRainyDay": "Idee für Regentage",
+    "themeRainyDayDesc": "Geschützte Waldwege, die auch im Nebel wunderschön sind.",
+    "themeParents": "Mit den Eltern",
+    "themeParentsDesc": "Bequeme, lohnende Wege für alle Generationen.",
+    "themeHalfDay": "Halbtages-Ausflug",
+    "themeHalfDayDesc": "Rechtzeitig zum Abendessen zurück — ein vollständiger Bergmoment in wenigen Stunden.",
+    "themeHutToHut": "Von Hütte zu Hütte",
+    "themeHutToHutDesc": "Mehrtägige Routen von Rifugio zu Rifugio durch die Dolomiten.",
     "featuredTrails": "Highlight-Wanderwege",
     "exploreTrail": "Wanderweg Erkunden",
     "previousTrail": "Vorheriger Wanderweg",
@@ -149,8 +156,9 @@
     "mapViewDesc": "Die interaktive Kartenansicht mit Wanderrouten wird in einem zukünftigen Update verfügbar sein."
   },
   "recommendations": {
-    "title": "Smarte Empfehlungen",
-    "subtitle": "Erhalte personalisierte Wanderwegvorschläge aus unseren geprüften Routen in Südtirol & Trentino",
+    "title": "Meinen Tag planen",
+    "subtitle": "Sag Josephine, wie du deinen Tag verbringen möchtest — sie findet den richtigen Weg für dich.",
+    "supportingLine": "Beantworte ein paar Fragen und Josephine schlägt einen Wanderweg, Rifugio oder eine Bergidee vor.",
     "step": "Schritt",
     "of": "von",
     "next": "Weiter",
@@ -253,7 +261,7 @@
     "premiumFeatures": ["Unbegrenzt gespeicherte Wanderwege", "Erweiterte Empfehlungen", "Offline-Karten", "Prioritäts-Support", "Exklusive Inhalte", "Früher Zugang zu neuen Wanderwegen"]
   },
   "footer": {
-    "madeIn": "Mit ❤️ in Südtirol gemacht",
+    "madeIn": "Entwickelt mit ❤️ im Herzen Südtirols, Italien",
     "about": "Über Uns",
     "contact": "Kontakt",
     "privacy": "Datenschutz",
@@ -611,32 +619,32 @@
     "getStarted": "Los geht's",
     "goToSlide": "Zu Folie gehen",
     "slide1": {
-      "title": "Alpine Wanderwege Entdecken",
-      "description": "Erkunde kuratierte Wanderwege in Südtirol und Trentino. Erhalte personalisierte Empfehlungen basierend auf deinen Vorlieben.",
-      "feature1": "Intelligente Routenempfehlungen",
-      "feature2": "Detaillierte Routeninformationen",
-      "feature3": "Interaktive Karten mit Mapbox"
+      "title": "Lern Josephine kennen",
+      "description": "Josephine ist deine freundliche lokale Bergführerin für Südtirol und Trentino. Sag ihr, was für einen Bergtag du möchtest — und sie findet etwas Wunderschönes.",
+      "feature1": "Entdecke Wanderwege, Rifugios und Bergmomente",
+      "feature2": "Menschliche, warmherzige Ratschläge — kein Algorithmus",
+      "feature3": "Lokal kuratiert für die Dolomiten"
     },
     "slide2": {
-      "title": "GPS-Tracking & Sicherheit",
-      "description": "Verfolge deine Wanderungen in Echtzeit mit Live-GPS-Tracking. Bleibe sicher mit Wetterwarnungen und Checkpoint-Benachrichtigungen.",
-      "feature1": "Echtzeit-Positionsverfolgung",
-      "feature2": "Automatische Statistikberechnung",
-      "feature3": "Wetter- und Sicherheitswarnungen"
+      "title": "Lokale Auswahl, der du vertrauen kannst",
+      "description": "Jeder Wanderweg und jedes Rifugio in Josephine ist von Experten vor Ort in Südtirol und Trentino geprüft und handverlesen — von Seenwegen bis zu versteckten Almen.",
+      "feature1": "Routen von lokalen Experten geprüft",
+      "feature2": "Rifugios, Almen und Biwaks enthalten",
+      "feature3": "Saisonstatus und Öffnungszeiten"
     },
     "slide3": {
-      "title": "Erfolge & Gamification",
-      "description": "Sammle Abzeichen, steige auf und trete in Bestenlisten an. Jede Wanderung erzählt deine alpine Geschichte.",
-      "feature1": "Schalte 18+ einzigartige Abzeichen frei",
-      "feature2": "Erklimme 10 Erfahrungsstufen",
-      "feature3": "Nimm an monatlichen Bestenlisten teil"
+      "title": "Speichere deine Favoriten",
+      "description": "Speichere Wanderwege und Rifugios, die du liebst. Baue deinen kleinen Atlas alpiner Orte auf, zu denen du zurückkehren möchtest.",
+      "feature1": "Ein-Tipp-Speichern für Wanderwege und Rifugios",
+      "feature2": "Wanderwegdetails offline verfügbar",
+      "feature3": "Behalte den Überblick über deine Wanderungen"
     },
     "slide4": {
-      "title": "Plane Deine Abenteuer",
-      "description": "Erstelle mehrtägige Routen mit unserem Wanderplaner. Speichere Routen, plane Ausrüstung und erhalte personalisierte Sicherheitstipps.",
-      "feature1": "Mehrtägige Reiseplanung",
-      "feature2": "Dynamische Ausrüstungschecklisten",
-      "feature3": "Speichern & Exportieren von Routen"
+      "title": "Aus Südtirol geboren",
+      "description": "Josephine wurde im Herzen der Alpen erschaffen. Wir kennen diese Berge — und wollen dir helfen, sie genauso zu lieben.",
+      "feature1": "Südtiroler Wurzeln, alpine Seele",
+      "feature2": "Verfügbar auf Deutsch, Englisch und Italienisch",
+      "feature3": "Fang an zu erkunden — dein Bergtag wartet"
     }
   },
   "celebration": {
@@ -651,8 +659,8 @@
     "checkpointsReached": "Checkpoints Erreicht"
   },
   "splash": {
-    "tagline": "Premium Alpine Wandern",
-    "footer": "Angetrieben von Leidenschaft für die Alpen"
+    "tagline": "Dein lokaler Begleiter in den Bergen",
+    "footer": "Entwickelt im Herzen Südtirols, Italien"
   },
   "gps": {
     "checkpointAheadToast": "{{icon}} {{name}} - {{distance}}m entfernt",

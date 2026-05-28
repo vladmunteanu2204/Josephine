@@ -1,8 +1,8 @@
-# Alpenvia 🏔️
+# Josephine 🏔️
 
-**A premium multilingual hiking platform for the South Tyrol and Trentino Alps**
+**Your local alpine companion for South Tyrol, Trentino and the Dolomites**
 
-*"Strava meets Lonely Mountain Journal" — an emotional, cinematic alpine experience where every achievement feels like a story of its own.*
+*"Your local companion in the mountains." — a warm, premium, human-first alpine experience crafted in the heart of South Tyrol.*
 
 [![Made with React](https://img.shields.io/badge/React-18-61DAFB?logo=react)](https://reactjs.org/)
 [![Flask](https://img.shields.io/badge/Flask-3.0-000000?logo=flask)](https://flask.palletsprojects.com/)
@@ -13,7 +13,7 @@
 
 ## 🌟 Overview
 
-Alpenvia is a production-ready hiking platform featuring:
+Josephine is a production-ready alpine companion platform featuring:
 - ✨ **Smart trail recommendations** based on verified routes
 - 🏔️ **Comprehensive rifugio (alpine hut) directory** with booking system
 - 🥾 **Multi-day hut-to-hut trekking** with stage-by-stage planning

@@ -1,7 +1,9 @@
-# Alpenvia Project State
+# Josephine Project State
 
 ## Overview
-Alpenvia is a production-ready, premium multilingual hiking platform for the South Tyrol and Trentino Alps. Its core purpose is to provide smart trail recommendations, comprehensive user reviews, and full internationalization (EN/IT/DE). The platform features an immersive dark alpine-inspired glassmorphic UI with cinematic trail detail pages, designed for optimal viewing in Replit's browser preview. The project aims to offer a high-quality, curated hiking experience based on verified trail data.
+Josephine is a production-ready, premium multilingual alpine companion for South Tyrol, Trentino and the Dolomites. Her core purpose is to provide warm, human-first trail recommendations, comprehensive rifugio discovery, and full internationalization (EN/IT/DE). The platform features an immersive dark alpine-inspired glassmorphic UI with cinematic trail detail pages, designed for optimal viewing in Replit's browser preview. The project aims to offer a warm, curated local alpine experience based on verified trail and rifugio data.
+
+**Brand:** Josephine | **Tagline:** "Your local companion in the mountains." | **Origin:** "Crafted in the heart of South Tyrol, Italy"
 
 ## User Preferences
 - Must be previewable in Replit web browser (not mobile-only)

@@ -94,14 +94,15 @@ function Home({ setCurrentView, viewTrail }) {
             >
               {t('hero.subtitle')}
             </p>
-            {/* Josephine Mascot */}
-            <div className="mascot-row">
-              <div className="mascot-avatar" aria-hidden="true">
-                <span className="mascot-emoji">🧭</span>
-                <div className="mascot-highlight"></div>
+            {/* Josephine Guide Card */}
+            <div className="josephine-guide-card" role="complementary" aria-label={t('home.josephineGuide')}>
+              <div className="guide-card-portrait" aria-hidden="true">
+                {/* TODO: insert Josephine illustration asset here */}
+                <div className="guide-portrait-shimmer"></div>
               </div>
-              <div className="mascot-bubble" role="note" aria-label={t('home.mascotPrompt')}>
-                <p className="mascot-prompt">{t('home.mascotPrompt')}</p>
+              <div className="guide-card-body">
+                <p className="guide-card-quote">{t('home.josephineGuide')}</p>
+                <p className="guide-card-origin">{t('hero.originLine')}</p>
               </div>
             </div>
 

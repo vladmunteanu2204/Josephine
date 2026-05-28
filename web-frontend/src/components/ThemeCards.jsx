@@ -7,58 +7,85 @@ function ThemeCards({ onThemeClick }) {
 
   const themes = [
     {
-      id: 'lakes',
-      icon: '💧',
-      title: t('home.themeLakes'),
-      description: t('home.themeLakesDesc'),
+      id: 'lake-day',
+      icon: '🏞️',
+      title: t('home.themeLakeDay'),
+      description: t('home.themeLakeDayDesc'),
       color: '#3b82f6',
       gradient: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
       tags: ['alpine lakes']
     },
     {
-      id: 'peaks',
-      icon: '⛰️',
-      title: t('home.themePeaks'),
-      description: t('home.themePeaksDesc'),
-      color: '#8b5cf6',
-      gradient: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
-      tags: ['panoramic views']
+      id: 'malga',
+      icon: '🧀',
+      title: t('home.themeMalga'),
+      description: t('home.themeMalgaDesc'),
+      color: '#d97706',
+      gradient: 'linear-gradient(135deg, #d97706 0%, #92400e 100%)',
+      tags: ['malga', 'food']
     },
     {
-      id: 'forests',
-      icon: '🌲',
-      title: t('home.themeForests'),
-      description: t('home.themeForestsDesc'),
+      id: 'easy-walk',
+      icon: '🌿',
+      title: t('home.themeEasyWalk'),
+      description: t('home.themeEasyWalkDesc'),
       color: '#10b981',
       gradient: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
-      tags: ['forests']
+      tags: ['easy', 'scenic']
     },
     {
-      id: 'family',
-      icon: '👨‍👩‍👧‍👦',
-      title: t('home.themeFamily'),
-      description: t('home.themeFamilyDesc'),
+      id: 'dog-friendly',
+      icon: '🐕',
+      title: t('home.themeDogFriendly'),
+      description: t('home.themeDogFriendlyDesc'),
       color: '#f59e0b',
       gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-      tags: ['family friendly']
+      tags: ['dog friendly']
     },
     {
-      id: 'culture',
-      icon: '🏛️',
-      title: t('home.themeCulture'),
-      description: t('home.themeCultureDesc'),
+      id: 'romantic',
+      icon: '🌅',
+      title: t('home.themeRomantic'),
+      description: t('home.themeRomanticDesc'),
       color: '#ec4899',
       gradient: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)',
-      tags: ['cultural routes']
+      tags: ['panoramic views', 'romantic']
     },
     {
-      id: 'loops',
-      icon: '🔄',
-      title: t('home.themeLoops'),
-      description: t('home.themeLoopsDesc'),
+      id: 'rainy-day',
+      icon: '☁️',
+      title: t('home.themeRainyDay'),
+      description: t('home.themeRainyDayDesc'),
+      color: '#6b7280',
+      gradient: 'linear-gradient(135deg, #6b7280 0%, #374151 100%)',
+      tags: ['forests', 'covered']
+    },
+    {
+      id: 'parents',
+      icon: '👨‍👩‍👧',
+      title: t('home.themeParents'),
+      description: t('home.themeParentsDesc'),
+      color: '#8b5cf6',
+      gradient: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
+      tags: ['family friendly', 'easy']
+    },
+    {
+      id: 'half-day',
+      icon: '⏱️',
+      title: t('home.themeHalfDay'),
+      description: t('home.themeHalfDayDesc'),
+      color: '#14b8a6',
+      gradient: 'linear-gradient(135deg, #14b8a6 0%, #0f766e 100%)',
+      tags: ['short']
+    },
+    {
+      id: 'hut-to-hut',
+      icon: '🏔️',
+      title: t('home.themeHutToHut'),
+      description: t('home.themeHutToHutDesc'),
       color: '#d4a574',
       gradient: 'linear-gradient(135deg, #d4a574 0%, #c89660 100%)',
-      tags: ['loop trail']
+      tags: ['multi-day', 'rifugio']
     }
   ];
 

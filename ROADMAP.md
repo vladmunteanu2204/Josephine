@@ -1,10 +1,10 @@
-# 🏔️ Alpenvia Development Roadmap
+# 🏔️ Josephine Development Roadmap
 
 ## Project Status: Phases 17C, 17F, 17H, 19A, 19B Complete (52%)
 
-**Vision:** "Strava meets Lonely Mountain Journal" — an emotional, cinematic alpine experience where every achievement feels like a story of its own.
+**Vision:** "Your local companion in the mountains." — a warm, premium, human-first alpine experience crafted in the heart of South Tyrol.
 
-**Ecosystem Vision:** "Alpenvia evolves from a hiking planner into a living alpine ecosystem — where trails meet huts, and exploration naturally becomes connection."
+**Ecosystem Vision:** "Josephine evolves from an alpine companion into a living local guide — where trails meet rifugios, and exploration naturally becomes belonging."
 
 **User Journey:** Discover → Save → Plan → Book → Track → Review → Share
 

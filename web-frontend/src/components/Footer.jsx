@@ -33,7 +33,7 @@ function Footer({ setCurrentView }) {
 
         <div className="footer-bottom">
           <p className="footer-copyright">
-            © {new Date().getFullYear()} Alpenvia. All rights reserved.
+            © {new Date().getFullYear()} Josephine. All rights reserved.
           </p>
         </div>
       </div>

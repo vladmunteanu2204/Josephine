@@ -42,9 +42,13 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
   const userMenuItems = currentUser ? [
     { key: 'profile', icon: '👤', label: t('profile.title') },
     { key: 'savedTrails', icon: '❤️', label: t('profile.savedTrails') },
-    { key: 'challenges', icon: '🎯', label: t('challenges.title') },
-    { key: 'leaderboards', icon: '🏆', label: t('leaderboards.title') },
     { key: 'settings', icon: '⚙️', label: t('settings.title') }
+  ] : [];
+
+  // Demoted from primary navigation for Josephine MVP; feature remains available via user menu
+  const secondaryMenuItems = currentUser ? [
+    { key: 'challenges', icon: '🎯', label: t('challenges.title') },
+    { key: 'leaderboards', icon: '🏆', label: t('leaderboards.title') }
   ] : [];
 
   const isAdmin = currentUser?.email === 'vladmunteanu2204@gmail.com';
@@ -103,6 +107,25 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
               <div className="hamburger-divider"></div>
               <div className="hamburger-section">
                 {userMenuItems.map((item) => (
+                  <button
+                    key={item.key}
+                    className={`hamburger-item ${currentView === item.key ? 'active' : ''}`}
+                    onClick={() => handleItemClick(item.key)}
+                  >
+                    <span className="hamburger-item-icon">{item.icon}</span>
+                    <span className="hamburger-item-label">{item.label}</span>
+                    {currentView === item.key && <span className="hamburger-item-indicator">•</span>}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+
+          {currentUser && secondaryMenuItems.length > 0 && (
+            <>
+              <div className="hamburger-divider"></div>
+              <div className="hamburger-section">
+                {secondaryMenuItems.map((item) => (
                   <button
                     key={item.key}
                     className={`hamburger-item ${currentView === item.key ? 'active' : ''}`}
