@@ -19,7 +19,7 @@ function TermsAndConditions({ onBack }) {
           <section className="legal-section">
             <h2>1. {t('legal.acceptance')}</h2>
             <p>
-              By accessing and using Alpenvia, you accept and agree to be bound by these Terms and Conditions. 
+              By accessing and using Josephine, you accept and agree to be bound by these Terms and Conditions. 
               If you do not agree to these terms, please do not use this application.
             </p>
           </section>
@@ -27,7 +27,7 @@ function TermsAndConditions({ onBack }) {
           <section className="legal-section">
             <h2>2. {t('legal.informationalPurpose')}</h2>
             <p>
-              Alpenvia provides hiking trail information for <strong>informational purposes only</strong>. 
+              Josephine provides hiking trail information for <strong>informational purposes only</strong>. 
               The application does not guarantee the accuracy, completeness, safety, or accessibility of any trail information.
             </p>
             <p>
@@ -59,7 +59,7 @@ function TermsAndConditions({ onBack }) {
           <section className="legal-section">
             <h2>4. {t('legal.noLiability')}</h2>
             <p>
-              <strong>Alpenvia and its creators, operators, and affiliates are NOT responsible or liable for:</strong>
+              <strong>Josephine and its creators, operators, and affiliates are NOT responsible or liable for:</strong>
             </p>
             <ul>
               <li>Any injuries, accidents, incidents, or deaths occurring during hiking activities</li>
@@ -124,7 +124,7 @@ function TermsAndConditions({ onBack }) {
               <li><strong>Mountain Rescue (South Tyrol): +39 0471 797 397</strong></li>
             </ul>
             <p>
-              Alpenvia's emergency share location feature is a <strong>supplementary tool</strong> and 
+              Josephine's emergency share location feature is a <strong>supplementary tool</strong> and 
               does not replace calling emergency services.
             </p>
           </section>
@@ -146,7 +146,7 @@ function TermsAndConditions({ onBack }) {
           <section className="legal-section">
             <h2>9. {t('legal.thirdPartyServices')}</h2>
             <p>
-              Alpenvia uses third-party services (maps, weather, authentication) that have their own 
+              Josephine uses third-party services (maps, weather, authentication) that have their own 
               terms of service. We are not responsible for the availability, accuracy, or reliability 
               of these services.
             </p>
@@ -189,7 +189,7 @@ function TermsAndConditions({ onBack }) {
         <div className="legal-footer">
           <p><strong>{t('legal.acknowledgment')}</strong></p>
           <p>
-            By using Alpenvia, you acknowledge that you have read, understood, and agree to 
+            By using Josephine, you acknowledge that you have read, understood, and agree to 
             be bound by these Terms and Conditions.
           </p>
         </div>

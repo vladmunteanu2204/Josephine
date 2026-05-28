@@ -1237,7 +1237,7 @@ Each level tied to real alpine regions with descriptions
 ## 🎨 **Design Philosophy**
 
 ### **Core Vision**
-"Strava meets Lonely Mountain Journal" — an emotional, cinematic alpine experience where every achievement feels like a story of its own.
+"Your local companion in the mountains." — a warm, curated alpine guide crafted in the heart of South Tyrol.
 
 ### **Ecosystem Philosophy**
 "Josephine evolves from a hiking planner into a living alpine ecosystem — where trails meet huts, and exploration naturally becomes connection."

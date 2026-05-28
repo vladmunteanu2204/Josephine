@@ -883,7 +883,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
     if (gpsTrackRef.current.length === 0) return;
 
     const gpxHeader = `<?xml version="1.0" encoding="UTF-8"?>
-<gpx version="1.1" creator="Alpenvia">
+<gpx version="1.1" creator="Josephine">
   <metadata>
     <name>${trail.name}</name>
     <time>${new Date().toISOString()}</time>
@@ -1061,7 +1061,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
         console.log('[GPS] Page hidden - GPS may pause on some devices');
         sendNotification(
           'GPS Tracking Active',
-          'Keep Alpenvia open to continue tracking your hike'
+          'Keep Josephine open to continue tracking your hike'
         );
       }
     };

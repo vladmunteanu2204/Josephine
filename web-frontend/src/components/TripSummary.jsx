@@ -125,7 +125,7 @@ function TripSummary({ hikeData, onClose, onAddReview }) {
 
     // Download
     const link = document.createElement('a');
-    link.download = `alpenvia-${hikeData.trail_id}-${Date.now()}.png`;
+    link.download = `josephine-${hikeData.trail_id}-${Date.now()}.png`;
     link.href = canvas.toDataURL();
     link.click();
   };

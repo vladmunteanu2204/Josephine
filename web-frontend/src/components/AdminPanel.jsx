@@ -81,7 +81,7 @@ function AdminPanel({ onNavigate }) {
             ← Back to Site
           </button>
           <div className="admin-title-section">
-            <h1>⚙️ Alpenvia Admin Panel</h1>
+            <h1>⚙️ Josephine Admin Panel</h1>
             <button className="logout-btn" onClick={() => { setIsAuthenticated(false); setAdminPassword(''); }}>
               🔒 Logout
             </button>

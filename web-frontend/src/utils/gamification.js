@@ -1,4 +1,4 @@
-// Gamification System for Alpenvia
+// Gamification System for Josephine
 // Handles badges, achievements, XP, and levels
 
 // Badge Definitions

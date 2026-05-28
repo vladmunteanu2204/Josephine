@@ -19,7 +19,7 @@ function PrivacyPolicy({ onBack }) {
           <section className="legal-section">
             <h2>1. {t('legal.introduction')}</h2>
             <p>
-              Alpenvia ("we", "our", "us") respects your privacy and is committed to protecting 
+              Josephine ("we", "our", "us") respects your privacy and is committed to protecting 
               your personal data. This Privacy Policy explains what data we collect, how we use it, 
               and your rights regarding your data.
             </p>
@@ -173,7 +173,7 @@ function PrivacyPolicy({ onBack }) {
           <section className="legal-section">
             <h2>11. {t('legal.childrenPrivacy')}</h2>
             <p>
-              Alpenvia is not intended for users under 13 years of age. We do not knowingly 
+              Josephine is not intended for users under 13 years of age. We do not knowingly 
               collect data from children under 13. If we discover such data, we will delete it promptly.
             </p>
           </section>
