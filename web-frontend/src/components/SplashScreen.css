@@ -180,6 +180,16 @@
   filter: drop-shadow(0 4px 20px rgba(212, 165, 116, 0.4));
 }
 
+.logo-svg-mark {
+  width: 96px;
+  height: 96px;
+  display: block;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 1px rgba(212, 165, 116, 0.2),
+    0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
 @keyframes logoFloat {
   0%, 100% {
     transform: translateY(0px) scale(1);

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#1a2235"/>
+      <stop offset="100%" stop-color="#0a0c12"/>
+    </radialGradient>
+    <linearGradient id="jGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e8c285"/>
+      <stop offset="50%" stop-color="#d4a574"/>
+      <stop offset="100%" stop-color="#b8854a"/>
+    </linearGradient>
+    <linearGradient id="peakGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#d4a574" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#4a90e2" stop-opacity="0.6"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="url(#bgGrad)"/>
+
+  <!-- Subtle mountain silhouette behind -->
+  <path d="M 80 340
+           L 140 240
+           L 175 265
+           L 220 195
+           L 256 215
+           L 300 165
+           L 345 200
+           L 390 230
+           L 432 340 Z"
+        fill="url(#peakGrad)" opacity="0.18"/>
+
+  <!-- "J" letterform -->
+  <!-- Vertical stroke top -->
+  <rect x="226" y="115" width="70" height="200" rx="12" fill="url(#jGold)" filter="url(#glow)"/>
+  <!-- Horizontal top serif -->
+  <rect x="200" y="115" width="122" height="40" rx="12" fill="url(#jGold)"/>
+  <!-- J curve bottom -->
+  <path d="M 226 300 Q 226 380 200 395 Q 170 408 150 395 Q 128 380 125 355"
+        fill="none" stroke="url(#jGold)" stroke-width="40" stroke-linecap="round"
+        filter="url(#glow)"/>
+
+  <!-- Mountain peak accent above J -->
+  <path d="M 256 88 L 278 115 L 234 115 Z"
+        fill="#d4a574" opacity="0.6"/>
+
+  <!-- Subtle star/dot accent -->
+  <circle cx="310" cy="130" r="6" fill="#e8c285" opacity="0.5"/>
+  <circle cx="328" cy="118" r="4" fill="#e8c285" opacity="0.3"/>
+</svg>
