@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
@@ -30,11 +30,36 @@ function App() {
   const [selectedTrail, setSelectedTrail] = useState(null);
   const [selectedRifugio, setSelectedRifugio] = useState(null);
   const [selectedMultiDayTrail, setSelectedMultiDayTrail] = useState(null);
+  const [catalogInitialTags, setCatalogInitialTags] = useState([]);
   const [showSplash, setShowSplash] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(() => {
     return !localStorage.getItem('onboardingCompleted');
   });
   const [isGPSActive, setIsGPSActive] = useState(false);
+
+  // Sync view to URL hash for back-button support and shareable links
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (hash && hash !== currentView) {
+      setCurrentView(hash);
+    }
+  }, []);
+
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (hash !== currentView) {
+      window.history.pushState(null, '', `#${currentView}`);
+    }
+  }, [currentView]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const hash = window.location.hash.slice(1);
+      if (hash) setCurrentView(hash);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const viewTrail = (trail) => {
     setPreviousView(currentView);
@@ -73,18 +98,19 @@ function App() {
         
         <main className="main-content">
           {currentView === 'home' && (
-            <Home 
+            <Home
               setCurrentView={setCurrentView}
+              navigateToCatalog={(tags) => { setCatalogInitialTags(tags || []); setCurrentView('catalog'); }}
               viewTrail={viewTrail}
             />
           )}
-          
+
           {currentView === 'recommendations' && (
             <SmartRecommendations viewTrail={viewTrail} />
           )}
-          
+
           {currentView === 'catalog' && (
-            <TrailCatalog viewTrail={viewTrail} />
+            <TrailCatalog viewTrail={viewTrail} initialTags={catalogInitialTags} onTagsConsumed={() => setCatalogInitialTags([])} />
           )}
           
           {currentView === 'detail' && selectedTrail && (

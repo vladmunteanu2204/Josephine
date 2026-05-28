@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import FeaturedCarousel from './FeaturedCarousel';
@@ -7,24 +7,45 @@ import './Home.css';
 
 const API_URL = '/api';
 
-function Home({ setCurrentView, viewTrail }) {
+function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
   const { t } = useTranslation();
   const [featuredTrails, setFeaturedTrails] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [scrollY, setScrollY] = useState(0);
+  const scrollYRef = useRef(0);
+  const rafRef = useRef(null);
   const heroRef = useRef(null);
+  const heroLayersRef = useRef({});
+
+  const applyParallax = useCallback(() => {
+    const y = scrollYRef.current;
+    const { bg, back, front, overlay, title, subtitle, cta, cue } = heroLayersRef.current;
+    if (bg) bg.style.transform = `translateY(${y * 0.5}px)`;
+    if (back) back.style.transform = `translateY(${y * 0.3}px)`;
+    if (front) front.style.transform = `translateY(${y * 0.15}px)`;
+    if (overlay) overlay.style.opacity = Math.max(0, 1 - y / 300);
+    if (title) title.style.transform = `translateY(${y * 0.1}px)`;
+    if (subtitle) subtitle.style.transform = `translateY(${y * 0.12}px)`;
+    if (cta) cta.style.transform = `translateY(${y * 0.08}px)`;
+    if (cue) cue.style.opacity = Math.max(0, 1 - y / 200);
+    rafRef.current = null;
+  }, []);
 
   useEffect(() => {
     loadFeaturedTrails();
-    
-    // Parallax scroll effect
+
     const handleScroll = () => {
-      setScrollY(window.scrollY);
+      scrollYRef.current = window.scrollY;
+      if (!rafRef.current) {
+        rafRef.current = requestAnimationFrame(applyParallax);
+      }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [applyParallax]);
 
   const loadFeaturedTrails = async () => {
     try {
@@ -45,8 +66,11 @@ function Home({ setCurrentView, viewTrail }) {
   };
 
   const handleThemeClick = (tags) => {
-    // Navigate to catalog with filtered tags
-    setCurrentView('catalog');
+    if (navigateToCatalog) {
+      navigateToCatalog(tags);
+    } else {
+      setCurrentView('catalog');
+    }
   };
 
   const handleScrollToContent = () => {
@@ -56,41 +80,41 @@ function Home({ setCurrentView, viewTrail }) {
     }
   };
 
-  const logoOpacity = Math.max(0, 1 - (scrollY / 300));
   const preferReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   return (
     <div className="home-page">
       {/* Enhanced Cinematic Parallax Hero Section */}
       <div className="hero-parallax-redesign" ref={heroRef}>
-        <div 
+        <div
           className="hero-layer hero-bg-redesign"
-          style={!preferReducedMotion ? { transform: `translateY(${scrollY * 0.5}px)` } : {}}
+          ref={el => heroLayersRef.current.bg = el}
         ></div>
-        <div 
+        <div
           className="hero-layer hero-mountains-back-redesign"
-          style={!preferReducedMotion ? { transform: `translateY(${scrollY * 0.3}px)` } : {}}
+          ref={el => heroLayersRef.current.back = el}
         ></div>
-        <div 
+        <div
           className="hero-layer hero-mountains-front-redesign"
-          style={!preferReducedMotion ? { transform: `translateY(${scrollY * 0.15}px)` } : {}}
+          ref={el => heroLayersRef.current.front = el}
         ></div>
-        <div 
+        <div className="hero-ridge-redesign"></div>
+        <div
           className="hero-overlay-redesign"
-          style={!preferReducedMotion ? { opacity: logoOpacity } : {}}
+          ref={el => heroLayersRef.current.overlay = el}
         ></div>
-        
+
         <div className="hero-content-wrapper-redesign">
           <div className="container hero-content-redesign">
-            <h1 
-              className="hero-title-redesign" 
-              style={!preferReducedMotion ? { transform: `translateY(${scrollY * 0.1}px)` } : {}}
+            <h1
+              className="hero-title-redesign"
+              ref={el => heroLayersRef.current.title = el}
             >
               {t('hero.title')}
             </h1>
-            <p 
-              className="hero-subtitle-redesign" 
-              style={!preferReducedMotion ? { transform: `translateY(${scrollY * 0.12}px)` } : {}}
+            <p
+              className="hero-subtitle-redesign"
+              ref={el => heroLayersRef.current.subtitle = el}
             >
               {t('hero.subtitle')}
             </p>
@@ -106,9 +130,9 @@ function Home({ setCurrentView, viewTrail }) {
               </div>
             </div>
 
-            <div 
-              className="hero-cta-buttons-redesign" 
-              style={!preferReducedMotion ? { transform: `translateY(${scrollY * 0.08}px)` } : {}}
+            <div
+              className="hero-cta-buttons-redesign"
+              ref={el => heroLayersRef.current.cta = el}
             >
               <button className="hero-btn-primary-redesign" onClick={() => setCurrentView('recommendations')}>
                 <span className="hero-btn-icon">✨</span>
@@ -119,11 +143,11 @@ function Home({ setCurrentView, viewTrail }) {
                 <span className="hero-btn-text">{t('home.browseTrailCatalog')}</span>
               </button>
             </div>
-            
-            <div 
+
+            <div
               className="hero-scroll-cue"
               onClick={handleScrollToContent}
-              style={!preferReducedMotion ? { opacity: Math.max(0, 1 - (scrollY / 200)) } : {}}
+              ref={el => heroLayersRef.current.cue = el}
             >
               <span className="scroll-cue-icon">🏔️</span>
               <span className="scroll-cue-text">{t('hero.scrollToExplore')}</span>
@@ -158,17 +182,17 @@ function Home({ setCurrentView, viewTrail }) {
         <section className="home-section">
           <div className="quick-actions-grid">
             <div className="quick-action-card" onClick={() => setCurrentView('recommendations')}>
-              <div className="quick-action-icon">✨</div>
+              <span className="quick-action-icon">✦</span>
               <h3 className="quick-action-title">{t('home.smartRecommendations')}</h3>
               <p className="quick-action-desc">{t('home.smartRecommendationsDesc')}</p>
-              <span className="quick-action-arrow">→</span>
+              <span className="quick-action-arrow">Explore →</span>
             </div>
             
             <div className="quick-action-card" onClick={() => setCurrentView('catalog')}>
-              <div className="quick-action-icon">🗺️</div>
+              <span className="quick-action-icon">◈</span>
               <h3 className="quick-action-title">{t('home.browseTrailCatalog')}</h3>
               <p className="quick-action-desc">{t('home.browseTrailCatalogDesc')}</p>
-              <span className="quick-action-arrow">→</span>
+              <span className="quick-action-arrow">Explore →</span>
             </div>
           </div>
         </section>

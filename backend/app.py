@@ -4,6 +4,7 @@ import os
 import json
 import random
 import io
+import fcntl
 from datetime import datetime
 from functools import wraps
 from weather_service import weather_service
@@ -26,8 +27,10 @@ except Exception as e:
     print(f"Warning: Object Storage not initialized: {e}")
     storage_client = None
 
-# Admin authentication
-ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'alpenvia_admin_2025')
+# Admin authentication — no fallback; server refuses to start without this env var
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
+if not ADMIN_PASSWORD:
+    raise RuntimeError("ADMIN_PASSWORD environment variable must be set before starting the server")
 
 def require_admin_auth(f):
     """Decorator to require admin authentication"""
@@ -40,6 +43,17 @@ def require_admin_auth(f):
     return decorated_function
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def atomic_json_write(path, data):
+    """Write JSON to path with an exclusive file lock to prevent corruption."""
+    with open(path, 'a+') as lock_file:
+        fcntl.flock(lock_file, fcntl.LOCK_EX)
+        try:
+            with open(path, 'w') as f:
+                json.dump(data, f, indent=2)
+        finally:
+            fcntl.flock(lock_file, fcntl.LOCK_UN)
 MULTI_DAY_TRAILS_FILE = os.path.join(BASE_DIR, 'backend', 'data', 'multi_day_trails.json')
 
 def load_trail_segments():
@@ -439,8 +453,7 @@ def save_hike():
         print(f"✅ Added hike: {hike_entry['id']} for trail: {hike_entry['trail_name']}")
         
         # Save back to file
-        with open(hikes_path, 'w') as f:
-            json.dump(hikes, f, indent=2)
+        atomic_json_write(hikes_path, hikes)
         
         print(f"💾 Saved {len(hikes['hikes'])} total hikes to: {hikes_path}")
         
@@ -552,8 +565,7 @@ def create_trail():
         trails['trails'].append(trail_data)
         
         trails_path = os.path.join(BASE_DIR, 'data', 'trails.json')
-        with open(trails_path, 'w') as f:
-            json.dump(trails, f, indent=2)
+        atomic_json_write(trails_path, trails)
         
         return jsonify({'success': True, 'trail': trail_data}), 201
     except Exception as e:
@@ -574,8 +586,7 @@ def update_trail(trail_id):
         trails['trails'][trail_index] = trail_data
         
         trails_path = os.path.join(BASE_DIR, 'data', 'trails.json')
-        with open(trails_path, 'w') as f:
-            json.dump(trails, f, indent=2)
+        atomic_json_write(trails_path, trails)
         
         return jsonify({'success': True, 'trail': trail_data})
     except Exception as e:
@@ -594,8 +605,7 @@ def delete_trail(trail_id):
             return jsonify({'error': 'Trail not found'}), 404
         
         trails_path = os.path.join(BASE_DIR, 'data', 'trails.json')
-        with open(trails_path, 'w') as f:
-            json.dump(trails, f, indent=2)
+        atomic_json_write(trails_path, trails)
         
         return jsonify({'success': True})
     except Exception as e:
@@ -740,8 +750,7 @@ def load_plans():
 def save_plans(plans_data):
     """Save hike plans to JSON file"""
     plans_path = os.path.join(BASE_DIR, 'data', 'plans.json')
-    with open(plans_path, 'w') as f:
-        json.dump(plans_data, f, indent=2)
+    atomic_json_write(plans_path, plans_data)
 
 @app.route('/api/hike-plans', methods=['GET'])
 def get_user_plans():
@@ -815,8 +824,7 @@ def load_user_analytics():
 def save_user_analytics(analytics_data):
     """Save user analytics to JSON file"""
     analytics_path = os.path.join(BASE_DIR, 'data', 'user_analytics.json')
-    with open(analytics_path, 'w') as f:
-        json.dump(analytics_data, f, indent=2)
+    atomic_json_write(analytics_path, analytics_data)
 
 @app.route('/api/analytics/trail/view', methods=['POST'])
 def track_trail_view():
@@ -874,8 +882,7 @@ def load_rifugios():
 def save_rifugios(rifugios_data):
     """Save rifugios to JSON file"""
     rifugios_path = os.path.join(BASE_DIR, 'data', 'rifugios.json')
-    with open(rifugios_path, 'w') as f:
-        json.dump(rifugios_data, f, indent=2)
+    atomic_json_write(rifugios_path, rifugios_data)
 
 def load_booking_inquiries():
     """Load booking inquiries from JSON file"""
@@ -889,8 +896,7 @@ def load_booking_inquiries():
 def save_booking_inquiries(inquiries_data):
     """Save booking inquiries to JSON file"""
     inquiries_path = os.path.join(BASE_DIR, 'data', 'booking_inquiries.json')
-    with open(inquiries_path, 'w') as f:
-        json.dump(inquiries_data, f, indent=2)
+    atomic_json_write(inquiries_path, inquiries_data)
 
 def get_rifugio_status(rifugio):
     """Determine current status of rifugio based on dates"""
@@ -1209,8 +1215,7 @@ def load_multi_day_trails():
 
 def save_multi_day_trails(data):
     """Save multi-day trails to JSON file"""
-    with open(MULTI_DAY_TRAILS_FILE, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+    atomic_json_write(MULTI_DAY_TRAILS_FILE, data)
 
 @app.route('/api/multi-day-trails', methods=['GET'])
 def get_multi_day_trails():

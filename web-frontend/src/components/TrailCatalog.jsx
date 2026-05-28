@@ -6,14 +6,14 @@ import './TrailCatalog.css';
 
 const API_URL = '/api';
 
-function TrailCatalog({ viewTrail }) {
+function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed }) {
   const { t } = useTranslation();
   const toast = useToast();
   const [trails, setTrails] = useState([]);
   const [filteredTrails, setFilteredTrails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
-  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState(initialTags);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'map'
   const [savedTrailIds, setSavedTrailIds] = useState(() => {
@@ -33,6 +33,13 @@ function TrailCatalog({ viewTrail }) {
   useEffect(() => {
     loadTrails();
   }, []);
+
+  useEffect(() => {
+    if (initialTags && initialTags.length > 0) {
+      setSelectedTags(initialTags);
+      if (onTagsConsumed) onTagsConsumed();
+    }
+  }, [initialTags]);
 
   useEffect(() => {
     applyFilters();
