@@ -326,6 +326,11 @@
         "Half-board (dinner + breakfast) is recommended at rifugios",
         "Check weather forecast before starting each stage"
       ],
+      "josephineNote": {
+        "en": "This is one of the great Dolomite classics. Do it in late September when the crowds are gone and the larch trees are golden — the light filtering through the larches near Rifugio Fanes is something you will carry with you for years.",
+        "it": "Questa è una delle grandi classiche delle Dolomiti. Fatela a fine settembre, quando le folle sono sparite e i larici sono dorati — la luce che filtra tra i larici vicino al Rifugio Fanes è qualcosa che vi porterete dentro per anni.",
+        "de": "Das ist einer der großen Dolomiten-Klassiker. Geht ihn Ende September, wenn die Menschenmassen weg sind und die Lärchen golden leuchten — das Licht, das bei der Rifugio Fanes durch die Lärchen fällt, ist etwas, das ihr jahrelang mit euch tragen werdet."
+      },
       "status": "published",
       "created_at": "2025-01-15T10:00:00Z",
       "updated_at": "2025-01-15T10:00:00Z"

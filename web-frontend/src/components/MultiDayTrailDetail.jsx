@@ -8,7 +8,7 @@ const API_URL = import.meta.env.VITE_API_URL || (typeof window !== 'undefined' &
   : 'http://localhost:8000');
 
 function MultiDayTrailDetail({ trailId, onNavigate }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [trail, setTrail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeStage, setActiveStage] = useState(1);
@@ -98,6 +98,23 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
         <div className="detail-section overview-section">
           <h2>{t('multiday.overview', 'Trek Overview')}</h2>
           <p className="overview-description">{trail.description}</p>
+
+          {(() => {
+            const note = trail.josephineNote;
+            if (!note || typeof note !== 'object') return null;
+            const lang = i18n.language ? i18n.language.split('-')[0] : 'en';
+            const noteText = (note[lang] || note.en || '').trim();
+            if (!noteText) return null;
+            return (
+              <div className="josephine-note-callout">
+                <div className="josephine-note-label">
+                  <span className="josephine-note-icon">🏔️</span>
+                  <span className="josephine-note-byline">{t('trail.josephineNote')}</span>
+                </div>
+                <p className="josephine-note-text">{noteText}</p>
+              </div>
+            );
+          })()}
 
           {trail.highlights && trail.highlights.length > 0 && (
             <div className="highlights-grid">

@@ -40,6 +40,7 @@ function MultiDayTrailsManager({ adminPassword }) {
       id: '',
       name: '',
       description: '',
+      josephineNote: { en: '', it: '', de: '' },
       type: 'point-to-point',
       duration_days: 3,
       duration_nights: 2,
@@ -352,6 +353,33 @@ function MultiDayTrailsManager({ adminPassword }) {
                   onChange={(e) => updateField('description', e.target.value)}
                   rows="4"
                   placeholder={t('admin.descriptionPlaceholder')}
+                />
+              </div>
+              <div className="form-group">
+                <label>🏔️ {t('trail.josephineNote', 'Josephine says')} (EN)</label>
+                <textarea
+                  value={editingTrail.josephineNote?.en || ''}
+                  onChange={(e) => updateField('josephineNote', { ...(editingTrail.josephineNote || {}), en: e.target.value })}
+                  rows="3"
+                  placeholder="A warm personal note in English..."
+                />
+              </div>
+              <div className="form-group">
+                <label>🏔️ {t('trail.josephineNote', 'Josephine dice')} (IT)</label>
+                <textarea
+                  value={editingTrail.josephineNote?.it || ''}
+                  onChange={(e) => updateField('josephineNote', { ...(editingTrail.josephineNote || {}), it: e.target.value })}
+                  rows="3"
+                  placeholder="Una nota personale in italiano..."
+                />
+              </div>
+              <div className="form-group">
+                <label>🏔️ {t('trail.josephineNote', 'Josephine sagt')} (DE)</label>
+                <textarea
+                  value={editingTrail.josephineNote?.de || ''}
+                  onChange={(e) => updateField('josephineNote', { ...(editingTrail.josephineNote || {}), de: e.target.value })}
+                  rows="3"
+                  placeholder="Eine persönliche Notiz auf Deutsch..."
                 />
               </div>
             </div>
