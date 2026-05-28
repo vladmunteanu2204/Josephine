@@ -10,7 +10,7 @@ import WeatherWidget from './WeatherWidget';
 import './TrailDetail.css';
 
 function TrailDetail({ trail, onBack, setIsGPSActive }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const toast = useToast();
   const [fullTrail, setFullTrail] = useState(trail);
   const [loading, setLoading] = useState(false);
@@ -306,6 +306,18 @@ function TrailDetail({ trail, onBack, setIsGPSActive }) {
             <div className="gradient-divider"></div>
           </div>
           <p className="overview-text">{fullTrail.description}</p>
+
+          {fullTrail.josephineNote && (
+            <div className="josephine-note-callout">
+              <div className="josephine-note-label">
+                <span className="josephine-note-icon">🏔️</span>
+                <span className="josephine-note-byline">{t('trail.josephineNote')}</span>
+              </div>
+              <p className="josephine-note-text">
+                {fullTrail.josephineNote[i18n.language] || fullTrail.josephineNote.en || fullTrail.josephineNote}
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="map-section">

@@ -24,6 +24,7 @@ function TrailManager({ adminPassword }) {
     duration_hours: 0,
     elevation_gain_m: 0,
     description: '',
+    josephineNote: { en: '', it: '', de: '' },
     thumbnail: '',
     image_url: '',
     wallpaper: '',
@@ -77,7 +78,8 @@ function TrailManager({ adminPassword }) {
       wallpaper: trail.wallpaper || '',
       photos: trail.photos || '',
       videos: trail.videos || '',
-      checkpoints: trail.checkpoints || []
+      checkpoints: trail.checkpoints || [],
+      josephineNote: trail.josephineNote || { en: '', it: '', de: '' }
     });
     // Set the string inputs for editing
     setTagsInput((trail.tags || []).join(', '));
@@ -102,6 +104,7 @@ function TrailManager({ adminPassword }) {
       duration_hours: 0,
       elevation_gain_m: 0,
       description: '',
+      josephineNote: { en: '', it: '', de: '' },
       thumbnail: '',
       image_url: '',
       wallpaper: '',
@@ -573,6 +576,31 @@ function TrailManager({ adminPassword }) {
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows="4"
                   placeholder="Detailed trail description..."
+                />
+              </div>
+
+              <div className="form-group full-width" style={{ borderTop: '1px solid rgba(212,165,116,0.2)', paddingTop: '16px', marginTop: '4px' }}>
+                <label style={{ color: 'rgba(212,165,116,0.9)', fontWeight: 700 }}>🏔️ Josephine's Note (editorial callout — shown on trail detail page)</label>
+                <textarea
+                  value={(formData.josephineNote && formData.josephineNote.en) || ''}
+                  onChange={(e) => setFormData({ ...formData, josephineNote: { ...(formData.josephineNote || {}), en: e.target.value } })}
+                  rows="2"
+                  placeholder="EN — e.g. Come in early morning before the tour buses arrive..."
+                  style={{ marginBottom: '8px', borderColor: 'rgba(212,165,116,0.25)' }}
+                />
+                <textarea
+                  value={(formData.josephineNote && formData.josephineNote.it) || ''}
+                  onChange={(e) => setFormData({ ...formData, josephineNote: { ...(formData.josephineNote || {}), it: e.target.value } })}
+                  rows="2"
+                  placeholder="IT — e.g. Vieni di mattina presto..."
+                  style={{ marginBottom: '8px', borderColor: 'rgba(212,165,116,0.25)' }}
+                />
+                <textarea
+                  value={(formData.josephineNote && formData.josephineNote.de) || ''}
+                  onChange={(e) => setFormData({ ...formData, josephineNote: { ...(formData.josephineNote || {}), de: e.target.value } })}
+                  rows="2"
+                  placeholder="DE — e.g. Komm früh morgens..."
+                  style={{ borderColor: 'rgba(212,165,116,0.25)' }}
                 />
               </div>
 
