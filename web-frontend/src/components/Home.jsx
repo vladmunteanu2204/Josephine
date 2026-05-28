@@ -94,6 +94,17 @@ function Home({ setCurrentView, viewTrail }) {
             >
               {t('hero.subtitle')}
             </p>
+            {/* Josephine Mascot */}
+            <div className="mascot-row">
+              <div className="mascot-avatar" aria-hidden="true">
+                <span className="mascot-emoji">🧭</span>
+                <div className="mascot-highlight"></div>
+              </div>
+              <div className="mascot-bubble" role="note" aria-label={t('home.mascotPrompt')}>
+                <p className="mascot-prompt">{t('home.mascotPrompt')}</p>
+              </div>
+            </div>
+
             <div 
               className="hero-cta-buttons-redesign" 
               style={!preferReducedMotion ? { transform: `translateY(${scrollY * 0.08}px)` } : {}}

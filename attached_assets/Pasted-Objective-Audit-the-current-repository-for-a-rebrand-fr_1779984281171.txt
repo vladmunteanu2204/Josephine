@@ -1,0 +1,58 @@
+Objective:
+Audit the current repository for a rebrand from Alpenvia into a friendly local alpine companion app. Do not edit files.
+
+Current context:
+The repository currently still presents the product as “Alpenvia”, a premium multilingual hiking platform with a “Strava meets Lonely Mountain Journal” positioning. We want to rethink the product into a warmer, simpler, more human alpine companion focused on helping tourists and locals decide what to do today in South Tyrol, Trentino, the Dolomites and nearby alpine areas.
+
+Files/components to inspect:
+- README.md
+- ROADMAP.md
+- replit.md
+- BUSINESS_ANALYSIS.md
+- web-frontend/src/App.jsx
+- web-frontend/src/components/Home.jsx
+- web-frontend/src/components/SmartRecommendations.jsx
+- web-frontend/src/components/TrailCatalog.jsx
+- web-frontend/src/components/TrailDetail.jsx
+- web-frontend/src/components/Rifugios.jsx
+- web-frontend/src/locales/en.json
+- web-frontend/src/locales/it.json
+- web-frontend/src/locales/de.json
+- main CSS files used by Home and recommendations
+
+Exact changes required:
+Do not modify any files.
+Identify where the old Alpenvia brand and old positioning appear.
+Identify the minimum set of files/components that must change for the first rebranded prototype.
+Identify which existing features should stay visible in MVP and which should be hidden from the main navigation.
+Propose a safe sequence of small implementation steps.
+
+What must not be changed:
+Do not change backend APIs.
+Do not change database schema.
+Do not change authentication.
+Do not remove any feature.
+Do not rename files or routes.
+Do not rewrite README yet.
+Do not make broad UI changes.
+
+UX requirements:
+The new product should feel like a friendly local alpine companion, not a heavy hiking platform.
+The main user should be able to answer: “What kind of alpine day do I want today?”
+The app should feel useful for tourists, casual hikers, older visitors, couples, families and dog owners.
+
+Data/model requirements:
+Reuse existing trail/rifugio data as much as possible.
+If new tags or mappings are needed, propose them but do not implement them.
+
+Acceptance criteria:
+Return only:
+1. Current brand/positioning audit
+2. Files/components impacted
+3. MVP visible vs hidden feature recommendation
+4. Rebrand risks
+5. Proposed first implementation step
+6. A precise next Replit prompt for that first implementation
+
+Expected response:
+Audit only. No code changes.

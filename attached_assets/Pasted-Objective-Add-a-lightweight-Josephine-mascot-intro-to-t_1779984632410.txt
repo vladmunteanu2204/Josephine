@@ -1,0 +1,89 @@
+Objective:
+Add a lightweight Josephine mascot intro to the homepage hero.
+
+Current context:
+The app is being rebranded from Alpenvia into Josephine, a friendly local alpine companion. The first impression should feel warm, human and memorable. We want Josephine to feel like a guide who helps the user decide what kind of alpine day they want.
+
+Files/components to inspect and edit:
+- web-frontend/src/components/Home.jsx
+- the CSS file used by Home.jsx / hero section
+- web-frontend/src/locales/en.json
+- web-frontend/src/locales/it.json
+- web-frontend/src/locales/de.json
+
+Exact changes required:
+Add a small mascot element inside the homepage hero area.
+
+The mascot should:
+- appear visually as a friendly 3D-style alpine guide placeholder
+- have a subtle bounce / jump animation on load
+- include a speech bubble
+- not require any new 3D library
+- not use Three.js, Spline, Rive or external animation dependencies
+- work on desktop and mobile
+- respect prefers-reduced-motion
+
+Speech bubble copy:
+
+EN:
+"What kind of alpine day are we planning today?"
+
+IT:
+"Che giornata in montagna prepariamo oggi?"
+
+DE:
+"Was für einen Bergtag planen wir heute?"
+
+Add these strings to the locale files using a clear key such as:
+home.mascotPrompt
+
+UX requirements:
+The mascot should feel premium, warm and friendly, not childish.
+It should not dominate the hero.
+It should support the main CTA “Plan My Day”.
+The design should fit the existing dark alpine glassmorphic style.
+On mobile, the mascot should stack neatly below or beside the hero text without breaking layout.
+
+Implementation guidance:
+If no mascot image asset exists, create a temporary CSS-based 3D-style circular mascot/avatar placeholder using gradients, soft shadow, and alpine colors.
+Use a simple CSS animation such as gentle-bounce.
+Add a speech bubble next to it with glassmorphic styling.
+Keep the component local to Home.jsx for now; do not create a complex mascot system yet.
+
+What must not be changed:
+- Do not change backend code.
+- Do not change routing.
+- Do not change authentication.
+- Do not change data JSON files.
+- Do not add new dependencies.
+- Do not change TrailDetail, TrailCatalog, Rifugios, AdminPanel or GPS components.
+- Do not redesign the entire homepage.
+- Do not remove existing CTAs.
+- Do not modify README.md, ROADMAP.md, replit.md or BUSINESS_ANALYSIS.md.
+
+Acceptance criteria:
+1. Homepage hero shows a Josephine mascot placeholder.
+2. Mascot has a subtle bounce/jump animation.
+3. Speech bubble appears with localized EN/IT/DE text.
+4. Animation is disabled or reduced when prefers-reduced-motion is enabled.
+5. Layout remains responsive on mobile and desktop.
+6. No new dependencies are added.
+7. No backend/routing/data files are changed.
+
+Test steps:
+- Run the app.
+- Open the homepage.
+- Confirm the mascot appears in the hero.
+- Confirm the speech bubble appears.
+- Switch EN/IT/DE and confirm the speech bubble text changes.
+- Test mobile width.
+- Confirm the page still works with existing hero CTAs.
+- Check package.json and confirm no dependency was added.
+
+Expected response:
+After editing, list:
+1. Files changed
+2. New translation keys added
+3. CSS classes added
+4. Confirmation that no dependencies/backend/routing/data files were changed
+5. Screenshot or visual confirmation of the homepage

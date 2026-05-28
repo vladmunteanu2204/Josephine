@@ -49,6 +49,7 @@
     "selectLanguage": "Select Language"
   },
   "home": {
+    "mascotPrompt": "What kind of alpine day are we planning today?",
     "smartRecommendations": "Smart Recommendations",
     "smartRecommendationsDesc": "Personal suggestions from verified routes",
     "browseTrailCatalog": "Browse Trail Catalog",

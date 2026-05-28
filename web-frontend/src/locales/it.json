@@ -49,6 +49,7 @@
     "selectLanguage": "Seleziona Lingua"
   },
   "home": {
+    "mascotPrompt": "Che giornata in montagna prepariamo oggi?",
     "smartRecommendations": "Raccomandazioni Intelligenti",
     "smartRecommendationsDesc": "Suggerimenti personali da percorsi verificati",
     "browseTrailCatalog": "Sfoglia Catalogo Sentieri",

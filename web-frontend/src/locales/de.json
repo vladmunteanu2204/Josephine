@@ -49,6 +49,7 @@
     "selectLanguage": "Sprache Auswählen"
   },
   "home": {
+    "mascotPrompt": "Was für einen Bergtag planen wir heute?",
     "smartRecommendations": "Smarte Empfehlungen",
     "smartRecommendationsDesc": "Persönliche Vorschläge aus geprüften Routen",
     "browseTrailCatalog": "Wanderwege-Katalog Durchsuchen",

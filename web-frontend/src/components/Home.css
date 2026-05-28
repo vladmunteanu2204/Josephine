@@ -237,6 +237,195 @@
   animation: fadeInUp 1s ease 0.2s both;
 }
 
+/* ========================================
+   JOSEPHINE MASCOT
+   ======================================== */
+
+.mascot-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin: 0 auto 36px;
+  max-width: 480px;
+  animation: fadeInUp 1.0s ease 0.3s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mascot-row {
+    animation: none;
+  }
+}
+
+.mascot-avatar {
+  width: 72px;
+  height: 72px;
+  min-width: 72px;
+  border-radius: 50%;
+  background: linear-gradient(
+    145deg,
+    #2a5a4e 0%,
+    #1a3329 45%,
+    #3a7a64 100%
+  );
+  border: 2px solid rgba(212, 165, 116, 0.45);
+  box-shadow:
+    0 10px 32px rgba(0, 0, 0, 0.55),
+    0 2px 0 rgba(255, 255, 255, 0.06) inset,
+    0 0 20px rgba(212, 165, 116, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  animation: mascotBounce 4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mascot-avatar {
+    animation: none;
+  }
+}
+
+.mascot-emoji {
+  font-size: 34px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+  position: relative;
+  z-index: 2;
+  line-height: 1;
+}
+
+/* 3D lens-highlight */
+.mascot-highlight {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  width: 26px;
+  height: 14px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.22) 0%,
+    transparent 75%
+  );
+  border-radius: 50%;
+  transform: rotate(-28deg);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Speech bubble */
+.mascot-bubble {
+  background: rgba(18, 40, 32, 0.78);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(212, 165, 116, 0.32);
+  border-radius: 18px;
+  padding: 14px 20px;
+  position: relative;
+  max-width: 320px;
+  box-shadow:
+    0 6px 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Bubble pointer — points left toward the avatar */
+.mascot-bubble::before {
+  content: '';
+  position: absolute;
+  left: -11px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-right: 11px solid rgba(212, 165, 116, 0.32);
+}
+
+.mascot-bubble::after {
+  content: '';
+  position: absolute;
+  left: -9px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 10px solid rgba(18, 40, 32, 0.78);
+}
+
+.mascot-prompt {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.55;
+  margin: 0;
+  font-style: italic;
+  letter-spacing: 0.01em;
+}
+
+/* Gentle bounce: idle for most of the cycle, quick hop */
+@keyframes mascotBounce {
+  0%, 65%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  72% {
+    transform: translateY(-10px) scale(1.04);
+  }
+  80% {
+    transform: translateY(-4px) scale(1.01);
+  }
+  86% {
+    transform: translateY(-8px) scale(1.03);
+  }
+  93% {
+    transform: translateY(-2px) scale(1.005);
+  }
+}
+
+/* Mobile: stack vertically, flip bubble pointer to top */
+@media (max-width: 520px) {
+  .mascot-row {
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .mascot-bubble {
+    max-width: 290px;
+    text-align: center;
+  }
+
+  /* Reset side pointer, point upward toward avatar */
+  .mascot-bubble::before {
+    left: 50%;
+    top: -11px;
+    transform: translateX(-50%);
+    border-top: none;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 11px solid rgba(212, 165, 116, 0.32);
+  }
+
+  .mascot-bubble::after {
+    left: 50%;
+    top: -9px;
+    transform: translateX(-50%);
+    border-top: none;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 10px solid rgba(18, 40, 32, 0.78);
+  }
+
+  .mascot-prompt {
+    font-size: 13px;
+  }
+}
+
+/* ======================================== */
+
 .hero-cta-buttons-redesign {
   display: flex;
   flex-direction: column;
