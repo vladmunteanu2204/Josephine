@@ -6,62 +6,84 @@ import './SmartRecommendations.css';
 
 const API_URL = '/api';
 
+const DURATION_OPTIONS = [
+  { label: '< 2h',    value: 1.5 },
+  { label: '2–4h',   value: 3   },
+  { label: '4–6h',   value: 5   },
+  { label: 'Full day', value: 8 },
+];
+
+const DIFFICULTY_OPTIONS = [
+  { key: 'easy',   dots: 1, label: 'Easy'   },
+  { key: 'medium', dots: 2, label: 'Moderate' },
+  { key: 'hard',   dots: 3, label: 'Hard'   },
+];
+
+const MOOD_OPTIONS = [
+  { id: 'alpine lakes',    icon: '◈', label: 'Alpine lakes'     },
+  { id: 'panoramic views', icon: '◈', label: 'Panoramic views'  },
+  { id: 'via ferrata',     icon: '◈', label: 'Via ferrata'      },
+  { id: 'forests',         icon: '◈', label: 'Forests'          },
+  { id: 'cultural routes', icon: '◈', label: 'Culture'          },
+  { id: 'loop',            icon: '◈', label: 'Loop trails'      },
+];
+
+function DifficultyDots({ count }) {
+  return (
+    <span className="sr-diff-dots" aria-hidden="true">
+      {[1, 2, 3].map(i => (
+        <span key={i} className={`sr-diff-dot ${i <= count ? 'filled' : ''}`} />
+      ))}
+    </span>
+  );
+}
+
 function SmartRecommendations({ viewTrail }) {
   const { t } = useTranslation();
   const toast = useToast();
-  const [step, setStep] = useState(1);
-  const [duration, setDuration] = useState(3);
+
+  // Form state
+  const [duration, setDuration]     = useState(3);
   const [difficulty, setDifficulty] = useState('medium');
-  const [interests, setInterests] = useState([]);
-  const [startArea, setStartArea] = useState('');
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [moods, setMoods]           = useState([]);
+  const [withDog, setWithDog]       = useState(false);
+  const [startArea, setStartArea]   = useState('');
+
+  // Results state
+  const [results, setResults]   = useState([]);
+  const [loading, setLoading]   = useState(false);
+  const [error, setError]       = useState('');
+  const [showResults, setShowResults] = useState(false);
+
   const [savedTrailIds, setSavedTrailIds] = useState(() => {
     const saved = localStorage.getItem('savedTrails');
     if (!saved) return [];
-    
     const parsed = JSON.parse(saved);
-    // Migration: Convert old format (full objects) to new format (IDs only)
     if (parsed.length > 0 && typeof parsed[0] === 'object') {
-      const ids = parsed.map(trail => trail.id);
+      const ids = parsed.map(t => t.id);
       localStorage.setItem('savedTrails', JSON.stringify(ids));
       return ids;
     }
     return parsed;
   });
 
-  const INTERESTS = [
-    { id: 'alpine lakes', icon: '💧', label: t('recommendations.alpineLakes') },
-    { id: 'panoramic views', icon: '🏔️', label: t('recommendations.panoramicViews') },
-    { id: 'via ferrata', icon: '🧗', label: t('recommendations.viaFerrata') },
-    { id: 'forests', icon: '🌲', label: t('recommendations.forests') },
-    { id: 'cultural routes', icon: '🏛️', label: t('recommendations.culturalRoutes') },
-    { id: 'loop', icon: '🔄', label: t('recommendations.loopTrails') },
-  ];
-
-  const toggleInterest = (interestId) => {
-    setInterests(prev =>
-      prev.includes(interestId)
-        ? prev.filter(id => id !== interestId)
-        : [...prev, interestId]
-    );
+  const toggleMood = (id) => {
+    setMoods(prev => prev.includes(id) ? prev.filter(m => m !== id) : [...prev, id]);
   };
 
   const handleSubmit = async () => {
     setLoading(true);
     setError('');
-    
     try {
+      const allInterests = [...moods, ...(withDog ? ['dog-friendly'] : [])];
       const response = await axios.post(`${API_URL}/ai/recommend`, {
         duration_hours: duration,
         difficulty,
-        interests,
-        start_area: startArea
+        interests: allInterests,
+        start_area: startArea,
       });
-      
       setResults(response.data.results || []);
-      setStep(4);
+      setShowResults(true);
     } catch (err) {
       setError(t('recommendations.failedToLoad'));
       console.error('Error:', err);
@@ -70,237 +92,197 @@ function SmartRecommendations({ viewTrail }) {
     }
   };
 
-  const toggleSaveTrail = (trail, e) => {
-    e.stopPropagation();
-    const isSaved = savedTrailIds.includes(trail.id);
-    
-    let newSaved;
-    if (isSaved) {
-      newSaved = savedTrailIds.filter(id => id !== trail.id);
-      toast.info(t('recommendations.trailUnsaved') || `${trail.name} removed from saved trails`);
-    } else {
-      newSaved = [...savedTrailIds, trail.id];
-      toast.success(t('recommendations.trailSaved') || `${trail.name} saved!`);
-    }
-    
-    setSavedTrailIds(newSaved);
-    localStorage.setItem('savedTrails', JSON.stringify(newSaved));
-  };
-
-  const isTrailSaved = (trailId) => {
-    return savedTrailIds.includes(trailId);
-  };
-
-  const resetWizard = () => {
-    setStep(1);
-    setDuration(3);
-    setDifficulty('medium');
-    setInterests([]);
-    setStartArea('');
+  const reset = () => {
+    setShowResults(false);
     setResults([]);
     setError('');
   };
 
-  return (
-    <div className="container">
-      <div className="recommendations-header">
-        <h1>{t('recommendations.title')}</h1>
-        <p>{t('recommendations.subtitle')}</p>
-        <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)', marginTop: '8px', fontStyle: 'italic' }}>{t('recommendations.supportingLine')}</p>
-      </div>
+  const toggleSave = (trail, e) => {
+    e.stopPropagation();
+    const isSaved = savedTrailIds.includes(trail.id);
+    const next = isSaved
+      ? savedTrailIds.filter(id => id !== trail.id)
+      : [...savedTrailIds, trail.id];
+    setSavedTrailIds(next);
+    localStorage.setItem('savedTrails', JSON.stringify(next));
+    isSaved
+      ? toast.info(`${trail.name} removed from saved trails`)
+      : toast.success(`${trail.name} saved!`);
+  };
 
-      {step < 4 && (
-        <div className="wizard-progress">
-          <span className="progress-text">
-            {t('recommendations.step')} {step} {t('recommendations.of')} 3
-          </span>
-          <div className="progress-bar">
-            <div 
-              className="progress-fill" 
-              style={{ width: `${(step / 3) * 100}%` }}
-            />
-          </div>
+  // ── Results view ──────────────────────────────────────────────────────────
+  if (showResults) {
+    return (
+      <div className="sr-results-page">
+        <div className="sr-results-header">
+          <button className="sr-back-btn" onClick={reset}>← New search</button>
+          <h2 className="sr-results-title">Josephine picked these for you</h2>
+          <p className="sr-results-verified">✓ Verified routes only</p>
         </div>
-      )}
 
-      {error && <div className="error">{error}</div>}
+        {error && <div className="error" style={{ margin: '0 20px 20px' }}>{error}</div>}
 
-      {step === 1 && (
-        <div className="wizard-step">
-          <h2>{t('recommendations.howLong')}</h2>
-          <div className="slider-container">
-            <div className="slider-value">{duration} {t('recommendations.hours')}</div>
-            <input
-              type="range"
-              min="1"
-              max="8"
-              step="0.5"
-              value={duration}
-              onChange={(e) => setDuration(parseFloat(e.target.value))}
-              className="slider"
-            />
-            <div className="slider-labels">
-              <span>1h</span>
-              <span>8h</span>
-            </div>
-          </div>
-
-          <h2 style={{ marginTop: '48px' }}>{t('recommendations.whatDifficulty')}</h2>
-          <div className="options-row">
-            {['easy', 'medium', 'hard'].map(diff => (
-              <button
-                key={diff}
-                className={`option-btn ${difficulty === diff ? 'active' : ''}`}
-                onClick={() => setDifficulty(diff)}
-              >
-                {t(`catalog.${diff}`)}
-              </button>
-            ))}
-          </div>
-
-          <button className="btn-primary next-btn" onClick={() => setStep(2)}>
-            {t('recommendations.next')}
-          </button>
-        </div>
-      )}
-
-      {step === 2 && (
-        <div className="wizard-step">
-          <h2>{t('recommendations.whatInterests')}</h2>
-          <p className="hint">{t('recommendations.selectAll')}</p>
-          
-          <div className="interests-grid">
-            {INTERESTS.map(interest => (
-              <button
-                key={interest.id}
-                className={`interest-card ${interests.includes(interest.id) ? 'active' : ''}`}
-                onClick={() => toggleInterest(interest.id)}
-              >
-                <div className="interest-icon">{interest.icon}</div>
-                <div className="interest-label">{interest.label}</div>
-              </button>
-            ))}
-          </div>
-
-          <div className="wizard-nav">
-            <button className="btn-secondary" onClick={() => setStep(1)}>
-              {t('recommendations.back')}
-            </button>
-            <button className="btn-primary" onClick={() => setStep(3)}>
-              {t('recommendations.next')}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {step === 3 && (
-        <div className="wizard-step">
-          <h2>{t('recommendations.whereToStart')}</h2>
-          <input
-            type="text"
-            className="text-input"
-            placeholder={t('recommendations.enterLocation')}
-            value={startArea}
-            onChange={(e) => setStartArea(e.target.value)}
-          />
-
-          <div className="summary-card">
-            <h3>{t('recommendations.yourPreferences')}</h3>
-            <ul>
-              <li>{t('recommendations.duration')}: {duration} {t('recommendations.hours')}</li>
-              <li>{t('recommendations.difficulty')}: {t(`catalog.${difficulty}`)}</li>
-              <li>{t('recommendations.interests')}: {interests.join(', ') || t('recommendations.noneSelected')}</li>
-              <li>{t('recommendations.startArea')}: {startArea || t('recommendations.anyLocation')}</li>
-            </ul>
-          </div>
-
-          <div className="wizard-nav">
-            <button className="btn-secondary" onClick={() => setStep(2)}>
-              {t('recommendations.back')}
-            </button>
-            <button 
-              className="btn-primary" 
-              onClick={handleSubmit}
-              disabled={loading}
-            >
-              {loading ? t('recommendations.findingTrails') : `✨ ${t('recommendations.getRecommendations')}`}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {step === 4 && (
-        <div className="results-section">
-          <div className="results-header">
-            <h2>{t('recommendations.recommendedTrails')}</h2>
-            <button className="btn-secondary" onClick={resetWizard}>
-              {t('recommendations.newSearch')}
-            </button>
-          </div>
-
-          <p className="results-disclaimer">
-            ✓ {t('recommendations.verifiedOnly')}
-          </p>
-
-          {results.length > 0 ? (
-            <div className="trail-grid">
-              {results.map(trail => (
-                <div 
-                  key={trail.id} 
-                  className="trail-card"
-                  onClick={() => viewTrail(trail)}
+        {results.length > 0 ? (
+          <div className="trail-grid" style={{ padding: '0 20px 40px' }}>
+            {results.map(trail => (
+              <div key={trail.id} className="trail-card" onClick={() => viewTrail(trail)}>
+                <button
+                  className={`save-btn ${savedTrailIds.includes(trail.id) ? 'saved' : ''}`}
+                  onClick={(e) => toggleSave(trail, e)}
+                  aria-label={savedTrailIds.includes(trail.id) ? 'Unsave' : 'Save'}
                 >
-                  <button
-                    className={`save-btn ${isTrailSaved(trail.id) ? 'saved' : ''}`}
-                    onClick={(e) => toggleSaveTrail(trail, e)}
-                    aria-label={isTrailSaved(trail.id) ? t('recommendations.unsaveTrail') : t('recommendations.saveTrail')}
-                  >
-                    {isTrailSaved(trail.id) ? '❤️' : '🤍'}
-                  </button>
-                  <img 
-                    src={trail.thumbnail} 
-                    alt={trail.name}
-                    className="trail-image"
-                  />
-                  <div className="trail-content">
-                    <div className="trail-header">
-                      <h3 className="trail-name">{trail.name}</h3>
-                      <span className={`badge badge-${trail.difficulty}`}>
-                        {t(`catalog.${trail.difficulty}`)}
-                      </span>
-                    </div>
-                    <p className="trail-region">{trail.region}</p>
-                    <div className="trail-stats">
-                      <div className="stat">
-                        <span className="stat-icon">📏</span>
-                        <span>{trail.distance_km} km</span>
-                      </div>
-                      <div className="stat">
-                        <span className="stat-icon">⏱️</span>
-                        <span>{trail.duration_hours}h</span>
-                      </div>
-                      <div className="stat">
-                        <span className="stat-icon">⛰️</span>
-                        <span>{trail.elevation_gain_m}m</span>
-                      </div>
-                    </div>
-                    <div className="trail-tags">
-                      {trail.tags.slice(0, 3).map((tag, i) => (
-                        <span key={i} className="tag">{tag}</span>
-                      ))}
-                    </div>
+                  {savedTrailIds.includes(trail.id) ? '♥' : '♡'}
+                </button>
+                <img src={trail.thumbnail} alt={trail.name} className="trail-image" />
+                <div className="trail-content">
+                  <div className="trail-header">
+                    <h3 className="trail-name">{trail.name}</h3>
+                    <span className={`badge badge-${trail.difficulty}`}>{t(`catalog.${trail.difficulty}`)}</span>
+                  </div>
+                  <p className="trail-region">{trail.region}</p>
+                  <div className="trail-stats">
+                    <div className="stat"><span className="stat-icon">▸</span><span>{trail.distance_km} km</span></div>
+                    <div className="stat"><span className="stat-icon">▸</span><span>{trail.duration_hours}h</span></div>
+                    <div className="stat"><span className="stat-icon">▸</span><span>{trail.elevation_gain_m}m ↑</span></div>
+                  </div>
+                  <div className="trail-tags">
+                    {trail.tags.slice(0, 3).map((tag, i) => <span key={i} className="tag">{tag}</span>)}
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="empty-state">
-              <div className="empty-icon">🏔️</div>
-              <p>{t('recommendations.noResults')}</p>
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="empty-state" style={{ padding: '60px 20px', textAlign: 'center' }}>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>◈</div>
+            <p style={{ color: 'rgba(240,236,230,0.6)' }}>{t('recommendations.noResults')}</p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ── Single-page form ──────────────────────────────────────────────────────
+  return (
+    <div className="sr-page">
+
+      {/* Header */}
+      <div className="sr-header">
+        <div className="sr-header-inner">
+          <div className="sr-josephine-mark">
+            <img src="/josephine-mark.svg" alt="" className="sr-mark-img" />
+          </div>
+          <div>
+            <h1 className="sr-title">Plan my day</h1>
+            <p className="sr-subtitle">Tell Josephine what you're in the mood for</p>
+          </div>
         </div>
-      )}
+      </div>
+
+      <div className="sr-form">
+
+        {/* Duration */}
+        <div className="sr-section">
+          <p className="sr-label">How long do you have?</p>
+          <div className="sr-segment">
+            {DURATION_OPTIONS.map(opt => (
+              <button
+                key={opt.value}
+                className={`sr-segment-btn ${duration === opt.value ? 'active' : ''}`}
+                onClick={() => setDuration(opt.value)}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Difficulty */}
+        <div className="sr-section">
+          <p className="sr-label">Difficulty</p>
+          <div className="sr-diff-row">
+            {DIFFICULTY_OPTIONS.map(opt => (
+              <button
+                key={opt.key}
+                className={`sr-diff-btn ${difficulty === opt.key ? 'active' : ''}`}
+                onClick={() => setDifficulty(opt.key)}
+              >
+                <DifficultyDots count={opt.dots} />
+                <span className="sr-diff-label">{opt.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Mood / interests */}
+        <div className="sr-section">
+          <p className="sr-label">I'm in the mood for… <span className="sr-label-hint">(pick any)</span></p>
+          <div className="sr-mood-grid">
+            {MOOD_OPTIONS.map(m => (
+              <button
+                key={m.id}
+                className={`sr-mood-btn ${moods.includes(m.id) ? 'active' : ''}`}
+                onClick={() => toggleMood(m.id)}
+              >
+                {m.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Dog toggle */}
+        <div className="sr-section sr-dog-row">
+          <div className="sr-dog-info">
+            <span className="sr-dog-icon">🐾</span>
+            <div>
+              <p className="sr-dog-label">With my dog</p>
+              <p className="sr-dog-hint">Filter for dog-friendly trails</p>
+            </div>
+          </div>
+          <button
+            className={`sr-toggle ${withDog ? 'active' : ''}`}
+            onClick={() => setWithDog(d => !d)}
+            aria-pressed={withDog}
+            aria-label="With my dog"
+          >
+            <span className="sr-toggle-thumb" />
+          </button>
+        </div>
+
+        {/* Start area */}
+        <div className="sr-section">
+          <p className="sr-label">Starting from <span className="sr-label-hint">(optional)</span></p>
+          <input
+            type="text"
+            className="sr-input"
+            placeholder="e.g. Cortina, Innsbruck, Bolzano…"
+            value={startArea}
+            onChange={e => setStartArea(e.target.value)}
+          />
+        </div>
+
+        {error && <p className="sr-error">{error}</p>}
+
+        {/* CTA */}
+        <div className="sr-cta-wrap">
+          <button
+            className="sr-cta"
+            onClick={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? (
+              <span className="sr-cta-loading">Finding your trails…</span>
+            ) : (
+              <>
+                <span className="sr-cta-text">Surprise me, Josephine</span>
+                <span className="sr-cta-arrow">↓</span>
+              </>
+            )}
+          </button>
+        </div>
+
+      </div>
     </div>
   );
 }
