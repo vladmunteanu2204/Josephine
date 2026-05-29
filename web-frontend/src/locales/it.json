@@ -36,8 +36,9 @@
     "logout": "Esci"
   },
   "hero": {
-    "title": "La tua giornata alpina inizia qui",
-    "subtitle": "Dì a Josephine che tipo di giornata vuoi — e lei ti indirizzerà verso qualcosa di bellissimo.",
+    "title": "Viaggi ispiranti.",
+    "titleAccent": "Momenti significativi.",
+    "subtitle": "Percorsi personalizzati, consigli locali, condizioni in tempo reale e conoscenza alpina — in un unico compagno.",
     "exploreYourPath": "Esplora il Tuo Percorso",
     "tagline": "Il tuo compagno locale in montagna.",
     "scrollToExplore": "Scopri cosa c'è là fuori",
@@ -53,6 +54,7 @@
     "josephineGuide": "Troviamo la giornata in montagna giusta per te.",
     "smartRecommendations": "Pianifica la Mia Giornata",
     "smartRecommendationsDesc": "Rispondi ad alcune domande e Josephine ti suggerirà il sentiero o rifugio perfetto.",
+    "startAdventure": "Inizia la tua avventura",
     "browseTrailCatalog": "Esplora i Luoghi",
     "browseTrailCatalogDesc": "Sfoglia ogni sentiero verificato, rifugio ed esperienza in montagna.",
     "todaysFeaturedTrail": "Sentiero in Evidenza Oggi",
@@ -804,6 +806,7 @@
     "outandback": "Andata e Ritorno"
   },
   "admin": {
+    "title": "Pannello Admin",
     "userPlans": "Piani Escursione Utenti",
     "userPlansDescription": "Visualizza tutti i piani escursionistici futuri inviati dagli utenti",
     "filterByUser": "Filtra per email utente",

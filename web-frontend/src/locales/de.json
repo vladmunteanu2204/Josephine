@@ -36,8 +36,9 @@
     "logout": "Abmelden"
   },
   "hero": {
-    "title": "Dein Bergtag beginnt hier",
-    "subtitle": "Sag Josephine, was für einen Tag du möchtest — und sie zeigt dir etwas Wunderschönes.",
+    "title": "Inspirierende Reisen.",
+    "titleAccent": "Bedeutungsvolle Momente.",
+    "subtitle": "Personalisierte Routen, lokale Tipps, aktuelle Bedingungen und Alpinwissen — alles in einem Begleiter.",
     "exploreYourPath": "Erkunde Deinen Weg",
     "tagline": "Dein lokaler Begleiter in den Bergen.",
     "scrollToExplore": "Entdecke was draußen wartet",
@@ -53,6 +54,7 @@
     "josephineGuide": "Lass uns den richtigen Bergtag für dich finden.",
     "smartRecommendations": "Meinen Tag planen",
     "smartRecommendationsDesc": "Beantworte ein paar Fragen und Josephine schlägt dir den perfekten Wanderweg oder Rifugio vor.",
+    "startAdventure": "Starte dein Abenteuer",
     "browseTrailCatalog": "Orte erkunden",
     "browseTrailCatalogDesc": "Stöbere durch jeden verifizierten Wanderweg, Rifugio und Bergmoment.",
     "todaysFeaturedTrail": "Heutiger Highlight-Wanderweg",
@@ -804,6 +806,7 @@
     "outandback": "Hin und Zurück"
   },
   "admin": {
+    "title": "Admin-Bereich",
     "userPlans": "Nutzer-Wanderpläne",
     "userPlansDescription": "Alle anstehenden Wanderpläne von Nutzern anzeigen",
     "filterByUser": "Nach Nutzer-E-Mail filtern",

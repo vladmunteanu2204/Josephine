@@ -110,7 +110,8 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
               className="hero-title-redesign"
               ref={el => heroLayersRef.current.title = el}
             >
-              {t('hero.title')}
+              {t('hero.title')}<br />
+              <span className="hero-title-accent">{t('hero.titleAccent')}</span>
             </h1>
             <p
               className="hero-subtitle-redesign"
@@ -134,12 +135,8 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
               ref={el => heroLayersRef.current.cta = el}
             >
               <button className="hero-btn-primary-redesign" onClick={() => setCurrentView('recommendations')}>
-                <span className="hero-btn-icon">✨</span>
-                <span className="hero-btn-text">{t('home.smartRecommendations')}</span>
-              </button>
-              <button className="hero-btn-secondary-redesign" onClick={() => setCurrentView('catalog')}>
-                <span className="hero-btn-icon">🗺️</span>
-                <span className="hero-btn-text">{t('home.browseTrailCatalog')}</span>
+                <span className="hero-btn-text">{t('home.startAdventure')}</span>
+                <span className="hero-btn-arrow">→</span>
               </button>
             </div>
 

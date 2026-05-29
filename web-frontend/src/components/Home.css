@@ -136,54 +136,40 @@
 
 .hero-parallax-redesign {
   position: relative;
-  min-height: min(700px, 85svh);
+  min-height: min(800px, 92svh);
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+/* Real photography background — Dolomites hiker, golden light */
 .hero-bg-redesign {
-  background: linear-gradient(
-    180deg,
-    #050810 0%,
-    #0a1520 18%,
-    #0d2018 38%,
-    #122b20 58%,
-    #1a3228 78%,
-    #1e3020 92%,
-    rgba(30, 20, 10, 0.95) 100%
-  );
+  background-image:
+    url('https://images.unsplash.com/photo-1551632811-561732d1e306?w=1600&auto=format&fit=crop&q=80');
+  background-size: cover;
+  background-position: center 35%;
   z-index: 1;
 }
 
-/* Distant peaks — hazy, blue-purple atmospheric perspective */
-.hero-mountains-back-redesign {
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300'%3E%3Cdefs%3E%3ClinearGradient id='snowFade' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23c8d8e8' stop-opacity='0.5'/%3E%3Cstop offset='35%25' stop-color='%234a6a80' stop-opacity='0.4'/%3E%3Cstop offset='100%25' stop-color='%23152838' stop-opacity='0.3'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23snowFade)' d='M0,280 L40,258 L65,265 L88,242 L108,252 L128,228 L148,240 L170,212 L188,226 L208,200 L225,215 L245,188 L265,204 L285,178 L303,194 L322,165 L340,182 L358,155 L378,172 L398,145 L416,162 L435,135 L452,153 L472,125 L492,144 L512,115 L530,134 L550,105 L568,124 L588,96 L608,116 L628,88 L645,108 L665,115 L684,132 L702,108 L720,126 L740,100 L758,118 L778,130 L796,112 L815,128 L835,108 L853,125 L872,142 L890,125 L910,142 L930,158 L948,142 L968,158 L988,175 L1006,160 L1026,176 L1046,192 L1065,178 L1085,195 L1106,212 L1125,198 L1145,215 L1165,230 L1185,218 L1200,228 L1200,300 L0,300 Z'/%3E%3C/svg%3E");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: bottom;
-  z-index: 2;
-  filter: blur(0.5px);
-}
-
-/* Mid-range peaks — darker forest greens, more detail */
+/* SVG mountain layers hidden — photo provides the landscape */
+.hero-mountains-back-redesign,
 .hero-mountains-front-redesign {
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300'%3E%3Cdefs%3E%3ClinearGradient id='midGrad' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%230f2a1e' stop-opacity='0.95'/%3E%3Cstop offset='100%25' stop-color='%231a3828' stop-opacity='0.98'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23midGrad)' d='M0,300 L0,268 L35,255 L58,264 L80,245 L105,258 L128,238 L152,252 L175,230 L198,245 L222,222 L245,238 L268,215 L292,232 L315,208 L338,226 L362,200 L385,218 L408,194 L430,212 L455,186 L478,205 L502,178 L525,198 L548,172 L570,192 L595,215 L618,195 L642,212 L665,228 L688,212 L712,228 L736,245 L758,228 L782,245 L805,262 L828,248 L852,265 L875,280 L898,268 L922,282 L946,295 L970,282 L994,295 L1200,300 Z'/%3E%3C/svg%3E");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: bottom;
-  z-index: 3;
+  display: none;
 }
 
-/* Foreground ridge — near-black with warm undertone, adds depth */
+/* Foreground gradient vignette that fades to app background */
 .hero-ridge-redesign {
   position: absolute;
   inset: 0;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300'%3E%3Cpath fill='%230a1410' d='M0,300 L0,285 L60,278 L120,285 L180,272 L240,282 L300,270 L360,280 L420,268 L480,278 L540,290 L600,278 L660,288 L720,295 L780,285 L840,292 L900,300 L1200,300 Z'/%3E%3C/svg%3E");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: bottom;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 45%,
+    rgba(8, 14, 8, 0.5) 70%,
+    rgba(8, 14, 8, 0.92) 90%,
+    var(--bg-primary) 100%
+  );
   z-index: 4;
   pointer-events: none;
 }
@@ -192,8 +178,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(8, 15, 25, 0.5) 0%, transparent 70%),
-    linear-gradient(to bottom, transparent 40%, rgba(8, 10, 8, 0.6) 100%);
+    linear-gradient(to bottom, rgba(5, 10, 5, 0.55) 0%, transparent 40%),
+    linear-gradient(to right, rgba(5, 10, 5, 0.3) 0%, transparent 60%);
   z-index: 5;
   pointer-events: none;
 }
@@ -213,19 +199,21 @@
 
 .hero-title-redesign {
   font-family: var(--font-display);
-  font-size: clamp(40px, 9vw, 80px);
-  font-weight: 300;
-  font-style: italic;
-  color: white;
+  font-size: clamp(38px, 8vw, 76px);
+  font-weight: 400;
+  font-style: normal;
+  color: #f0ece6;
   margin: 0 0 20px 0;
-  line-height: 1.05;
-  background: linear-gradient(135deg, #f8f4ee 0%, #e8c49a 45%, #c9965a 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 4px 24px rgba(201, 150, 90, 0.25));
+  line-height: 1.1;
+  text-shadow: 0 4px 32px rgba(0, 0, 0, 0.6);
   animation: fadeInUp 0.8s ease;
-  letter-spacing: 0.02em;
+  letter-spacing: -0.01em;
+}
+
+.hero-title-accent {
+  color: #c9a84c;
+  font-style: italic;
+  text-shadow: 0 4px 32px rgba(0, 0, 0, 0.6), 0 0 40px rgba(201, 168, 76, 0.2);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -271,14 +259,14 @@
   max-width: 500px;
   border-radius: 20px;
   overflow: hidden;
-  background: rgba(18, 44, 36, 0.72);
+  background: rgba(18, 36, 20, 0.78);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(212, 165, 116, 0.28);
+  border: 1px solid rgba(201, 168, 76, 0.28);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.04) inset,
     0 8px 40px rgba(0, 0, 0, 0.5),
-    0 0 60px rgba(212, 165, 116, 0.07);
+    0 0 60px rgba(201, 168, 76, 0.07);
   animation: fadeInUp 1.0s ease 0.3s both;
 }
 
@@ -289,29 +277,21 @@
 }
 
 .guide-card-portrait {
-  /* TODO: insert Josephine illustration asset here */
-  width: 96px;
-  min-width: 96px;
+  width: 92px;
+  min-width: 92px;
   flex-shrink: 0;
-  background:
-    linear-gradient(
-      170deg,
-      rgba(74, 144, 226, 0.16) 0%,
-      rgba(26, 51, 41, 0.55) 45%,
-      rgba(212, 165, 116, 0.10) 100%
-    );
+  background: linear-gradient(170deg, rgba(26, 42, 20, 0.9) 0%, rgba(16, 28, 16, 0.95) 100%);
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.guide-portrait-shimmer {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 55% 70% at 50% 30%,
-    rgba(212, 165, 116, 0.16) 0%,
-    transparent 70%
-  );
+.guide-portrait-mark {
+  width: 64px;
+  height: 64px;
+  filter: drop-shadow(0 2px 12px rgba(201, 168, 76, 0.3));
 }
 
 .guide-card-body {
@@ -333,7 +313,7 @@
 }
 
 .guide-card-origin {
-  color: rgba(212, 165, 116, 0.75);
+  color: rgba(201, 168, 76, 0.75);
   font-size: 11px;
   font-weight: 400;
   letter-spacing: 0.07em;
@@ -371,97 +351,62 @@
 
 .hero-cta-buttons-redesign {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
   align-items: center;
-  max-width: 400px;
+  justify-content: center;
   margin: 0 auto 60px;
   animation: fadeInUp 1.2s ease 0.4s both;
 }
 
-.hero-btn-primary-redesign,
-.hero-btn-secondary-redesign {
-  width: 100%;
-  max-width: 380px;
-  display: flex;
+/* Single gold pill CTA — matches mockup exactly */
+.hero-btn-primary-redesign {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 18px 32px;
-  font-size: 17px;
-  font-weight: 700;
-  border-radius: 14px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  gap: 14px;
+  padding: 18px 36px;
+  background: #c9a84c;
+  color: #1a1a0e;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   border: none;
-  min-height: 58px;
+  border-radius: 100px;
+  cursor: pointer;
   position: relative;
   overflow: hidden;
-}
-
-.hero-btn-primary-redesign::before,
-.hero-btn-secondary-redesign::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.6s ease, height 0.6s ease;
-}
-
-.hero-btn-primary-redesign:active::before,
-.hero-btn-secondary-redesign:active::before {
-  width: 300px;
-  height: 300px;
-}
-
-.hero-btn-primary-redesign {
-  background: linear-gradient(135deg, #c9965a 0%, #b8844a 100%);
-  color: #faf6f0;
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.15) inset,
-    0 8px 32px rgba(201, 150, 90, 0.35);
-  border-radius: 100px;
+    0 1px 0 rgba(255, 255, 255, 0.25) inset,
+    0 8px 32px rgba(201, 168, 76, 0.45),
+    0 2px 8px rgba(0, 0, 0, 0.3);
+  min-height: 54px;
 }
 
 .hero-btn-primary-redesign:hover {
-  transform: translateY(-3px);
+  background: #d4b85c;
+  transform: translateY(-2px);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.2) inset,
-    0 16px 40px rgba(201, 150, 90, 0.5);
+    0 1px 0 rgba(255, 255, 255, 0.3) inset,
+    0 14px 40px rgba(201, 168, 76, 0.6),
+    0 4px 12px rgba(0, 0, 0, 0.35);
 }
 
-.hero-btn-secondary-redesign {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  color: rgba(240, 230, 210, 0.9);
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  border-radius: 100px;
-}
-
-.hero-btn-secondary-redesign:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(201, 150, 90, 0.35);
-  transform: translateY(-3px);
-}
-
-.hero-btn-icon {
-  font-size: 22px;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+.hero-btn-primary-redesign:active {
+  transform: translateY(0);
 }
 
 .hero-btn-text {
   letter-spacing: 0.01em;
+}
+
+.hero-btn-arrow {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+  line-height: 1;
+}
+
+.hero-btn-primary-redesign:hover .hero-btn-arrow {
+  transform: translateX(4px);
 }
 
 .hero-scroll-cue {

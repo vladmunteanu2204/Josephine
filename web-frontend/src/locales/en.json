@@ -36,8 +36,9 @@
     "logout": "Logout"
   },
   "hero": {
-    "title": "Your alpine day starts here",
-    "subtitle": "Tell Josephine what kind of day you want — and she'll point you to something beautiful.",
+    "title": "Inspiring journeys.",
+    "titleAccent": "Meaningful moments.",
+    "subtitle": "Personalized routes, local tips, live conditions and alpine knowledge — all in one companion.",
     "exploreYourPath": "Explore Your Path",
     "tagline": "Your local companion in the mountains.",
     "scrollToExplore": "Discover what's out there",
@@ -53,6 +54,7 @@
     "josephineGuide": "Let's find the right mountain day for you.",
     "smartRecommendations": "Plan My Day",
     "smartRecommendationsDesc": "Answer a few questions and Josephine will suggest a perfect trail or rifugio.",
+    "startAdventure": "Start your adventure",
     "browseTrailCatalog": "Explore Places",
     "browseTrailCatalogDesc": "Browse every verified trail, rifugio and mountain experience.",
     "todaysFeaturedTrail": "Today's Featured Trail",
@@ -822,6 +824,7 @@
     "outandback": "Out & Back"
   },
   "admin": {
+    "title": "Admin Panel",
     "userPlans": "User Hike Plans",
     "userPlansDescription": "View all upcoming hike plans submitted by users",
     "filterByUser": "Filter by user email",
