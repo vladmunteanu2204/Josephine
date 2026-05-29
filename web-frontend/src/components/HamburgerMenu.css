@@ -17,12 +17,12 @@
   right: 0;
   bottom: 0;
   width: min(340px, 85vw);
-  background: linear-gradient(145deg, rgba(26, 26, 26, 0.98), rgba(20, 20, 20, 0.95));
+  background: linear-gradient(145deg, rgba(20, 36, 22, 0.99), rgba(14, 26, 15, 0.98));
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: -8px 0 40px rgba(0, 0, 0, 0.6),
-              inset 1px 0 0 rgba(255, 255, 255, 0.05);
+  border-left: 1px solid rgba(201, 168, 76, 0.12);
+  box-shadow: -8px 0 40px rgba(0, 0, 0, 0.7),
+              inset 1px 0 0 rgba(201, 168, 76, 0.05);
   z-index: var(--z-modal);
   display: flex;
   flex-direction: column;
@@ -64,16 +64,15 @@
   justify-content: space-between;
   align-items: center;
   padding: 24px 24px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
 }
 
 .hamburger-title {
+  font-family: 'Cormorant Garamond', 'Garamond', Georgia, serif;
   font-size: 20px;
-  font-weight: 700;
-  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-weight: 400;
+  font-style: italic;
+  color: #f0ece6;
   margin: 0;
 }
 
@@ -134,13 +133,13 @@
 }
 
 .hamburger-item:hover {
-  background: linear-gradient(145deg, rgba(50, 50, 50, 0.6), rgba(40, 40, 40, 0.4));
+  background: linear-gradient(145deg, rgba(26, 42, 28, 0.7), rgba(20, 34, 22, 0.5));
   color: var(--text-primary);
   transform: translateX(4px);
 }
 
 .hamburger-item.active {
-  background: linear-gradient(135deg, rgba(212, 165, 116, 0.2) 0%, rgba(212, 165, 116, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.18) 0%, rgba(201, 168, 76, 0.08) 100%);
   color: var(--accent-primary);
   border-left: 3px solid var(--accent-primary);
   padding-left: 17px;
@@ -158,13 +157,27 @@
 }
 
 .hamburger-item-icon {
-  font-size: 22px;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
+  opacity: 0.75;
+  transition: opacity 0.3s ease;
+}
+
+.hamburger-item:hover .hamburger-item-icon,
+.hamburger-item.active .hamburger-item-icon {
+  opacity: 1;
 }
 
 .hamburger-item-label {
   flex: 1;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+  font-style: italic;
   letter-spacing: 0.01em;
 }
 

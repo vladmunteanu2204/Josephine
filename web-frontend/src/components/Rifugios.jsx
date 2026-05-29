@@ -126,7 +126,7 @@ function Rifugios({ onNavigate }) {
     <div className="rifugios-page">
       {/* Hero Section */}
       <div className="rifugios-header">
-        <h1 className="page-title">🏔️ {t('rifugio.title')}</h1>
+        <h1 className="page-title">{t('rifugio.title')}</h1>
         <p className="page-subtitle">{t('rifugio.subtitle')}</p>
       </div>
 

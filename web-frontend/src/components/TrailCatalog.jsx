@@ -136,7 +136,12 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed }) {
             <div className="filter-section">
               <label className="filter-label">{t('catalog.search')}</label>
               <div className="search-box">
-                <span className="search-icon">🔍</span>
+                <span className="search-icon">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="7" cy="7" r="5" stroke="currentColor" strokeWidth="1.5"/>
+                    <path d="M11 11L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </span>
                 <input
                   type="text"
                   className="search-input"
@@ -220,7 +225,11 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed }) {
                 onClick={() => setViewMode('map')}
                 aria-label="Map view"
               >
-                🗺️
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 2L1 4V16L6 14L12 16L17 14V2L12 4L6 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+                  <path d="M6 2V14" stroke="currentColor" strokeWidth="1.5"/>
+                  <path d="M12 4V16" stroke="currentColor" strokeWidth="1.5"/>
+                </svg>
               </button>
             </div>
           </div>
@@ -289,7 +298,7 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed }) {
           ) : (
             <div className="map-view-placeholder">
               <div className="map-placeholder-content">
-                <span className="map-placeholder-icon">🗺️</span>
+                <span className="map-placeholder-icon">◈</span>
                 <h3>{t('catalog.mapViewTitle')}</h3>
                 <p>{t('catalog.mapViewDesc')}</p>
               </div>

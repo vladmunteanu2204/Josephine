@@ -147,14 +147,22 @@ function MediaGallery({ trail }) {
             className={`media-tab ${activeTab === 'photos' ? 'active' : ''}`}
             onClick={() => setActiveTab('photos')}
           >
-            📸 {t('trail.photos')} ({photos.length})
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" style={{display:'inline',verticalAlign:'middle',marginRight:'6px'}}>
+              <rect x="1" y="2" width="13" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.3"/>
+              <circle cx="7.5" cy="7" r="2" stroke="currentColor" strokeWidth="1.3"/>
+            </svg>
+            {t('trail.photos')} ({photos.length})
           </button>
-          <button 
+          <button
             className={`media-tab ${activeTab === 'videos' ? 'active' : ''}`}
             onClick={() => setActiveTab('videos')}
             disabled={!hasVideos}
           >
-            🎥 {t('trail.videos')} ({videos.length})
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" style={{display:'inline',verticalAlign:'middle',marginRight:'6px'}}>
+              <rect x="1" y="2" width="10" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.3"/>
+              <path d="M11 5.5L14 3.5V11.5L11 9.5V5.5Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+            </svg>
+            {t('trail.videos')} ({videos.length})
           </button>
         </div>
       </div>

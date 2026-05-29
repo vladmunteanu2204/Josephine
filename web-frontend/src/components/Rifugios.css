@@ -1,20 +1,23 @@
 .rifugios-page {
   min-height: 100vh;
-  background: linear-gradient(180deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+  background: linear-gradient(180deg, #0a0a0a 0%, #0e1810 50%, #0a0a0a 100%);
   padding-bottom: 60px;
 }
 
 .rifugios-header {
   text-align: center;
-  padding: 40px 20px;
-  background: linear-gradient(135deg, rgba(212, 165, 116, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
-  border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+  padding: 60px 20px 50px;
+  background: linear-gradient(180deg, #0a1a0c 0%, #0e1810 100%);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
 }
 
 .page-title {
-  font-size: 36px;
-  font-weight: 800;
-  color: #D4A574;
+  font-family: var(--font-display);
+  font-size: clamp(32px, 6vw, 52px);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--accent-primary);
+  letter-spacing: 0.01em;
   margin-bottom: 12px;
 }
 

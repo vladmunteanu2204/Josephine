@@ -7,6 +7,7 @@ import TrailMap from './TrailMap';
 import MediaGallery from './MediaGallery';
 import ActiveHikeTracker from './ActiveHikeTracker';
 import WeatherWidget from './WeatherWidget';
+import { ENABLE_HIKE_TRACKING } from '../featureFlags';
 import './TrailDetail.css';
 
 function TrailDetail({ trail, onBack, setIsGPSActive }) {
@@ -185,7 +186,7 @@ function TrailDetail({ trail, onBack, setIsGPSActive }) {
     }
   };
 
-  if (isHikeActive) {
+  if (ENABLE_HIKE_TRACKING && isHikeActive) {
     return (
       <ActiveHikeTracker 
         trail={fullTrail} 
@@ -272,19 +273,21 @@ function TrailDetail({ trail, onBack, setIsGPSActive }) {
           </div>
         </div>
 
-        <div className="start-hike-section">
-          <button 
-            className="btn-start-hike btn-pulse"
-            onClick={() => {
-              setIsHikeActive(true);
-              if (setIsGPSActive) setIsGPSActive(true);
-            }}
-          >
-            <span className="btn-icon">🥾</span>
-            <span className="btn-text">{t('trail.startHike')}</span>
-            <span className="btn-subtext">{t('trail.gpsTrackingFeatures')}</span>
-          </button>
-        </div>
+        {ENABLE_HIKE_TRACKING && (
+          <div className="start-hike-section">
+            <button 
+              className="btn-start-hike btn-pulse"
+              onClick={() => {
+                setIsHikeActive(true);
+                if (setIsGPSActive) setIsGPSActive(true);
+              }}
+            >
+              <span className="btn-icon">🥾</span>
+              <span className="btn-text">{t('trail.startHike')}</span>
+              <span className="btn-subtext">{t('trail.gpsTrackingFeatures')}</span>
+            </button>
+          </div>
+        )}
 
         {fullTrail.coordinates && fullTrail.coordinates.length > 0 && (
           <div className="weather-section">
@@ -316,7 +319,7 @@ function TrailDetail({ trail, onBack, setIsGPSActive }) {
             return (
               <div className="josephine-note-callout">
                 <div className="josephine-note-label">
-                  <span className="josephine-note-icon">🏔️</span>
+                  <span className="josephine-note-icon">✦</span>
                   <span className="josephine-note-byline">{t('trail.josephineNote')}</span>
                 </div>
                 <p className="josephine-note-text">{noteText}</p>
