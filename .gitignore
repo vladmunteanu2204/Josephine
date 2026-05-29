@@ -39,3 +39,7 @@ dist/
 # OS
 .DS_Store
 Thumbs.db
+
+# Claude local files
+.local/
+attached_assets/
