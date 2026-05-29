@@ -4,8 +4,8 @@
   "description": "Josephine helps you choose a beautiful alpine day in South Tyrol, Trentino and the Dolomites. Trails, rifugios and mountain moments, locally curated.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0a0a",
-  "theme_color": "#d4a574",
+  "background_color": "#1a2a1c",
+  "theme_color": "#1a2a1c",
   "orientation": "portrait-primary",
   "icons": [
     {

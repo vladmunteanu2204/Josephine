@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
+import { ENABLE_GAMIFICATION } from '../featureFlags';
 import axios from 'axios';
 import TrailManager from './admin/TrailManager';
 import ReviewsModeration from './admin/ReviewsModeration';
@@ -109,12 +110,14 @@ function AdminPanel({ onNavigate }) {
           >
             💬 Reviews
           </button>
-          <button
-            className={`admin-tab ${activeTab === 'challenges' ? 'active' : ''}`}
-            onClick={() => setActiveTab('challenges')}
-          >
-            🏆 Challenges
-          </button>
+          {ENABLE_GAMIFICATION && (
+            <button
+              className={`admin-tab ${activeTab === 'challenges' ? 'active' : ''}`}
+              onClick={() => setActiveTab('challenges')}
+            >
+              🏆 Challenges
+            </button>
+          )}
           <button
             className={`admin-tab ${activeTab === 'plans' ? 'active' : ''}`}
             onClick={() => setActiveTab('plans')}
@@ -133,23 +136,25 @@ function AdminPanel({ onNavigate }) {
           >
             📊 Analytics
           </button>
-          <button
-            className={`admin-tab ${activeTab === 'gamification' ? 'active' : ''}`}
-            onClick={() => setActiveTab('gamification')}
-          >
-            🎮 Gamification
-          </button>
+          {ENABLE_GAMIFICATION && (
+            <button
+              className={`admin-tab ${activeTab === 'gamification' ? 'active' : ''}`}
+              onClick={() => setActiveTab('gamification')}
+            >
+              🎮 Gamification
+            </button>
+          )}
         </div>
 
         <div className="admin-content">
           {activeTab === 'trails' && <TrailManager adminPassword={adminPassword} />}
           {activeTab === 'multiday' && <MultiDayTrailsManager adminPassword={adminPassword} />}
           {activeTab === 'reviews' && <ReviewsModeration adminPassword={adminPassword} />}
-          {activeTab === 'challenges' && <ChallengesManager adminPassword={adminPassword} />}
+          {ENABLE_GAMIFICATION && activeTab === 'challenges' && <ChallengesManager adminPassword={adminPassword} />}
           {activeTab === 'plans' && <UserPlansManager adminPassword={adminPassword} />}
           {activeTab === 'users' && <UserManagement adminPassword={adminPassword} />}
           {activeTab === 'analytics' && <TrailAnalytics adminPassword={adminPassword} />}
-          {activeTab === 'gamification' && <GamificationStats adminPassword={adminPassword} />}
+          {ENABLE_GAMIFICATION && activeTab === 'gamification' && <GamificationStats adminPassword={adminPassword} />}
         </div>
       </div>
     </div>

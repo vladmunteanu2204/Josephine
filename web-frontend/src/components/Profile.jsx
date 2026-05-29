@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
+import { ENABLE_GAMIFICATION } from '../featureFlags';
 import { updateProfile, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 import { getUserGamificationData, calculateLevel, getXPProgress, getBadgeById, BADGES } from '../utils/gamification';
 import BadgeDisplay from './BadgeDisplay';
@@ -253,7 +254,7 @@ function Profile({ onNavigate }) {
           )}
         </div>
 
-        {gamificationData && (
+        {ENABLE_GAMIFICATION && gamificationData && (
           <>
             <div className="profile-section">
               <div className="profile-section-header">

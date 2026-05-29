@@ -11,8 +11,8 @@
   left: 0;
   right: 0;
   height: 80vh;
-  background: radial-gradient(ellipse at top, rgba(74, 124, 158, 0.15) 0%, transparent 50%),
-              radial-gradient(ellipse at bottom right, rgba(45, 74, 62, 0.1) 0%, transparent 50%);
+  background: radial-gradient(ellipse at top, rgba(26, 42, 28, 0.4) 0%, transparent 55%),
+              radial-gradient(ellipse at bottom right, rgba(201, 168, 76, 0.04) 0%, transparent 50%);
   pointer-events: none;
   z-index: 0;
 }

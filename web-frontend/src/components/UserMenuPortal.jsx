@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import { ENABLE_GAMIFICATION } from '../featureFlags';
 import './UserMenuPortal.css';
 
 export default function UserMenuPortal({ 
@@ -57,8 +58,10 @@ export default function UserMenuPortal({
   const menuItems = [
     { key: 'profile', label: t('header.profile'), icon: '👤' },
     { key: 'saved', label: t('header.savedTrails'), icon: '❤️' },
-    { key: 'challenges', label: t('header.challenges'), icon: '🏆' },
-    { key: 'leaderboards', label: t('header.leaderboards'), icon: '📊' },
+    ...(ENABLE_GAMIFICATION ? [
+      { key: 'challenges', label: t('header.challenges'), icon: '🏆' },
+      { key: 'leaderboards', label: t('header.leaderboards'), icon: '📊' },
+    ] : []),
     { key: 'planner', label: t('header.hikePlanner'), icon: '🗓️' },
     ...(isAdmin ? [{ key: 'admin', label: t('header.adminPanel'), icon: '⚙️' }] : []),
     { key: 'settings', label: t('header.settings'), icon: '⚙️' },
