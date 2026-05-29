@@ -119,17 +119,6 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
             >
               {t('hero.subtitle')}
             </p>
-            {/* Josephine Guide Card */}
-            <div className="josephine-guide-card" role="complementary" aria-label={t('home.josephineGuide')}>
-              <div className="guide-card-portrait" aria-hidden="true">
-                <img src="/josephine-mark.svg" alt="" className="guide-portrait-mark" />
-              </div>
-              <div className="guide-card-body">
-                <p className="guide-card-quote">{t('home.josephineGuide')}</p>
-                <p className="guide-card-origin">{t('hero.originLine')}</p>
-              </div>
-            </div>
-
             <div
               className="hero-cta-buttons-redesign"
               ref={el => heroLayersRef.current.cta = el}
@@ -152,55 +141,6 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
           </div>
         </div>
       </div>
-
-      {/* ── Meet Josephine ── */}
-      <section className="home-meet-josephine">
-        <div className="container">
-          <p className="meet-eyebrow">MEET JOSEPHINE</p>
-          <h2 className="meet-headline">
-            Your human alpine companion.<br />
-            <span className="meet-headline-sub">
-              She knows the mountains, the trails, the rifugios and the little things that make your day unforgettable.
-            </span>
-          </h2>
-
-          <div className="meet-pillars">
-            {[
-              { icon: '📍', label: 'Local knowledge' },
-              { icon: '☀️', label: 'Live conditions' },
-              { icon: '✦',  label: 'Smart recommendations' },
-              { icon: '♡',  label: 'Always by your side' },
-            ].map(({ icon, label }) => (
-              <div key={label} className="meet-pillar">
-                <span className="meet-pillar-icon">{icon}</span>
-                <span className="meet-pillar-label">{label}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Character portrait placeholder — swap with real pose when ready */}
-          <div className="meet-character-row">
-            <div className="meet-character">
-              <img src="/josephine-pose-welcome.png" alt="Josephine welcoming"
-                className="meet-character-img"
-                onError={e => { e.target.src = '/josephine-mark.svg'; e.target.className = 'meet-character-fallback'; }}
-              />
-            </div>
-            <div className="meet-character">
-              <img src="/josephine-pose-neutral.png" alt="Josephine"
-                className="meet-character-img meet-character-img--center"
-                onError={e => { e.target.src = '/josephine-mark.svg'; e.target.className = 'meet-character-fallback'; }}
-              />
-            </div>
-            <div className="meet-character">
-              <img src="/josephine-pose-point.png" alt="Josephine pointing"
-                className="meet-character-img"
-                onError={e => { e.target.src = '/josephine-mark.svg'; e.target.className = 'meet-character-fallback'; }}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Main Content */}
       <div className="container home-content">
@@ -241,11 +181,8 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
               </button>
             </div>
             <div className="jph-speaks-visual">
-              <div className="jph-speaks-character">
-                <img src="/josephine-pose-think.png" alt="Josephine thinking"
-                  className="jph-speaks-img"
-                  onError={e => { e.target.src = '/josephine-mark.svg'; e.target.className = 'jph-speaks-fallback'; }}
-                />
+              <div className="jph-speaks-mark-wrap">
+                <img src="/josephine-mark.svg" alt="" className="jph-speaks-mark" />
               </div>
               <div className="jph-speaks-bubble">
                 <p className="jph-speaks-bubble-text">You've been amazing today! ☀️ Look at that view… worth every step.</p>

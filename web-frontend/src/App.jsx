@@ -39,7 +39,6 @@ function App() {
     return !localStorage.getItem('onboardingCompleted');
   });
   const [isGPSActive, setIsGPSActive] = useState(false);
-  const [josephineOpen, setJosephineOpen] = useState(false);
 
   // Sync view to URL hash for back-button support and shareable links
   useEffect(() => {
@@ -205,14 +204,10 @@ function App() {
         <BottomNav
           currentView={currentView}
           setCurrentView={setCurrentView}
-          onJosephineOpen={() => setJosephineOpen(true)}
+          onJosephineOpen={() => setCurrentView('recommendations')}
         />
 
-        <JosephineWidget
-          isOpen={josephineOpen}
-          onClose={() => setJosephineOpen(false)}
-          setCurrentView={setCurrentView}
-        />
+        <JosephineWidget setCurrentView={setCurrentView} />
 
         {!showSplash && showOnboarding && (
           <OnboardingWizard onComplete={() => setShowOnboarding(false)} />

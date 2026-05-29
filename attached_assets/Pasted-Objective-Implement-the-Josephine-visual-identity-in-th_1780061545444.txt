@@ -1,0 +1,217 @@
+Objective:
+Implement the Josephine visual identity in the app using the attached reference design as the primary visual source of truth.
+
+Current context:
+The current splash screen and top branding/header are not good enough and must be redefined.
+We now have a strong visual direction for Josephine:
+- elegant serif wordmark
+- female hiker silhouette / logo mark
+- premium alpine mood
+- dark forest green + warm gold + cream palette
+- cinematic splash screen
+- refined desktop header/nav
+
+You must use the attached reference image as the main design reference for:
+1. logo direction
+2. app icon direction
+3. splash screen direction
+4. top header / nav direction
+5. overall premium alpine visual language
+
+Important:
+The goal is to implement the app so that it feels as close as reasonably possible to the attached design direction.
+Do not replace it with a generic hiking UI.
+Do not improvise a completely different visual style.
+Do not keep the current “J” splash mark or the current floating mountain icon branding.
+
+Reference image:
+Use the attached image as the visual target. The desired output should follow its composition, hierarchy, palette, typography direction and premium feel as closely as possible.
+
+Files/components to inspect:
+- web-frontend/src/components/SplashScreen.jsx
+- web-frontend/src/components/Header.jsx
+- web-frontend/src/components/HamburgerMenu.jsx
+- web-frontend/src/components/Home.jsx
+- web-frontend/src/App.jsx
+- web-frontend/src/locales/en.json
+- web-frontend/src/locales/it.json
+- web-frontend/src/locales/de.json
+- relevant global CSS / component CSS
+- public/ or assets/ folders for images/icons/logo assets
+- manifest.json / favicon / app icon related files if present
+- index.html if title/icon metadata is there
+
+Exact changes required:
+
+Part 1 — Visual identity foundation
+Create or add the Josephine visual identity so the app reflects the reference design closely.
+
+Desired logo direction:
+- a premium elegant wordmark: “Josephine”
+- an icon/mark featuring a female hiker silhouette with backpack
+- mountain/path/alpine symbolism
+- subtle circular/arched framing
+- small star/spark accent
+- optional leaf/organic detail like in the reference
+- overall feeling: human, alpine, elegant, cinematic, premium
+
+The logo should feel close to the reference image:
+- female hiker silhouette
+- dark forest green / black-green
+- warm gold details
+- refined composition
+- not cartoonish
+- not childish
+- not generic outdoor app icon
+
+If no vector logo exists yet:
+- create a usable temporary production-ready asset set as closely aligned as possible to the reference design
+- include:
+  - horizontal logo lockup
+  - compact icon/mark
+  - small nav logo version
+- prioritize polish and consistency
+
+Part 2 — Splash screen redesign
+Replace the current splash screen entirely.
+
+The new splash screen should match the reference direction closely:
+- cinematic alpine background image
+- female hiker visible walking upward on mountain terrain
+- Josephine logo/mark near top center
+- large wordmark “Josephine”
+- supporting line:
+  “YOUR HUMAN ALPINE COMPANION”
+- origin line:
+  “Crafted in South Tyrol, Italy”
+- subtle loading/progress line
+- small loading text:
+  “Preparing your next adventure…”
+
+The splash screen must feel premium and immersive.
+It should not feel like a placeholder.
+It should not use a plain “J”.
+It should not use the current cheap mountain symbol.
+
+If animation is possible without adding heavy dependencies:
+- use only subtle fade/appear/progress motion
+- no heavy Lottie/Rive/Three.js in this step
+- keep load performance safe
+
+Part 3 — Header / nav redesign
+Redesign the top header/nav so it follows the reference direction closely.
+
+Header direction:
+- dark forest/green premium bar
+- refined logo lockup on the left
+- elegant typography
+- clean nav items
+- subtle gold active state
+- premium icon treatment on the right
+- rounded / polished feel if it fits current layout
+- visually much closer to the attached reference
+
+Navigation should feel clean and upscale, not generic or cluttered.
+
+Keep or prioritize:
+- Home
+- Explore
+- My Plan / Plan My Day
+- Saved
+- Insights only if it still fits
+- search / notification / profile icons only if already supported
+
+Do not overload the nav.
+
+Part 4 — Home hero alignment
+Adjust the top section of the homepage so it visually aligns with the new brand language from the reference.
+
+Desired hero direction:
+- cinematic mountain background
+- premium serif headline feel
+- strong emotional copy
+- brand-consistent button style
+- visually connected to the new logo/header/splash
+
+You do NOT need to fully rebuild the whole homepage in this step.
+Focus on the above-the-fold experience so the app feels visually coherent with the new Josephine identity.
+
+Part 5 — Color and typography system
+Bring the app closer to the reference design system.
+
+Use a palette close to:
+- dark forest green
+- olive / muted green-gray
+- warm gold / ochre
+- soft beige / cream
+- off-white
+
+Typography direction:
+- primary brand / hero / logo feeling should be elegant serif
+- supporting UI text can remain clean sans-serif if needed
+- overall result should feel premium, editorial and calm
+
+Part 6 — App icon / favicon / PWA icon direction
+If safe and supported in the codebase:
+- update favicon/app icon/PWA icon direction to match the new Josephine icon mark
+- keep it visually aligned with the reference icon
+
+Do not spend time on perfect export tooling if it causes scope explosion.
+A strong temporary implementation aligned with the reference is acceptable in this sprint.
+
+What must not be changed:
+- Do not change backend APIs
+- Do not change database schema
+- Do not change authentication
+- Do not break navigation routing
+- Do not remove features
+- Do not add heavy animation or 3D dependencies
+- Do not redesign every screen in the whole app
+- Do not create a childish mascot
+- Do not keep the old splash “J”
+- Do not keep the current floating mountain branding
+
+Quality requirements:
+- The app must look significantly more premium after this change
+- The splash screen must feel intentional and branded
+- The header/nav must feel coherent with the new identity
+- The implementation should visually follow the attached reference as closely as reasonably possible
+- Prefer polished static implementation over weak animated gimmicks
+- Mobile and desktop must both look clean
+- Keep the result close to the design board format and visual language
+
+Acceptance criteria:
+1. The splash screen is fully redesigned and no longer uses the current “J” mark
+2. The header/logo area is fully redesigned and no longer uses the current floating mountain style
+3. The new visual identity clearly follows the attached reference image
+4. A female hiker / alpine companion motif is present in the brand mark
+5. The color palette feels close to the reference
+6. The app feels premium, elegant and alpine
+7. Mobile and desktop both look coherent
+8. No backend/auth/schema logic is broken
+9. No heavy new dependency is added
+10. The app builds successfully
+
+Test steps:
+- Run the app
+- Open the splash screen and compare it visually to the reference direction
+- Confirm the old “J” splash is gone
+- Confirm the top header/logo branding is replaced
+- Confirm the homepage top section feels aligned with the new identity
+- Check mobile layout
+- Check desktop layout
+- Confirm build passes
+
+Expected response:
+After implementation, return:
+1. Files changed
+2. Assets created or updated
+3. What parts of the reference design were implemented
+4. Any parts that could not be matched exactly
+5. Confirmation that backend/auth/schema were untouched
+6. Build/test result
+7. Screenshots of:
+   - splash screen
+   - header/nav
+   - homepage top section
+   - mobile view

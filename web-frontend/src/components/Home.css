@@ -1044,6 +1044,24 @@ input, select, textarea {
   opacity: 0.7;
 }
 
+.jph-speaks-mark-wrap {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #1a2a1c, #0e1c10);
+  border: 1.5px solid rgba(201, 168, 76, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 8px;
+}
+
+.jph-speaks-mark {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+}
+
 .jph-speaks-bubble {
   width: 100%;
   background: rgba(255, 255, 255, 0.04);

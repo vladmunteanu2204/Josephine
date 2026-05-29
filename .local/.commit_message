@@ -1,0 +1,29 @@
+feat: add Josephine editorial trail notes to trail detail pages (Task #4)
+
+data/trails.json:
+- Added josephineNote {en, it, de} field to all 6 trails with warm,
+  locally-specific 1–2 sentence notes authored in Josephine's voice
+  (val_di_funes, hochmuth_tirolo, maso_corto, schenna, cascada_loop, Mastaun)
+
+TrailDetail.jsx:
+- Destructured i18n from useTranslation() for language detection
+- Added .josephine-note-callout block below trail overview description
+  renders josephineNote[i18n.language] with EN fallback
+
+TrailDetail.css:
+- Added .josephine-note-callout: amber glassmorphic card, left amber border,
+  backdrop blur, fadeInUp animation (reuses existing keyframe)
+- .josephine-note-label / .josephine-note-byline / .josephine-note-text
+- Responsive tweaks at 600px breakpoint
+
+Locale files (en/it/de):
+- Added trail.josephineNote key:
+  EN "Josephine says" | IT "Josephine dice" | DE "Josephine sagt"
+
+TrailManager.jsx (Admin panel):
+- formData extended with josephineNote: {en, it, de} (both initial state and handleCreate)
+- handleEdit populates josephineNote from trail data with safe fallback
+- Form JSX: 3 textarea fields (EN/IT/DE) in styled section below description,
+  amber-tinted label, placeholder text as examples
+- Backend update endpoint passes through josephineNote automatically
+  (full trail object replacement, no backend changes needed)

@@ -1,0 +1,31 @@
+VERDICT: REJECTED
+The diff delivers meaningful parts of the rebrand (hero copy, CTA labels, guide card swap, nav demotion, new theme cards, and many locale updates), but it does not complete core task requirements—especially the documentation rebrand and full Alpenvia-to-Josephine replacement.
+
+Critical findings:
+- **Documentation requirement is not met (blocking):** `README.md`, `ROADMAP.md`, `replit.md`, and `BUSINESS_ANALYSIS.md` were only partially edited. They still contain substantial legacy VERDICT: REJECTED
+Alpenvia positioning/content (e.g., project structure path `alpenvia/`, multiple “Alpenvia” references, old phase framing, old positioning language). Task explicitly required these docs to describe Josephine’s new positioning and roadmap framing.
+- **Roadmap rewrite requirement is not met (blocking):** `ROADMAP.md` remains the old long phase-based document; it was not reframed into the requested 5-month sequence (Brand+UXThe diff delivers meaningful parts of the rebrand (hero copy, CTA labels, guide card swap, nav demotion, new theme cards, and many locale updates), but it does not complete core task requirements—especially the documentation rebrand and full Alpenvia-to-Josephine replacement.
+, Homepage+PlanMyDay, Experience detail, Content+monetisation, Polish+beta).
+- **Guide card mobile behavior likely misses explicit acceptance criteria:** requirement said mobile card should stack to a single column. In `Home.css`, mobile styles resize elements but keep horizontal flex layout (`.josephine-guide-card` remains row), so the explicit stack behavior is not implemented.
+-
+ **Brand replacement incomplete:** there are still visible/docuCritical findings:
+mented Alpenvia strings in rebrand-target docs (`replit.md` and other- **Documentation requirement is not met (blocking):** `README.md`, `ROADMAP.md`, `replit.md`, and `BUSINESS_ANALYSIS.md` were only partially edited. They still contain substantial legacy Alpenvia positioning/content (e.g., project structure path `alpenvia/`, multiple “Alpenvia” references, old phase framing, old positioning language). Task explicitly required these docs to describe Josephine’s new positioning and roadmap framing.
+s), violating “every visible instance” criterion for docs.
+- **Roadmap rewrite requirement is not met (blocking):** `ROADMAP.md` remains the old long phase-based document; it was not reframed into the requested 5-month sequence (Brand+UX, Homepage+PlanMyDay, Experience detail, Content+monetisation, Polish+beta).
+
+Security:
+- None observed (no serious authz/injection/secrets regr- **Guide card mobile behavior likely misses explicit acceptance criteria:** requirement said mobile card should stack to a single column. In `Home.css`, mobile styles resize elements but keep horizontal flex layout (`.josephine-guide-card` remains row), so the explicit stack behavior is not implemented.
+essions introduced in this diff).
+
+Next actions:
+1. Fully rewrite- **Brand replacement incomplete:** there are still visible/documented Alpenvia strings in rebrand-target docs (`replit.md` and others), violating “every visible instance” criterion for docs.
+ the four docs per brief (not partial substitutions), removing legacy Alpen
+via framing and implementing Josephine positioning throughout.
+Security:
+2. Rework `ROADMAP.md` into the requested 5-month structure and language- None observed (no serious authz/injection/secrets regressions introduced in this diff).
+.
+3. Update `Home.css` mobile breakpoint so `.josephine-gu
+ide-card` becomes single-column on mobile (e.g., `flex-directNext actions:
+ion: column`) and verify no remaining “Alpenvia” strings in UI me1. Fully rewrite the four docs per brief (not partial substitutions), removing legacy Alpenvia framing and implementing Josephine positioning throughout.
+tadata/docs.2. Rework `ROADMAP.md` into the requested 5-month structure and language.
+3. Update `Home.css` mobile breakpoint so `.josephine-guide-card` becomes single-column on mobile (e.g., `flex-direction: column`) and verify no remaining “Alpenvia” strings in UI metadata/docs.

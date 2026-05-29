@@ -8,90 +8,91 @@ function ThemeCards({ onThemeClick }) {
   const themes = [
     {
       id: 'lake-day',
-      icon: '🏞️',
+      icon: '◈',
       title: t('home.themeLakeDay'),
       description: t('home.themeLakeDayDesc'),
-      color: '#3b82f6',
-      gradient: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-      tags: ['alpine lakes']
+      accent: '#7aa8c4',
+      bg: 'linear-gradient(145deg, #0d1f2d 0%, #0a1520 100%)',
+      tags: ['alpine lakes'],
     },
     {
       id: 'malga',
-      icon: '🧀',
+      icon: '◈',
       title: t('home.themeMalga'),
       description: t('home.themeMalgaDesc'),
-      color: '#d97706',
-      gradient: 'linear-gradient(135deg, #d97706 0%, #92400e 100%)',
-      tags: ['malga', 'food']
+      accent: '#c9a84c',
+      bg: 'linear-gradient(145deg, #1a1408 0%, #110e05 100%)',
+      tags: ['malga', 'food'],
     },
     {
       id: 'easy-walk',
-      icon: '🌿',
+      icon: '◈',
       title: t('home.themeEasyWalk'),
       description: t('home.themeEasyWalkDesc'),
-      color: '#10b981',
-      gradient: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
-      tags: ['easy', 'scenic']
+      accent: '#7abf8a',
+      bg: 'linear-gradient(145deg, #0a1a0d 0%, #061008 100%)',
+      tags: ['easy', 'scenic'],
     },
     {
       id: 'dog-friendly',
-      icon: '🐕',
+      icon: '◈',
       title: t('home.themeDogFriendly'),
       description: t('home.themeDogFriendlyDesc'),
-      color: '#f59e0b',
-      gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-      tags: ['dog friendly']
+      accent: '#c9a84c',
+      bg: 'linear-gradient(145deg, #18140a 0%, #100e06 100%)',
+      tags: ['dog friendly'],
     },
     {
       id: 'romantic',
-      icon: '🌅',
+      icon: '◈',
       title: t('home.themeRomantic'),
       description: t('home.themeRomanticDesc'),
-      color: '#ec4899',
-      gradient: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)',
-      tags: ['panoramic views', 'romantic']
+      accent: '#c49aa0',
+      bg: 'linear-gradient(145deg, #1a0e10 0%, #10080a 100%)',
+      tags: ['panoramic views', 'romantic'],
     },
     {
       id: 'rainy-day',
-      icon: '☁️',
+      icon: '◈',
       title: t('home.themeRainyDay'),
       description: t('home.themeRainyDayDesc'),
-      color: '#6b7280',
-      gradient: 'linear-gradient(135deg, #6b7280 0%, #374151 100%)',
-      tags: ['forests', 'covered']
+      accent: '#8fa8b4',
+      bg: 'linear-gradient(145deg, #0e1418 0%, #080e12 100%)',
+      tags: ['forests', 'covered'],
     },
     {
       id: 'parents',
-      icon: '👨‍👩‍👧',
+      icon: '◈',
       title: t('home.themeParents'),
       description: t('home.themeParentsDesc'),
-      color: '#8b5cf6',
-      gradient: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
-      tags: ['family friendly', 'easy']
+      accent: '#a49abf',
+      bg: 'linear-gradient(145deg, #14101a 0%, #0c0810 100%)',
+      tags: ['family friendly', 'easy'],
     },
     {
       id: 'half-day',
-      icon: '⏱️',
+      icon: '◈',
       title: t('home.themeHalfDay'),
       description: t('home.themeHalfDayDesc'),
-      color: '#14b8a6',
-      gradient: 'linear-gradient(135deg, #14b8a6 0%, #0f766e 100%)',
-      tags: ['short']
+      accent: '#7ab4a8',
+      bg: 'linear-gradient(145deg, #0a1614 0%, #060e0c 100%)',
+      tags: ['short'],
     },
     {
       id: 'hut-to-hut',
-      icon: '🏔️',
+      icon: '◈',
       title: t('home.themeHutToHut'),
       description: t('home.themeHutToHutDesc'),
-      color: '#d4a574',
-      gradient: 'linear-gradient(135deg, #d4a574 0%, #c89660 100%)',
-      tags: ['multi-day', 'rifugio']
-    }
+      accent: '#c9a84c',
+      bg: 'linear-gradient(145deg, #1a1508 0%, #100e04 100%)',
+      tags: ['multi-day', 'rifugio'],
+    },
   ];
 
   return (
     <div className="theme-cards-section">
       <div className="theme-cards-header">
+        <p className="theme-cards-eyebrow">EXPLORE BY MOOD</p>
         <h2 className="section-title-large">{t('home.exploreByTheme')}</h2>
         <p className="section-subtitle">{t('home.exploreByThemeDesc')}</p>
       </div>
@@ -102,14 +103,13 @@ function ThemeCards({ onThemeClick }) {
             key={theme.id}
             className="theme-card"
             onClick={() => onThemeClick && onThemeClick(theme.tags)}
-            style={{ '--theme-color': theme.color }}
+            style={{ '--accent': theme.accent, background: theme.bg }}
           >
-            <div className="theme-card-bg" style={{ background: theme.gradient }}></div>
-            <div className="theme-card-content">
-              <div className="theme-icon">{theme.icon}</div>
+            <div className="theme-card-inner">
+              <span className="theme-accent-dot" style={{ background: theme.accent }} />
               <h3 className="theme-title">{theme.title}</h3>
               <p className="theme-description">{theme.description}</p>
-              <div className="theme-arrow">→</div>
+              <span className="theme-arrow" style={{ color: theme.accent }}>Explore →</span>
             </div>
           </div>
         ))}
