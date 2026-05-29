@@ -1,0 +1,299 @@
+/* ============================================================
+   Josephine Companion Widget
+   ============================================================ */
+
+/* ── Backdrop ── */
+.jph-widget__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 3990;
+  background: rgba(5, 10, 5, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: jphFadeIn 0.2s ease;
+}
+
+/* ── Floating trigger button ── */
+.jph-widget__trigger {
+  position: fixed;
+  bottom: 28px;
+  right: 24px;
+  z-index: 4000;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #1a2a1c, #142018);
+  border: 2px solid rgba(201, 168, 76, 0.45);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.5),
+    0 0 0 0 rgba(201, 168, 76, 0.4);
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* On mobile, sit above bottom nav */
+@media (max-width: 899px) {
+  .jph-widget__trigger {
+    bottom: 80px;
+    right: 16px;
+    width: 52px;
+    height: 52px;
+  }
+}
+
+.jph-widget__trigger:hover {
+  border-color: rgba(201, 168, 76, 0.8);
+  box-shadow:
+    0 6px 32px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(201, 168, 76, 0.25);
+  transform: scale(1.06);
+}
+
+.jph-widget__trigger--open {
+  border-color: rgba(201, 168, 76, 0.7);
+  background: linear-gradient(145deg, #1f3222, #162a1a);
+}
+
+.jph-widget__trigger-mark {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+/* Pulse ring */
+.jph-widget__pulse {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(201, 168, 76, 0.4);
+  animation: jphPulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes jphPulse {
+  0%   { transform: scale(1);   opacity: 0.8; }
+  100% { transform: scale(1.6); opacity: 0;   }
+}
+
+/* ── Panel ── */
+.jph-widget__panel {
+  position: fixed;
+  bottom: 100px;
+  right: 24px;
+  z-index: 4001;
+  width: min(340px, calc(100vw - 32px));
+  background: linear-gradient(160deg, rgba(18, 28, 20, 0.98), rgba(12, 20, 14, 0.97));
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 24px;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(201, 168, 76, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  padding: 0 0 20px 0;
+  overflow: hidden;
+  animation: jphSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (max-width: 899px) {
+  .jph-widget__panel {
+    bottom: 144px;
+    right: 16px;
+    left: 16px;
+    width: auto;
+  }
+}
+
+@keyframes jphSlideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);     }
+}
+
+/* ── Portrait area ── */
+.jph-widget__portrait-wrap {
+  width: 100%;
+  height: 180px;
+  background: linear-gradient(180deg, #0e1c10 0%, #162818 100%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Subtle radial glow behind character */
+.jph-widget__portrait-wrap::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 120px;
+  background: radial-gradient(ellipse at center, rgba(201, 168, 76, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.jph-widget__portrait-img {
+  height: 175px;
+  width: auto;
+  object-fit: contain;
+  object-position: bottom;
+  position: relative;
+  z-index: 1;
+  /* When real image loads, it appears here naturally */
+}
+
+.jph-widget__portrait-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.jph-widget__mark-fallback {
+  width: 90px;
+  height: 90px;
+  opacity: 0.8;
+  filter: drop-shadow(0 4px 16px rgba(201, 168, 76, 0.3));
+}
+
+/* ── Name row ── */
+.jph-widget__name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px 8px;
+}
+
+.jph-widget__name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 20px;
+  font-weight: 400;
+  font-style: italic;
+  color: #f0ece6;
+  letter-spacing: 0.01em;
+}
+
+/* Audio waveform decoration */
+.jph-widget__wave {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 16px;
+}
+
+.jph-widget__bar {
+  display: block;
+  width: 2.5px;
+  border-radius: 2px;
+  background: #c9a84c;
+  opacity: 0.7;
+  animation: jphBarBounce 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes jphBarBounce {
+  from { transform: scaleY(0.4); opacity: 0.5; }
+  to   { transform: scaleY(1);   opacity: 0.9; }
+}
+
+/* ── Message bubble ── */
+.jph-widget__bubble {
+  margin: 0 16px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+
+.jph-widget__msg-line {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(240, 236, 230, 0.9);
+  margin: 0 0 4px;
+}
+
+.jph-widget__msg-line:last-child { margin: 0; }
+
+.jph-widget__msg-line strong {
+  color: #f0ece6;
+  font-weight: 600;
+}
+
+/* ── Response buttons ── */
+.jph-widget__responses {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 16px;
+}
+
+.jph-widget__btn {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border: none;
+  letter-spacing: 0.01em;
+}
+
+.jph-widget__btn--primary {
+  background: #c9a84c;
+  color: #1a1a0e;
+  box-shadow: 0 4px 16px rgba(201, 168, 76, 0.35);
+}
+
+.jph-widget__btn--primary:hover {
+  background: #d4b85c;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(201, 168, 76, 0.5);
+}
+
+.jph-widget__btn--ghost {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(240, 236, 230, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.jph-widget__btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: #f0ece6;
+  border-color: rgba(201, 168, 76, 0.25);
+}
+
+/* ── Close button ── */
+.jph-widget__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.jph-widget__close:hover {
+  background: rgba(0, 0, 0, 0.55);
+  color: #f0ece6;
+}
+
+@keyframes jphFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

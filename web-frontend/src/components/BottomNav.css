@@ -1,0 +1,156 @@
+/* ============================================================
+   Josephine — Mobile Bottom Navigation
+   Mobile only: hidden ≥ 900px (desktop has header nav)
+   ============================================================ */
+
+.jph-bottom-nav {
+  display: none; /* shown via media query */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-navbar);
+  height: 64px;
+  background: rgba(12, 20, 14, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(201, 168, 76, 0.15);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
+  /* Safe area for iPhone home indicator */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  align-items: center;
+  justify-content: space-around;
+}
+
+@media (max-width: 899px) {
+  .jph-bottom-nav {
+    display: flex;
+  }
+
+  /* Push main content up so it doesn't hide behind the nav */
+  body {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* ── Regular tab ── */
+.jph-bottom-nav__tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: 100%;
+  background: none;
+  border: none;
+  color: rgba(154, 148, 136, 0.7);
+  cursor: pointer;
+  padding: 8px 0 0;
+  transition: color 0.2s ease;
+  min-width: 0;
+  border-radius: 0;
+}
+
+.jph-bottom-nav__tab:hover {
+  color: rgba(240, 236, 230, 0.8);
+  transform: none;
+}
+
+.jph-bottom-nav__tab.active {
+  color: #c9a84c;
+}
+
+.jph-bottom-nav__tab.active .jph-bottom-nav__icon {
+  position: relative;
+}
+
+/* Gold dot above active icon */
+.jph-bottom-nav__tab.active .jph-bottom-nav__icon::after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #c9a84c;
+}
+
+.jph-bottom-nav__icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.jph-bottom-nav__label {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 56px;
+}
+
+/* ── Centre Josephine button ── */
+.jph-bottom-nav__josephine {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  /* Offset upward to float above the bar */
+  margin-top: -20px;
+  position: relative;
+  border-radius: 50%;
+  transform: none;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.jph-bottom-nav__josephine:hover {
+  transform: scale(1.08) translateY(-2px);
+}
+
+.jph-bottom-nav__josephine:active {
+  transform: scale(0.96);
+}
+
+.jph-bottom-nav__j-ring {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #1a2a1c, #0e1c10);
+  border: 2.5px solid #c9a84c;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.55),
+    0 0 16px rgba(201, 168, 76, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.jph-bottom-nav__josephine:hover .jph-bottom-nav__j-ring {
+  border-color: rgba(201, 168, 76, 0.9);
+  box-shadow:
+    0 6px 28px rgba(0, 0, 0, 0.6),
+    0 0 24px rgba(201, 168, 76, 0.4);
+}
+
+.jph-bottom-nav__j-mark {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}

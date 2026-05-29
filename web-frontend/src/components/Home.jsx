@@ -153,6 +153,55 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
         </div>
       </div>
 
+      {/* ── Meet Josephine ── */}
+      <section className="home-meet-josephine">
+        <div className="container">
+          <p className="meet-eyebrow">MEET JOSEPHINE</p>
+          <h2 className="meet-headline">
+            Your human alpine companion.<br />
+            <span className="meet-headline-sub">
+              She knows the mountains, the trails, the rifugios and the little things that make your day unforgettable.
+            </span>
+          </h2>
+
+          <div className="meet-pillars">
+            {[
+              { icon: '📍', label: 'Local knowledge' },
+              { icon: '☀️', label: 'Live conditions' },
+              { icon: '✦',  label: 'Smart recommendations' },
+              { icon: '♡',  label: 'Always by your side' },
+            ].map(({ icon, label }) => (
+              <div key={label} className="meet-pillar">
+                <span className="meet-pillar-icon">{icon}</span>
+                <span className="meet-pillar-label">{label}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Character portrait placeholder — swap with real pose when ready */}
+          <div className="meet-character-row">
+            <div className="meet-character">
+              <img src="/josephine-pose-welcome.png" alt="Josephine welcoming"
+                className="meet-character-img"
+                onError={e => { e.target.src = '/josephine-mark.svg'; e.target.className = 'meet-character-fallback'; }}
+              />
+            </div>
+            <div className="meet-character">
+              <img src="/josephine-pose-neutral.png" alt="Josephine"
+                className="meet-character-img meet-character-img--center"
+                onError={e => { e.target.src = '/josephine-mark.svg'; e.target.className = 'meet-character-fallback'; }}
+              />
+            </div>
+            <div className="meet-character">
+              <img src="/josephine-pose-point.png" alt="Josephine pointing"
+                className="meet-character-img"
+                onError={e => { e.target.src = '/josephine-mark.svg'; e.target.className = 'meet-character-fallback'; }}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Main Content */}
       <div className="container home-content">
         {/* Featured Trails Carousel */}
@@ -161,7 +210,7 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
             <h2 className="section-title-home">{t('home.featuredTrails')}</h2>
             <div className="gradient-divider-home"></div>
           </div>
-          
+
           {loading ? (
             <div className="loading-carousel">{t('home.loadingRecommendation')}</div>
           ) : (
@@ -174,22 +223,67 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
           <ThemeCards onThemeClick={handleThemeClick} />
         </section>
 
-        {/* Quick Actions */}
-        <section className="home-section">
-          <div className="quick-actions-grid">
-            <div className="quick-action-card" onClick={() => setCurrentView('recommendations')}>
-              <span className="quick-action-icon">✦</span>
-              <h3 className="quick-action-title">{t('home.smartRecommendations')}</h3>
-              <p className="quick-action-desc">{t('home.smartRecommendationsDesc')}</p>
-              <span className="quick-action-arrow">Explore →</span>
+        {/* ── Josephine Speaks ── */}
+        <section className="home-section home-josephine-speaks">
+          <div className="jph-speaks-grid">
+            <div className="jph-speaks-content">
+              <p className="jph-speaks-eyebrow">JOSEPHINE SPEAKS</p>
+              <h2 className="jph-speaks-headline">She talks to you, guides you and adapts to you.</h2>
+              <ul className="jph-speaks-list">
+                {['Natural conversations', 'Voice messages', 'Smart suggestions', 'Encouragement when you need it most'].map(item => (
+                  <li key={item} className="jph-speaks-item">
+                    <span className="jph-speaks-check">✓</span> {item}
+                  </li>
+                ))}
+              </ul>
+              <button className="jph-speaks-cta" onClick={() => setCurrentView('recommendations')}>
+                Plan my day with Josephine →
+              </button>
             </div>
-            
-            <div className="quick-action-card" onClick={() => setCurrentView('catalog')}>
-              <span className="quick-action-icon">◈</span>
-              <h3 className="quick-action-title">{t('home.browseTrailCatalog')}</h3>
-              <p className="quick-action-desc">{t('home.browseTrailCatalogDesc')}</p>
-              <span className="quick-action-arrow">Explore →</span>
+            <div className="jph-speaks-visual">
+              <div className="jph-speaks-character">
+                <img src="/josephine-pose-think.png" alt="Josephine thinking"
+                  className="jph-speaks-img"
+                  onError={e => { e.target.src = '/josephine-mark.svg'; e.target.className = 'jph-speaks-fallback'; }}
+                />
+              </div>
+              <div className="jph-speaks-bubble">
+                <p className="jph-speaks-bubble-text">You've been amazing today! ☀️ Look at that view… worth every step.</p>
+                <div className="jph-speaks-audio">
+                  <span className="jph-speaks-audio-dot" />
+                  {[3,5,8,6,9,5,7,4,6,8,5,3].map((h, i) => (
+                    <span key={i} className="jph-speaks-audio-bar" style={{ height: `${h * 1.6}px`, animationDelay: `${i * 0.1}s` }} />
+                  ))}
+                  <span className="jph-speaks-audio-time">0:06</span>
+                </div>
+              </div>
             </div>
+          </div>
+        </section>
+
+        {/* ── Multi-day + Narya ── */}
+        <section className="home-section home-feature-cards">
+          <div className="home-feature-card" onClick={() => setCurrentView('multiday-trails')}>
+            <div className="home-feature-card__badge">MULTI-DAY JOURNEYS</div>
+            <h3 className="home-feature-card__title">Hut-to-hut adventures curated with care.</h3>
+            <div className="home-feature-card__preview">
+              <div className="home-feature-trail-chip">
+                <span className="home-feature-trail-name">Dolomites Alta Via 1</span>
+                <span className="home-feature-trail-meta">7 days · Moderate</span>
+              </div>
+            </div>
+            <span className="home-feature-card__link">Explore routes →</span>
+          </div>
+
+          <div className="home-feature-card home-feature-card--narya" onClick={() => setCurrentView('catalog')}>
+            <div className="home-feature-card__badge home-feature-card__badge--narya">NARYA</div>
+            <h3 className="home-feature-card__title">Your canine companion. Paw-approved adventures.</h3>
+            <ul className="home-feature-narya-list">
+              {['Dog-friendly trails', 'Water points', 'Shade & safety tips'].map(item => (
+                <li key={item}>🐾 {item}</li>
+              ))}
+            </ul>
+            <span className="home-feature-card__link">Find dog-friendly trails →</span>
           </div>
         </section>
 

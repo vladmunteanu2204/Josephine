@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { ENABLE_HIKE_TRACKING, ENABLE_GAMIFICATION } from './featureFlags';
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import Header from './components/Header';
@@ -23,6 +24,8 @@ import MultiDayTrailDetail from './components/MultiDayTrailDetail';
 import SplashScreen from './components/SplashScreen';
 import OnboardingWizard from './components/OnboardingWizard';
 import Footer from './components/Footer';
+import JosephineWidget from './components/JosephineWidget';
+import BottomNav from './components/BottomNav';
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
@@ -36,6 +39,7 @@ function App() {
     return !localStorage.getItem('onboardingCompleted');
   });
   const [isGPSActive, setIsGPSActive] = useState(false);
+  const [josephineOpen, setJosephineOpen] = useState(false);
 
   // Sync view to URL hash for back-button support and shareable links
   useEffect(() => {
@@ -44,6 +48,18 @@ function App() {
       setCurrentView(hash);
     }
   }, []);
+
+  // Redirect any disabled-feature views to home — catches all paths
+  // (hash changes, popstate, direct setCurrentView calls, UserMenuPortal, etc.)
+  useEffect(() => {
+    const disabledViews = [
+      ...(!ENABLE_GAMIFICATION ? ['challenges', 'leaderboards'] : []),
+      ...(!ENABLE_HIKE_TRACKING ? ['hike'] : []),
+    ];
+    if (disabledViews.includes(currentView)) {
+      setCurrentView('home');
+    }
+  }, [currentView]);
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
@@ -68,6 +84,16 @@ function App() {
   };
 
   const navigate = (view, param = null) => {
+    // Redirect disabled feature routes to home
+    if (!ENABLE_GAMIFICATION && (view === 'challenges' || view === 'leaderboards')) {
+      setCurrentView('home');
+      return;
+    }
+    if (!ENABLE_HIKE_TRACKING && view === 'hike') {
+      setCurrentView('home');
+      return;
+    }
+
     if (view === 'detail' || view === 'rifugio-detail' || view === 'multiday-detail') {
       setPreviousView(currentView);
     }
@@ -94,7 +120,7 @@ function App() {
     <div className="app">
       <ToastProvider>
         <AuthProvider>
-          {!isGPSActive && <Header currentView={currentView} setCurrentView={setCurrentView} />}
+          {(!isGPSActive || !ENABLE_HIKE_TRACKING) && <Header currentView={currentView} setCurrentView={setCurrentView} />}
         
         <main className="main-content">
           {currentView === 'home' && (
@@ -133,7 +159,7 @@ function App() {
             <Settings onNavigate={navigate} />
           )}
 
-          {currentView === 'leaderboards' && (
+          {ENABLE_GAMIFICATION && currentView === 'leaderboards' && (
             <Leaderboards onNavigate={navigate} />
           )}
 
@@ -153,7 +179,7 @@ function App() {
             <AdminPanel onNavigate={navigate} />
           )}
 
-          {currentView === 'challenges' && (
+          {ENABLE_GAMIFICATION && currentView === 'challenges' && (
             <Challenges onNavigate={navigate} />
           )}
 
@@ -175,7 +201,19 @@ function App() {
         </main>
 
         <Footer setCurrentView={setCurrentView} />
-        
+
+        <BottomNav
+          currentView={currentView}
+          setCurrentView={setCurrentView}
+          onJosephineOpen={() => setJosephineOpen(true)}
+        />
+
+        <JosephineWidget
+          isOpen={josephineOpen}
+          onClose={() => setJosephineOpen(false)}
+          setCurrentView={setCurrentView}
+        />
+
         {!showSplash && showOnboarding && (
           <OnboardingWizard onComplete={() => setShowOnboarding(false)} />
         )}
