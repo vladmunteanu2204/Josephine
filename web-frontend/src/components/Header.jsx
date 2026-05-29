@@ -14,6 +14,7 @@ const languageLabels = {
   de: 'DE'
 };
 
+
 function Header({ currentView, setCurrentView }) {
   const { t, i18n } = useTranslation();
   const { currentUser, logout } = useAuth();
@@ -41,47 +42,20 @@ function Header({ currentView, setCurrentView }) {
 
   const handleMenuNavigation = (key) => {
     switch(key) {
-      case 'profile':
-        setCurrentView('profile');
-        break;
-      case 'savedTrails':
-        setCurrentView('savedTrails');
-        break;
-      case 'challenges':
-        setCurrentView('challenges');
-        break;
-      case 'leaderboards':
-        setCurrentView('leaderboards');
-        break;
-      case 'planner':
-        setCurrentView('planner');
-        break;
-      case 'admin':
-        setCurrentView('admin');
-        break;
-      case 'settings':
-        setCurrentView('settings');
-        break;
-      case 'home':
-        setCurrentView('home');
-        break;
-      case 'recommendations':
-        setCurrentView('recommendations');
-        break;
-      case 'catalog':
-        setCurrentView('catalog');
-        break;
-      case 'rifugios':
-        setCurrentView('rifugios');
-        break;
-      case 'multiday-trails':
-        setCurrentView('multiday-trails');
-        break;
-      case 'logout':
-        handleLogout();
-        break;
-      default:
-        break;
+      case 'profile':        setCurrentView('profile');         break;
+      case 'savedTrails':    setCurrentView('savedTrails');     break;
+      case 'challenges':     setCurrentView('challenges');      break;
+      case 'leaderboards':   setCurrentView('leaderboards');    break;
+      case 'planner':        setCurrentView('planner');         break;
+      case 'admin':          setCurrentView('admin');           break;
+      case 'settings':       setCurrentView('settings');        break;
+      case 'home':           setCurrentView('home');            break;
+      case 'recommendations':setCurrentView('recommendations'); break;
+      case 'catalog':        setCurrentView('catalog');         break;
+      case 'rifugios':       setCurrentView('rifugios');        break;
+      case 'multiday-trails':setCurrentView('multiday-trails'); break;
+      case 'logout':         handleLogout();                    break;
+      default: break;
     }
   };
 
@@ -90,56 +64,106 @@ function Header({ currentView, setCurrentView }) {
     return languageLabels[currentLang] || 'EN';
   };
 
+  // Desktop nav items mapping to app views
+  const desktopNavItems = [
+    { key: 'home',            label: 'Home' },
+    { key: 'catalog',         label: 'Explore' },
+    { key: 'planner',         label: 'My Plan' },
+    { key: 'savedTrails',     label: 'Saved' },
+    { key: 'recommendations', label: 'Insights' },
+  ];
+
   return (
     <>
-      <header className="header header-mobile-redesign">
-        <div className="container header-content-mobile">
-          <div className="logo logo-mobile" onClick={() => setCurrentView('home')}>
-            <span className="logo-icon logo-icon-mobile">🏔️</span>
-            <span className="logo-text logo-text-mobile">Josephine</span>
+      <header className="jph-header">
+        <div className="jph-header__inner">
+
+          {/* ── Logo lockup ── */}
+          <div
+            className="jph-header__logo"
+            onClick={() => setCurrentView('home')}
+            role="link"
+            tabIndex={0}
+            onKeyDown={e => e.key === 'Enter' && setCurrentView('home')}
+            aria-label="Josephine — home"
+          >
+            <img
+              src="/josephine-mark.svg"
+              alt="Josephine mark"
+              className="jph-header__mark-img"
+              aria-hidden="true"
+            />
+            <div className="jph-header__wordmark-block">
+              <span className="jph-header__wordmark">Josephine</span>
+              <span className="jph-header__sub">YOUR HUMAN ALPINE COMPANION</span>
+            </div>
           </div>
-          
-          <div className="header-actions-mobile">
+
+          {/* ── Desktop centre nav ── */}
+          <nav className="jph-header__desktop-nav" aria-label="Main navigation">
+            {desktopNavItems.map(item => (
+              <button
+                key={item.key}
+                className={`jph-header__nav-item ${currentView === item.key ? 'active' : ''}`}
+                onClick={() => setCurrentView(item.key)}
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+
+          {/* ── Right actions ── */}
+          <div className="jph-header__actions">
             <button
-              className="header-icon-btn language-btn-mobile"
+              className="jph-header__btn jph-header__btn--lang"
               onClick={() => setShowLanguageSheet(true)}
               aria-label={t('language.selectLanguage')}
               title={t('language.selectLanguage')}
             >
-              <span className="language-icon">🌐</span>
-              <span className="language-label-mobile">{getCurrentLanguageLabel()}</span>
-              <span className="language-chevron">▼</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M 12 2 a 15 15 0 0 1 0 20 M 12 2 a 15 15 0 0 0 0 20"/>
+              </svg>
+              <span className="jph-header__lang-label">{getCurrentLanguageLabel()}</span>
             </button>
-            
+
             {currentUser ? (
-              <button 
+              <button
                 ref={avatarButtonRef}
-                className="header-icon-btn user-btn-mobile"
+                className="jph-header__btn jph-header__btn--avatar"
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 aria-label="User menu"
                 aria-expanded={showUserMenu}
               >
-                <div className="user-avatar user-avatar-mobile">
+                <div className="jph-header__avatar">
                   {getInitials(currentUser.displayName || currentUser.email)}
                 </div>
               </button>
             ) : (
-              <button 
-                className="header-icon-btn auth-btn-mobile"
+              <button
+                className="jph-header__btn jph-header__btn--user"
                 onClick={() => setShowLogin(true)}
                 aria-label={t('auth.login')}
               >
-                <span className="auth-icon">👤</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
               </button>
             )}
 
             <button
-              className="header-icon-btn hamburger-btn-mobile"
+              className="jph-header__btn jph-header__btn--menu"
               onClick={() => setShowHamburger(true)}
               aria-label={t('menu.navigation')}
               aria-expanded={showHamburger}
             >
-              <span className="hamburger-icon">☰</span>
+              <span className="jph-header__menu-bars" aria-hidden="true">
+                <span/>
+                <span/>
+                <span/>
+              </span>
             </button>
 
             {currentUser && (
@@ -170,22 +194,16 @@ function Header({ currentView, setCurrentView }) {
       />
 
       {showLogin && (
-        <Login 
+        <Login
           onClose={() => setShowLogin(false)}
-          switchToSignup={() => {
-            setShowLogin(false);
-            setShowSignup(true);
-          }}
+          switchToSignup={() => { setShowLogin(false); setShowSignup(true); }}
         />
       )}
 
       {showSignup && (
-        <Signup 
+        <Signup
           onClose={() => setShowSignup(false)}
-          switchToLogin={() => {
-            setShowSignup(false);
-            setShowLogin(true);
-          }}
+          switchToLogin={() => { setShowSignup(false); setShowLogin(true); }}
         />
       )}
     </>

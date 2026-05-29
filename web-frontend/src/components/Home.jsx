@@ -121,8 +121,7 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
             {/* Josephine Guide Card */}
             <div className="josephine-guide-card" role="complementary" aria-label={t('home.josephineGuide')}>
               <div className="guide-card-portrait" aria-hidden="true">
-                {/* TODO: insert Josephine illustration asset here */}
-                <div className="guide-portrait-shimmer"></div>
+                <img src="/josephine-mark.svg" alt="" className="guide-portrait-mark" />
               </div>
               <div className="guide-card-body">
                 <p className="guide-card-quote">{t('home.josephineGuide')}</p>
