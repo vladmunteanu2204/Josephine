@@ -17,5 +17,16 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['mapbox-gl', 'react-map-gl']
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          mapbox: ['mapbox-gl', 'react-map-gl'],
+          react: ['react', 'react-dom'],
+          i18n: ['react-i18next', 'i18next'],
+        }
+      }
+    }
   }
 });

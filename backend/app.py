@@ -7,7 +7,10 @@ import io
 import fcntl
 import hashlib
 import time
-from datetime import datetime
+import sqlite3
+import threading
+import jwt
+from datetime import datetime, timedelta
 from functools import wraps
 from weather_service import weather_service
 try:
@@ -44,17 +47,112 @@ ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY')
 if not ANTHROPIC_API_KEY:
     print("Warning: ANTHROPIC_API_KEY not set — /api/chat will use structured lookup only (no LLM)")
 
+# Singleton Anthropic client — instantiated once, not per-request
+_anthropic_client = None
+if ANTHROPIC_API_KEY:
+    try:
+        import anthropic as _anthropic_module
+        _anthropic_client = _anthropic_module.Anthropic(api_key=ANTHROPIC_API_KEY)
+    except Exception as _e:
+        print(f"Warning: Could not init Anthropic client: {_e}")
+
+# ── JWT secret (derived from ADMIN_PASSWORD so no extra env var needed) ──
+JWT_SECRET = hashlib.sha256(ADMIN_PASSWORD.encode()).hexdigest()
+JWT_ALGORITHM = 'HS256'
+JWT_EXPIRY_HOURS = 12
+
+# ── Brute-force lockout: max 10 failed attempts per 15 min per IP ─────────
+_failed_attempts: dict = {}   # ip → [timestamp, ...]
+_failed_lock = threading.Lock()
+MAX_FAILED = 10
+LOCKOUT_WINDOW = 900   # 15 minutes
+
+def _record_failed(ip: str):
+    now = time.time()
+    with _failed_lock:
+        bucket = [t for t in _failed_attempts.get(ip, []) if now - t < LOCKOUT_WINDOW]
+        bucket.append(now)
+        _failed_attempts[ip] = bucket
+
+def _is_locked_out(ip: str) -> bool:
+    now = time.time()
+    with _failed_lock:
+        bucket = [t for t in _failed_attempts.get(ip, []) if now - t < LOCKOUT_WINDOW]
+        _failed_attempts[ip] = bucket
+        return len(bucket) >= MAX_FAILED
+
+@app.route('/api/admin/login', methods=['POST'])
+def admin_login():
+    """Issue a short-lived JWT after verifying admin password."""
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr or '0.0.0.0').split(',')[0].strip()
+    if _is_locked_out(ip):
+        return jsonify({'error': 'Too many failed attempts. Try again in 15 minutes.'}), 429
+    body = request.get_json(silent=True) or {}
+    password = body.get('password', '')
+    if not password or password != ADMIN_PASSWORD:
+        _record_failed(ip)
+        return jsonify({'error': 'Invalid credentials'}), 401
+    payload = {
+        'sub': 'admin',
+        'iat': datetime.utcnow(),
+        'exp': datetime.utcnow() + timedelta(hours=JWT_EXPIRY_HOURS),
+    }
+    token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+    return jsonify({'token': token, 'expires_in': JWT_EXPIRY_HOURS * 3600})
+
 def require_admin_auth(f):
-    """Decorator to require admin authentication"""
+    """Decorator: accept either a valid JWT (Bearer token) or the legacy
+    X-Admin-Password header so the existing AdminPanel keeps working."""
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        auth_header = request.headers.get('X-Admin-Password')
-        if not auth_header or auth_header != ADMIN_PASSWORD:
-            return jsonify({'error': 'Unauthorized - Invalid admin credentials'}), 401
-        return f(*args, **kwargs)
+        # ── 1. Try JWT Bearer token ──
+        auth = request.headers.get('Authorization', '')
+        if auth.startswith('Bearer '):
+            token = auth[7:]
+            try:
+                jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+                return f(*args, **kwargs)
+            except jwt.ExpiredSignatureError:
+                return jsonify({'error': 'Token expired — please log in again'}), 401
+            except jwt.InvalidTokenError:
+                return jsonify({'error': 'Invalid token'}), 401
+        # ── 2. Legacy header (backwards-compat, still works) ──
+        ip = request.headers.get('X-Forwarded-For', request.remote_addr or '0.0.0.0').split(',')[0].strip()
+        if _is_locked_out(ip):
+            return jsonify({'error': 'Too many failed attempts. Try again in 15 minutes.'}), 429
+        pw = request.headers.get('X-Admin-Password', '')
+        if pw and pw == ADMIN_PASSWORD:
+            return f(*args, **kwargs)
+        _record_failed(ip)
+        return jsonify({'error': 'Unauthorized - Invalid admin credentials'}), 401
     return decorated_function
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TRAILS_PATH   = os.path.join(BASE_DIR, 'data', 'trails.json')
+RIFUGIOS_PATH = os.path.join(BASE_DIR, 'data', 'rifugios.json')
+
+# ── Fix #2: in-process TTL cache for JSON file reads ─────────────────────
+_FILE_CACHE: dict = {}          # path → (data, loaded_at)
+_FILE_CACHE_LOCK = threading.Lock()
+FILE_CACHE_TTL = 30             # seconds — live edits propagate in ≤30s
+
+def _cached_json(path: str):
+    """Read JSON from disk at most once per FILE_CACHE_TTL seconds."""
+    now = time.time()
+    with _FILE_CACHE_LOCK:
+        entry = _FILE_CACHE.get(path)
+        if entry and now - entry[1] < FILE_CACHE_TTL:
+            return entry[0]
+    with open(path, 'r') as f:
+        data = json.load(f)
+    with _FILE_CACHE_LOCK:
+        _FILE_CACHE[path] = (data, now)
+    return data
+
+def _invalidate_cache(path: str):
+    """Call after writing to a JSON file so the next read reflects changes."""
+    with _FILE_CACHE_LOCK:
+        _FILE_CACHE.pop(path, None)
 
 
 def atomic_json_write(path, data):
@@ -69,22 +167,19 @@ def atomic_json_write(path, data):
 MULTI_DAY_TRAILS_FILE = os.path.join(BASE_DIR, 'backend', 'data', 'multi_day_trails.json')
 
 def load_trail_segments():
-    """Load trail segments from the mock database"""
+    """Load trail segments from the mock database (TTL-cached)"""
     segments_path = os.path.join(BASE_DIR, 'data', 'trail_segments.json')
-    with open(segments_path, 'r') as f:
-        return json.load(f)
+    return _cached_json(segments_path)
 
 def load_complete_trails():
-    """Load complete trail data"""
+    """Load complete trail data (TTL-cached)"""
     trails_path = os.path.join(BASE_DIR, 'data', 'trails.json')
-    with open(trails_path, 'r') as f:
-        return json.load(f)
+    return _cached_json(trails_path)
 
 def load_reviews():
-    """Load reviews data"""
+    """Load reviews data (TTL-cached)"""
     reviews_path = os.path.join(BASE_DIR, 'data', 'reviews.json')
-    with open(reviews_path, 'r') as f:
-        return json.load(f)
+    return _cached_json(reviews_path)
 
 def compress_image(file_data, filename):
     """
@@ -263,11 +358,23 @@ def get_trails():
     
     if interest:
         filtered_trails = [t for t in filtered_trails if interest.lower() in [i.lower() for i in t['interests']]]
-    
-    # Process media fields for all trails
+
+    total = len(filtered_trails)
+
+    # Pagination — ?page=1&per_page=20 (default: all for backwards-compat when per_page not set)
+    page     = request.args.get('page', type=int)
+    per_page = request.args.get('per_page', type=int)
+    if per_page and per_page > 0:
+        page = max(1, page or 1)
+        start = (page - 1) * per_page
+        filtered_trails = filtered_trails[start:start + per_page]
+
+    # Process media fields
     processed_trails = [process_trail_media(t) for t in filtered_trails]
-    
-    return jsonify({'trails': processed_trails, 'count': len(processed_trails)})
+
+    resp = jsonify({'trails': processed_trails, 'count': len(processed_trails), 'total': total})
+    resp.headers['Cache-Control'] = 'public, max-age=60'
+    return resp
 
 @app.route('/api/trails/<trail_id>', methods=['GET'])
 def get_trail(trail_id):
@@ -679,8 +786,9 @@ def create_trail():
         
         trails['trails'].append(trail_data)
         
-        trails_path = os.path.join(BASE_DIR, 'data', 'trails.json')
+        trails_path = TRAILS_PATH
         atomic_json_write(trails_path, trails)
+        _invalidate_cache(TRAILS_PATH)
         
         return jsonify({'success': True, 'trail': trail_data}), 201
     except Exception as e:
@@ -700,8 +808,9 @@ def update_trail(trail_id):
         
         trails['trails'][trail_index] = trail_data
         
-        trails_path = os.path.join(BASE_DIR, 'data', 'trails.json')
+        trails_path = TRAILS_PATH
         atomic_json_write(trails_path, trails)
+        _invalidate_cache(TRAILS_PATH)
         
         return jsonify({'success': True, 'trail': trail_data})
     except Exception as e:
@@ -719,8 +828,9 @@ def delete_trail(trail_id):
         if len(trails['trails']) == original_count:
             return jsonify({'error': 'Trail not found'}), 404
         
-        trails_path = os.path.join(BASE_DIR, 'data', 'trails.json')
+        trails_path = TRAILS_PATH
         atomic_json_write(trails_path, trails)
+        _invalidate_cache(TRAILS_PATH)
         
         return jsonify({'success': True})
     except Exception as e:
@@ -739,8 +849,9 @@ def publish_trail(trail_id):
         if not trail:
             return jsonify({'error': 'Trail not found'}), 404
         trail['status'] = new_status
-        trails_path = os.path.join(BASE_DIR, 'data', 'trails.json')
+        trails_path = TRAILS_PATH
         atomic_json_write(trails_path, trails)
+        _invalidate_cache(TRAILS_PATH)
         return jsonify({'success': True, 'status': new_status})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -869,10 +980,9 @@ def delete_review(review_id):
 CHALLENGES_FILE = os.path.join(BASE_DIR, 'data', 'challenges.json')
 
 def load_challenges():
-    """Load challenges from JSON file"""
+    """Load challenges from JSON file (TTL-cached)"""
     try:
-        with open(CHALLENGES_FILE, 'r') as f:
-            return json.load(f)
+        return _cached_json(CHALLENGES_FILE)
     except FileNotFoundError:
         return {'challenges': []}
 
@@ -1070,18 +1180,18 @@ def track_trail_save():
 
 # Rifugio Management
 def load_rifugios():
-    """Load rifugios from JSON file"""
+    """Load rifugios from JSON file (TTL-cached)"""
     rifugios_path = os.path.join(BASE_DIR, 'data', 'rifugios.json')
     try:
-        with open(rifugios_path, 'r') as f:
-            return json.load(f)
+        return _cached_json(rifugios_path)
     except FileNotFoundError:
         return []
 
 def save_rifugios(rifugios_data):
-    """Save rifugios to JSON file"""
+    """Save rifugios to JSON file and bust cache."""
     rifugios_path = os.path.join(BASE_DIR, 'data', 'rifugios.json')
     atomic_json_write(rifugios_path, rifugios_data)
+    _invalidate_cache(rifugios_path)
 
 def load_booking_inquiries():
     """Load booking inquiries from JSON file"""
@@ -1187,8 +1297,20 @@ def get_rifugios():
         # Apply status filter after calculating current status
         if status_filter:
             filtered_rifugios = [r for r in filtered_rifugios if r.get('current_status') == status_filter]
-        
-        return jsonify({'rifugios': filtered_rifugios})
+
+        total = len(filtered_rifugios)
+
+        # Pagination — ?page=1&per_page=20
+        page     = request.args.get('page', type=int)
+        per_page = request.args.get('per_page', type=int)
+        if per_page and per_page > 0:
+            page = max(1, page or 1)
+            start = (page - 1) * per_page
+            filtered_rifugios = filtered_rifugios[start:start + per_page]
+
+        resp = jsonify({'rifugios': filtered_rifugios, 'total': total})
+        resp.headers['Cache-Control'] = 'public, max-age=60'
+        return resp
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -1916,36 +2038,84 @@ def serve_media(filename):
 # Layer 3: Claude API (Haiku)   — paid, cached, rate-limited
 # ============================================================
 
-# -- Cache & rate-limit state (in-process, resets on restart) --
-_chat_cache = {}        # sha256(question) → (reply_str, timestamp)
-_rate_buckets = {}      # ip → [timestamp, ...]
-_system_prompt_cache = {'prompt': None, 'built_at': 0}
+# ── Fix #4: SQLite-backed Josephine cache + rate limiter ─────────────────
+# Survives server restarts; thread-safe via check_same_thread=False + WAL mode.
+_CHAT_DB_PATH = os.path.join(BASE_DIR, 'backend', 'data', 'chat_cache.db')
+
+def _get_db():
+    """Return a thread-local SQLite connection."""
+    import threading
+    local = threading.local()
+    if not hasattr(local, 'conn'):
+        local.conn = sqlite3.connect(_CHAT_DB_PATH, check_same_thread=False)
+        local.conn.execute('PRAGMA journal_mode=WAL')
+        local.conn.execute('''CREATE TABLE IF NOT EXISTS chat_cache (
+            key TEXT PRIMARY KEY,
+            reply TEXT NOT NULL,
+            ts REAL NOT NULL
+        )''')
+        local.conn.execute('''CREATE TABLE IF NOT EXISTS rate_log (
+            ip TEXT NOT NULL,
+            ts REAL NOT NULL
+        )''')
+        local.conn.execute('CREATE INDEX IF NOT EXISTS idx_rate_ip ON rate_log(ip, ts)')
+        local.conn.commit()
+    return local.conn
+
+# Initialise on startup
+_db_conn = sqlite3.connect(_CHAT_DB_PATH, check_same_thread=False)
+_db_conn.execute('PRAGMA journal_mode=WAL')
+_db_conn.execute('''CREATE TABLE IF NOT EXISTS chat_cache (
+    key TEXT PRIMARY KEY,
+    reply TEXT NOT NULL,
+    ts REAL NOT NULL
+)''')
+_db_conn.execute('''CREATE TABLE IF NOT EXISTS rate_log (
+    ip TEXT NOT NULL,
+    ts REAL NOT NULL
+)''')
+_db_conn.execute('CREATE INDEX IF NOT EXISTS idx_rate_ip ON rate_log(ip, ts)')
+_db_conn.commit()
+_db_lock = threading.Lock()
 
 CACHE_TTL              = 86_400   # 24 h
 MAX_LLM_CALLS_PER_HOUR = 5        # per IP
 
+_system_prompt_cache = {'prompt': None, 'built_at': 0}
 
 def _cache_get(question: str):
     key = hashlib.sha256(question.lower().strip().encode()).hexdigest()
-    entry = _chat_cache.get(key)
-    if entry and time.time() - entry[1] < CACHE_TTL:
-        return entry[0]
-    return None
+    cutoff = time.time() - CACHE_TTL
+    with _db_lock:
+        row = _db_conn.execute(
+            'SELECT reply FROM chat_cache WHERE key=? AND ts>?', (key, cutoff)
+        ).fetchone()
+    return row[0] if row else None
 
 
 def _cache_set(question: str, reply: str):
     key = hashlib.sha256(question.lower().strip().encode()).hexdigest()
-    _chat_cache[key] = (reply, time.time())
+    with _db_lock:
+        _db_conn.execute(
+            'INSERT OR REPLACE INTO chat_cache(key, reply, ts) VALUES(?,?,?)',
+            (key, reply, time.time())
+        )
+        _db_conn.commit()
 
 
 def _rate_allowed(ip: str) -> bool:
-    now = time.time()
-    bucket = [t for t in _rate_buckets.get(ip, []) if now - t < 3600]
-    if len(bucket) >= MAX_LLM_CALLS_PER_HOUR:
-        _rate_buckets[ip] = bucket
-        return False
-    bucket.append(now)
-    _rate_buckets[ip] = bucket
+    now  = time.time()
+    hour = now - 3600
+    with _db_lock:
+        count = _db_conn.execute(
+            'SELECT COUNT(*) FROM rate_log WHERE ip=? AND ts>?', (ip, hour)
+        ).fetchone()[0]
+        if count >= MAX_LLM_CALLS_PER_HOUR:
+            return False
+        _db_conn.execute('INSERT INTO rate_log(ip, ts) VALUES(?,?)', (ip, now))
+        # Prune old entries opportunistically
+        _db_conn.execute('DELETE FROM rate_log WHERE ts<?', (hour,))
+        _db_conn.commit()
     return True
 
 
@@ -2376,12 +2546,10 @@ def josephine_chat():
         })
 
     try:
-        import anthropic
-        client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
         system_prompt = _build_system_prompt()
         if lang_instruction:
             system_prompt = system_prompt + f"\n\n{lang_instruction}"
-        response = client.messages.create(
+        response = _anthropic_client.messages.create(
             model='claude-haiku-4-5',
             max_tokens=300,
             system=system_prompt,
@@ -2414,9 +2582,7 @@ def serve_frontend(path):
     return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
-    # Use port from environment variable, default to 8000 for development
-    # Deployment will set PORT=5000
+    # Development only — production uses gunicorn (see Procfile / start command).
     port = int(os.environ.get('PORT', 8000))
-    # Disable debug mode in production (PORT=5000)
     debug_mode = port != 5000
     app.run(host='0.0.0.0', port=port, debug=debug_mode)
