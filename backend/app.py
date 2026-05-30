@@ -281,56 +281,58 @@ def generate_trail():
 def get_recommendations():
     """
     Smart recommendation engine using local database scoring.
-    Scores trails based on difficulty, interests, duration, dog-friendly and location.
-    Returns top 3-5 verified trails with Josephine reasoning text.
+    Scores trails based on difficulty, interests, duration, season,
+    family-friendly, dog-friendly and location.
+    Returns top 3-5 verified trails with Josephine's own words as notes.
     """
     try:
         data = request.json or {}
 
-        duration_hours = data.get('duration_hours', data.get('duration', 3))
-        difficulty = data.get('difficulty', 'medium')
-        interests = data.get('interests', [])
-        with_dog = 'dog-friendly' in interests
-        mood_interests = [i for i in interests if i != 'dog-friendly']
-        start_area = data.get('start_area', data.get('starting_area', ''))
+        duration_hours  = data.get('duration_hours', data.get('duration', 3))
+        difficulty      = data.get('difficulty', 'medium')
+        interests       = data.get('interests', [])
+        with_dog        = 'dog-friendly' in interests
+        family_friendly = data.get('family_friendly', False)
+        start_area      = data.get('start_area', data.get('starting_area', ''))
+        mood_interests  = [i for i in interests if i != 'dog-friendly']
 
+        # Fix 2: current month for season awareness
+        current_month = datetime.now().strftime('%B')   # e.g. "June"
         trails = load_complete_trails()['trails']
 
         scored_trails = []
         for trail in trails:
             score = 0
             reasons = []
+            warnings = []
 
-            # Difficulty match — highest weight
+            # ── Difficulty ──────────────────────────────────────────────
             if trail['difficulty'].lower() == difficulty.lower():
                 score += 4
-                reasons.append(f"{difficulty} difficulty")
+                reasons.append(trail['difficulty'])
             elif (difficulty == 'medium' and trail['difficulty'] == 'easy') or \
                  (difficulty == 'hard'   and trail['difficulty'] == 'medium'):
-                score += 1  # adjacent difficulty partial credit
+                score += 1
 
-            # Duration match — penalise large gaps
+            # ── Duration ────────────────────────────────────────────────
             duration_diff = abs(trail['duration_hours'] - duration_hours)
             if duration_diff <= 0.5:
                 score += 3
-                reasons.append(f"fits your {duration_hours}h window perfectly")
             elif duration_diff <= 1.5:
                 score += 2
-                reasons.append(f"close to your {duration_hours}h window")
+            elif duration_diff > 2.5:
+                score -= 1   # penalise large mismatches
 
-            # Interest / mood matching — check both 'interests' and 'tags' fields
-            # so trails with empty interests but populated tags still surface
+            # ── Interest / mood — interests + tags + partial keyword ────
             trail_keywords = set(
                 [i.lower() for i in trail.get('interests', [])] +
                 [t.lower() for t in trail.get('tags', [])]
             )
             for interest in mood_interests:
                 interest_lower = interest.lower()
-                # Direct match
                 if interest_lower in trail_keywords:
                     score += 2
                     reasons.append(interest)
-                # Partial/keyword match (e.g. "cultural routes" matches "cultural heritage")
                 elif any(interest_lower.split()[0] in kw for kw in trail_keywords):
                     score += 1
                     reasons.append(interest)
@@ -339,15 +341,23 @@ def get_recommendations():
             if 'loop' in mood_interests and trail.get('trail_type', '').lower() == 'loop':
                 score += 2
 
-            # Dog-friendly — hard filter: exclude if requested but not available
+            # ── Dog-friendly ─────────────────────────────────────────────
             if with_dog:
                 if trail.get('dog_friendly'):
                     score += 3
                     reasons.append("dog-friendly")
                 else:
-                    score -= 10  # effectively excludes it
+                    score -= 10   # effectively excludes it
 
-            # Location / start area — raised weight so it actually matters
+            # ── Fix 3: Family-friendly ───────────────────────────────────
+            if family_friendly:
+                if trail.get('family_friendly'):
+                    score += 3
+                    reasons.append("family-friendly")
+                elif trail['difficulty'] == 'hard':
+                    score -= 5    # hard trails are poor family choices
+
+            # ── Location ─────────────────────────────────────────────────
             if start_area:
                 region_match = start_area.lower() in trail.get('region', '').lower()
                 name_match   = start_area.lower() in trail.get('name', '').lower()
@@ -355,11 +365,24 @@ def get_recommendations():
                     score += 4
                     reasons.append(f"near {start_area}")
 
-            scored_trails.append({'trail': trail, 'score': score, 'reasons': reasons})
+            # ── Fix 2: Season awareness ───────────────────────────────────
+            best_season = trail.get('best_season', [])
+            if best_season:
+                if current_month in best_season:
+                    score += 2   # boost in-season trails
+                else:
+                    score -= 2   # penalise out-of-season
+                    warnings.append(f"best visited {best_season[0]}–{best_season[-1]}")
+            # Trails with no season set are year-round — no penalty
 
-        # Add a small daily jitter so results feel fresh each day.
-        # Seed = today's date, so results are stable within a day but
-        # rotate naturally without feeling random/broken.
+            scored_trails.append({
+                'trail': trail,
+                'score': score,
+                'reasons': reasons,
+                'warnings': warnings,
+            })
+
+        # Daily jitter — stable within a day, rotates each morning
         daily_rng = random.Random(datetime.now().strftime('%Y-%m-%d'))
         for item in scored_trails:
             item['score'] += daily_rng.uniform(0, 0.8)
@@ -369,35 +392,39 @@ def get_recommendations():
 
         results = []
         for i, item in enumerate(top_scored):
-            trail = process_trail_media(item['trail'])
-            reasons = item['reasons']
+            trail    = process_trail_media(item['trail'])
+            warnings = item['warnings']
 
-            # Build Josephine's reasoning blurb
-            if i == 0:
-                if reasons:
-                    reason_str = " · ".join(dict.fromkeys(reasons))  # deduplicate, keep order
-                    josephine_note = f"My top pick for you — {reason_str}. You're going to love it."
-                else:
-                    josephine_note = "This one just feels right for today. Trust me on this."
+            # ── Fix 1: Use Josephine's own written note ──────────────────
+            raw_note = trail.get('josephineNote') or trail.get('josephine_note') or {}
+            if isinstance(raw_note, dict):
+                josephine_note = raw_note.get('en') or raw_note.get('it') or ''
             else:
-                if reasons:
-                    reason_str = " · ".join(dict.fromkeys(reasons))
-                    josephine_note = f"Also great — {reason_str}."
-                else:
-                    josephine_note = "A solid alternative worth considering."
+                josephine_note = str(raw_note)
 
-            coords_list = trail.get('coordinates', [])
+            # Fallback if the trail has no note yet
+            if not josephine_note.strip():
+                josephine_note = (
+                    "This one just feels right for today. Trust me on this."
+                    if i == 0 else
+                    "A solid choice worth considering."
+                )
+
+            # Append season warning naturally if needed
+            if warnings:
+                josephine_note = josephine_note.rstrip('.') + f" — note: {warnings[0]}."
+
+            coords_list    = trail.get('coordinates', [])
             pois_formatted = [
                 {
-                    'type': poi.get('type', 'viewpoint'),
-                    'name': poi.get('name', ''),
-                    'coord': poi.get('coordinates', [0, 0]),
-                    'message': poi.get('description', '')
+                    'type':    poi.get('type', 'viewpoint'),
+                    'name':    poi.get('name', ''),
+                    'coord':   poi.get('coordinates', [0, 0]),
+                    'message': poi.get('description', ''),
                 }
                 for poi in trail.get('pois', [])
             ]
 
-            # Resolve best image: wallpaper > gallery[0] > image_url
             best_image = (
                 trail.get('wallpaper') or
                 (trail.get('gallery') or [None])[0] or
@@ -407,24 +434,27 @@ def get_recommendations():
             )
 
             results.append({
-                'id': trail['id'],
-                'name': trail['name'],
-                'distance_km': trail['distance_km'],
-                'duration_hours': trail['duration_hours'],
+                'id':               trail['id'],
+                'name':             trail['name'],
+                'distance_km':      trail['distance_km'],
+                'duration_hours':   trail['duration_hours'],
                 'elevation_gain_m': trail['elevation_gain_m'],
-                'difficulty': trail['difficulty'],
-                'geometry': {'type': 'LineString', 'coordinates': coords_list},
-                'pois': pois_formatted,
-                'tags': trail.get('interests', []),
-                'description': trail.get('description', ''),
-                'wallpaper': best_image,
-                'thumbnail': best_image,
-                'image_url': trail.get('image_url', ''),
-                'region': trail.get('region', ''),
-                'rating': trail.get('rating', 0),
-                'trail_type': trail.get('trail_type', ''),
-                'dog_friendly': trail.get('dog_friendly', False),
-                'josephine_note': josephine_note,
+                'difficulty':       trail['difficulty'],
+                'geometry':         {'type': 'LineString', 'coordinates': coords_list},
+                'pois':             pois_formatted,
+                'tags':             trail.get('interests', []),
+                'description':      trail.get('description', ''),
+                'wallpaper':        best_image,
+                'thumbnail':        best_image,
+                'image_url':        trail.get('image_url', ''),
+                'region':           trail.get('region', ''),
+                'rating':           trail.get('rating', 0),
+                'trail_type':       trail.get('trail_type', ''),
+                'dog_friendly':     trail.get('dog_friendly', False),
+                'family_friendly':  trail.get('family_friendly', False),
+                'best_season':      trail.get('best_season', []),
+                'josephine_note':   josephine_note,
+                'in_season':        current_month in trail.get('best_season', [current_month]),
             })
 
         return jsonify({'results': results})

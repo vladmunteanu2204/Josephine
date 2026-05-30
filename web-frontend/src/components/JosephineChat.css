@@ -540,3 +540,15 @@
 .jc-trail-card__cta:hover {
   background: #d4b85c;
 }
+
+.jc-trail-card__season-warn {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  color: #c9a84c;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 6px;
+  padding: 2px 8px;
+  margin-top: 4px;
+}
