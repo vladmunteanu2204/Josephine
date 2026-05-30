@@ -25,9 +25,12 @@ import time
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-TRAIL_BATCHES   = int(os.environ.get('SEED_TRAIL_BATCHES',   3))
-RIFUGIO_BATCHES = int(os.environ.get('SEED_RIFUGIO_BATCHES', 2))
-DRY_RUN         = os.environ.get('SEED_DRY_RUN') == '1'
+TRAIL_BATCHES        = int(os.environ.get('SEED_TRAIL_BATCHES',   9))   # 9 × 5 = 45 trails
+RIFUGIO_BATCHES      = int(os.environ.get('SEED_RIFUGIO_BATCHES', 4))   # 4 × 5 = 20 rifugios
+TRAIL_BATCH_SIZE     = int(os.environ.get('SEED_TRAIL_BATCH_SIZE',   5))
+RIFUGIO_BATCH_SIZE   = int(os.environ.get('SEED_RIFUGIO_BATCH_SIZE', 5))
+DRY_RUN              = os.environ.get('SEED_DRY_RUN') == '1'
+SEED_STATUS          = os.environ.get('SEED_STATUS', 'published')
 
 BASE_DIR      = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TRAILS_FILE   = os.path.join(BASE_DIR, 'data', 'trails.json')
@@ -101,7 +104,7 @@ Spread across regions: Dolomites, Val Gardena, Val Pusteria, Merano & Surroundin
 
 Each object MUST include ALL these fields:
 
-id ("rif-NNN" slug, e.g. "rif-042" — ensure uniqueness),
+id ("rif-NNN" slug where NNN is a random number between 020 and 099 — ensure uniqueness across all entries),
 name (authentic Italian/German alpine hut name),
 type ("rifugio" | "malga" | "bivacco"),
 region,
@@ -140,35 +143,50 @@ def haversine_km(lat1, lon1, lat2, lon2):
 
 
 def parse_json_response(text: str):
-    """Strip markdown fences if present and parse JSON."""
+    """Extract a JSON array from the response — handles markdown fences and leading text."""
     text = text.strip()
-    if text.startswith('```'):
-        lines = text.split('\n')
-        text = '\n'.join(lines[1:])  # drop first ```json line
-        if text.rstrip().endswith('```'):
-            text = text.rstrip()[:-3]
+    # Strip markdown fences
+    if '```' in text:
+        # Extract content between first ``` and last ```
+        parts = text.split('```')
+        for part in parts:
+            part = part.strip()
+            if part.startswith('json'):
+                part = part[4:].strip()
+            if part.startswith('[') or part.startswith('{'):
+                text = part
+                break
+    # Find the outermost JSON array
+    start = text.find('[')
+    end   = text.rfind(']')
+    if start != -1 and end != -1 and end > start:
+        text = text[start:end + 1]
     return json.loads(text)
 
 
 def generate_batch(prompt: str, n: int, retries: int = 3):
-    """Call Claude Haiku to generate n records. Retries on JSON parse error."""
+    """Call Claude to generate n records. Retries on JSON parse error."""
     for attempt in range(retries):
         try:
             print(f"  Generating batch of {n} (attempt {attempt + 1})…")
+            # Use simple replace instead of .format() — prompts contain
+            # literal {braces} for examples that confuse Python's formatter.
+            content = prompt.replace('{n}', str(n))
             resp = client.messages.create(
                 model='claude-haiku-4-5',
                 max_tokens=8192,
-                messages=[{'role': 'user', 'content': prompt.format(n=n)}],
+                messages=[{'role': 'user', 'content': content}],
             )
-            result = parse_json_response(resp.content[0].text)
+            raw = resp.content[0].text
+            result = parse_json_response(raw)
             if not isinstance(result, list):
-                raise ValueError("Response is not a JSON array")
+                raise ValueError(f"Response is not a JSON array — got: {type(result)}")
             print(f"  ✓ Got {len(result)} records")
             return result
         except Exception as e:
             print(f"  ✗ Attempt {attempt + 1} failed: {e}")
             if attempt < retries - 1:
-                time.sleep(3)
+                time.sleep(2)
     print("  ERROR: All retry attempts failed for this batch.")
     return []
 
@@ -189,8 +207,13 @@ def link_nearby(trails, rifugios, radius_km=10.0):
             r_coords = rif.get('coordinates', {})
             if not r_coords:
                 continue
-            r_lat = r_coords.get('lat') or r_coords.get('latitude')
-            r_lon = r_coords.get('lng') or r_coords.get('longitude')
+            if isinstance(r_coords, list) and len(r_coords) >= 2:
+                r_lat, r_lon = r_coords[1], r_coords[0]
+            elif isinstance(r_coords, dict):
+                r_lat = r_coords.get('lat') or r_coords.get('latitude')
+                r_lon = r_coords.get('lng') or r_coords.get('longitude')
+            else:
+                continue
             if r_lat and r_lon:
                 if haversine_km(t_lat, t_lon, r_lat, r_lon) <= radius_km:
                     nearby.append(rif['id'])
@@ -201,8 +224,13 @@ def link_nearby(trails, rifugios, radius_km=10.0):
         r_coords = rif.get('coordinates', {})
         if not r_coords:
             continue
-        r_lat = r_coords.get('lat') or r_coords.get('latitude')
-        r_lon = r_coords.get('lng') or r_coords.get('longitude')
+        if isinstance(r_coords, list) and len(r_coords) >= 2:
+            r_lat, r_lon = r_coords[1], r_coords[0]
+        elif isinstance(r_coords, dict):
+            r_lat = r_coords.get('lat') or r_coords.get('latitude')
+            r_lon = r_coords.get('lng') or r_coords.get('longitude')
+        else:
+            continue
         if not (r_lat and r_lon):
             continue
         nearby = []
@@ -222,8 +250,8 @@ def link_nearby(trails, rifugios, radius_km=10.0):
 def main():
     print("=" * 60)
     print("Alpenvia Seed Script")
-    print(f"Trails: {TRAIL_BATCHES} batch(es) × 15 = ~{TRAIL_BATCHES * 15} new trails")
-    print(f"Rifugios: {RIFUGIO_BATCHES} batch(es) × 10 = ~{RIFUGIO_BATCHES * 10} new rifugios")
+    print(f"Trails: {TRAIL_BATCHES} batch(es) × {TRAIL_BATCH_SIZE} = ~{TRAIL_BATCHES * TRAIL_BATCH_SIZE} new trails")
+    print(f"Rifugios: {RIFUGIO_BATCHES} batch(es) × {RIFUGIO_BATCH_SIZE} = ~{RIFUGIO_BATCHES * RIFUGIO_BATCH_SIZE} new rifugios")
     print("All records will be set to status='draft' — publish via Admin Panel.")
     if DRY_RUN:
         print("DRY RUN — files will not be written.")
@@ -243,10 +271,10 @@ def main():
     print(f"\n[TRAILS] Generating {TRAIL_BATCHES} batch(es)…")
     for i in range(TRAIL_BATCHES):
         print(f"  Batch {i + 1}/{TRAIL_BATCHES}")
-        batch = generate_batch(TRAIL_PROMPT, 15)
+        batch = generate_batch(TRAIL_PROMPT, TRAIL_BATCH_SIZE)
         for t in batch:
             if t.get('id') and t['id'] not in existing_trail_ids:
-                t['status'] = 'draft'  # enforce draft
+                t['status'] = SEED_STATUS
                 new_trails.append(t)
                 existing_trail_ids.add(t['id'])
             else:
@@ -258,7 +286,7 @@ def main():
     print(f"\n[RIFUGIOS] Generating {RIFUGIO_BATCHES} batch(es)…")
     for i in range(RIFUGIO_BATCHES):
         print(f"  Batch {i + 1}/{RIFUGIO_BATCHES}")
-        batch = generate_batch(RIFUGIO_PROMPT, 10)
+        batch = generate_batch(RIFUGIO_PROMPT, RIFUGIO_BATCH_SIZE)
         for r in batch:
             if r.get('id') and r['id'] not in existing_rifugio_ids:
                 r['status'] = 'draft'  # enforce draft

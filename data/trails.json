@@ -124,7 +124,9 @@
         "parking": "Free car park beside St. Johann Church, 60 spaces",
         "facilities": "WC, picnic benches at the church"
       },
-      "nearby_rifugios": [],
+      "nearby_rifugios": [
+        "rif-067"
+      ],
       "crowding": {
         "level": "high",
         "peak_months": [
@@ -3955,7 +3957,10 @@
         "facilities": "WC, café at cable car station"
       },
       "nearby_rifugios": [
-        "rif-001"
+        "rif-055",
+        "rif-001",
+        "rif-053",
+        "rif-005"
       ],
       "crowding": {
         "level": "medium",
@@ -13924,6 +13929,7 @@
         "facilities": "WC, mountain restaurants at ski base"
       },
       "nearby_rifugios": [
+        "rif-076",
         "rif-001"
       ],
       "crowding": {
@@ -15740,7 +15746,11 @@
         "parking": "Village centre, free with 2h limit; castle car park €2/day",
         "facilities": "WC in village, café at Schenna castle"
       },
-      "nearby_rifugios": [],
+      "nearby_rifugios": [
+        "rif-055",
+        "rif-053",
+        "rif-005"
+      ],
       "crowding": {
         "level": "low",
         "peak_months": [
@@ -17644,7 +17654,11 @@
         "parking": "Small free car park at waterfall entrance, 20 spaces",
         "facilities": "No WC at trailhead; WC in Lagundo village (5 min)"
       },
-      "nearby_rifugios": [],
+      "nearby_rifugios": [
+        "rif-055",
+        "rif-053",
+        "rif-005"
+      ],
       "crowding": {
         "level": "medium",
         "peak_months": [
@@ -19516,6 +19530,3951 @@
         "Panorama over the Vinschgau valley and the Ortler group to the south-west",
         "Ancient chestnut forest on the descent — beautiful amber colours in October"
       ]
+    },
+    {
+      "id": "seceda-ridge-loop",
+      "name": "Seceda Ridge Loop",
+      "region": "Val Gardena",
+      "difficulty": "medium",
+      "tagline": "A sweeping alpine traverse with Dolomite peaks framing every turn.",
+      "distance_km": 8.5,
+      "duration_hours": 4.5,
+      "elevation_gain_m": 520,
+      "elevation_loss_m": 520,
+      "trail_type": "loop",
+      "interests": [
+        "panoramic views",
+        "summits",
+        "alpine lakes"
+      ],
+      "description": "Starting from the Ortisei cable car station, this loop ascends to the Seceda summit (2,519m) via well-marked alpine pastures dotted with traditional rifugios. The ridge walk offers 360-degree views of the Sassolungo, Sella Group, and Ra Gusela formations, with sections crossing wild flower meadows in summer. The descent follows a gentler path through larch forests back to the valley floor.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Seceda Summit",
+          "type": "summit",
+          "description": "The iconic 2,519m peak offering unobstructed panoramic views across the entire Val Gardena basin."
+        },
+        {
+          "name": "Rifugio Seceda",
+          "type": "cultural",
+          "description": "A traditional alpine hut serving hearty Tyrolean cuisine with a sun-facing terrace overlooking the valley."
+        },
+        {
+          "name": "Sassolungo Viewpoint",
+          "type": "viewpoint",
+          "description": "A dramatic angle capturing the distinctive tower-like limestone formations of the Sassolungo massif."
+        }
+      ],
+      "rating": 4.7,
+      "reviews_count": 487,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "low",
+        "fitness": "medium",
+        "exposure": "medium"
+      },
+      "best_season": [
+        "June",
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc",
+        "cable_car"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "dolomites",
+        "valley views",
+        "cable car accessible",
+        "alpine hut"
+      ],
+      "josephineNote": {
+        "en": "Take the Seceda cable car up—it saves legs and the descent through the larch forest alone is worth the trip. I stopped at Rifugio Seceda for a speck and cheese platter around 2pm, and watched paragliders launching from the ridge while I ate. The wildflowers in July are outrageous."
+      },
+      "access_info": "From Bolzano, drive 45 minutes to Ortisei in Val Gardena. The trailhead is at the Seceda cable car station (Funivia Seceda) in the town center. Ample parking available at the base station.",
+      "opening_season": {
+        "start_date": "2024-06-01",
+        "end_date": "2024-10-31"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Parking at Seceda cable car base: 250 spaces, €4/day",
+        "bus": "SAD line 260 (Bolzano–Ortisei), runs hourly June–September, 75 minutes from Bolzano"
+      },
+      "trailhead_info": {
+        "parking": "250 spaces at cable car station, €4/day",
+        "facilities": "Cable car building has WC, café, rental shop"
+      },
+      "nearby_rifugios": [
+        {
+          "name": "Rifugio Seceda",
+          "elevation_m": 2519,
+          "distance_from_trail_km": 0
+        }
+      ],
+      "crowding": {
+        "level": "high",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Start the loop at dawn before 7am or visit in early June when crowds are thin but weather is stable."
+      },
+      "weather_notes": "Afternoon thunderstorms are common in summer; start early and descend by 2pm.",
+      "highlights": [
+        "Unobstructed 360-degree view of Sassolungo's distinctive tower formations",
+        "Wild flower meadows carpeting the upper slopes in July with Dolomite walls as backdrop",
+        "Larch forest descent with rhythmic switchbacks through dappled light"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "lago-sorapis-alpine-lake",
+      "name": "Lago di Sorapis Alpine Lake",
+      "region": "Val Pusteria",
+      "difficulty": "easy",
+      "tagline": "A stunningly turquoise glacial lake cradled in an amphitheater of pale limestone.",
+      "distance_km": 4.2,
+      "duration_hours": 2.5,
+      "elevation_gain_m": 280,
+      "elevation_loss_m": 280,
+      "trail_type": "out_and_back",
+      "interests": [
+        "alpine lakes",
+        "panoramic views",
+        "forests"
+      ],
+      "description": "This gentle out-and-back hike from Auronzo di Cadore leads through mixed spruce and larch forest to an enchanting turquoise glacial lake surrounded by soaring limestone walls. The lake's intense color—caused by suspended glacial sediment—looks almost unreal beneath the towering north face of Ra Gusela. The trail is well-maintained, family-friendly, and offers plenty of picnic spots near the shore.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Lago di Sorapis",
+          "type": "lake",
+          "description": "A pristine glacial lake with striking turquoise water reflecting the pale limestone amphitheater walls."
+        },
+        {
+          "name": "Ra Gusela North Face",
+          "type": "viewpoint",
+          "description": "The dramatic 1,000m limestone wall rising directly above the lake's eastern shore, creating a cathedral-like setting."
+        },
+        {
+          "name": "Rifugio Auronzo",
+          "type": "cultural",
+          "description": "A small mountain hut near the lake offering refreshments and shelter, with views back toward Auronzo valley."
+        }
+      ],
+      "rating": 4.6,
+      "reviews_count": 692,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "low",
+        "exposure": "low"
+      },
+      "best_season": [
+        "June",
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "wc",
+        "restaurants"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "turquoise lake",
+        "easy walk",
+        "photography",
+        "families"
+      ],
+      "josephineNote": {
+        "en": "The lake's color shifts throughout the day—I shot it in mid-morning with soft cloud cover and the turquoise was almost neon. Bring a light jacket; even in August there's a breeze at 1,900m. The path has zero technical challenge, making it perfect for dragging reluctant teenagers."
+      },
+      "access_info": "From Cortina d'Ampezzo, drive 30 minutes southeast to Auronzo di Cadore. Follow signs to 'Rifugio Auronzo' parking area. The trailhead is clearly marked at the parking lot entrance.",
+      "opening_season": {
+        "start_date": "2024-05-15",
+        "end_date": "2024-11-15"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Rifugio Auronzo parking: 80 spaces, €3/day",
+        "bus": "SAD line 440 (Cortina–Auronzo), 2–3 daily runs, June–September only"
+      },
+      "trailhead_info": {
+        "parking": "80 spaces at Rifugio Auronzo lot, €3/day",
+        "facilities": "WC at parking, rifugio café 50m up trail"
+      },
+      "nearby_rifugios": [
+        {
+          "name": "Rifugio Auronzo",
+          "elevation_m": 2320,
+          "distance_from_trail_km": 2.1
+        }
+      ],
+      "crowding": {
+        "level": "medium",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Visit on a weekday or in the shoulder months of June or September; early morning parking fills quickly on summer weekends."
+      },
+      "weather_notes": "Afternoon fog can obscure the lake; aim for morning visits and avoid midday if clouds are building.",
+      "highlights": [
+        "Turquoise glacial water so vivid it appears painted, reflecting Ra Gusela's limestone cathedral walls",
+        "Gentle forest path through larch and spruce with dappled sunlight on moss-covered roots",
+        "Intimate lake amphitheater where sound echoes off the 1,000m north face"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "merano-passeier-valley-cultural",
+      "name": "Merano & Passeier Valley Cultural Route",
+      "region": "Merano & Surroundings",
+      "difficulty": "easy",
+      "tagline": "A gentle valley walk weaving through vineyards, orchards, and medieval villages.",
+      "distance_km": 6.8,
+      "duration_hours": 3,
+      "elevation_gain_m": 180,
+      "elevation_loss_m": 180,
+      "trail_type": "out_and_back",
+      "interests": [
+        "cultural routes",
+        "panoramic views",
+        "forests"
+      ],
+      "description": "Beginning in the spa town of Merano, this easy riverside path follows the Passeier River through apple orchards and vineyard terraces, passing traditional farmhouses with painted shutters and small chapels. The trail weaves through the villages of Stetzing and Plödern, where you can taste local wines and visit centuries-old wine estates. The valley floor offers continuous mountain backdrops and minimal elevation change, making it accessible for all ages.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Merano Town Center",
+          "type": "cultural",
+          "description": "A belle époque spa town with a historic promenade, elegant gardens, and 15th-century castle."
+        },
+        {
+          "name": "Stetzing Chapel",
+          "type": "church",
+          "description": "A small Romanesque chapel dating to the 12th century, nestled among apple orchards."
+        },
+        {
+          "name": "Plödern Wine Estate",
+          "type": "cultural",
+          "description": "A traditional South Tyrolean wine estate offering tastings of local Vermentino and Lagrein varieties."
+        }
+      ],
+      "rating": 4.4,
+      "reviews_count": 234,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "very_low",
+        "exposure": "very_low"
+      },
+      "best_season": [
+        "April",
+        "May",
+        "September",
+        "October"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "wine country",
+        "cultural",
+        "easy walk",
+        "orchards"
+      ],
+      "josephineNote": {
+        "en": "Stop at one of the roadside wine estates—I tasted a mineral-driven Vermentino at Plödern around 11am, and they let me sit in their garden for an hour. The chapel at Stetzing has an unlocked door; the interior frescoes are faded but haunting. Skip this in July and August; May or October are perfect."
+      },
+      "access_info": "Merano is 30 minutes southwest of Bolzano by train or car. Park in the town center or at the Passeier trailhead parking area just south of town. The trail is well-signposted from Merano's main promenade.",
+      "opening_season": {
+        "start_date": null,
+        "end_date": null
+      },
+      "year_round": true,
+      "transport": {
+        "car": "Merano town parking: 600 spaces across multiple lots, €1–2/hour",
+        "bus": "SAD line 204 (Bolzano–Merano), runs hourly year-round, 45 minutes from Bolzano; also line 260 stops in Merano"
+      },
+      "trailhead_info": {
+        "parking": "600+ spaces in Merano town center, €1–2/hour",
+        "facilities": "Multiple WCs, cafés, wine bars in Merano"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "high",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Visit May or October when the weather is mild and crowds are minimal; locals do this walk often then."
+      },
+      "weather_notes": "Winter can bring fog in the valley; spring and fall offer ideal clear conditions.",
+      "highlights": [
+        "Terraced vineyards with heirloom grapevines against a backdrop of Ortler range peaks",
+        "12th-century Stetzing Chapel standing alone in an apple orchard, frescoes still faintly visible inside",
+        "Tasting room stops at traditional wine estates where Lagrein and Vermentino are still fermented in oak"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "tre-cime-grande-loop",
+      "name": "Tre Cime di Lavaredo Grande Loop",
+      "region": "Dolomites",
+      "difficulty": "hard",
+      "tagline": "An iconic Dolomite classic circumnavigating three iconic limestone towers with exposure and scrambling.",
+      "distance_km": 11.3,
+      "duration_hours": 7,
+      "elevation_gain_m": 1240,
+      "elevation_loss_m": 1240,
+      "trail_type": "loop",
+      "interests": [
+        "summits",
+        "panoramic views",
+        "glaciers"
+      ],
+      "description": "This demanding loop encircles the three legendary pinnacles of the Tre Cime (Three Peaks), ascending via steep scree and rock scrambles to reach the saddles between each tower. The route passes beneath the 500m north faces, offering vertiginous views into the void and across the Cortina basin to the Sorapis massif. Technical sections and substantial exposure demand sure-footedness, fitness, and commitment, rewarding skilled hikers with arguably the finest perspectives on these world-famous formations.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Tre Cime Summits",
+          "type": "summit",
+          "description": "Three iconic limestone towers (2,999m, 2,973m, 2,943m) rising vertically from the Lavaredo plateau—the most photographed peaks in the Alps."
+        },
+        {
+          "name": "Rifugio Auronzo",
+          "type": "cultural",
+          "description": "A substantial stone rifugio clinging to the rock at 2,320m, offering hot food and a chance to refuel mid-loop."
+        },
+        {
+          "name": "Tre Cime North Face Viewpoint",
+          "type": "viewpoint",
+          "description": "A dizzying vantage point directly beneath the 500m vertical walls, where the scale of the formations becomes vertiginous."
+        }
+      ],
+      "rating": 4.8,
+      "reviews_count": 1240,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "high",
+        "fitness": "high",
+        "exposure": "very_high"
+      },
+      "best_season": [
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "cable_car"
+      ],
+      "dog_friendly": false,
+      "family_friendly": false,
+      "tags": [
+        "dolomites",
+        "iconic",
+        "technical",
+        "exposure",
+        "scramble"
+      ],
+      "josephineNote": {
+        "en": "Start well before dawn—I began at 5:30am to beat crowds and finish the exposed sections in good light. The scramble around the Cima Grande's north face is genuinely exposed; one slip is serious. I took 6.5 hours moving steadily, and my calves still remember the descent. Eat at Rifugio Auronzo midway—you'll need it."
+      },
+      "access_info": "From Cortina d'Ampezzo, drive 20 minutes northeast to Misurina, then climb 15 minutes to the Tre Cime cable car base at Auronzo. Park at the large lot and take the cable car to 2,320m (or hike the approach).",
+      "opening_season": {
+        "start_date": "2024-07-01",
+        "end_date": "2024-09-30"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Tre Cime parking (Auronzo base): 400 spaces, €8/day during peak season",
+        "bus": "SAD line 440 (Cortina–Misurina–Tre Cime), 4–5 daily runs July–September"
+      },
+      "trailhead_info": {
+        "parking": "400 spaces at Auronzo base, €8/day",
+        "facilities": "WC at cable car base, gift shop, small café"
+      },
+      "nearby_rifugios": [
+        {
+          "name": "Rifugio Auronzo",
+          "elevation_m": 2320,
+          "distance_from_trail_km": 0
+        }
+      ],
+      "crowding": {
+        "level": "high",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Start at 5:30am or hike on weekdays in early July or late September; the trail becomes dangerously crowded with tourists by 9am in August."
+      },
+      "weather_notes": "Afternoon thunderstorms are common and dangerous on exposed terrain; descend by 3pm and avoid the loop if storms are forecast.",
+      "highlights": [
+        "Standing directly beneath the 500m north faces where perspective collapses and the towers appear to topple overhead",
+        "Rock scrambling around Cima Grande with feet dangling over the void and the entire Dolomite chain visible below",
+        "Sunrise hitting the pale limestone walls in shades of rose and gold before shadows reclaim the cirque"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "sarntaler-alm-lake-plateau",
+      "name": "Sarntal Alpine Lake Plateau",
+      "region": "Val Sarentino",
+      "difficulty": "medium",
+      "tagline": "A high-altitude plateau studded with glacial lakes and grazing marmots beneath the Sarntaler Weißspitze.",
+      "distance_km": 9.4,
+      "duration_hours": 5.5,
+      "elevation_gain_m": 740,
+      "elevation_loss_m": 740,
+      "trail_type": "loop",
+      "interests": [
+        "alpine lakes",
+        "wildlife",
+        "panoramic views",
+        "summits"
+      ],
+      "description": "Beginning in the Sarntal Valley north of Bolzano, this medium-difficulty loop ascends through beech forest onto the high plateau system of Sarntaler Alm, home to a string of pristine mountain lakes reflecting the jagged ridge of Sarntaler Weißspitze. The route traverses windswept alpine meadows where marmots whistle warnings and golden eagles circle, passing through traditional rifugio settlements and crossing streams fed by lingering snowpatches. The descent follows a water-carved ravine back into the forested valley floor.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Sarntaler Alm Plateau",
+          "type": "viewpoint",
+          "description": "An expansive high-altitude plateau dotted with glacial lakes and surrounded by 3,000m+ ridges on all sides."
+        },
+        {
+          "name": "Seebenalm Lake",
+          "type": "lake",
+          "description": "The largest of the plateau lakes, offering reflections of the Sarntaler Weißspitze and a small rifugio at its shore."
+        },
+        {
+          "name": "Rifugio Sarntaler Alm",
+          "type": "cultural",
+          "description": "A traditional alpine hut serving hearty Tyrolean fare and offering beds for overnight stays; a good refuel point."
+        }
+      ],
+      "rating": 4.5,
+      "reviews_count": 156,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "medium",
+        "fitness": "medium",
+        "exposure": "low"
+      },
+      "best_season": [
+        "June",
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "alpine lakes",
+        "wildlife",
+        "plateau",
+        "marmots"
+      ],
+      "josephineNote": {
+        "en": "The marmots are shameless—they'll approach your backpack if you set it down. I saw three golden eagles working the thermals above the plateau around 2pm, and a herd of about 50 Alpine chamois grazing on the far ridge. The beech forest on the ascent is cathedral-like and cool even in August. Rifugio Sarntaler Alm has excellent kasnocken (cheese dumplings) and a south-facing terrace."
+      },
+      "access_info": "From Bolzano, drive 25 minutes north to Sarntal village. Continue to the Sarntal Alm parking area at 1,600m. The trailhead is well-marked at the parking lot, with the ascent beginning through beech forest.",
+      "opening_season": {
+        "start_date": "2024-06-01",
+        "end_date": "2024-10-15"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Sarntal Alm parking: 120 spaces, €3/day",
+        "bus": "SAD line 252 (Bolzano–Sarntal), runs 3–4 times daily year-round, 35 minutes from Bolzano to Sarntal village; then local shuttle or taxi to parking"
+      },
+      "trailhead_info": {
+        "parking": "120 spaces at Sarntal Alm lot, €3/day",
+        "facilities": "WC at parking area, rifugio 2.5 hours up trail"
+      },
+      "nearby_rifugios": [
+        {
+          "name": "Rifugio Sarntaler Alm",
+          "elevation_m": 2350,
+          "distance_from_trail_km": 2.5
+        }
+      ],
+      "crowding": {
+        "level": "low",
+        "peak_months": [
+          "August"
+        ],
+        "quiet_tip": "This trail sees far fewer visitors than Seceda or Tre Cime; even in August it's peaceful on weekdays."
+      },
+      "weather_notes": "Summer afternoon thunderstorms are possible; the open plateau offers no shelter, so start early and descend by 3pm.",
+      "highlights": [
+        "A string of mirror-like glacial lakes reflecting jagged ridges, each with distinct mineral colors from turquoise to deep blue",
+        "Marmots and chamois herds on windswept meadows with the Sarntaler Weißspitze dominating the skyline",
+        "Ancient beech forest ascent where dappled light filters through moss-draped trees and streams cascade over dark stone"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "tre-cime-drei-zinnen-circuit",
+      "name": "Tre Cime Circuit (Drei Zinnen)",
+      "region": "Val Pusteria",
+      "difficulty": "hard",
+      "tagline": "The most iconic dolomitic traverse in Europe—three needle summits connected by dramatic exposed rock with chains and via ferrata.",
+      "distance_km": 10.2,
+      "duration_hours": 6,
+      "elevation_gain_m": 780,
+      "elevation_loss_m": 780,
+      "trail_type": "loop",
+      "interests": [
+        "summits",
+        "panoramic views",
+        "wildlife"
+      ],
+      "description": "This legendary circuit ascends to and traverses the three famous Tre Cime pinnacles (Cima Grande, Cima Ovest, Cima Piccola) via ladders, chains, and exposed rock scrambling at 2,900m+ altitude. The route combines breathtaking technical climbing with vertiginous exposure over limestone cliffs that plunge hundreds of meters to the Misurina valley below. Experienced alpinists relish this classic Italian alpine challenge; it demands sure footing, head for heights, and early morning starts to secure parking.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Cima Grande (Big Summit)",
+          "type": "summit",
+          "description": "The tallest of the three at 2,999m, offering the most exposure and the most rewarding panoramic views across the Veneto plains and Austrian Alps."
+        },
+        {
+          "name": "Rifugio Auronzo",
+          "type": "cultural",
+          "description": "A historic mountain refuge nestled at the base of the Tre Cime, serving warm meals and offering dormitory beds for overnight stays."
+        },
+        {
+          "name": "Lago di Misurina",
+          "type": "lake",
+          "description": "A pristine alpine lake 1,000m below the circuit, reflecting the needle peaks in its clear waters and offering a scenic return approach."
+        },
+        {
+          "name": "Passo Tre Croci Viewpoint",
+          "type": "viewpoint",
+          "description": "A mountain pass offering the most iconic photograph of the three peaks rising dramatically above the forested slopes."
+        }
+      ],
+      "rating": 4.9,
+      "reviews_count": 1247,
+      "image_url": "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "very_high",
+        "fitness": "high",
+        "exposure": "very_high"
+      },
+      "best_season": [
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc",
+        "first_aid"
+      ],
+      "dog_friendly": false,
+      "family_friendly": false,
+      "tags": [
+        "dolomites",
+        "three-peaks",
+        "via-ferrata",
+        "extreme-exposure"
+      ],
+      "josephineNote": {
+        "en": "Arrive by 6 AM during July–August or the parking will be full by 8 AM—I've seen 1,500+ people on this trail on peak days. The descent from Cima Grande involves iron ladders bolted directly to the rock face with a 500m drop; don't look down if you're prone to vertigo. Wear a helmet; rockfall from climbers above is real, and I witnessed a loose stone hit a hiker's shoulder in August. The chains between summits can be icy even in September at dawn."
+      },
+      "access_info": "From Cortina d'Ampezzo or Auronzo di Cadore (Val Pusteria), drive to Rifugio Auronzo parking (the main trailhead). The parking area sits at 2,320m via the steep Passo Tre Croci road. Public transport is limited; car is essential.",
+      "opening_season": {
+        "start_date": "2024-07-01",
+        "end_date": "2024-09-30"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Rifugio Auronzo parking: 200 spaces, €6 per day (often full by 8 AM)",
+        "bus": "No direct bus service; nearest SAD service is line 252 (Cortina–Auronzo), but does not reach trailhead"
+      },
+      "trailhead_info": {
+        "parking": "Rifugio Auronzo base: 200 spaces, €6/day, often full",
+        "facilities": "Toilets, restaurant, first aid station at Rifugio Auronzo"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "high",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Hike on weekdays in early July or late September; avoid weekends entirely during peak season when 1,500+ hikers are on the trail simultaneously."
+      },
+      "weather_notes": "Weather changes rapidly above 2,900m; afternoon thunderstorms and sudden fog are common—descend by 1 PM to avoid lightning exposure on exposed limestone.",
+      "highlights": [
+        "Iron ladders bolted directly into vertical dolomite walls, creating a vertical climbing experience with 500m+ exposure",
+        "The iconic three needle summits rising simultaneously into view as you round each bend—the most photographed mountains in the Dolomites",
+        "Clear-day views extending to the Julian Alps in Slovenia and the Veneto plains stretching toward the Adriatic Sea"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "merano-passeier-valley-ramble",
+      "name": "Merano & Passeier Valley Forest Ramble",
+      "region": "Merano & Surroundings",
+      "difficulty": "easy",
+      "tagline": "A gentle woodland stroll through chestnut and larch forests following mountain streams and visiting traditional villages.",
+      "distance_km": 6.8,
+      "duration_hours": 3,
+      "elevation_gain_m": 280,
+      "elevation_loss_m": 280,
+      "trail_type": "loop",
+      "interests": [
+        "forests",
+        "cultural routes",
+        "waterfalls"
+      ],
+      "description": "This forgiving circuit departs Merano's thermal spa promenade and ascends gently through fragrant chestnut groves and shaded larch forests alongside the babbling Passeier River. The trail passes the picturesque village of Saltaus (famous for its apricots and wine) and returns via a scenic waterfall viewpoint framed by ferns and mossy boulders. Interpretive signs explain the region's viticulture and traditional architecture, making it ideal for leisurely afternoon wandering.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Passeier River Waterfall",
+          "type": "waterfall",
+          "description": "A modest but charming 8-meter cascade tumbling through moss-covered boulders, surrounded by mist and ferns."
+        },
+        {
+          "name": "Saltaus Village",
+          "type": "cultural",
+          "description": "A traditional South Tyrolean wine village known for apricot cultivation, featuring stone farmhouses with timber balconies and a small church."
+        },
+        {
+          "name": "Merano Thermal Spa",
+          "type": "cultural",
+          "description": "A Belle Époque-style spa town famous for its thermal waters, Italian promenade, and elegant architecture; an excellent starting point for this trail."
+        }
+      ],
+      "rating": 4.3,
+      "reviews_count": 312,
+      "image_url": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1533694359331-835e20b1e945?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "low",
+        "exposure": "very_low"
+      },
+      "best_season": [
+        "April",
+        "May",
+        "June",
+        "September",
+        "October"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "family-friendly",
+        "forest-walk",
+        "cultural",
+        "easy"
+      ],
+      "josephineNote": {
+        "en": "Start from Merano's Spa Quarter parking (Thermenplatz) and grab a coffee at one of the promenade cafés before heading out—the wooded section stays cool even on hot days. The waterfall is most impressive in June during snowmelt; by August it's reduced to a trickle. Stop at the wine bar in Saltaus village (about halfway); the local Vermentino pairs perfectly with the apricot liqueur they produce there."
+      },
+      "access_info": "From Merano town center, head to the Spa Quarter (Kurviertel) and park at Thermenplatz parking lot. The trailhead begins near the thermal spa complex. Merano is easily reached by train (Trenitalia and SAD services) or car via the Passeier Valley road (SR44).",
+      "opening_season": {
+        "start_date": null,
+        "end_date": null
+      },
+      "year_round": true,
+      "transport": {
+        "car": "Thermenplatz parking (Merano spa complex): 400 spaces, €1.20/hour or €6/day",
+        "bus": "SAD line 260 (Merano–Passeier Valley) runs year-round, stopping in Saltaus village, 8–12 times daily"
+      },
+      "trailhead_info": {
+        "parking": "Thermenplatz: 400 spaces, €1.20/hour or €6/day",
+        "facilities": "Toilets, cafés, restaurants at spa complex"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "medium",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Hike on weekday mornings in April–May or September–October when the trail is virtually empty and the weather is ideal."
+      },
+      "weather_notes": "This low-altitude trail (280–560m) is rarely snow-covered; spring floods can make the riverside sections muddy.",
+      "highlights": [
+        "Shaded larch and chestnut forest groves with dappled sunlight and the scent of wild garlic in spring",
+        "The traditional wine village of Saltaus with terraced vineyards and baroque church steeple framed by walnut trees",
+        "Passeier River waterfall framed by moss-covered boulders and native ferns, most dramatic during June snowmelt"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "odle-fanes-traverse",
+      "name": "Odle–Fanes High Traverse",
+      "region": "Val Gardena",
+      "difficulty": "medium",
+      "tagline": "A stunning point-to-point alpine traverse connecting two UNESCO UNESCO World Heritage massifs with sweeping views and mountain rifugios.",
+      "distance_km": 12.3,
+      "duration_hours": 7,
+      "elevation_gain_m": 890,
+      "elevation_loss_m": 950,
+      "trail_type": "point_to_point",
+      "interests": [
+        "panoramic views",
+        "summits",
+        "alpine lakes"
+      ],
+      "description": "This rewarding high-altitude traverse starts at Passo Ghedina and traverses the jagged Odle massif, passing turquoise alpine lakes and rifugios, before descending into the Fanes valley and ascending to the Fanes plateau with its distinctive dolomitic walls and expansive meadows. The route combines demanding technical sections with serene wildflower-filled traverses, offering intimate mountain experiences and opportunities to stay overnight at traditional mountain refuges. Expect narrow ledges, chains on steeper sections, and weather exposure at 2,700–2,900m.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Rifugio Fedare",
+          "type": "cultural",
+          "description": "A rustic mountain hut perched on a saddle between the Odle peaks, serving hearty Tyrolean cuisine and offering dormitory beds."
+        },
+        {
+          "name": "Lago di Sorapis",
+          "type": "lake",
+          "description": "An impossibly turquoise alpine lake ringed by limestone peaks, a classic Dolomites photography spot and refreshing rest point."
+        },
+        {
+          "name": "Fanes Plateau Meadows",
+          "type": "viewpoint",
+          "description": "Expansive alpine meadows dotted with wildflowers (June–August) and offering unobstructed views of the Ra Gusela and Nuvolau peaks."
+        }
+      ],
+      "rating": 4.6,
+      "reviews_count": 658,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "medium",
+        "fitness": "medium",
+        "exposure": "medium"
+      },
+      "best_season": [
+        "June",
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "restaurants",
+        "wc"
+      ],
+      "dog_friendly": false,
+      "family_friendly": false,
+      "tags": [
+        "alpine-traverse",
+        "rifugios",
+        "dolomites",
+        "high-altitude"
+      ],
+      "josephineNote": {
+        "en": "Plan to stay overnight at Rifugio Fedare (reserve ahead!) and hike this as a two-day adventure—rushing the 12km in a single day leaves no time to savor the Odle peaks and Fanes plateau properly. The Lago di Sorapis is at its most stunning in early morning light; if you overnight at Fedare, wake at 5 AM and walk the extra 20 minutes to catch sunrise reflections. Bring gaiters; the meadow section north of Fedare is boggy even in September."
+      },
+      "access_info": "Drive to Passo Ghedina (2,135m) via the Colle Santa Lucia road from Cortina or Val Gardena. Parking is available at the pass. Arrange shuttle from Fanes valley (Rifugio Fedare can advise) or hike back to the starting point via an alternate descent.",
+      "opening_season": {
+        "start_date": "2024-06-15",
+        "end_date": "2024-09-30"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Passo Ghedina parking: 80 spaces, €4 per day",
+        "bus": "No direct bus to trailhead; SAD line 340 serves Val Gardena and Cortina; private shuttle services available June–September"
+      },
+      "trailhead_info": {
+        "parking": "Passo Ghedina: 80 spaces, €4/day",
+        "facilities": "None at trailhead; nearest facilities at Rifugio Fedare (5km into trail)"
+      },
+      "nearby_rifugios": [
+        "Rifugio Fedare (on-trail, overnight beds available)"
+      ],
+      "crowding": {
+        "level": "medium",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Hike on weekdays in early June or late September; this traverse is less crowded than Tre Cime, offering solitude in the high meadows."
+      },
+      "weather_notes": "Afternoon thunderstorms are frequent above 2,700m; descend from exposed ridge sections by 1 PM.",
+      "highlights": [
+        "The jagged Odle massif pinnacles rising dramatically above the trail with intimate close-up views of dolomitic formations",
+        "Lago di Sorapis's impossibly turquoise waters reflecting needle peaks—one of the Dolomites' most iconic alpine lake views",
+        "Fanes plateau's wildflower-filled meadows (June–August) stretching beneath Ra Gusela's distinctive mushroom-shaped summit"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "bolzano-gummer-joch-loop",
+      "name": "Bolzano to Gummer Joch Alpine Loop",
+      "region": "Bolzano & Surroundings",
+      "difficulty": "easy",
+      "tagline": "A scenic mid-elevation circuit from Bolzano's outskirts through vineyards, forests, and mountain meadows with medieval castles and wine villages.",
+      "distance_km": 7.2,
+      "duration_hours": 3.5,
+      "elevation_gain_m": 420,
+      "elevation_loss_m": 420,
+      "trail_type": "loop",
+      "interests": [
+        "cultural routes",
+        "forests",
+        "panoramic views"
+      ],
+      "description": "This accessible loop departs the city suburbs of Bolzano and ascends through terraced apple orchards and Pinot Grigio vineyards toward the Gummer Joch alpine pass (1,666m), passing the striking ruins of Runkelstein Castle perched on a rocky outcrop. The descent through mixed larch and pine forests offers respite and shade, returning past traditional Tyrolean farmhouses with their distinctive timber balconies and decorated lintels. The trail exemplifies South Tyrol's unique blend of alpine geography and viticulture heritage.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Runkelstein Castle Ruins",
+          "type": "cultural",
+          "description": "A striking 13th-century fortress ruin dramatically positioned on a rocky crag overlooking Bolzano, featuring medieval frescoes in the keep."
+        },
+        {
+          "name": "Gummer Joch Mountain Pass",
+          "type": "viewpoint",
+          "description": "A scenic 1,666m saddle offering panoramic views of the Dolomites to the east and the Rhaetian Alps to the north."
+        },
+        {
+          "name": "Siebeneich Wine Village",
+          "type": "cultural",
+          "description": "A traditional South Tyrolean village with a baroque church, wine bars serving Pinot Grigio and Lagrein, and craft shops."
+        }
+      ],
+      "rating": 4.2,
+      "reviews_count": 389,
+      "image_url": "https://images.unsplash.com/photo-1533694359331-835e20b1e945?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1533694359331-835e20b1e945?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1533694359331-835e20b1e945?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "low",
+        "exposure": "very_low"
+      },
+      "best_season": [
+        "April",
+        "May",
+        "September",
+        "October"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "easy-loop",
+        "viticulture",
+        "cultural-heritage",
+        "family"
+      ],
+      "josephineNote": {
+        "en": "Park near Siebeneich village (not at the city edge) and do the loop in reverse to visit the castle ruins early before day-trippers arrive. Stop at Weingut Kränzelhof halfway up (their Pinot Grigio is exceptional) for a leisurely wine tasting; they'll happily serve glasses on the terrace. The castle offers minimal shade, so hike this in early morning or late afternoon. Spring (April–May) is ideal when apple blossoms blanket the orchards and wildflowers line the path."
+      },
+      "access_info": "From Bolzano city center, drive northeast toward Siebeneich village (via the Siebeneich road, about 8km from Bolzano center). Park at Siebeneich village parking. The trailhead begins near the village church. Bolzano is served by train (ÖBB and Trenitalia) and multiple SAD bus lines.",
+      "opening_season": {
+        "start_date": null,
+        "end_date": null
+      },
+      "year_round": true,
+      "transport": {
+        "car": "Siebeneich village parking: 60 spaces, free",
+        "bus": "SAD line 204 (Bolzano–Siebeneich) runs year-round, stopping in village center, 12–18 times daily"
+      },
+      "trailhead_info": {
+        "parking": "Siebeneich village: 60 spaces, free",
+        "facilities": "Toilets and restaurants in village; no facilities at trailhead proper"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "low",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Hike weekday mornings in April–May or September–October; the trail is virtually empty outside summer, and the weather is more pleasant."
+      },
+      "weather_notes": "This mid-elevation trail (450–1,666m) is rarely snow-covered; May and September are ideal for weather stability.",
+      "highlights": [
+        "Runkelstein Castle's dramatic rocky outcrop with medieval frescoes and panoramic views of Bolzano city spread below",
+        "Terraced vineyards dotted with apple orchards and traditional timber-frame Tyrolean farmhouses with decorated lintels and geranium-filled balconies",
+        "Mixed larch and pine forest descent offering cool shade and the scent of wild mushrooms (autumn) and fresh alpine vegetation (spring)"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "tre-cime-sorau-loop",
+      "name": "Tre Cime di Lavaredo Circuit",
+      "region": "Dolomites",
+      "difficulty": "hard",
+      "tagline": "The most iconic Dolomite peaks in one strenuous loop with via ferrata scrambles and breathtaking exposure.",
+      "distance_km": 12.0,
+      "duration_hours": 6.0,
+      "elevation_gain_m": 1180,
+      "elevation_loss_m": 1180,
+      "trail_type": "loop",
+      "interests": [
+        "summits",
+        "panoramic views",
+        "via ferrata"
+      ],
+      "description": "This demanding loop circles the famous Tre Cime, approaching from Lago di Sorau and incorporating sections of the original WWI Paternsattel via ferrata with metal rungs bolted into near-vertical limestone walls. The three distinctive towers—Grande, Ovest, and Piccola—rise like Gothic cathedrals from the surrounding meadows. Exposure reaches 200+ meters on several sections; only suitable for experienced hikers comfortable with scrambling and chains.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Tre Cime di Lavaredo",
+          "type": "summit",
+          "description": "Three iconic limestone towers considered the symbol of the Dolomites, visible from dozens of peaks across the range."
+        },
+        {
+          "name": "Lago di Sorau",
+          "type": "lake",
+          "description": "A pristine alpine lake with emerald waters, the traditional starting point for Tre Cime circuits."
+        },
+        {
+          "name": "Rifugio Tre Cime",
+          "type": "cultural",
+          "description": "Historic mountain hut at 2367m with wartime artifacts and panoramic outdoor seating."
+        },
+        {
+          "name": "Paternsattel Via Ferrata",
+          "type": "viewpoint",
+          "description": "Original WWI climbing route with restored metal rungs offering thrilling exposed sections between the cimes."
+        }
+      ],
+      "rating": 4.7,
+      "reviews_count": 890,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "high",
+        "fitness": "high",
+        "exposure": "very_high"
+      },
+      "best_season": [
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc",
+        "first_aid"
+      ],
+      "dog_friendly": false,
+      "family_friendly": false,
+      "tags": [
+        "tre-cime",
+        "via-ferrata",
+        "dolomites",
+        "expert-only",
+        "exposure"
+      ],
+      "josephineNote": {
+        "en": "Bring climbing gloves—the metal rungs on the Paternsattel section will shred unprotected hands. The crux between Tre Cime Grande and Ovest has a 30-meter vertical scramble with chains; test your grip strength before committing. Start at 6am from Lago di Sorau to avoid crowding on the metal sections and finish before afternoon lightning risk at 2pm."
+      },
+      "access_info": "Cortina d'Ampezzo, 14 km north. Drive on SR48 toward Misurina, then follow signs to Lago di Sorau. Large parking area with 300+ spaces at lake trailhead, €3 per day. Shuttle buses run hourly from nearby towns during peak season.",
+      "opening_season": {
+        "start_date": "2024-07-01",
+        "end_date": "2024-09-30"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "300+ spaces at Lago di Sorau, €3/day; shuttle buses available from Cortina (SAD line 442)",
+        "bus": "SAD line 442 from Cortina to Lago di Sorau shuttle, hourly June–September, 30 min ride"
+      },
+      "trailhead_info": {
+        "parking": "300+ spaces at lake, €3/day",
+        "facilities": "WC at parking, small snack bar, first aid post at Rifugio Tre Cime"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "high",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Avoid weekends in July–August entirely. Mid-week September mornings (especially Tuesday–Wednesday) see 70% fewer hikers on the via ferrata sections."
+      },
+      "weather_notes": "Afternoon thunderstorms and sudden weather changes are common; the exposed via ferrata sections become dangerous in lightning, requiring descent by 1pm latest.",
+      "highlights": [
+        "Traversing the Paternsattel via ferrata with your hands on century-old metal rungs, feeling the same exposure as WWI soldiers",
+        "The Gran Cime tower rising 300m vertically directly above your position with nothing but air beneath",
+        "Sunset views from Rifugio Tre Cime looking down on the entire Ampezzan plain, turning the limestone towers blood-red"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "merano-wanderweg-easy",
+      "name": "Merano Promenade & Passirio Valley",
+      "region": "Merano & Surroundings",
+      "difficulty": "easy",
+      "tagline": "A gentle waterside stroll through medieval Merano and along the crystal Passirio River through vineyards.",
+      "distance_km": 6.0,
+      "duration_hours": 2.0,
+      "elevation_gain_m": 85,
+      "elevation_loss_m": 85,
+      "trail_type": "out_and_back",
+      "interests": [
+        "forests",
+        "cultural routes",
+        "panoramic views"
+      ],
+      "description": "This leisurely walk follows the famous Merano Passeggiata (promenade) through the elegant spa town, then traces the emerald Passirio River northward into vineyards and chestnut forests. The route passes the Gothic Duomo di Merano and traditional wine estates (Weinstrasse) before reaching a small waterfall in a ferny gorge. Perfect for a morning stroll followed by coffee in Merano's historic Piazza del Duomo.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Duomo di Merano",
+          "type": "church",
+          "description": "15th-century Gothic cathedral with intricate stonework and a distinctive spire dominating Merano's medieval center."
+        },
+        {
+          "name": "Passirio River Gorge",
+          "type": "waterfall",
+          "description": "A narrow ferny gorge where the Passirio tumbles over moss-covered rocks, creating a natural amphitheater of sound."
+        },
+        {
+          "name": "Weinstrasse (Wine Route)",
+          "type": "cultural",
+          "description": "Historic vineyard estates lining the route where Merano's famous light wines (Vermentino, Schiava) have been produced for centuries."
+        },
+        {
+          "name": "Passeggiata Lungo Passirio",
+          "type": "viewpoint",
+          "description": "The elegant promenade with plane trees offering views back to the town and Alpine peaks beyond."
+        }
+      ],
+      "rating": 4.6,
+      "reviews_count": 650,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "very_low",
+        "exposure": "very_low"
+      },
+      "best_season": [
+        "April",
+        "May",
+        "June",
+        "September",
+        "October"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc",
+        "first_aid"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "easy-walk",
+        "merano",
+        "cultural-heritage",
+        "river-walk",
+        "wine-region"
+      ],
+      "josephineNote": {
+        "en": "Stop at Café Wanderer on the Passeggiata exactly at 10:30am for their fresh apple strudel—it's only made fresh until 11am and locals queue for it. The Passirio River gorge has the best fern display and clearest water in early June after spring melt. Skip the route if it's been raining heavily; the Passirio can rise suddenly and block the gorge path."
+      },
+      "access_info": "Merano town center. Park in the central Piazza del Duomo (paid lot, €1.50/hour) or the larger Postplatz lot (500 spaces). Trailhead begins at the northern end of the Passeggiata near the Therme (spa complex).",
+      "opening_season": {
+        "start_date": null,
+        "end_date": null
+      },
+      "year_round": true,
+      "transport": {
+        "car": "Merano Piazza del Duomo: 150 spaces, €1.50/hour. Postplatz: 500 spaces, €1.50/hour",
+        "bus": "SAD lines 204 and 206 run every 10–15 min from Bolzano to Merano central station (30 min), year-round"
+      },
+      "trailhead_info": {
+        "parking": "Multiple lots in Merano center, €1.50/hour",
+        "facilities": "Numerous cafés, restaurants, WC facilities throughout town"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "medium",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Walk the promenade section between 8–9am before tourists emerge from hotels; the Passirio gorge stays quiet even mid-day because it requires a slight effort to reach."
+      },
+      "weather_notes": "The route is pleasant year-round, though Passirio gorge becomes slippery after rain and the promenade may be crowded during afternoon heat.",
+      "highlights": [
+        "The Gothic Duomo di Merano's intricate façade framed by plane trees as you approach from the north",
+        "Stepping into the cool, fern-draped Passirio gorge where the sound of rushing water echoes off limestone walls",
+        "Tasting Vermentino wine at a Weinstrasse estate house where the vineyard slopes directly overlook your tasting table"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "bolzano-kohlern-forest-loop",
+      "name": "Bolzano–Guntschna Forest Loop",
+      "region": "Bolzano & Surroundings",
+      "difficulty": "easy",
+      "tagline": "A shaded forest circuit above Bolzano offering surprising solitude and views over the Südtiroler wine country.",
+      "distance_km": 7.5,
+      "duration_hours": 2.5,
+      "elevation_gain_m": 320,
+      "elevation_loss_m": 320,
+      "trail_type": "loop",
+      "interests": [
+        "forests",
+        "panoramic views",
+        "loop trail"
+      ],
+      "description": "Starting from the Kohlern cable car station, this loop descends through dense larch and spruce forest, passing the Guntschna hut, then circles back via the Ritten plateau with views across the Isarco Valley to the Dolomites. The forest is remarkably cool even on hot days, and wildflowers carpet the understory in early summer. The trail is quiet because most visitors take the cable car up and down rather than walking.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Ritten Plateau Viewpoint",
+          "type": "viewpoint",
+          "description": "An open meadow area with benches offering broad views south across vineyards toward the Dolomites' lower foothills."
+        },
+        {
+          "name": "Guntschna Rifugio",
+          "type": "cultural",
+          "description": "Family-run mountain hut serving fresh Speck and Casunziei (filled pasta), popular with local families on weekends."
+        },
+        {
+          "name": "Schwarzseespitz Forest",
+          "type": "viewpoint",
+          "description": "A dense, primordial spruce forest section where shafts of morning light pierce the canopy."
+        }
+      ],
+      "rating": 4.4,
+      "reviews_count": 420,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "low",
+        "fitness": "low",
+        "exposure": "low"
+      },
+      "best_season": [
+        "May",
+        "June",
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "cable_car",
+        "parking",
+        "restaurants",
+        "wc"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "forest-walk",
+        "bolzano",
+        "cable-car",
+        "loop-trail",
+        "local-secret"
+      ],
+      "josephineNote": {
+        "en": "Start your loop by descending through the Schwarzseespitz forest (not taking the cable car down) to experience the primordial spruce silence—most visitors miss this by going down the cable car. Guntschna hut's Casunziei are made fresh daily at 11am; arrive then and you'll eat them warm. The Ritten plateau section is boggy and muddy until mid-June; wear trail shoes with good grip."
+      },
+      "access_info": "Bolzano city center, 2.5 km east. Follow signs for 'Ritten Bahn' (cable car) on the eastern edge of the city. Free parking lot at the cable car base with 200 spaces. Trailhead begins at cable car upper station (Kohlern).",
+      "opening_season": {
+        "start_date": "2024-05-01",
+        "end_date": "2024-10-31"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "200 free spaces at Ritten Bahn base station",
+        "bus": "SAD line 252 from Bolzano city center to Ritten Bahn station, 15 min, runs every 20 min during summer"
+      },
+      "trailhead_info": {
+        "parking": "200 free spaces at cable car station",
+        "facilities": "WC at cable car station, snack bar, souvenir shop"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "low",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "This trail stays relatively quiet year-round because tourists prefer cable car rides; mid-week afternoons in June are nearly empty."
+      },
+      "weather_notes": "The forest provides shade on hot days; the route can be muddy and slippery through June due to snowmelt runoff.",
+      "highlights": [
+        "The hushed primordial spruce forest where little light penetrates and the air smells of earth and resin",
+        "Fresh warm Casunziei served at Guntschna with a view across the Isarco Valley to the Dolomites",
+        "The relative solitude of this loop—feeling like a local on a secret forest path while others queue for cable cars"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "passo-giau-alpine-circuit",
+      "name": "Passo Giau Alpine Lakes Circuit",
+      "region": "Val Pusteria",
+      "difficulty": "medium",
+      "tagline": "A stunning high-altitude circuit across windswept passes with turquoise lakes and panoramic Alpine views.",
+      "distance_km": 10.5,
+      "duration_hours": 4.5,
+      "elevation_gain_m": 680,
+      "elevation_loss_m": 680,
+      "trail_type": "loop",
+      "interests": [
+        "alpine lakes",
+        "panoramic views",
+        "summits"
+      ],
+      "description": "This moderate circuit climbs from the Tre Croci mountain hut to Passo Giau (2236m), then descends along a chain of glacial lakes including Lago d'Sorau and Lago di Ghedina before ascending to Ra Gusela viewpoint. The trail traverses exposed alpine grassland with unobstructed 360-degree views across the Ampezzan valleys. Clear water and jagged limestone peaks create a landscape of stark beauty.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Passo Giau Summit",
+          "type": "summit",
+          "description": "A historic Alpine pass at 2236m with a small chapel and panoramic restaurant offering views across three provinces."
+        },
+        {
+          "name": "Lago d'Sorau",
+          "type": "lake",
+          "description": "A pristine turquoise glacial lake ringed by steep grass slopes and limestone peaks."
+        },
+        {
+          "name": "Ra Gusela Viewpoint",
+          "type": "viewpoint",
+          "description": "A dramatic limestone pinnacle offering 360-degree views down into Val Colle Santa Lucia and across the Dolomite massifs."
+        },
+        {
+          "name": "Rifugio Tre Croci",
+          "type": "cultural",
+          "description": "A historic mountain hut at the pass entrance, serving warm Südtiroler soup and fresh apple cake."
+        }
+      ],
+      "rating": 4.7,
+      "reviews_count": 745,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "medium",
+        "fitness": "medium",
+        "exposure": "medium"
+      },
+      "best_season": [
+        "June",
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "alpine-lakes",
+        "passo-giau",
+        "val-pusteria",
+        "high-altitude",
+        "panoramic"
+      ],
+      "josephineNote": {
+        "en": "Hike counterclockwise from Tre Croci, summiting Passo Giau first—this puts the sun at your back for photography and you'll have the ascent while fresh. The lakes are coldest in early July (snowmelt) but clearest; by August they're 2°C warmer but slightly murkier. Bring layers; the pass sits in clouds frequently even when valleys below are clear—weather changes in 15 minutes."
+      },
+      "access_info": "Cortina d'Ampezzo, 16 km north. Drive on SR48 toward Misurina, following signs to Tre Croci. Large parking area with 400+ spaces. Trailhead begins at Rifugio Tre Croci on the pass road.",
+      "opening_season": {
+        "start_date": "2024-06-01",
+        "end_date": "2024-09-30"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "400+ spaces at Tre Croci, free parking",
+        "bus": "SAD line 442 from Cortina toward Tre Croci (limited service); no frequent direct bus to trailhead"
+      },
+      "trailhead_info": {
+        "parking": "400+ free spaces at Tre Croci",
+        "facilities": "Rifugio Tre Croci has WC, restaurant, gift shop"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "medium",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Start your hike at 6:30am from the lower Tre Croci parking area to be at Passo Giau before tour buses arrive at 10am; afternoon crowds are intense."
+      },
+      "weather_notes": "The exposed pass and high meadows are prone to sudden afternoon thunderstorms and rapid visibility loss; descend to lower elevation by 2pm.",
+      "highlights": [
+        "Cresting Passo Giau and seeing the chapel silhouetted against infinite Alpine vistas stretching into three provinces",
+        "The jewel-like turquoise waters of Lago d'Sorau surrounded by grass slopes steeper than you'd think possible",
+        "Standing on Ra Gusela pinnacle with vertigo-inducing drops on all sides and the Ampezzan valleys sprawling below"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "lago-di-braies-circuit",
+      "name": "Lago di Braies Circuit",
+      "region": "Val Pusteria",
+      "difficulty": "easy",
+      "tagline": "Crystal waters ringed by 1,000m vertical cliffs create an almost supernatural mountain amphitheater.",
+      "distance_km": 3.8,
+      "duration_hours": 1.5,
+      "elevation_gain_m": 120,
+      "elevation_loss_m": 120,
+      "trail_type": "loop",
+      "interests": [
+        "alpine lakes",
+        "panoramic views",
+        "forests"
+      ],
+      "description": "This gentle circumnavigation of the Dolomites' most photographed lake begins from the parking area and follows a well-maintained path through dense pine forest before emerging at the shoreline. The stunning Tre Cime di Lavaredo peaks tower 1,200m directly above the impossibly blue water, creating an otherworldly scene best experienced at dawn or dusk. The entire circuit is paved in sections and utterly flat, making it perfect for families, yet the dramatic geology feels wild and untamed.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Tre Cime di Lavaredo",
+          "type": "summit",
+          "description": "UNESCO World Heritage peaks forming the most recognizable mountain silhouette in the Dolomites, towering directly above the lake's north shore."
+        },
+        {
+          "name": "Rifugio Fedare",
+          "type": "cultural",
+          "description": "Cozy lakeside hut offering fresh trout, speck sandwiches, and unbeatable views from its waterfront terrace."
+        },
+        {
+          "name": "Lake Viewpoint Platform",
+          "type": "viewpoint",
+          "description": "Wooden platform on the east shore providing the classic postcard angle with Tre Cime framed perfectly behind the blue water."
+        }
+      ],
+      "rating": 4.6,
+      "reviews_count": 1847,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "very_low",
+        "exposure": "low"
+      },
+      "best_season": [
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc",
+        "first_aid"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "lake",
+        "easy-walk",
+        "dolomites",
+        "family-friendly"
+      ],
+      "josephineNote": {
+        "en": "Arrive by 6:30am (parking fills by 10am in summer) and do the circuit counterclockwise—you'll have the west shore's golden morning light reflected off the water while morning mist still clings to the Tre Cime. Bring a swimsuit; the water reaches 18°C by late July and a quick dip near the south shore's pebble beach is absolutely restorative."
+      },
+      "access_info": "From Cortina d'Ampezzo, drive 13km north on SS48 toward Passo Ghedina, then follow signs to Lago di Braies. The large parking area is at 1,923m elevation, just above the lake's northern edge.",
+      "opening_season": {
+        "start_date": "2024-05-01",
+        "end_date": "2024-10-31"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Parking at Lago di Braies: 250 spaces, €5/day in high season (July-August), €3/day shoulder season. Gates close at 8pm; arrive early.",
+        "bus": "SAD line 442 from Cortina d'Ampezzo to Lago di Braies (seasonal, 2-3 times daily June-September). Stop: Lago di Braies. No winter service."
+      },
+      "trailhead_info": {
+        "parking": "250 spaces at lot; often full by 9am in peak season",
+        "facilities": "WC at parking area, restaurant/bar at Rifugio Fedare halfway around lake, first aid station"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "high",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Hike very early (6-7am) or visit on weekdays in June or September; most tour groups arrive 10am-4pm. Evening walk after 5pm is also peaceful with golden light."
+      },
+      "weather_notes": "Afternoon thunderstorms are common July-August; the lake can be dangerously windy, and afternoon mist obscures the Tre Cime frequently.",
+      "highlights": [
+        "The moment you first glimpse the Tre Cime's triple summit perfectly mirrored in the glassy lake water at sunrise",
+        "Swimming in the impossibly clear blue water with mountain peaks towering above—a surreal Alpine experience",
+        "The wooden boathouses and traditional Tyrolean rifugio nestled against the cliff base, unchanged for decades"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "merano-tappeiner-promenade",
+      "name": "Merano Tappeiner Promenade",
+      "region": "Merano & Surroundings",
+      "difficulty": "easy",
+      "tagline": "A leisurely clifftop walk through Mediterranean gardens overlooking the Passeier Valley, perfect for morning strolls.",
+      "distance_km": 6.2,
+      "duration_hours": 2,
+      "elevation_gain_m": 180,
+      "elevation_loss_m": 180,
+      "trail_type": "point_to_point",
+      "interests": [
+        "panoramic views",
+        "cultural routes"
+      ],
+      "description": "Built in 1910 and winding along the slopes above Merano town, this famous promenade combines 19th-century elegance with Alpine scenery, offering continuous views across terraced vineyards toward the Ötztal peaks. The path is meticulously maintained with stone benches, informational plaques about local flora, and access to hidden side trails leading into olive groves and apple orchards. You'll pass botanical gardens and encounter locals taking their constitutional walks, giving the experience a genteel, timeless atmosphere.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Merano Town Center",
+          "type": "cultural",
+          "description": "Historic medieval town with thermal baths, Gothic cathedral, and elegant 19th-century architecture serving as the trail's starting point."
+        },
+        {
+          "name": "Botanical Gardens (South Route)",
+          "type": "viewpoint",
+          "description": "Terraced Mediterranean and alpine gardens with specimens from across the world, set against mountain backdrops."
+        },
+        {
+          "name": "Schloss Tirol",
+          "type": "cultural",
+          "description": "13th-century castle overlooking the Passeier Valley, accessible via a short detour from the main promenade path."
+        }
+      ],
+      "rating": 4.4,
+      "reviews_count": 687,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "low",
+        "exposure": "low"
+      },
+      "best_season": [
+        "April",
+        "May",
+        "September",
+        "October"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc",
+        "first_aid"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "promenade",
+        "cultural-walk",
+        "merano",
+        "historical"
+      ],
+      "josephineNote": {
+        "en": "Walk this at 10am on a Thursday in May when locals are out but not tourists. Stop for coffee and apple strudel at Café Tappeiner (the café with the same name as the promenade, midway through)—their homenade linzer torte is incomparable, and the owner Karl will tell you forgotten stories about Merano's Belle Époque era if you ask."
+      },
+      "access_info": "Merano is 30km south of Bolzano via SS44. Park in the town center parking garage (Parkhaus Stadtmitte) and walk uphill to reach the promenade entrance near the train station. The path begins at 320m elevation on the town's northern edge.",
+      "opening_season": null,
+      "year_round": true,
+      "transport": {
+        "car": "Parkhaus Stadtmitte: 600 spaces, €2.20/hour or €15/day. Limited free parking on street near train station.",
+        "bus": "SAD line 204/206 from Bolzano central station to Merano (every 20-30 minutes year-round, 50-minute journey). Stop: Merano Zentrum. Local Merano buses connect to trailhead."
+      },
+      "trailhead_info": {
+        "parking": "600 spaces in Parkhaus Stadtmitte; additional street parking available",
+        "facilities": "Multiple cafés and WCs in Merano town center; WC facilities intermittent along promenade"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "medium",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Visit on weekday mornings in shoulder seasons (April-May or September-October); the promenade is nearly empty before 10am and after 5pm."
+      },
+      "weather_notes": "Spring and autumn offer ideal conditions; summer can be warm (25°C+) with afternoon sun exposure, while winter is mild but often cloudy.",
+      "highlights": [
+        "The perfectly manicured stone promenade switchbacking along cliff faces with continuous valley vistas below",
+        "Terraced apple orchards and olive groves—in May you'll smell the apple blossoms, in September catch harvest activity",
+        "Schloss Tirol's distinctive silhouette rising above the trail, looking like it grew organically from the mountain itself"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "tre-cime-grande-circuito",
+      "name": "Tre Cime Grande Circuito",
+      "region": "Dolomites",
+      "difficulty": "hard",
+      "tagline": "A legendary 21-hour circumnavigation of the Tre Cime di Lavaredo with exposure, scrambling, and views that rank among Europe's greatest mountain scenery.",
+      "distance_km": 23.4,
+      "duration_hours": 9,
+      "elevation_gain_m": 1420,
+      "elevation_loss_m": 1420,
+      "trail_type": "loop",
+      "interests": [
+        "summits",
+        "panoramic views",
+        "alpine lakes",
+        "wildlife"
+      ],
+      "description": "This challenging circuit traces the base and ridgelines of the Tre Cime's imposing limestone walls, offering an intimate perspective on geology that's impossible from ground level. Starting from Auronzo refuge, the route climbs through vertical terrain with chains, ladders, and scrambling sections that demand mountain sense and exposure tolerance. You'll traverse narrow ridges, cross hanging valleys dotted with marmots, and navigate Via Ferrata-standard passages while the three iconic peaks tower above you in constantly changing configurations—a full day's immersion in vertical limestone wilderness.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Tre Cime Summits",
+          "type": "summit",
+          "description": "Three distinctive limestone towers (2,999m, 2,973m, 2,946m) that dominate the eastern Dolomites and form UNESCO World Heritage geography."
+        },
+        {
+          "name": "Rifugio Auronzo",
+          "type": "cultural",
+          "description": "Historic 1897 mountain hut perched on a ledge with terraces overlooking the Val d'Ampezzo and serving hearty mountain fare."
+        },
+        {
+          "name": "Lake Sorapis",
+          "type": "lake",
+          "description": "A high alpine lake visible from ridge sections, its turquoise waters creating a striking contrast to the pale limestone cliffs surrounding it."
+        },
+        {
+          "name": "Tre Cime Viewpoint",
+          "type": "viewpoint",
+          "description": "The classic aerial perspective of all three peaks stacked vertically, achieved only from the western approach ridge near Passo Tre Croci."
+        }
+      ],
+      "rating": 4.9,
+      "reviews_count": 342,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "high",
+        "fitness": "high",
+        "exposure": "very_high"
+      },
+      "best_season": [
+        "July",
+        "August",
+        "early September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc",
+        "first_aid"
+      ],
+      "dog_friendly": false,
+      "family_friendly": false,
+      "tags": [
+        "hardcore-climb",
+        "tre-cime",
+        "exposure",
+        "via-ferrata-style"
+      ],
+      "josephineNote": {
+        "en": "Start at 4:30am from Rifugio Auronzo parking (you'll need to overnight at the rifugio or sleep in your car—I recommend the rifugio's simple rooms). At the Passo Tre Croci scramble section around hour 4, move deliberately and don't rush even if others pass; a woman from Munich fell there in 2019 trying to keep pace. The limestone becomes slick even when apparently dry. Bring 3 liters of water minimum; there's no refill between Auronzo and the western rifugios."
+      },
+      "access_info": "From Cortina d'Ampezzo, drive 12km east on SR48 toward Misurina, then south to Rifugio Auronzo parking at 2,320m. The large parking area sits directly below the Tre Cime's south face. Overnight accommodation strongly recommended at Rifugio Auronzo (phone +39 0436 4206).",
+      "opening_season": {
+        "start_date": "2024-07-01",
+        "end_date": "2024-09-15"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Rifugio Auronzo parking: 400 spaces, €6/day. Mountain roads snow-closed November-May; check openings weekly in late June. Road becomes impassable during afternoon thunderstorms.",
+        "bus": "No direct bus service to Rifugio Auronzo; nearest SADstop is Misurina (line 442 from Cortina, 3 daily in summer). From Misurina, require private transfer or taxi (20 minutes, €25-40)."
+      },
+      "trailhead_info": {
+        "parking": "400 spaces at Auronzo; often full by 8am; arrive before dawn if doing day-route",
+        "facilities": "WC and restaurant at Rifugio Auronzo; no facilities on trail itself"
+      },
+      "nearby_rifugios": [
+        "Rifugio Auronzo (at trailhead, 2,320m, +39 0436 4206)"
+      ],
+      "crowding": {
+        "level": "medium",
+        "peak_months": [
+          "August"
+        ],
+        "quiet_tip": "Go mid-week in July or after September 1st; the route sees heavy traffic August 1-20 during Italian school holidays. Early start (before 5am) means you'll pass groups rather than them catching you."
+      },
+      "weather_notes": "Afternoon thunderstorms are frequent and dangerous on exposed ridges; you must summit the hardest passages before 1pm or turn back, and never climb above 2,800m after 2pm.",
+      "highlights": [
+        "The jaw-dropping moment at hour 5 when all three Tre Cime peaks suddenly line up vertically above you, creating the postcard-perfect composition",
+        "Scrambling along the exposed Passo Tre Croci ridge where you can see both the Dolomites and Ötztal Alps simultaneously stretching to the horizon",
+        "Encountering marmot colonies in hanging valleys—they whistle warnings as you pass through their territory near the western refugios"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "hasenhohe-vinschgau-forest-loop",
+      "name": "Hasenhöhe Forest Loop",
+      "region": "Vinschgau",
+      "difficulty": "easy",
+      "tagline": "A gentle woodland ramble through pristine larch forests with occasional views toward the Ötztal and a charming rifugio lunch stop.",
+      "distance_km": 5.1,
+      "duration_hours": 2.25,
+      "elevation_gain_m": 310,
+      "elevation_loss_m": 310,
+      "trail_type": "loop",
+      "interests": [
+        "forests",
+        "cultural routes",
+        "panoramic views"
+      ],
+      "description": "Rising gently from the mountain village of Schnals into dense larch forest, this accessible loop showcases the Vinschgau's quiet mountain character away from the crowded Ötztal highway. The trail winds through 500-year-old larch groves where sunlight filters through golden needles, creating an almost cathedral-like atmosphere, before emerging at Rifugio Hasenhöhe where you'll eat homemade schnitzel overlooking the valley. The descent follows a forester's path back to the village through meadows dotted with edelweiss and gentian in season.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Rifugio Hasenhöhe",
+          "type": "cultural",
+          "description": "Traditional family-run mountain hut at 2,150m serving authentic Tyrolean cuisine and offering breathtaking Ötztal views from its terrace."
+        },
+        {
+          "name": "Ancient Larch Grove",
+          "type": "viewpoint",
+          "description": "A protected section of 400-500 year-old larch trees, some with 2m+ trunk diameters, creating a mystical forest environment."
+        },
+        {
+          "name": "Schnals Village",
+          "type": "cultural",
+          "description": "Picturesque Tyrolean settlement with a 13th-century church, traditional architecture, and direct access to the Ötztal glacier region."
+        }
+      ],
+      "rating": 4.5,
+      "reviews_count": 231,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "low",
+        "exposure": "very_low"
+      },
+      "best_season": [
+        "June",
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "forest-walk",
+        "vinschgau",
+        "family-friendly",
+        "local-flavors"
+      ],
+      "josephineNote": {
+        "en": "Park at the Schnals village lot and start hiking by 9:30am to arrive at Rifugio Hasenhöhe around noon—their mushroom risotto (Eierschwammerl risotto) is made fresh daily from what the owner foraged that morning, and it changes with the seasons. The larch trees are most luminous in October when needles turn gold; go then if you can. There's a small spring halfway up where locals refill water bottles—it's icy cold and the locals say it grants wishes if you drink from your cupped hands."
+      },
+      "access_info": "From Merano, drive 35km north on SS44 into the Vinschgau (Val Venosta), then follow signs to Schnals (Schlandern). Park in the village lot near the church. The trailhead begins at the village edge at 1,850m elevation.",
+      "opening_season": {
+        "start_date": "2024-06-01",
+        "end_date": "2024-10-15"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Schnals village parking: 80 spaces, free. Additional parking 200m away near church, also free.",
+        "bus": "SAD line 260 from Bolzano to Schnals (hourly service, 90-minute journey). Nearest bus stop is Schnals Dorf, 5-minute walk from trailhead. Service June-September only."
+      },
+      "trailhead_info": {
+        "parking": "80 spaces in village lot, free",
+        "facilities": "WC at village parking area; Rifugio Hasenhöhe has WC and restaurant halfway through hike"
+      },
+      "nearby_rifugios": [
+        "Rifugio Hasenhöhe (at 2,150m, on-trail, +39 0473 667159)"
+      ],
+      "crowding": {
+        "level": "low",
+        "peak_months": [
+          "August"
+        ],
+        "quiet_tip": "Almost entirely uncrowded except for weekends in August; go on any weekday in June, July, or September and you may see only locals and maybe one other hiking group."
+      },
+      "weather_notes": "Weather is generally stable in this shaded valley; afternoon clouds develop frequently but rain is less common than in the main Ötztal.",
+      "highlights": [
+        "Walking beneath 500-year-old larch trees whose trunks are wider than you are tall, creating cathedral-like light filtering through golden needles",
+        "Sitting on Rifugio Hasenhöhe's terrace with a plate of kasnocken (cheese dumplings) while mountain peaks frame the southern view",
+        "The September wildflower meadow descending back to Schnals, carpeted in edelweiss and deep blue gentian flowers"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "tre-cime-circuit",
+      "name": "Tre Cime di Lavaredo Circuit",
+      "region": "Val Pusteria",
+      "difficulty": "hard",
+      "tagline": "A legendary high-altitude traverse visiting three UNESCO-protected towers with vertigo-inducing rock scrambles.",
+      "distance_km": 12.0,
+      "duration_hours": 6.0,
+      "elevation_gain_m": 880,
+      "elevation_loss_m": 880,
+      "trail_type": "loop",
+      "interests": [
+        "summits",
+        "panoramic views",
+        "glaciers"
+      ],
+      "description": "This famous circuit tackles the three iconic rock towers of Lavaredo—Grande, Ovest, and Nord—ascending via ferrata-lite scrambles and exposed traverses that demand rock scrambling skill and complete comfort with exposure. The path weaves through dramatic limestone amphitheaters, past WWI trenches and tunnels carved directly into the mountain, and offers views across the entire Tre Tre Cime massif and beyond to the Austrian border. Sections require hands-on scrambling; cable and chain assistance is provided but exposure remains substantial throughout.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Grande Tower (3,999m)",
+          "type": "summit",
+          "description": "The tallest of the three iconic peaks, requiring a 30-minute scramble with fixed cable assistance and stunning views westward across the Sorau valley."
+        },
+        {
+          "name": "WWI Trenches",
+          "type": "cultural",
+          "description": "Intact military fortifications and tunnels cut directly into the rock, silent reminders of the brutal mountain warfare between Austria and Italy."
+        },
+        {
+          "name": "Auronzo Rifugio",
+          "type": "cultural",
+          "description": "Mountain hut at the circuit start offering hearty South Tyrolean meals and detailed route updates from experienced staff."
+        },
+        {
+          "name": "Misurina Alpine Lake",
+          "type": "lake",
+          "description": "A turquoise glacial lake in the valley below, accessible via the access road and visible throughout much of the circuit."
+        }
+      ],
+      "rating": 4.7,
+      "reviews_count": 890,
+      "image_url": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "high",
+        "fitness": "high",
+        "exposure": "very_high"
+      },
+      "best_season": [
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc",
+        "first_aid"
+      ],
+      "dog_friendly": false,
+      "family_friendly": false,
+      "tags": [
+        "dolomites-icon",
+        "rock-scrambling",
+        "via-ferrata",
+        "exposed-ridge"
+      ],
+      "josephineNote": {
+        "en": "I did this in late August with afternoon clouds rolling in—it actually made the rock feel less exposed psychologically, though visibility dropped to 20m at times. Start at Auronzo Rifugio entrance at 6:30am; the cable system up Grande Tower gets congested after 9am, and you'll be roped with strangers. The descent down Ovest is looser scree—wear good boots with ankle support."
+      },
+      "access_info": "From Cortina d'Ampezzo, drive north 20km on SS638 to Auronzo di Cadore, then follow the narrow mountain road 6km to Auronzo Rifugio (2,320m parking area). The trailhead is at the rifugio entrance.",
+      "opening_season": {
+        "start_date": "2024-06-15",
+        "end_date": "2024-10-15"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Large parking lot at Auronzo Rifugio: 150 spaces, €3/day. The access road is narrow and often has one-way traffic; check signage for direction restrictions by time.",
+        "bus": "No direct bus service; nearest SAD station is Cortina d'Ampezzo (line 252 from Bolzano)"
+      },
+      "trailhead_info": {
+        "parking": "Auronzo Rifugio lot: 150 spaces, €3/day, often full by 8am in peak season",
+        "facilities": "Rifugio café, WC, and detailed route information at trailhead"
+      },
+      "nearby_rifugios": [
+        "Auronzo Rifugio (2,320m, at trailhead)",
+        "Lavaredo Rifugio (2,344m, on circuit)"
+      ],
+      "crowding": {
+        "level": "high",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Go on a Thursday or Friday in early July or after August 20; avoid weekends entirely in peak season"
+      },
+      "weather_notes": "Afternoon electrical storms develop rapidly; descent must be completed by 2pm, and rockfall risk is high during or after rain.",
+      "highlights": [
+        "The exposed traverse of the Grande Tower summit with your hands on fixed cables, gazing down 300m vertical drops to the Tre Cime basin below",
+        "Descending the scramble from Ovest Tower on loose scree with the entire circuit laid out beneath you—pure adrenaline",
+        "Silent exploration of WWI trenches and tunnels blasted into the rock, where soldiers fought at 3,500m altitude"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "reschenhöhe-lake-walk",
+      "name": "Reschenhöhe & Alpine Lakes Loop",
+      "region": "Vinschgau",
+      "difficulty": "easy",
+      "tagline": "A gentle high-altitude loop through Tyrolean meadows and pristine mountain lakes with Austrian views.",
+      "distance_km": 7.0,
+      "duration_hours": 2.5,
+      "elevation_gain_m": 280,
+      "elevation_loss_m": 280,
+      "trail_type": "loop",
+      "interests": [
+        "alpine lakes",
+        "panoramic views",
+        "forests",
+        "wildlife"
+      ],
+      "description": "This accessible loop ascends gently from Reschenhöhe (1,504m) through rolling alpine pastures studded with tiny glacial lakes that mirror the surrounding peaks and provide unexpected wild swimming opportunities. The trail passes through Pinus mugo (dwarf pine) scrub and offers continuous views toward the Ortler massif and across the border into Austria's Ötztal region. The descent meanders through larch forest with frequent marmot sightings and emerges at a traditional mountain café serving authentic Tyrolean butter cake.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Haidersee Alpine Lake",
+          "type": "lake",
+          "description": "A stunning turquoise glacial pool ringed with stone-pine forest, cold enough for a refreshing dip but magical on calm mornings."
+        },
+        {
+          "name": "Reschenhöhe Pass Monument",
+          "type": "cultural",
+          "description": "Historic pass marker and Austrian border point with traditional stone cairns, offering panoramic views of the Ötztal and Vinschgau valleys."
+        },
+        {
+          "name": "Ortler Viewpoint",
+          "type": "viewpoint",
+          "description": "A natural rock outcrop on the loop's highest point offering unobstructed views of South Tyrol's tallest mountain and the surrounding Ortler glaciers."
+        }
+      ],
+      "rating": 4.5,
+      "reviews_count": 620,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "low",
+        "exposure": "low"
+      },
+      "best_season": [
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "family-friendly",
+        "alpine-lakes",
+        "easy-walk",
+        "austrian-border"
+      ],
+      "josephineNote": {
+        "en": "I did this loop on a misty June morning and the low clouds made the landscape feel intimate—like walking through a secret valley. Stop at the tiny café at Haidersee for their homemade Kaiserschmarrn (shredded pancake); it's a family-run spot that's been there 30 years. The lake is cold but refreshing; I swam in my hiking clothes in July and it was the best part of my day."
+      },
+      "access_info": "From Merano, drive west 45km on the SS40 toward Mals through the Vinschgau valley. At Reschen, turn south at signs for Reschenhöhe Straße; continue 3km to the Reschenhöhe pass parking area (1,504m).",
+      "opening_season": null,
+      "year_round": true,
+      "transport": {
+        "car": "Reschenhöhe pass parking: 80 spaces, free. Note: mountain road may have snow November-April; carry chains in winter.",
+        "bus": "SAD line 350 from Merano to Mals (50 mins, daily). No direct service to Reschenhöhe; requires taxi from Mals (€15-20)."
+      },
+      "trailhead_info": {
+        "parking": "80 spaces at pass, free, but fills quickly on weekends",
+        "facilities": "Basic café at trailhead with WC; more extensive facilities at Haidersee café halfway through loop"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "low",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "This trail sees minimal crowds compared to Val Gardena; even July afternoons are peaceful. Go after 4pm to have the lakes nearly to yourself."
+      },
+      "weather_notes": "Mountain weather changes rapidly; afternoon fog is common in June and September, obscuring views within minutes of clear conditions.",
+      "highlights": [
+        "Swimming in the turquoise Haidersee alpine lake surrounded by stone pines and Austrian peaks across the border",
+        "Encountering wild marmots and Alpine ibex herds in the meadows—often more animals than hikers on this quiet route",
+        "The moment you crest onto the Austrian border ridge and see both the Ötztal and Vinschgau valleys spread before you"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "bolzano-renon-plateau",
+      "name": "Renon Plateau Forest Trail",
+      "region": "Bolzano & Surroundings",
+      "difficulty": "easy",
+      "tagline": "A serene forest ramble across South Tyrol's green plateau, dotted with traditional farmsteads and Alpine meadows.",
+      "distance_km": 8.5,
+      "duration_hours": 3.0,
+      "elevation_gain_m": 200,
+      "elevation_loss_m": 200,
+      "trail_type": "loop",
+      "interests": [
+        "forests",
+        "cultural routes",
+        "panoramic views"
+      ],
+      "description": "This gentle loop explores the Renon (Ritten) plateau's quiet lanes and forest trails, passing traditional South Tyrolean farmhouses with distinctive architecture, wooden balconies laden with drying corn, and small family-run farms selling fresh milk and cheese. The trail winds through cool beech and spruce forest before emerging onto open meadows with views northward to the Dolomites and southward toward the Adige valley. Bird watchers will appreciate the diverse woodland habitat, while food lovers can sample homemade fare at farm stops along the route.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Maria Saal Church",
+          "type": "church",
+          "description": "A 15th-century church perched on a hilltop overlooking the plateau, featuring baroque frescoes and panoramic views from its small cemetery."
+        },
+        {
+          "name": "Lauben Farmstead",
+          "type": "cultural",
+          "description": "A working organic farm offering freshly made butter, cheese, and milk; stop here to taste authentic South Tyrolean dairy products."
+        },
+        {
+          "name": "Plateau Viewpoint",
+          "type": "viewpoint",
+          "description": "An open meadow vista showing the entire Bolzano valley, Dolomites, and distant Brenta group on clear days."
+        }
+      ],
+      "rating": 4.4,
+      "reviews_count": 450,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "low",
+        "exposure": "very_low"
+      },
+      "best_season": [
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "family-friendly",
+        "cultural-heritage",
+        "farmland",
+        "near-bolzano"
+      ],
+      "josephineNote": {
+        "en": "I hiked this on a lazy May afternoon and stopped at Lauben farm for their fresh ricotta and warm apple strudel—the owner's grandmother was making it in the kitchen. The plateau stays cool even on hot summer days because of the forest canopy; perfect for escaping Bolzano's heat. Go on a weekday morning for near-total solitude."
+      },
+      "access_info": "From Bolzano city center, take the Renon cable car (Rittner Bahn) which departs every 10 minutes from Bolzano-Gries district. The cable car arrives at Renon (1,370m); park at the cable car base station (paid parking).",
+      "opening_season": null,
+      "year_round": true,
+      "transport": {
+        "car": "Cable car base station parking: 150 spaces, €1.80/hour. Alternative: drive via the mountain road if you prefer (20 mins from city center).",
+        "bus": "SAD line 204 from Bolzano center to Renon cable car base (15 mins, hourly service year-round)"
+      },
+      "trailhead_info": {
+        "parking": "Use cable car base parking (150 spaces, €1.80/hour) or park in Bolzano and ride the cable car",
+        "facilities": "Café and WC at the upper cable car station"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "medium",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Go on weekday mornings; this trail is less crowded than Dolomite peaks but busier than remote valleys"
+      },
+      "weather_notes": "The plateau is often cooler and breezier than Bolzano; bring a light jacket even in summer.",
+      "highlights": [
+        "Stumbling upon a working farmstead where you can buy fresh, warm butter and milk directly from the farmer",
+        "The cool beech forest section in mid-afternoon when shafts of golden light pierce the canopy",
+        "Maria Saal church perched on its hilltop, surrounded by wildflower meadows and distant Dolomite views"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "val-sarentino-ibex-trail",
+      "name": "Val Sarentino Ibex & Waterfall Trail",
+      "region": "Val Sarentino",
+      "difficulty": "medium",
+      "tagline": "A wild valley traverse featuring Alpine ibex herds, cascading waterfalls, and remote mountain rifugios.",
+      "distance_km": 10.5,
+      "duration_hours": 5.0,
+      "elevation_gain_m": 650,
+      "elevation_loss_m": 650,
+      "trail_type": "out_and_back",
+      "interests": [
+        "waterfalls",
+        "wildlife",
+        "panoramic views",
+        "alpine lakes"
+      ],
+      "description": "This out-and-back trail ascends a remote valley from Sarentino village into high Alpine terrain where wildlife is more abundant than people, with regular Alpine ibex sightings in the upper sections and cascading waterfalls that tumble over moss-covered rocks throughout the route. The valley narrowed dramatically as elevation increases, creating intimate amphitheater walls of grey limestone that frame distant glacier remnants. The upper trail terminates at a small crystal-clear alpine lake beneath a rocky cirque, where marmots whistle warnings and the silence feels profound.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Sarenta Waterfall",
+          "type": "waterfall",
+          "description": "A 40-meter cascade tumbling over moss-covered limestone, most dramatic in June-July during snowmelt."
+        },
+        {
+          "name": "Alpine Ibex Viewpoint",
+          "type": "viewpoint",
+          "description": "A rocky outlook at 2,400m elevation where herds of wild ibex with magnificent curved horns often graze on the surrounding slopes."
+        },
+        {
+          "name": "Sarntal Rifugio",
+          "type": "cultural",
+          "description": "A remote mountain hut serving hearty South Tyrolean meals and offering overnight accommodations for serious hikers."
+        },
+        {
+          "name": "Sarentino Summit Alpine Lake",
+          "type": "lake",
+          "description": "A pristine glacial pool at trail's end, reflecting surrounding peaks and providing an unexpected wild swimming opportunity."
+        }
+      ],
+      "rating": 4.6,
+      "reviews_count": 340,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "medium",
+        "fitness": "medium",
+        "exposure": "medium"
+      },
+      "best_season": [
+        "June",
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "restaurants",
+        "wc"
+      ],
+      "dog_friendly": false,
+      "family_friendly": false,
+      "tags": [
+        "alpine-ibex",
+        "waterfalls",
+        "remote-valley",
+        "wildlife"
+      ],
+      "josephineNote": {
+        "en": "I saw 15 wild ibex on the rocky slopes above the Ibex Viewpoint in early July—they were relaxed and used to hikers at that distance. The Sarenta Waterfall thundered with snowmelt; if you go in late August it's just a trickle. Stay at Sarntal Rifugio overnight if you can; the sunset and star visibility are incredible, and the owner makes the best speck (cured meat) I've tasted in Tyrol."
+      },
+      "access_info": "From Bolzano, drive southeast 30km on the SS44 toward Sarentino village. Park at the Sarentino village center (free parking); the trailhead starts at the yellow hiking sign near the village church, ascending along the Sarenta stream.",
+      "opening_season": {
+        "start_date": "2024-06-01",
+        "end_date": "2024-10-15"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Free parking in Sarentino village center (20 spaces); overflow parking available 100m away",
+        "bus": "SAD line 252 from Bolzano to Sarentino village (45 mins, limited service—check schedule as only 2-3 daily buses)"
+      },
+      "trailhead_info": {
+        "parking": "Free village parking: 20 spaces at center, additional overflow parking nearby",
+        "facilities": "Small village store and café at trailhead; main facilities at Sarntal Rifugio (2.5 hours up trail)"
+      },
+      "nearby_rifugios": [
+        "Sarntal Rifugio (2,340m, on upper trail)"
+      ],
+      "crowding": {
+        "level": "low",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "This valley sees fewer hikers than famous Dolomite trails; even peak season offers solitude. Go on any day and you'll likely see fewer than 20 other people."
+      },
+      "weather_notes": "Weather changes rapidly in this narrow valley; afternoon thunderstorms develop quickly in summer; start by 7am and plan to descend by 2pm.",
+      "highlights": [
+        "Watching Alpine ibex herds grazing on near-vertical rocky slopes, with their massive curved horns silhouetted against the sky",
+        "The moment the waterfall comes into view—a thundering cascade of white water framed by moss-covered grey limestone",
+        "The final push to the alpine lake where the valley's rocky walls create an amphitheater and silence is near-total"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "merano-waalweg-easy",
+      "name": "Merano Water Trail (Waalweg)",
+      "region": "Merano & Surroundings",
+      "difficulty": "easy",
+      "tagline": "A gentle centuries-old irrigation channel walk through orchards and vineyards with mountain backdrops.",
+      "distance_km": 6.0,
+      "duration_hours": 2.0,
+      "elevation_gain_m": 80,
+      "elevation_loss_m": 80,
+      "trail_type": "out_and_back",
+      "interests": [
+        "cultural routes",
+        "panoramic views",
+        "forests"
+      ],
+      "description": "The Waalweg follows a historic water channel built in medieval times to irrigate the apple orchards and vineyards of the Merano valley, offering a peaceful, nearly flat walk with constant views of snow-capped peaks. The path meanders through tunnels carved into rock, past ancient apple trees, and alongside refreshing mountain streams, with occasional rifugios for refreshment. This is one of South Tyrol's most accessible high-altitude walks, suitable for all ages and fitness levels.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Merano Town Center",
+          "type": "cultural",
+          "description": "Historic spa town with pastel Art Nouveau architecture, famous Kurhaus gardens, and excellent restaurants."
+        },
+        {
+          "name": "Castello Tirolo",
+          "type": "cultural",
+          "description": "13th-century castle perched above Merano offering regional history museum and panoramic terraces."
+        },
+        {
+          "name": "Mountain Stream Crossings",
+          "type": "viewpoint",
+          "description": "Multiple points where the Waalweg crosses sparkling alpine streams with Ortler massif views."
+        }
+      ],
+      "rating": 4.6,
+      "reviews_count": 856,
+      "image_url": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "very_low",
+        "exposure": "very_low"
+      },
+      "best_season": [
+        "April",
+        "May",
+        "September",
+        "October"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "easy",
+        "cultural",
+        "orchards",
+        "family-friendly"
+      ],
+      "josephineNote": {
+        "en": "The Waalweg is absolutely magical in late May when apple blossoms still linger and the mountain streams are full from snowmelt—the sound is incredible. Start from Merano's Passer bridge (not the Avelengo trailhead) and you'll have the best light. Bring a small container; local apple farmers often leave fresh fruit by the trail in harvest season (September–October)."
+      },
+      "access_info": "From Merano town center, walk to the Passer River bridge (Passerbrücke) near the Kurhaus. The Waalweg trailhead is signed from here; it's a 15-minute walk from the town center.",
+      "opening_season": {
+        "start_date": null,
+        "end_date": null
+      },
+      "year_round": true,
+      "transport": {
+        "car": "Merano town parking: multiple municipal lots, €1.50/hour; Kurhaus lot has 300 spaces",
+        "bus": "SAD line 260 from Bolzano to Merano (1 hour, hourly service); line 204 from Bolzano also stops in Merano"
+      },
+      "trailhead_info": {
+        "parking": "Multiple Merano town lots; Kurhaus lot 300 spaces, €1.50/hour",
+        "facilities": "Full facilities in Merano center; cafes at Passerbrücke"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "medium",
+        "peak_months": [
+          "July",
+          "August",
+          "September"
+        ],
+        "quiet_tip": "Visit in April or October for solitude; early mornings any season offer fewer tourists."
+      },
+      "weather_notes": "This valley can be surprisingly warm and sunny even in shoulder seasons; spring and fall are ideal to avoid summer crowds and heat.",
+      "highlights": [
+        "Medieval water channel carved through living rock with views of the Ortler massif beyond apple orchards",
+        "Traditional Ladin stone tunnels where the Waalweg ducks through mountainsides, with cool mountain air and echoing water sounds",
+        "Merano's Belle Époque architecture and thermal gardens as a finishing point for lunch and refreshment"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "tre-cime-lavaredo-loop",
+      "name": "Tre Cime di Lavaredo Circuit",
+      "region": "Dolomites",
+      "difficulty": "hard",
+      "tagline": "The Dolomites' most recognizable peaks demand respect on this exposed, technical alpine circumnavigation.",
+      "distance_km": 11.0,
+      "duration_hours": 6.5,
+      "elevation_gain_m": 1250,
+      "elevation_loss_m": 1250,
+      "trail_type": "loop",
+      "interests": [
+        "summits",
+        "panoramic views",
+        "alpine lakes",
+        "wildlife"
+      ],
+      "description": "This demanding loop circles the UNESCO-listed Tre Cime di Lavaredo—three monumental limestone pillars rising sheer from alpine meadows—crossing exposed ridges with chains and cables for protection, scrambling over technical rock sections, and offering unparalleled views into Dolomite geology. The trail traverses multiple high passes, visits hidden lakes cradled between peaks, and requires solid scrambling ability, good fitness, and mountain experience. Afternoon electrical storms are a real hazard on this exposed ridge traverse.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Tre Cime Peaks",
+          "type": "summit",
+          "description": "Three iconic limestone towers (2,999m, 2,999m, 2,959m) creating the most photographed skyline in the Dolomites."
+        },
+        {
+          "name": "Rifugio Auronzo",
+          "type": "cultural",
+          "description": "Dramatic rifugio perched on exposed terrain below the main peaks, serving hearty mountain fare and offering emergency shelter."
+        },
+        {
+          "name": "Sorau Lake",
+          "type": "lake",
+          "description": "Remote turquoise alpine lake nestled at 2,600m between steep scree slopes and offering the only water refill on the route."
+        },
+        {
+          "name": "Via Ferrata Sections",
+          "type": "viewpoint",
+          "description": "Protected scrambling passages with fixed cables offering thrilling exposure and intimate views of vertical rock faces."
+        }
+      ],
+      "rating": 4.9,
+      "reviews_count": 2000,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "high",
+        "fitness": "high",
+        "exposure": "very_high"
+      },
+      "best_season": [
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "first_aid"
+      ],
+      "dog_friendly": false,
+      "family_friendly": false,
+      "tags": [
+        "dolomites",
+        "tre-cime",
+        "technical",
+        "exposed"
+      ],
+      "josephineNote": {
+        "en": "I did this loop on a clear September morning starting at 6am and it was absolutely spine-tingling—the exposure on the ridges is real and humbling. The chain-protected sections are well-maintained but require confidence on steep rock. Most crucially: if you see any cloud building by noon, descend immediately. I've seen lightning strike Rifugio Auronzo from 20km away. Bring proper climbing shoes, not hiking boots."
+      },
+      "access_info": "From Cortina d'Ampezzo, drive towards Tre Cime National Park via the SR48A (toll road, €10). The main trailhead is at Auronzo parking area (1,320m), 45 minutes drive from Cortina.",
+      "opening_season": {
+        "start_date": "2024-06-01",
+        "end_date": "2024-10-15"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Auronzo parking: 2,000 spaces, €5/day; arrive by 7am in July–August or risk full lots by 9am",
+        "bus": "No direct bus service; shuttle from Cortina d'Ampezzo town (10€, 30 mins, summer only) operates July–August daily"
+      },
+      "trailhead_info": {
+        "parking": "2,000 spaces at Auronzo; €5/day; very full by 10am in peak season",
+        "facilities": "WC at parking; full facilities at Rifugio Auronzo (1.5 hours up trail)"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "high",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Start before 7am or visit mid-week in early September when Italian schools resume; the crowds thin dramatically."
+      },
+      "weather_notes": "Afternoon thunderstorms are very common June–August; the exposed ridges have zero shelter and attract frequent lightning strikes.",
+      "highlights": [
+        "The dramatic exposed ridge traverse with fixed cable sections offering vertiginous views into Dolomite canyons",
+        "Close-range views of three monumental limestone towers that define the Dolomite skyline, accessible only from this loop",
+        "Remote Sorau Lake cupped between scree slopes at 2,600m, a hidden gem for brave souls to refill water"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "passo-gardena-langkofel",
+      "name": "Passo Gardena to Langkofel Ridge",
+      "region": "Val Gardena",
+      "difficulty": "medium",
+      "tagline": "A classic alpine traverse linking the Dolomites' most dramatic ridgelines with stunning exposure and technical sections.",
+      "distance_km": 9.5,
+      "duration_hours": 5.5,
+      "elevation_gain_m": 680,
+      "elevation_loss_m": 820,
+      "trail_type": "point_to_point",
+      "interests": [
+        "summits",
+        "panoramic views",
+        "alpine lakes"
+      ],
+      "description": "This demanding ridge walk traverses from Passo Gardena across the Langkofel (Sassolungo) ridge, one of the Dolomites' most distinctive sawtooth mountain ranges, with constant exposure, scrambling, and via ferrata sections secured by chains. The ridge offers 360-degree views of the surrounding Dolomite UNESCO world heritage landscape and passes through a landscape of dramatic towers, hidden tarns, and wind-sculptured limestone formations. The point-to-point format allows for a cable car descent, avoiding dangerous scree fields.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Langkofel Summit",
+          "type": "summit",
+          "description": "The iconic 3,181m sawtooth peak offering panoramic views across the entire Dolomite range and Italian Alps."
+        },
+        {
+          "name": "Passo Gardena",
+          "type": "viewpoint",
+          "description": "High pass at 2,121m between Val Gardena and Val di Fassa, with rifugios and cable car access."
+        },
+        {
+          "name": "Via Ferrata Chains",
+          "type": "viewpoint",
+          "description": "Multiple protected scrambling sections with fixed cables offering exhilarating ridge exposure."
+        }
+      ],
+      "rating": 4.7,
+      "reviews_count": 1123,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "high",
+        "fitness": "medium",
+        "exposure": "very_high"
+      },
+      "best_season": [
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc",
+        "cable_car"
+      ],
+      "dog_friendly": false,
+      "family_friendly": false,
+      "tags": [
+        "dolomites",
+        "ridge",
+        "via-ferrata",
+        "sawtooth"
+      ],
+      "josephineNote": {
+        "en": "The Langkofel ridge is absolutely magical at sunrise when you're above the clouds and the jagged towers cast long shadows—I started from Passo Gardena at 6:30am and had the entire ridge to myself. The via ferrata sections are straightforward if you're comfortable with exposure; just move deliberately. Skip this if you're afraid of heights. The cable car down from Rifugio Fedare is mandatory if you're tired; the scree descent is tedious and hard on knees."
+      },
+      "access_info": "Drive to Passo Gardena (2,121m) via the SR163 from Ortisei or the SR242 from Canazei. The trailhead is at the pass, where multiple rifugios and cable cars provide services.",
+      "opening_season": {
+        "start_date": "2024-06-15",
+        "end_date": "2024-10-15"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Passo Gardena parking: 600 spaces, €2/day; very full weekends July–August",
+        "bus": "SAD line 350 from Bolzano to Ortisei (30 mins), then shuttle from Ortisei to Passo Gardena (20 mins, summer only)"
+      },
+      "trailhead_info": {
+        "parking": "600 spaces at Passo Gardena; €2/day; arrive by 8am on weekends",
+        "facilities": "Multiple rifugios at pass with full WC and restaurant services"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "medium",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Visit on weekdays in September for significantly fewer people; the ridge is much more peaceful mid-week."
+      },
+      "weather_notes": "Afternoon cloud and occasional thunderstorms are common; the exposed ridge offers no shelter and attracts lightning frequently.",
+      "highlights": [
+        "The sawtooth Langkofel ridge with dramatic exposure, via ferrata chains, and 360-degree Dolomite panoramas",
+        "The iconic profile of Sassolungo from multiple angles, one of the Dolomites' most recognizable mountain silhouettes",
+        "Hidden tarns and wind-carved limestone formations creating an otherworldly alpine landscape"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "bolzano-guncina-easy",
+      "name": "Guncina Forest Loop",
+      "region": "Bolzano & Surroundings",
+      "difficulty": "easy",
+      "tagline": "A gentle woodland ramble through beech forests directly above Bolzano with surprising mountain views.",
+      "distance_km": 5.5,
+      "duration_hours": 2.0,
+      "elevation_gain_m": 350,
+      "elevation_loss_m": 350,
+      "trail_type": "loop",
+      "interests": [
+        "forests",
+        "panoramic views",
+        "cultural routes"
+      ],
+      "description": "This accessible loop climbs gently through pristine beech and spruce forests from the Bolzano suburbs, emerging into alpine meadows with surprising views of the Dolomite peaks rising beyond the city. The forest path is shaded and cool even in summer, perfect for families and less experienced walkers, and the open meadow sections offer refreshing perspectives of the Ortler and Adamello ranges. Traditional stone rifugios dot the route, offering refreshment with a view.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Rifugio Guncina",
+          "type": "cultural",
+          "description": "Family-friendly mountain hut at 1,600m serving traditional South Tyrol dumplings and schnitzel with alpine views."
+        },
+        {
+          "name": "Bolzano City View",
+          "type": "viewpoint",
+          "description": "Panoramic meadows offering bird's-eye views of Bolzano's medieval center and surrounding wine country."
+        },
+        {
+          "name": "Beech Forest Section",
+          "type": "viewpoint",
+          "description": "Cool, shaded woodland trail with moss-covered rocks and natural spring water trickles."
+        }
+      ],
+      "rating": 4.4,
+      "reviews_count": 623,
+      "image_url": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "low",
+        "exposure": "very_low"
+      },
+      "best_season": [
+        "May",
+        "June",
+        "September",
+        "October"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "easy",
+        "family-friendly",
+        "forest",
+        "bolzano"
+      ],
+      "josephineNote": {
+        "en": "The Guncina loop is perfect for a lazy Sunday morning—park at the bottom, do the easy forest loop, have lunch at Rifugio Guncina (order the spinach and ricotta dumplings), and be back in Bolzano by 3pm. The beech forest is absolutely glorious in autumn when the leaves turn golden; spring is lovely too with wildflowers in the meadows. Dogs love the forest floor; bring a portable water bowl."
+      },
+      "access_info": "From central Bolzano, drive north on Via Guncina (follow signs for 'Guncina/Kohlern') for 3km to the parking area at 1,190m. The loop trailhead is clearly marked from the parking area.",
+      "opening_season": {
+        "start_date": null,
+        "end_date": null
+      },
+      "year_round": true,
+      "transport": {
+        "car": "Guncina parking: 200 spaces, free; alternative street parking available",
+        "bus": "SAD line 12 from Bolzano town center to Guncina (20 mins, hourly service year-round) stops 500m from trailhead"
+      },
+      "trailhead_info": {
+        "parking": "200 spaces, free; street parking available if full",
+        "facilities": "Cafe at parking area; full facilities at Rifugio Guncina (1 hour up trail)"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "low",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Visit weekday mornings year-round; even in summer the beech forest loop sees few hikers compared to alpine routes."
+      },
+      "weather_notes": "The beech forest provides excellent shade even in hot summer; spring rain is common but rarely heavy enough to close the trail.",
+      "highlights": [
+        "Cool, moss-covered beech forest with natural spring water and dappled sunlight, a respite from Bolzano's summer heat",
+        "Alpine meadows emerging from forest with sudden views of Bolzano nestled in wine country far below",
+        "Rifugio Guncina's terrace serving fresh regional dumplings with Dolomite views as a perfect lunch reward"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "tre-cime-tre-rifugios",
+      "name": "Tre Cime di Lavaredo Circuit",
+      "region": "Dolomites",
+      "difficulty": "hard",
+      "tagline": "Hike past three UNESCO World Heritage limestone spires in one of Europe's most dramatic mountain amphitheaters.",
+      "distance_km": 12,
+      "duration_hours": 5.5,
+      "elevation_gain_m": 780,
+      "elevation_loss_m": 780,
+      "trail_type": "loop",
+      "interests": [
+        "summits",
+        "panoramic views",
+        "alpine lakes"
+      ],
+      "description": "This legendary circuit winds through the Sorau Valley and circles the iconic Tre Cime—three colossal limestone towers that dominate the Dolomites skyline. The trail passes Rifugio Auronzo and Rifugio Lavaredo, offering dramatic vertical climbs and descents with exposure that demands respect and focus. Every switchback reveals another jaw-dropping perspective of these 3,000m+ spires, UNESCO-recognized for their otherworldly geology.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Grande Cima",
+          "type": "summit",
+          "description": "The largest of the three towers at 3,094m, its sheer north face dominates the vista."
+        },
+        {
+          "name": "Rifugio Auronzo",
+          "type": "cultural",
+          "description": "A mountain hut perched at 2,602m offering refuge and hearty Tyrolean cuisine."
+        },
+        {
+          "name": "Sorau Valley",
+          "type": "viewpoint",
+          "description": "A glacial valley beneath the Tre Cime offering sweeping panoramas of all three peaks."
+        },
+        {
+          "name": "Rifugio Lavaredo",
+          "type": "cultural",
+          "description": "Another atmospheric hut at 2,344m with legendary strudel and mountain hospitality."
+        }
+      ],
+      "rating": 4.9,
+      "reviews_count": 1205,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "high",
+        "fitness": "high",
+        "exposure": "very_high"
+      },
+      "best_season": [
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc",
+        "first_aid"
+      ],
+      "dog_friendly": false,
+      "family_friendly": false,
+      "tags": [
+        "tre cime",
+        "dolomites",
+        "summits",
+        "exposed",
+        "legendary"
+      ],
+      "josephineNote": {
+        "en": "The descent from Rifugio Auronzo toward the Sorau Valley involves steep switchbacks with cable-assisted sections—if you're not comfortable with exposure or via ferrata, turn back at the valley floor. The real magic isn't at the rifugios but in the Sorau Valley itself around midday when light hits the north faces—plan your timing accordingly."
+      },
+      "access_info": "From Cortina d'Ampezzo, drive northeast on SS48bis toward Misurina, then follow signs to Tre Cime di Lavaredo car park (30 minutes). The trailhead begins at Auronzo refuge parking area, a 10-minute shuttle ride or 45-minute walk from the main parking.",
+      "opening_season": {
+        "start_date": "2024-07-01",
+        "end_date": "2024-09-30"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Tre Cime car park: 500 spaces, €12/day; shuttle to Auronzo refuge included",
+        "bus": "No direct SAD bus service; nearest is SAD 442 to Auronzo in July–August only"
+      },
+      "trailhead_info": {
+        "parking": "500 spaces at main car park, €12/day, with shuttle bus to Auronzo",
+        "facilities": "Toilets, restaurants at car park and at both rifugios"
+      },
+      "nearby_rifugios": [
+        {
+          "name": "Rifugio Auronzo",
+          "elevation": 2602
+        },
+        {
+          "name": "Rifugio Lavaredo",
+          "elevation": 2344
+        }
+      ],
+      "crowding": {
+        "level": "high",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Start at 6:30am to reach Sorau Valley by 9am before crowds; return via a different route than you came to spread impact."
+      },
+      "weather_notes": "Afternoon storms are frequent and dangerous at altitude; descent to lower elevations immediately if weather deteriorates.",
+      "highlights": [
+        "The jaw-dropping moment when all three Tre Cime come into alignment from the Sorau Valley floor",
+        "Alpine Ibex herds often seen on cliff faces near Rifugio Auronzo",
+        "The cable-assisted descent sections offering technical climbing experience in a safe, managed environment"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "passo-gardena-forest-meander",
+      "name": "Passo Gardena Forest Meander",
+      "region": "Val Gardena",
+      "difficulty": "easy",
+      "tagline": "Wander through enchanting spruce and larch forests below Passo Gardena, where mountain culture meets pristine wilderness.",
+      "distance_km": 6.2,
+      "duration_hours": 2.5,
+      "elevation_gain_m": 220,
+      "elevation_loss_m": 220,
+      "trail_type": "loop",
+      "interests": [
+        "forests",
+        "cultural routes",
+        "panoramic views"
+      ],
+      "description": "This gentle loop descends from Passo Gardena through dense Alpine forest, passing traditional wooden farmhouses and ancient stone chapels tucked between towering larches. The trail meanders along a small creek, offering the soothing soundtrack of running water and bird calls, before climbing back via a sunlit meadow with views toward the Sella Group. Perfect for families or anyone seeking meditative forest walking without technical challenge.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Cappella San Maurizio",
+          "type": "cultural",
+          "description": "A 16th-century stone chapel hidden in the forest, with hand-carved wooden doors and local pilgrimage traditions."
+        },
+        {
+          "name": "Passo Gardena Pass",
+          "type": "viewpoint",
+          "description": "At 2,121m, the pass offers classic Dolomites vistas toward Sella and Marmolada."
+        },
+        {
+          "name": "Alm Dairy",
+          "type": "cultural",
+          "description": "A working mountain dairy where local cheese is still made using centuries-old methods."
+        }
+      ],
+      "rating": 4.6,
+      "reviews_count": 412,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "low",
+        "exposure": "very_low"
+      },
+      "best_season": [
+        "May",
+        "June",
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "family friendly",
+        "forests",
+        "cultural",
+        "easy"
+      ],
+      "josephineNote": {
+        "en": "Stop at the working Alm dairy around 10am when they're making cheese—the herders often invite visitors into the dairy house, and you can taste fresh whey ricotta still warm from the vat. The forest is particularly magical in early June when rhododendrons bloom along the creek section."
+      },
+      "access_info": "From Ortisei, drive south on SS242 toward Passo Gardena (25 minutes). Park at the pass trailhead, clearly marked. The trail begins on the south side of the pass.",
+      "opening_season": {
+        "start_date": "2024-05-01",
+        "end_date": "2024-11-30"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Passo Gardena car park: 120 spaces, €4/day",
+        "bus": "SAD line 260 from Ortisei to Passo Gardena (6 daily in summer); 30-minute journey"
+      },
+      "trailhead_info": {
+        "parking": "120 spaces at pass, €4/day",
+        "facilities": "Basic WC at pass, restaurants 5-minute walk away"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "low",
+        "peak_months": [
+          "August"
+        ],
+        "quiet_tip": "Visit on weekdays in June or September when the pass traffic is lighter and crowds have dispersed to more famous trails."
+      },
+      "weather_notes": "Morning mist is common in spring and early summer; trails are muddy after rain.",
+      "highlights": [
+        "The sudden emergence from dense forest into the Cappella San Maurizio clearing, where light filters through ancient larches",
+        "Encounter with traditional Tyrolean dairy farming culture—you may see farmers herding cattle at pasture",
+        "The creek section's mossy banks and woodland understory blooming with Alpine wildflowers in June"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "merano-castle-wine-loop",
+      "name": "Merano Castle & Wine Route Loop",
+      "region": "Merano & Surroundings",
+      "difficulty": "easy",
+      "tagline": "Stroll past medieval castles and into world-class wine estates on this cultural ramble through Merano's noble heritage.",
+      "distance_km": 7.8,
+      "duration_hours": 3,
+      "elevation_gain_m": 280,
+      "elevation_loss_m": 280,
+      "trail_type": "loop",
+      "interests": [
+        "cultural routes",
+        "panoramic views"
+      ],
+      "description": "This low-altitude loop circles Merano's historic estates, passing Schloss Tirol (the region's founding castle), Schloss Fragsburg, and three family-run wineries producing world-renowned Pinot Noir and Sauvignon Blanc. The path winds through vineyards striped with ancient dry-stone walls, past centuries-old farmhouses converted to wine bars, offering tastings at cellar doors. It's a perfect blend of history, viticulture, and Tyrolean hospitality at a leisurely pace.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Schloss Tirol",
+          "type": "cultural",
+          "description": "The 12th-century castle birthplace of the Tyrol region, with museum exhibits and panoramic tower views."
+        },
+        {
+          "name": "Schloss Fragsburg",
+          "type": "cultural",
+          "description": "A picturesque 13th-century fortress perched above terraced vineyards, visible from miles around."
+        },
+        {
+          "name": "Merano Wine Route",
+          "type": "viewpoint",
+          "description": "Officially designated wine trail passing 30+ estates; this loop covers three premium producers."
+        },
+        {
+          "name": "Merano Town Center",
+          "type": "cultural",
+          "description": "The elegant spa town with Austro-Hungarian architecture, famous for its Passeggiata promenade."
+        }
+      ],
+      "rating": 4.5,
+      "reviews_count": 638,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "low",
+        "exposure": "very_low"
+      },
+      "best_season": [
+        "April",
+        "May",
+        "September",
+        "October"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc",
+        "first_aid"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "wine",
+        "cultural",
+        "castles",
+        "easy",
+        "merano"
+      ],
+      "josephineNote": {
+        "en": "Call ahead to at least one of the wine estates (Ansitz Plantaditsch is my favorite) to reserve a tasting—they're often manned by the proprietors themselves who'll tell you stories about terroir that guidebooks can't capture. Time your loop to arrive at a winery around 11:30am when they're open for morning tastings but before tour groups arrive."
+      },
+      "access_info": "Merano is 30 minutes by car northwest of Bolzano on SS38. Park in Merano town center near the Kurhaus; the Schloss Tirol trailhead is a 5-minute walk uphill from the main promenade. Public transport: SAD buses serve Merano hourly from Bolzano.",
+      "opening_season": {
+        "start_date": "2024-04-01",
+        "end_date": "2024-11-30"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Merano town center parking: 400 spaces, €1.50/hour; castle parking: 80 spaces, €3/day",
+        "bus": "SAD line 204 hourly from Bolzano to Merano Zentrum; 40-minute journey"
+      },
+      "trailhead_info": {
+        "parking": "Multiple options in town center; castle lot recommended for direct trail access",
+        "facilities": "Excellent WC facilities in town; restaurants and wine bars throughout the route"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "medium",
+        "peak_months": [
+          "September",
+          "October"
+        ],
+        "quiet_tip": "Visit in late April when vineyards are budding and tourists haven't arrived; or early October before wine harvest festival crowds."
+      },
+      "weather_notes": "Spring and autumn offer perfect temperatures; summers can be warm in this lower-altitude valley.",
+      "highlights": [
+        "Schloss Tirol's tower views encompassing the entire Val d'Adige and Alps beyond",
+        "Privately owned vineyards where you can taste Pinot Noir directly from barrel in candlelit estate cellars",
+        "The architectural contrast between medieval castles and contemporary glass-and-steel winery buildings designed by regional architects"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "sassongher-sasso-lungo-ridge",
+      "name": "Sassongher to Sasso Lungo Ridge Traverse",
+      "region": "Val Gardena",
+      "difficulty": "medium",
+      "tagline": "Ridge-walk across two of the Dolomites' most distinctive tower formations with plunging views into the Selva Valley.",
+      "distance_km": 9.3,
+      "duration_hours": 5,
+      "elevation_gain_m": 650,
+      "elevation_loss_m": 750,
+      "trail_type": "point_to_point",
+      "interests": [
+        "summits",
+        "panoramic views",
+        "alpine lakes"
+      ],
+      "description": "This demanding traverse ascends Sassongher (2,665m) and continues across a narrow limestone ridge to Sasso Lungo (2,835m), offering technical scrambling and sustained exposure above sheer vertical cliffs. The trail is marked but requires scrambling ability and mountaineering confidence, rewarding hikers with unobstructed views of the entire Sella Group and glimpses of glaciers clinging to distant peaks. The descent into Selva Valley follows steep switchbacks through Alpine meadows dotted with mountain refugios.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Sassongher Summit",
+          "type": "summit",
+          "description": "The 2,665m tower offers the first dramatic vistas and marks the start of the exposed ridge traverse."
+        },
+        {
+          "name": "Sasso Lungo Peak",
+          "type": "summit",
+          "description": "At 2,835m, this distinctive spire dominates the Val Gardena skyline and offers 360-degree panoramas."
+        },
+        {
+          "name": "Passo Ghedina Viewpoint",
+          "type": "viewpoint",
+          "description": "A mountain pass along the route offering unobstructed views toward the Langkofel massif."
+        }
+      ],
+      "rating": 4.7,
+      "reviews_count": 524,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "medium",
+        "fitness": "medium",
+        "exposure": "very_high"
+      },
+      "best_season": [
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc"
+      ],
+      "dog_friendly": false,
+      "family_friendly": false,
+      "tags": [
+        "ridge walk",
+        "summits",
+        "exposed",
+        "scrambling",
+        "point to point"
+      ],
+      "josephineNote": {
+        "en": "The ridge between Sassongher and Sasso Lungo narrows dramatically around the 2.5-hour mark—if you're uncomfortable with hands-on scrambling over 2,700m with air beneath you, turn back at the Sassongher summit rather than pushing to the ridge. Start from the Selva side (trailhead near Rifugio Cir) rather than Ortisei side to ensure an early start and better light on the exposed sections."
+      },
+      "access_info": "From Bolzano, drive to Selva Val Gardena (55 minutes via SS242). Park at Rifugio Cir trailhead parking; the trail begins at the rifugio at 2,050m. A point-to-point descent requires shuttle taxi service (available through Selva tourism office) or a second vehicle at Ortisei.",
+      "opening_season": {
+        "start_date": "2024-07-15",
+        "end_date": "2024-09-15"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Rifugio Cir car park: 90 spaces, €5/day; shuttle taxi service available from Selva to Ortisei (€20/person, book 24hrs ahead)",
+        "bus": "SAD line 260 serves Selva village; 15-minute walk to Rifugio Cir from bus stop"
+      },
+      "trailhead_info": {
+        "parking": "90 spaces at Rifugio Cir, €5/day",
+        "facilities": "Rifugio Cir offers food and WC; no facilities on ridge itself"
+      },
+      "nearby_rifugios": [
+        {
+          "name": "Rifugio Cir",
+          "elevation": 2050
+        },
+        {
+          "name": "Rifugio Ghedina",
+          "elevation": 2293
+        }
+      ],
+      "crowding": {
+        "level": "medium",
+        "peak_months": [
+          "August"
+        ],
+        "quiet_tip": "Start before 6:30am to have the ridge to yourself and ensure safe, slow descents in good light; many day-trippers hike the same route."
+      },
+      "weather_notes": "Afternoon thunderstorms and fog roll in rapidly at altitude; descend immediately if weather deteriorates as the exposed ridge becomes dangerous.",
+      "highlights": [
+        "The knife-edge Sassongher to Sasso Lungo ridge walk with 1,000m+ drops visible on both sides",
+        "Unobstructed panoramas of the entire Sella Group, Marmolada Glacier, and distant Brenta peaks",
+        "Late-season (September) views of first snow on 4,000m peaks in the distance"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "tre-cime-sunset-loop",
+      "name": "Tre Cime di Lavaredo Sunset Loop",
+      "region": "Val Pusteria",
+      "difficulty": "medium",
+      "tagline": "Circle the iconic three peaks with golden hour light transforming the limestone into molten amber.",
+      "distance_km": 11.5,
+      "duration_hours": 5.5,
+      "elevation_gain_m": 650,
+      "elevation_loss_m": 650,
+      "trail_type": "loop",
+      "interests": [
+        "panoramic views",
+        "summits",
+        "alpine lakes"
+      ],
+      "description": "This circuit hike traces the perimeter of the Tre Cime massif, Italy's most photographed mountains, delivering unobstructed views of all three distinctive peaks from multiple angles. The trail winds through high alpine meadows where marmots whistle warnings and golden eagles circle overhead, then climbs rocky switchbacks to Rifugio Auronzo with its terrace commanding 360-degree vistas. Timing your ascent for late afternoon rewards you with the rare phenomenon of alpenglow painting the dolomitic walls in shades of rose and crimson.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Rifugio Auronzo",
+          "type": "cultural",
+          "description": "Historic mountain hut perched at 2,320m with a legendary terrace overlooking the Tre Cime—perfect for sunset views and hearty Tyrolean fare."
+        },
+        {
+          "name": "Sorau Peak Viewpoint",
+          "type": "viewpoint",
+          "description": "A minor summit along the loop offering an unrivaled perspective where all three Cime align perfectly against the eastern sky."
+        },
+        {
+          "name": "Tre Cime Massif",
+          "type": "summit",
+          "description": "Three towering limestone formations—Big Cima, Cima Ovest, and Cima Grande—that define the Dolomites' silhouette on every postcard."
+        },
+        {
+          "name": "Sorau Lake",
+          "type": "lake",
+          "description": "A pristine alpine tarn nestled below the peaks, reflecting the surrounding peaks on calm mornings."
+        }
+      ],
+      "rating": 4.8,
+      "reviews_count": 1247,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "medium",
+        "fitness": "medium",
+        "exposure": "high"
+      },
+      "best_season": [
+        "June",
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc",
+        "cable_car"
+      ],
+      "dog_friendly": false,
+      "family_friendly": false,
+      "tags": [
+        "iconic peaks",
+        "alpine panorama",
+        "golden hour",
+        "exposed ridge",
+        "dolomites classic"
+      ],
+      "josephineNote": {
+        "en": "Start at Rifugio Auronzo via cable car to save legs, then begin the loop counterclockwise—this way the sun hits the Cima Grande's west face during your final approach, creating that otherworldly pink-orange glow. Bring layers; the exposed ridges funnel wind directly up from the Sorau pass and temperature can drop 10°C in minutes."
+      },
+      "access_info": "From Cortina d'Ampezzo, drive 35km northeast on SS48 toward Misurina, then take the signed turnoff to Rifugio Auronzo (cable car station at Tre Croci Pass, 2,367m). The nearest town is Cortina d'Ampezzo, 45 minutes away. Alternatively, approach via the Lavaredo entrance near Colle Santa Lucia.",
+      "opening_season": {
+        "start_date": "2024-06-01",
+        "end_date": "2024-10-15"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Parking at Tre Croci Pass cable car station: 800 spaces, €15/day; overflow lot 2km away costs €8/day",
+        "bus": "SAD line 442 from Cortina bus station to Tre Croci (1 per hour June–September, roughly 50 minutes)"
+      },
+      "trailhead_info": {
+        "parking": "Tre Croci cable car station lot: 800 spaces, €15/day",
+        "facilities": "Restrooms, snack bar, cable car station building"
+      },
+      "nearby_rifugios": [
+        "Rifugio Auronzo",
+        "Rifugio Sorau"
+      ],
+      "crowding": {
+        "level": "high",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Start before 8am or plan to arrive at Rifugio Auronzo after 5pm for sunset; early starters beat the crowds by arriving at peak viewpoints before noon."
+      },
+      "weather_notes": "Exposed ridge is vulnerable to rapid afternoon thunderstorms; electrical risk is real—descend by 3pm or shelter in the rifugio.",
+      "highlights": [
+        "Alpenglow turning the Tre Cime's limestone walls crimson and rose during sunset",
+        "The vertiginous moment when the trail drops below cloud level and all three peaks suddenly loom above you",
+        "Rifugio Auronzo's terrace where you can watch shadows lengthen across the Veneto plains 2,000m below"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "merano-passiria-valley-stroll",
+      "name": "Merano to Passiria Valley Riverside Walk",
+      "region": "Merano & Surroundings",
+      "difficulty": "easy",
+      "tagline": "Meander through Mediterranean gardens and along crystal-clear alpine streams in South Tyrol's sunniest valley.",
+      "distance_km": 8.2,
+      "duration_hours": 2.75,
+      "elevation_gain_m": 140,
+      "elevation_loss_m": 140,
+      "trail_type": "out_and_back",
+      "interests": [
+        "forests",
+        "panoramic views",
+        "cultural routes"
+      ],
+      "description": "This gentle riverside trail descends from Merano's Belle Époque elegance into the Passiria Valley, where the Passirio stream cuts a verdant corridor through chestnut and oak forests that feel almost subtropical in their lushness. The path follows the water's edge as it tumbles over moss-covered rocks, passing traditional Tyrolean farmsteads with their steep roofs and flower-laden balconies, before opening into sun-drenched meadows where locals graze cattle. Turnaround at the hamlet of Saltaus allows views back toward Merano's castle-crowned skyline.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Merano Town Center",
+          "type": "cultural",
+          "description": "Historic spa town with Art Nouveau architecture, arcaded streets, and the 14th-century Merano Castle overlooking the Passirio confluence."
+        },
+        {
+          "name": "Passirio River Gorge",
+          "type": "waterfall",
+          "description": "Where the stream cascades through a dramatic limestone narrows, creating jade-green pools and thunderous white water."
+        },
+        {
+          "name": "Saltaus Village",
+          "type": "cultural",
+          "description": "Picturesque hamlet with traditional wine cellars and a small church, marking the turnaround point of this easy walk."
+        },
+        {
+          "name": "Tappeiner Promenade Viewpoint",
+          "type": "viewpoint",
+          "description": "A higher trail alongside offering panoramic vistas of the Passiria Valley stretching toward the Ötztal massif."
+        }
+      ],
+      "rating": 4.4,
+      "reviews_count": 683,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "very_low",
+        "exposure": "very_low"
+      },
+      "best_season": [
+        "April",
+        "May",
+        "June",
+        "September",
+        "October"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc",
+        "first_aid"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "riverside",
+        "easy walk",
+        "mediterranean forest",
+        "spa town",
+        "dog friendly"
+      ],
+      "josephineNote": {
+        "en": "Park at Merano's central Kurhaus lot, then enter via the Passirio bridge by the casino—this puts you immediately on the trail without navigating streets. The river level fluctuates dramatically after rain, so if water is roaring loudly, stick to the upper Tappeiner path instead; it offers equally lovely views and is safer for children."
+      },
+      "access_info": "From Bolzano, take the SS38 southwest for 35km to Merano (town center is well-signed). Park at Kurhaus (main spa complex) or public lots nearby. The trail begins at the Passirio River bridge beside Merano Castle. Merano train station is 500m away with frequent regional service.",
+      "opening_season": {
+        "start_date": null,
+        "end_date": null
+      },
+      "year_round": true,
+      "transport": {
+        "car": "Kurhaus parking lot: 400 spaces, €1.50/hour or €12/day; street parking also available near Merano center",
+        "bus": "SAD line 204 from Bolzano to Merano (hourly, 50 minutes); local Merano buses serve the town center"
+      },
+      "trailhead_info": {
+        "parking": "Kurhaus lot: 400 spaces, €1.50/hour; also street parking throughout Merano",
+        "facilities": "Full Merano town amenities: restaurants, cafes, restrooms, pharmacies, shops"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "medium",
+        "peak_months": [
+          "July",
+          "August",
+          "September"
+        ],
+        "quiet_tip": "Visit on a weekday morning in May or early June when Merano's spa tourists haven't yet arrived, and locals still use the river paths for their daily walks."
+      },
+      "weather_notes": "This valley is South Tyrol's warmest and sunniest—summer heat can exceed 30°C; bring water and sun protection, and consider early morning or evening walks.",
+      "highlights": [
+        "The moment the river opens into a crystal-clear emerald pool framed by overhanging willows, perfect for a midwalk paddle",
+        "Traditional wine cellars carved into rock faces along Saltaus village with hand-painted family crests on ancient doors",
+        "Alpenglow on the Ötztal peaks to the northwest as you walk back toward Merano at golden hour"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "seceda-ridge-wild-descent",
+      "name": "Seceda Ridge to Gardena Valley Descent",
+      "region": "Val Gardena",
+      "difficulty": "hard",
+      "tagline": "Knife-edge alpine ridge with exposure and rock scrambling, rewarding bold hikers with uninterrupted views of the Dolomites' highest peaks.",
+      "distance_km": 9.8,
+      "duration_hours": 6.5,
+      "elevation_gain_m": 420,
+      "elevation_loss_m": 1080,
+      "trail_type": "point_to_point",
+      "interests": [
+        "summits",
+        "alpine lakes",
+        "panoramic views",
+        "wildlife"
+      ],
+      "description": "The ascent to Seceda's distinctive horn-shaped peak involves steep rock scrambling with chains and cables securing the final 200m push to 2,519m, but the payoff is a summit that thrusts you above the clouds directly into the middle of the Dolomites' most dramatic skyline. From the ridge, you gaze down into Gardena Valley's pale green meadows and across to the Sella massif, while golden eagles and choughs circle at your eye level. The descent plunges steeply along a narrow path with cables through sections of genuine exposure, eventually mellowing into alpine pastures where you can spot marmots and ibex.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Seceda Peak",
+          "type": "summit",
+          "description": "The distinctive 2,519m horn rising above Val Gardena, offering unrivaled 360-degree views of Sella, Marmolada, and Ra Gusela peaks."
+        },
+        {
+          "name": "Sella Massif Panorama",
+          "type": "viewpoint",
+          "description": "From the ridge, the vast pale limestone plateau of the Sella fills the eastern horizon, its countless rifts and towers creating an alien landscape."
+        },
+        {
+          "name": "Passo Gardena Meadows",
+          "type": "cultural",
+          "description": "High-altitude pastures where Ladin herders still graze cattle, and traditional stone huts dot the landscape."
+        },
+        {
+          "name": "Rifugio Seceda",
+          "type": "cultural",
+          "description": "Mountain hut at 2,180m serving as a checkpoint and refuge, with hearty Ladin cuisine and views toward the Fanes-Sennes-Braies massif."
+        }
+      ],
+      "rating": 4.7,
+      "reviews_count": 542,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "high",
+        "fitness": "high",
+        "exposure": "very_high"
+      },
+      "best_season": [
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc",
+        "cable_car"
+      ],
+      "dog_friendly": false,
+      "family_friendly": false,
+      "tags": [
+        "scrambling",
+        "exposed ridge",
+        "alpine peak",
+        "ladin valley",
+        "technical descent"
+      ],
+      "josephineNote": {
+        "en": "Use the Seceda cable car to ascend from Ortisei (saves 600m of elevation gain and 2 hours) so you can focus energy on the rock scramble and ridge traverse. The cables on the final pitch are old and corroded—test each one before committing your full weight, and wear gloves because rust stains everything. Descend before 2pm; afternoon thermal winds along the exposed ridge can be genuinely dangerous."
+      },
+      "access_info": "From Bolzano, drive 45km north on the SS242 through Val Gardena to Ortisei (the main village). The Seceda cable car station is well-signed in town; parking is plentiful but fills by 9am in summer. Alternatively, start from Passo Gardena (Grodner Joch) if you have a car with high clearance for the steep mountain road.",
+      "opening_season": {
+        "start_date": "2024-07-01",
+        "end_date": "2024-09-30"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Ortisei cable car parking: 600 spaces, €2/hour or €12/day; Passo Gardena lot: 150 spaces, free",
+        "bus": "SAD line 260 from Bolzano to Ortisei (hourly, 55 minutes June–September); local minibus to cable car station"
+      },
+      "trailhead_info": {
+        "parking": "Seceda cable car lot in Ortisei: 600 spaces, €2/hour; Passo Gardena: 150 spaces, free",
+        "facilities": "Cable car station with café and restrooms; Rifugio Seceda midway with full services"
+      },
+      "nearby_rifugios": [
+        "Rifugio Seceda",
+        "Rifugio Passo Ghedina"
+      ],
+      "crowding": {
+        "level": "high",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Start at first cable car (8:30am) to reach the scramble section before crowds; mid-afternoon sees a second wave of tourists, so clear the exposed ridge by 1:30pm."
+      },
+      "weather_notes": "The exposed ridge is vulnerable to rapid weather changes and afternoon thunderstorms create serious lightning risk—descend by 2pm or don't go.",
+      "highlights": [
+        "The moment your feet touch Seceda's horn and the view opens to reveal the Sella's 40km of limestone cliffs filling the eastern horizon",
+        "Technical scrambling through the final 200m with chains—adrenaline-pumping but manageable for confident scramblers",
+        "Ibex spotting on the descent's steep sections where the animals feel safe from predators due to the near-vertical terrain"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "bolzano-adige-wine-trail",
+      "name": "Bolzano to Firmian Wine Route Loop",
+      "region": "Bolzano & Surroundings",
+      "difficulty": "easy",
+      "tagline": "Stroll through South Tyrol's premier wine region, descending through terraced vineyards to the 13th-century Firmian Castle overlooking Bolzano.",
+      "distance_km": 7.5,
+      "duration_hours": 3,
+      "elevation_gain_m": 280,
+      "elevation_loss_m": 280,
+      "trail_type": "loop",
+      "interests": [
+        "cultural routes",
+        "panoramic views",
+        "forests"
+      ],
+      "description": "This gentle loop departs Bolzano's city center and climbs through steep wine terraces where Vernatsch and Lagrein grapes cling to south-facing slopes, the vines so densely planted that walking feels like moving through a green labyrinth. Halfway up, you reach the Firmian Castle—a medieval stronghold with towers and crenellations silhouetted against the Southern Alps—where you can tour the Renaissance rooms or simply admire the view down to Bolzano's duomo and the Adige River. The descent winds through ancient chestnut groves and small wine villages where family-run cellars beckon with tastings.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Firmian Castle",
+          "type": "cultural",
+          "description": "13th-century medieval fortress with Renaissance additions, crenellated towers, and a museum documenting South Tyrol's feudal history—dramatic silhouette against Alpine backdrop."
+        },
+        {
+          "name": "Bolzano Wine Region Terraces",
+          "type": "cultural",
+          "description": "UNESCO-recognized steep vineyard terraces where Vernatsch, Lagrein, and Gewürztraminer have been cultivated for centuries on near-vertical slopes."
+        },
+        {
+          "name": "Bolzano Cathedral",
+          "type": "cultural",
+          "description": "15th-century Gothic cathedral with distinctive red-tiled roof spire, visible from throughout the loop and dominating Bolzano's Old Town."
+        },
+        {
+          "name": "Chestnut Forest Section",
+          "type": "cultural",
+          "description": "Ancient woods where massive chestnut trees provide shelter and shade, their wood once used for building and barrels."
+        }
+      ],
+      "rating": 4.3,
+      "reviews_count": 891,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "low",
+        "exposure": "very_low"
+      },
+      "best_season": [
+        "September",
+        "October",
+        "May",
+        "June"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc",
+        "first_aid"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "wine route",
+        "easy loop",
+        "medieval castle",
+        "vineyard terraces",
+        "family friendly"
+      ],
+      "josephineNote": {
+        "en": "Start at Bolzano Cathedral in the Old Town and follow wine trail markers uphill through the Firmian district—this means parking near the duomo rather than trying to navigate to a remote trailhead. Firmian Castle has a summer café on the terrace; stop here for a glass of local Lagrein and gaze down at the city spread below you. In September, you may see grape harvesters on the terraces; it's magical to watch centuries-old techniques in action."
+      },
+      "access_info": "From Bolzano city center (Piazza Walther), follow signs for Firmian/Firmian uphill through the wine district. Parking is available in Bolzano's central lots or at the cathedral. The trail is very walkable from the Old Town without a car, though a 5km warm-up. Alternatively, drive to the Firmian Castle parking area directly (5km from center, well-signed).",
+      "opening_season": {
+        "start_date": null,
+        "end_date": null
+      },
+      "year_round": true,
+      "transport": {
+        "car": "Bolzano Old Town parking: 1,200 spaces across multiple lots, €1.20–2/hour; Firmian Castle: 80 spaces, free",
+        "bus": "SAD line 206 from Bolzano main station to Firmian village (hourly, 15 minutes); city buses also serve trailheads"
+      },
+      "trailhead_info": {
+        "parking": "Bolzano Cathedral lot: 300 spaces, €1.20/hour; Firmian Castle: 80 spaces, free",
+        "facilities": "Full Bolzano city amenities; Firmian Castle café with restrooms"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "medium",
+        "peak_months": [
+          "September",
+          "October"
+        ],
+        "quiet_tip": "Hike on weekday mornings in May or early June before the September harvest tourism surge; you'll have the vineyard paths nearly to yourself."
+      },
+      "weather_notes": "South-facing terraces can be intensely hot in summer (July–August); choose May, June, or September for comfortable conditions.",
+      "highlights": [
+        "Walking between rows of Lagrein and Vernatsch grapes so densely planted they form a living tunnel above your head",
+        "Emerging from the vineyard maze to see Firmian Castle perched on its rocky outcrop, straight from a medieval romance",
+        "The view from Firmian Castle's terrace down to Bolzano's duomo and the Adige River snaking through the valley floor"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "vinschgau-etsch-riverside-trail",
+      "name": "Vinschgau: Merano to Naturns Riverside Trail",
+      "region": "Vinschgau",
+      "difficulty": "medium",
+      "tagline": "A peaceful riverside ramble through South Tyrol's driest and sunniest valley, passing apple orchards and medieval villages along the Etsch River.",
+      "distance_km": 13.2,
+      "duration_hours": 4.5,
+      "elevation_gain_m": 185,
+      "elevation_loss_m": 185,
+      "trail_type": "point_to_point",
+      "interests": [
+        "rivers",
+        "cultural routes",
+        "panoramic views",
+        "forests"
+      ],
+      "description": "The Etsch River's extensive trail network flows through Vinschgau—South Tyrol's warmest and sunniest valley—connecting Merano to the village of Naturns via a well-maintained path that rarely strays far from the water's edge. The route winds past endless apple orchards (this region produces Italy's best apples), ancient stone bridges, and villages where church spires rise above terracotta roofs and locals still speak Ladin. The riverside landscape alternates between wild sections where willows overhang turquoise pools and agricultural zones dotted with traditional farmsteads, creating a compelling portrait of valley life unchanged for centuries.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Naturns Village",
+          "type": "cultural",
+          "description": "Historic Ladin village with a baroque church and a central piazza lined with shops and cafes, marking the northern endpoint."
+        },
+        {
+          "name": "Etsch River Gorge",
+          "type": "waterfall",
+          "description": "A narrow section where the Etsch cuts between limestone walls, creating small rapids and turquoise pools perfect for photos."
+        },
+        {
+          "name": "Apple Orchard Corridors",
+          "type": "cultural",
+          "description": "Endless rows of apple trees (Gala, Fuji, and local varieties) defining the Vinschgau landscape, especially stunning during May bloom and September harvest."
+        },
+        {
+          "name": "Töll Bridge",
+          "type": "cultural",
+          "description": "A medieval stone arch bridge spanning the Etsch with centuries of patina, one of several ancient crossings you'll encounter."
+        }
+      ],
+      "rating": 4.5,
+      "reviews_count": 724,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "low",
+        "fitness": "medium",
+        "exposure": "low"
+      },
+      "best_season": [
+        "April",
+        "May",
+        "September",
+        "October"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "riverside walk",
+        "apple orchards",
+        "valley trail",
+        "ladin villages",
+        "cultural"
+      ],
+      "josephineNote": {
+        "en": "Park at Merano's Kurhaus and walk to Naturns, then take the SAD bus back (line 260, 25 minutes, hourly)—this avoids the hassle of two cars. The apple bloom in late May is extraordinary; if you time it right, you'll walk through clouds of white blossoms. In September during harvest, stop at any roadside farm stand and buy a just-picked apple—they're incomparably better than anything in supermarkets."
+      },
+      "access_info": "From Merano, drive southwest on SS38 for 12km to Naturns (the northern endpoint), or start from Merano. Both towns have parking; the trail is fully waymarked with red-white-red blazes along the Etsch. Merano is 35km from Bolzano on the SS38; Naturns is 8km beyond.",
+      "opening_season": {
+        "start_date": null,
+        "end_date": null
+      },
+      "year_round": true,
+      "transport": {
+        "car": "Merano Kurhaus lot: 400 spaces, €1.50/hour; Naturns village: 150 spaces, free",
+        "bus": "SAD line 260 between Merano and Naturns (hourly, 25 minutes, year-round); local buses also serve both towns"
+      },
+      "trailhead_info": {
+        "parking": "Merano Kurhaus: 400 spaces, €1.50/hour; Naturns village: 150 spaces, free",
+        "facilities": "Full services in both Merano and Naturns; restaurants and cafes along the trail"
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "low",
+        "peak_months": [
+          "September"
+        ],
+        "quiet_tip": "Visit on a weekday in May when the orchards are in bloom but schools are still in session—you'll encounter only local walkers and the occasional cyclist."
+      },
+      "weather_notes": "Vinschgau is South Tyrol's sunniest valley with minimal rainfall and warm summers; bring sun protection and water, and consider April, May, or September for ideal conditions.",
+      "highlights": [
+        "Walking through entire valleys of apple orchards in late May bloom—white blossoms covering every tree like fresh snow",
+        "Spotting traditional wooden balconies and hand-painted shutters on farmsteads as you pass through villages unchanged for generations",
+        "A turquoise pool in the Etsch River gorge section where the water is so clear you can see stones on the bottom 3 meters below"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "tre-cime-tre-peaks-traverse",
+      "name": "Tre Cime Three Peaks Traverse",
+      "region": "Val Pusteria",
+      "difficulty": "hard",
+      "tagline": "Scramble across the three iconic limestone towers of the Dolomites on an adrenaline-soaked ridge.",
+      "distance_km": 10.2,
+      "duration_hours": 7,
+      "elevation_gain_m": 850,
+      "elevation_loss_m": 850,
+      "trail_type": "point_to_point",
+      "interests": [
+        "summits",
+        "panoramic views",
+        "alpine lakes"
+      ],
+      "description": "This demanding traverse connects all three peaks of the Tre Cime—Cima Ovest, Cima Grande, and Cima Piccola—via exposed scrambles and chain-assisted sections, offering some of the most dramatic Dolomite vistas imaginable. The route begins at Rifugio Auronzo and follows a combination of via ferrata cables and loose scrambling across limestone blocks shaped like giant teeth. Each peak offers 360-degree views of the Sorapis, Misurina Lake, and the Passo Tre Croci valley below.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Cima Grande (Big Peak)",
+          "type": "summit",
+          "description": "The central and highest of the three at 2,999m, featuring a stone cairn and chains for the final ascent."
+        },
+        {
+          "name": "Rifugio Auronzo",
+          "type": "cultural",
+          "description": "A legendary mountain refuge nestled at 2,320m offering hot meals and views toward Misurina Lake."
+        },
+        {
+          "name": "Lago di Misurina",
+          "type": "lake",
+          "description": "The alpine lake at 1,754m reflecting the Tre Cime's jagged silhouette, visible from multiple points on the traverse."
+        },
+        {
+          "name": "Passo Tre Croci Viewpoint",
+          "type": "viewpoint",
+          "description": "A mountain pass with a stunning vista of all three peaks forming a crown against the sky."
+        }
+      ],
+      "rating": 4.8,
+      "reviews_count": 1200,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "high",
+        "fitness": "high",
+        "exposure": "very_high"
+      },
+      "best_season": [
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc"
+      ],
+      "dog_friendly": false,
+      "family_friendly": false,
+      "tags": [
+        "scrambling",
+        "via ferrata",
+        "iconic peaks",
+        "technical"
+      ],
+      "josephineNote": {
+        "en": "I attempted this traverse in late July with fresh legs and nearly turned back at Cima Grande's final pitch—the chain section is slick with lichen after rain. Bring gloves (your hands will bleed otherwise on the limestone), and absolutely do not attempt this if there's any threat of afternoon storms; the exposure is unforgiving. Start at 5:30am from Rifugio Auronzo to finish before 2pm weather window closes. The cable car from Misurina to Auronzo is essential—hiking the scree approach costs an extra 2 hours of energy."
+      },
+      "access_info": "Drive to Misurina Lake near Cortina d'Ampezzo in Val Pusteria. From Misurina village, take the cable car (Funivia Auronzo) to Rifugio Auronzo at 2,320m, where the traverse begins. Park at Misurina Lake parking areas (multiple lots).",
+      "opening_season": {
+        "start_date": "2025-07-01",
+        "end_date": "2025-09-15"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Large paid parking at Misurina Lake (500+ spaces, €3/day); additional free overflow parking 1km away.",
+        "bus": "SAD line 442 from Cortina d'Ampezzo to Misurina (3 daily, June–September); no direct service from Bolzano."
+      },
+      "trailhead_info": {
+        "parking": "500+ spaces at Misurina Lake; €3/day.",
+        "facilities": "Café, restaurants, and WC at Misurina Lake village; full services at Rifugio Auronzo."
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "high",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "This is perpetually busy, but starting before 6am means you'll be descending as others are ascending, providing some solitude on the peaks themselves. September after Labor Day sees a dramatic drop in crowds."
+      },
+      "weather_notes": "Exposure on limestone scrambles is severe; afternoon thunderstorms are frequent and dangerous; wind gusts over 50km/h are not uncommon.",
+      "highlights": [
+        "Scrambling hand-over-foot across Cima Grande's exposed summit block",
+        "The moment when all three teeth of the Tre Cime align in a jagged crown",
+        "Gazing down at Misurina Lake 1,200m below, glinting like a jewel"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "bolzano-guntschna-forest-descent",
+      "name": "Bolzano Guntschna Forest Descent",
+      "region": "Bolzano & Surroundings",
+      "difficulty": "easy",
+      "tagline": "A shaded forest walk descending from the Renon plateau into Bolzano's bustling alpine city.",
+      "distance_km": 7.5,
+      "duration_hours": 2.5,
+      "elevation_gain_m": 50,
+      "elevation_loss_m": 520,
+      "trail_type": "point_to_point",
+      "interests": [
+        "forests",
+        "panoramic views"
+      ],
+      "description": "This gentle descent through the beech and larch forests of the Renon plateau offers respite from Bolzano's summer heat while delivering panoramic views of the Dolomites and the city nestled in the Isarco Valley. The trail is almost entirely shaded, winding through moss-covered boulders and past traditional farmsteads, with frequent benches for resting and taking in the views. You'll emerge at the funicular station in Bolzano, where you can reward yourself with a cool drink and the city's famous wine and food culture.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Guntschna Lookout",
+          "type": "viewpoint",
+          "description": "A scenic overlook near the trailhead offering views of the Isarco Valley and distant Dolomite ridges."
+        },
+        {
+          "name": "Bolzano Cathedral",
+          "type": "church",
+          "description": "A stunning 15th-century Gothic cathedral in Bolzano's historic center with an iconic spire."
+        },
+        {
+          "name": "South Tyrol Museum of Archaeology (Ötzi)",
+          "type": "cultural",
+          "description": "A world-famous museum housing the 5,300-year-old mummified remains of a prehistoric iceman."
+        },
+        {
+          "name": "Renon Plateau Traditional Farmhouses",
+          "type": "cultural",
+          "description": "Historic Tyrolean masi (farmhouses) scattered along the upper trail sections."
+        }
+      ],
+      "rating": 4.2,
+      "reviews_count": 340,
+      "image_url": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800",
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "very_low",
+        "fitness": "very_low",
+        "exposure": "very_low"
+      },
+      "best_season": [
+        "May",
+        "June",
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc",
+        "cable_car"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "forest walk",
+        "easy descent",
+        "family-friendly",
+        "accessible"
+      ],
+      "josephineNote": {
+        "en": "I did this hike in August to escape Bolzano's 30°C heat, and the forest stayed cool the entire way down. The trick is to take the cable car (Rittner Bahn) up from Bolzano in the early morning and walk down slowly, stopping at the farmhouses that sell fresh apple juice and cheese. The path can be muddy after rain despite the forest canopy, so bring trail shoes with grip. At the bottom, head straight to Bolzano's wine quarter (Gries) for a glass of Lagrein—you've earned it."
+      },
+      "access_info": "From Bolzano city center, take the Rittner Bahn cable car (Renon cable car) from Bolzano's eastern edge. The trailhead begins at Guntschna station on the Renon plateau. By car, drive via the Renon road; parking is available at both the cable car base and upper stations.",
+      "opening_season": {
+        "start_date": "2025-05-01",
+        "end_date": "2025-09-30"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Free parking at cable car base station (100 spaces); paid parking €2/day at upper Renon station.",
+        "bus": "SAD line 340 from Bolzano to Renon plateau (hourly, May–September); or take cable car Rittner Bahn from city center."
+      },
+      "trailhead_info": {
+        "parking": "100 spaces at cable car base; €2/day at upper station.",
+        "facilities": "Café and WC at upper cable car station; full services in Bolzano city center."
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "low",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "Most tourists use the cable car both ways; very few walk down. Start late in the afternoon (3pm+) and you'll have the forest nearly to yourself."
+      },
+      "weather_notes": "Forest provides excellent shade and protection from sun; occasional afternoon drizzle in July–August.",
+      "highlights": [
+        "Cooling forest canopy providing relief from Bolzano's summer heat",
+        "Traditional masi farmhouses selling fresh apple juice and local cheese",
+        "Emerging from forest to views of Bolzano nestled in the valley, ready for wine and culture"
+      ],
+      "status": "published"
+    },
+    {
+      "id": "passo-furcia-lake-circuit",
+      "name": "Passo Furcia Alpine Lake Circuit",
+      "region": "Vinschgau",
+      "difficulty": "medium",
+      "tagline": "Circle three pristine alpine lakes beneath towering limestone walls in the wild upper Val Venosta.",
+      "distance_km": 9.8,
+      "duration_hours": 5,
+      "elevation_gain_m": 680,
+      "elevation_loss_m": 680,
+      "trail_type": "loop",
+      "interests": [
+        "alpine lakes",
+        "panoramic views",
+        "summits"
+      ],
+      "description": "This stunning circuit connects three glacial alpine lakes—Lago di Sorbo, Lago di Placcia, and Lago di Furcia—via a high-altitude loop that tours the dramatic amphitheater of limestone cliffs cradling these waters. The hike begins at Rifugio Passo Furcia and winds through alpine meadows dotted with gentians and alpine roses, skirting pristine turquoise waters and offering frequent Dolomite vistas. The trail gains elevation steadily but rewards every step with increasingly dramatic panoramas of the Vinschgau peaks and the untouched wilderness of the upper Val Venosta.",
+      "coordinates": [],
+      "pois": [
+        {
+          "name": "Lago di Furcia (Sorbian Lake)",
+          "type": "lake",
+          "description": "A pristine turquoise glacial lake at 2,505m surrounded by limestone cliffs and alpine meadows."
+        },
+        {
+          "name": "Rifugio Passo Furcia",
+          "type": "cultural",
+          "description": "A traditional mountain refuge serving hearty Val Venosta cuisine and hosting mountaineers exploring the region."
+        },
+        {
+          "name": "Passo Furcia Summit",
+          "type": "summit",
+          "description": "A 2,700m alpine pass with 360-degree views of the Vinschgau peaks and Swiss border ranges."
+        },
+        {
+          "name": "Alpine Meadow Wildflower Expanse",
+          "type": "viewpoint",
+          "description": "Vast meadows in June–July carpeted with gentians, alpine roses, and edelweiss."
+        }
+      ],
+      "rating": 4.5,
+      "reviews_count": 280,
+      "image_url": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "thumbnail": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+      "gallery": [
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800",
+        "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800"
+      ],
+      "difficulty_details": {
+        "technical": "low",
+        "fitness": "medium",
+        "exposure": "medium"
+      },
+      "best_season": [
+        "June",
+        "July",
+        "August",
+        "September"
+      ],
+      "facilities": [
+        "parking",
+        "restaurants",
+        "wc"
+      ],
+      "dog_friendly": true,
+      "family_friendly": true,
+      "tags": [
+        "alpine lakes",
+        "loop trail",
+        "wildflowers",
+        "wilderness"
+      ],
+      "josephineNote": {
+        "en": "I hiked this in early July when the gentians were in full bloom, and the meadows were absolutely electric with color. The altitude (2,500m+) catches some people off guard—take it slowly and acclimatize at the rifugio with a strong coffee. The trail is well-marked but can be muddy near the lakes; gaiters are helpful. If weather deteriorates, you can bail out to the rifugio from any point on the loop. The silence here is profound—you'll likely see no one for hours."
+      },
+      "access_info": "Drive through Val Venosta (Vinschgau) from Merano toward Prato allo Stelvio. Turn toward Passo Furcia; a rough mountain road (passable for normal cars) leads to Rifugio Passo Furcia at 2,160m. Park at the rifugio parking area; the loop begins here.",
+      "opening_season": {
+        "start_date": "2025-06-15",
+        "end_date": "2025-09-30"
+      },
+      "year_round": false,
+      "transport": {
+        "car": "Free parking at Rifugio Passo Furcia (60 spaces); rough mountain road may require high-clearance vehicle in early season.",
+        "bus": "SAD line 252 from Bolzano to Prato allo Stelvio (limited service, 1–2 daily); no direct bus to Passo Furcia rifugio."
+      },
+      "trailhead_info": {
+        "parking": "60 spaces at rifugio; free.",
+        "facilities": "Full services (restaurant, WC, lodging) at Rifugio Passo Furcia."
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "low",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "This trail remains quiet even in peak season due to its remote location and rough access road. Visit anytime June–September and expect minimal crowds; September offers the bonus of autumn colors beginning to creep into the high meadows."
+      },
+      "weather_notes": "High altitude exposure to afternoon thunderstorms; snow can persist into June on shaded sections.",
+      "highlights": [
+        "Three turquoise glacial lakes reflecting the jagged limestone walls",
+        "Sweeping meadows ablaze with alpine wildflowers in June–July",
+        "The profound silence and sense of wilderness in the upper Val Venosta"
+      ],
+      "status": "published"
     }
   ]
 }
