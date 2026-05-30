@@ -57,7 +57,7 @@ Talisman(
     strict_transport_security=True,
     strict_transport_security_max_age=31536000,
     frame_options='DENY',
-    content_type_options=True,
+    x_content_type_options=True,
     content_security_policy={
         'default-src': ["'self'"],
         'img-src':     ["'self'", 'data:', 'https:', 'blob:'],
@@ -894,14 +894,6 @@ def get_weather_suitability():
 
 # ===== ADMIN API ENDPOINTS =====
 
-@app.route('/api/admin/login', methods=['POST'])
-def admin_login():
-    """Verify admin password"""
-    password = request.json.get('password')
-    if password == ADMIN_PASSWORD:
-        return jsonify({'success': True, 'message': 'Login successful'})
-    return jsonify({'success': False, 'message': 'Invalid password'}), 401
-
 @app.route('/api/admin/trails', methods=['POST'])
 @require_admin_auth
 def create_trail():
@@ -1288,6 +1280,10 @@ def save_user_analytics(analytics_data):
             print(f"[db] save_user_analytics fallback to JSON: {e}")
     analytics_path = os.path.join(BASE_DIR, 'data', 'user_analytics.json')
     atomic_json_write(analytics_path, analytics_data)
+
+# ── In-memory recommendation cache (keyed by SHA256 of params, TTL 5min) ─
+_chat_cache: dict = {}   # key → (serialised_json, timestamp)
+_rate_buckets: dict = {} # ip → [timestamp, ...]
 
 # ── Analytics write buffer — batch increments, flush every 30s ────────────
 _analytics_buffer: dict = {'views': {}, 'saves': {}}
