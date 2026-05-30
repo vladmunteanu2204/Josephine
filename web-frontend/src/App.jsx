@@ -26,6 +26,7 @@ import OnboardingWizard from './components/OnboardingWizard';
 import Footer from './components/Footer';
 import JosephineWidget from './components/JosephineWidget';
 import BottomNav from './components/BottomNav';
+import JosephineChat from './components/JosephineChat';
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
@@ -196,6 +197,10 @@ function App() {
 
           {currentView === 'multiday-detail' && selectedMultiDayTrail && (
             <MultiDayTrailDetail trailId={selectedMultiDayTrail} onNavigate={navigate} />
+          )}
+
+          {currentView === 'josephine' && (
+            <JosephineChat onBack={goBack} setCurrentView={setCurrentView} />
           )}
         </main>
 

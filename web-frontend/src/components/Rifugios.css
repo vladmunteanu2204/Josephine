@@ -1,478 +1,293 @@
-.rifugios-page {
+/* ============================================================
+   Rifugios — Dark Alpine Design
+   ============================================================ */
+
+.rif-page {
   min-height: 100vh;
-  background: linear-gradient(180deg, #0a0a0a 0%, #0e1810 50%, #0a0a0a 100%);
-  padding-bottom: 60px;
+  background: var(--bg-primary, #080e08);
+  padding-bottom: 100px;
 }
 
-.rifugios-header {
-  text-align: center;
-  padding: 60px 20px 50px;
-  background: linear-gradient(180deg, #0a1a0c 0%, #0e1810 100%);
-  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+/* ── State ── */
+.rif-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 24px;
+  color: rgba(240,236,230,0.45);
+  font-size: 15px;
 }
 
-.page-title {
-  font-family: var(--font-display);
-  font-size: clamp(32px, 6vw, 52px);
+/* ── Header ── */
+.rif-header {
+  background: linear-gradient(180deg, #0a1a0c 0%, #080e08 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 60px 0 40px;
+}
+
+.rif-header__eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #c9a84c;
+  text-transform: uppercase;
+  margin: 0 0 10px;
+}
+
+.rif-header__title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(32px, 5vw, 56px);
   font-weight: 300;
   font-style: italic;
-  color: var(--accent-primary);
-  letter-spacing: 0.01em;
-  margin-bottom: 12px;
+  color: #f0ece6;
+  margin: 0 0 10px;
+  line-height: 1.1;
 }
 
-.page-subtitle {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 16px;
-}
-
-.rifugios-container {
-  display: flex;
-  max-width: 1400px;
-  margin: 0 auto;
-  gap: 24px;
-  padding: 24px;
-}
-
-/* Filters Sidebar */
-.filters-sidebar {
-  width: 280px;
-  flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 24px;
-  height: fit-content;
-  position: sticky;
-  top: 24px;
-}
-
-.filters-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.filters-header h2 {
-  font-size: 20px;
-  color: #D4A574;
+.rif-header__sub {
+  font-size: 15px;
+  color: rgba(240,236,230,0.5);
   margin: 0;
+  max-width: 520px;
+  line-height: 1.6;
 }
 
-.clear-filters-btn {
-  background: rgba(212, 165, 116, 0.15);
-  border: 1px solid rgba(212, 165, 116, 0.3);
-  color: #D4A574;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+/* ── Filter bar ── */
+.rif-filters {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(8,14,8,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 14px 0;
 }
 
-.clear-filters-btn:hover {
-  background: rgba(212, 165, 116, 0.25);
-  transform: translateY(-1px);
-}
-
-.filter-group {
-  margin-bottom: 20px;
-}
-
-.filter-group label {
-  display: block;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 14px;
-  margin-bottom: 8px;
-  font-weight: 600;
-}
-
-.search-input,
-.filter-select,
-.altitude-input {
-  width: 100%;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-  color: white;
-  font-size: 14px;
-}
-
-.search-input:focus,
-.filter-select:focus,
-.altitude-input:focus {
-  outline: none;
-  border-color: rgba(212, 165, 116, 0.5);
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.altitude-inputs {
+.rif-filters__inner {
   display: flex;
-  gap: 8px;
-}
-
-.altitude-input {
-  flex: 1;
-}
-
-.results-count {
-  margin-top: 24px;
-  padding: 16px;
-  background: rgba(212, 165, 116, 0.1);
-  border-radius: 8px;
-  text-align: center;
-  color: #D4A574;
-  font-weight: 600;
-}
-
-/* Main Content */
-.rifugios-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.view-controls {
-  display: flex;
+  align-items: center;
   gap: 12px;
-  margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 
-.view-btn {
-  flex: 1;
-  padding: 12px 24px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 14px;
+/* Search */
+.rif-search-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.rif-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(240,236,230,0.35);
+  pointer-events: none;
+}
+
+.rif-search {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 100px;
+  padding: 8px 14px 8px 36px;
+  font-size: 13px;
+  color: #f0ece6;
+  outline: none;
+  width: 200px;
+  transition: border-color 0.2s;
+}
+
+.rif-search::placeholder { color: rgba(240,236,230,0.35); }
+.rif-search:focus { border-color: rgba(201,168,76,0.4); }
+
+/* Pill groups */
+.rif-pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.rif-pill {
+  padding: 7px 14px;
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: transparent;
+  color: rgba(240,236,230,0.55);
+  font-size: 12px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.18s ease;
+  white-space: nowrap;
 }
 
-.view-btn.active {
-  background: linear-gradient(135deg, rgba(212, 165, 116, 0.25) 0%, rgba(212, 165, 116, 0.15) 100%);
-  border-color: rgba(212, 165, 116, 0.4);
-  color: #D4A574;
+.rif-pill:hover { border-color: rgba(255,255,255,0.25); color: #f0ece6; }
+.rif-pill.active {
+  background: rgba(201,168,76,0.12);
+  border-color: rgba(201,168,76,0.5);
+  color: #c9a84c;
 }
 
-.view-btn:hover:not(.active) {
-  background: rgba(255, 255, 255, 0.08);
+.rif-clear {
+  padding: 7px 14px;
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: transparent;
+  color: rgba(240,236,230,0.45);
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.2s;
 }
 
-/* Rifugios Grid */
-.rifugios-grid {
+.rif-clear:hover { color: #f0ece6; }
+
+/* ── Body ── */
+.rif-body {
+  padding-top: 32px;
+}
+
+.rif-count {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(240,236,230,0.35);
+  margin: 0 0 24px;
+}
+
+/* ── Grid ── */
+.rif-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
 }
 
-.rifugio-card {
-  background: linear-gradient(135deg, rgba(212, 165, 116, 0.1) 0%, rgba(255, 255, 255, 0.03) 100%);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(212, 165, 116, 0.2);
-  border-radius: 16px;
+/* ── Card ── */
+.rif-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.22s ease, border-color 0.22s ease;
 }
 
-.rifugio-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 20px 60px rgba(212, 165, 116, 0.3);
-  border-color: rgba(212, 165, 116, 0.5);
+.rif-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(201,168,76,0.25);
 }
 
-.rifugio-card-image {
+/* Photo */
+.rif-card__img-wrap {
   position: relative;
   height: 200px;
   overflow: hidden;
 }
 
-.rifugio-card-image img {
+.rif-card__img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.4s ease;
 }
 
-.rifugio-card:hover .rifugio-card-image img {
-  transform: scale(1.1);
+.rif-card:hover .rif-card__img { transform: scale(1.04); }
+
+.rif-card__img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(8,14,8,0.75) 0%, transparent 60%);
 }
 
-.status-badge {
+.rif-card__type-badge {
   position: absolute;
   top: 12px;
-  right: 12px;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  backdrop-filter: blur(10px);
-}
-
-.status-badge.status-open {
-  background: rgba(34, 197, 94, 0.9);
-  color: white;
-}
-
-.status-badge.status-closed {
-  background: rgba(239, 68, 68, 0.9);
-  color: white;
-}
-
-.status-badge.status-opening-soon {
-  background: rgba(234, 179, 8, 0.9);
-  color: white;
-}
-
-.status-badge.status-seasonal {
-  background: rgba(156, 163, 175, 0.9);
-  color: white;
-}
-
-.rifugio-card-content {
-  padding: 20px;
-}
-
-.rifugio-name {
-  font-size: 20px;
+  left: 12px;
+  font-size: 10px;
   font-weight: 700;
-  color: white;
-  margin: 0 0 12px 0;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #f0ece6;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 100px;
+  padding: 4px 10px;
 }
 
-.rifugio-meta {
+/* Body */
+.rif-card__body {
+  padding: 18px 18px 20px;
+}
+
+.rif-card__status-row {
   display: flex;
-  gap: 16px;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.rif-card__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.rif-card__status-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(240,236,230,0.6);
+}
+
+.rif-card__hours {
+  font-size: 11px;
+  color: rgba(240,236,230,0.4);
+  margin-left: 4px;
+}
+
+.rif-card__name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 20px;
+  font-weight: 400;
+  font-style: italic;
+  color: #f0ece6;
+  margin: 0 0 8px;
+  line-height: 1.2;
+}
+
+.rif-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(240,236,230,0.45);
   margin-bottom: 12px;
 }
 
-.meta-item {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 14px;
-}
-
-.rifugio-type-badge {
-  display: inline-block;
-  padding: 4px 12px;
-  background: rgba(212, 165, 116, 0.2);
-  border: 1px solid rgba(212, 165, 116, 0.3);
-  border-radius: 12px;
-  color: #D4A574;
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 16px;
-}
-
-.facilities-icons {
+.rif-card__amenities {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
-.facilities-icons span {
+.rif-card__amenity {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.8);
+  opacity: 0.7;
 }
 
-/* Map View Placeholder */
-.rifugios-map-placeholder {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 80px 40px;
+/* ── Empty ── */
+.rif-empty {
   text-align: center;
-  min-height: 500px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  padding: 80px 24px;
+  color: rgba(240,236,230,0.4);
 }
 
-.rifugios-map-placeholder p {
-  font-size: 24px;
-  color: rgba(255, 255, 255, 0.5);
-  margin-bottom: 12px;
-}
+.rif-empty p { margin-bottom: 16px; }
 
-.map-hint {
-  font-size: 14px !important;
-  color: rgba(255, 255, 255, 0.4) !important;
-}
-
-/* Empty State */
-.empty-state {
-  text-align: center;
-  padding: 80px 40px;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 16px;
-}
-
-.empty-state p {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 18px;
-  margin-bottom: 24px;
-}
-
-/* Mobile Responsive */
-@media (max-width: 1024px) {
-  .rifugios-container {
-    flex-direction: column;
-  }
-  
-  .filters-sidebar {
-    width: 100%;
-    position: static;
-  }
-  
-  .rifugios-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  }
-}
-
-@media (max-width: 768px) {
-  .rifugios-header {
-    padding: 32px 16px;
-  }
-
-  .page-title {
-    font-size: 28px;
-  }
-
-  .page-subtitle {
-    font-size: 14px;
-  }
-
-  .rifugios-container {
-    padding: 16px;
-  }
-
-  .filters-sidebar {
-    padding: 20px 16px;
-  }
-
-  .view-controls {
-    gap: 10px;
-  }
-
-  .view-btn {
-    padding: 14px 20px;
-    font-size: 15px;
-    font-weight: 600;
-    white-space: nowrap;
-    min-width: 0;
-  }
-
-  .rifugios-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .rifugio-card-image {
-    height: 180px;
-  }
-}
-
-@media (max-width: 480px) {
-  .rifugios-header {
-    padding: 28px 16px;
-  }
-
-  .page-title {
-    font-size: 24px;
-  }
-
-  .page-subtitle {
-    font-size: 13px;
-  }
-
-  .rifugios-container {
-    padding: 12px;
-    gap: 16px;
-  }
-
-  .filters-sidebar {
-    padding: 18px 14px;
-    border-radius: 12px;
-  }
-
-  .filters-header {
-    flex-direction: column;
-    gap: 12px;
-    align-items: stretch;
-  }
-
-  .filters-header h2 {
-    font-size: 18px;
-    text-align: center;
-  }
-
-  .clear-filters-btn {
-    width: 100%;
-    padding: 10px 16px;
-    font-size: 14px;
-  }
-
-  .filter-group {
-    margin-bottom: 16px;
-  }
-
-  .view-controls {
-    gap: 8px;
-  }
-
-  .view-btn {
-    flex: 1;
-    padding: 12px 16px;
-    font-size: 14px;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-
-  .rifugios-grid {
-    gap: 16px;
-  }
-
-  .rifugio-card {
-    border-radius: 12px;
-  }
-
-  .rifugio-card-image {
-    height: 160px;
-  }
-
-  .rifugio-card-content {
-    padding: 16px;
-  }
-
-  .rifugio-name {
-    font-size: 18px;
-  }
-
-  .rifugio-meta {
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .meta-item {
-    font-size: 13px;
-  }
-
-  .empty-state {
-    padding: 60px 20px;
-  }
-
-  .empty-state p {
-    font-size: 16px;
-  }
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .rif-header { padding: 40px 0 28px; }
+  .rif-filters__inner { gap: 8px; }
+  .rif-search { width: 160px; }
+  .rif-grid { grid-template-columns: 1fr; }
 }

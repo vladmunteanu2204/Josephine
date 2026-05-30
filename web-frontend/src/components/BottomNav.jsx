@@ -64,7 +64,7 @@ function BottomNav({ currentView, setCurrentView, onJosephineOpen }) {
       {/* Centre Josephine button */}
       <button
         className="jph-bottom-nav__josephine"
-        onClick={onJosephineOpen}
+        onClick={() => setCurrentView('josephine')}
         aria-label="Talk to Josephine"
       >
         <div className="jph-bottom-nav__j-ring">

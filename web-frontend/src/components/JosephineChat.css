@@ -1,0 +1,395 @@
+/* ============================================================
+   Josephine Chat — Dark Alpine Design
+   ============================================================ */
+
+.jc-page {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  background: #080e08;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Header ── */
+.jc-header {
+  position: relative;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: rgba(8,14,8,0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+
+.jc-back-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #f0ece6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.jc-back-btn:hover { background: rgba(255,255,255,0.1); }
+
+.jc-header__identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.jc-header__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(201,168,76,0.12);
+  border: 1px solid rgba(201,168,76,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.jc-header__mark {
+  width: 20px;
+  height: 20px;
+  opacity: 0.8;
+}
+
+.jc-header__name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #f0ece6;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.jc-header__status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: rgba(240,236,230,0.45);
+  margin: 0;
+}
+
+.jc-header__online-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  flex-shrink: 0;
+}
+
+.jc-menu-btn {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.jc-menu-btn span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(240,236,230,0.5);
+}
+
+/* ── Portrait ── */
+.jc-portrait {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 280px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.jc-portrait__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  opacity: 0.18;
+}
+
+.jc-portrait__gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8,14,8,0.4) 0%, #080e08 100%);
+}
+
+/* ── Messages ── */
+.jc-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 16px 12px;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.jc-messages::-webkit-scrollbar { width: 0; }
+
+/* Message row */
+.jc-msg {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  max-width: 88%;
+}
+
+.jc-msg--user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.jc-msg--josephine {
+  align-self: flex-start;
+}
+
+/* Avatar */
+.jc-msg__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid rgba(201,168,76,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.jc-msg__avatar img {
+  width: 16px;
+  height: 16px;
+  opacity: 0.75;
+}
+
+/* Message content column */
+.jc-msg__content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Bubble */
+.jc-bubble {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px 18px 18px 4px;
+  padding: 12px 16px;
+}
+
+.jc-msg--user .jc-bubble {
+  background: rgba(201,168,76,0.12);
+  border-color: rgba(201,168,76,0.2);
+  border-radius: 18px 18px 4px 18px;
+}
+
+.jc-bubble__text {
+  font-size: 14px;
+  color: rgba(240,236,230,0.88);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.jc-msg--user .jc-bubble__text {
+  color: #f0ece6;
+}
+
+/* Typing indicator */
+.jc-bubble--typing {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 14px 18px;
+}
+
+.jc-bubble--typing span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(240,236,230,0.4);
+  animation: jc-bounce 1.2s ease-in-out infinite;
+}
+
+.jc-bubble--typing span:nth-child(2) { animation-delay: 0.2s; }
+.jc-bubble--typing span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes jc-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30%            { transform: translateY(-5px); opacity: 1; }
+}
+
+/* Voice bubble */
+.jc-voice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(201,168,76,0.08);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 18px 18px 18px 4px;
+  padding: 12px 16px;
+  min-width: 160px;
+}
+
+.jc-voice__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #c9a84c;
+  flex-shrink: 0;
+}
+
+.jc-voice__bars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+}
+
+.jc-voice__bar {
+  width: 3px;
+  background: #c9a84c;
+  border-radius: 2px;
+  opacity: 0.7;
+  animation: jc-wave 1.4s ease-in-out infinite;
+}
+
+@keyframes jc-wave {
+  0%, 100% { transform: scaleY(1); }
+  50%       { transform: scaleY(0.4); }
+}
+
+.jc-voice__time {
+  font-size: 11px;
+  color: rgba(201,168,76,0.7);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* Action chips */
+.jc-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.jc-chip {
+  padding: 8px 16px;
+  border-radius: 100px;
+  border: 1px solid rgba(201,168,76,0.35);
+  background: rgba(201,168,76,0.06);
+  color: #c9a84c;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.jc-chip:hover {
+  background: rgba(201,168,76,0.15);
+  border-color: rgba(201,168,76,0.6);
+}
+
+/* ── Input bar ── */
+.jc-input-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: rgba(8,14,8,0.95);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  position: relative;
+  z-index: 20;
+  flex-shrink: 0;
+}
+
+.jc-input-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 100px;
+  padding: 0 14px;
+  transition: border-color 0.2s;
+}
+
+.jc-input-wrap:focus-within { border-color: rgba(201,168,76,0.4); }
+
+.jc-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #f0ece6;
+  padding: 11px 0;
+}
+
+.jc-input::placeholder { color: rgba(240,236,230,0.35); }
+
+.jc-mic-btn {
+  background: none;
+  border: none;
+  color: rgba(240,236,230,0.4);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.jc-mic-btn:hover { color: #c9a84c; }
+
+.jc-send-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #c9a84c;
+  border: none;
+  color: #1a1a0e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(201,168,76,0.4);
+}
+
+.jc-send-btn:disabled {
+  background: rgba(255,255,255,0.07);
+  color: rgba(240,236,230,0.3);
+  box-shadow: none;
+  cursor: default;
+}
+
+.jc-send-btn:not(:disabled):hover {
+  background: #d4b85c;
+  transform: scale(1.05);
+}
