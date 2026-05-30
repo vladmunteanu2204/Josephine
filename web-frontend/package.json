@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@sentry/react": "^10.55.0",
     "axios": "^1.6.0",
     "firebase": "^12.14.0",
     "i18next": "^26.3.0",

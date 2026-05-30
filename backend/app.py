@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
+from flask_talisman import Talisman
 import os
 import json
 import random
@@ -22,11 +23,51 @@ import subprocess
 import tempfile
 import uuid
 
+# ── Sentry — initialise before anything else so all errors are captured ──
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
+
+SENTRY_DSN = os.environ.get('SENTRY_DSN')
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[FlaskIntegration()],
+        traces_sample_rate=0.1,
+        environment=os.environ.get('FLASK_ENV', 'production'),
+    )
+    print(f"Sentry initialised (env={os.environ.get('FLASK_ENV', 'production')})")
+else:
+    print("Warning: SENTRY_DSN not set — error tracking disabled")
+
 # Configure Flask to serve static files from the built React frontend
-app = Flask(__name__, 
+app = Flask(__name__,
             static_folder='../web-frontend/dist',
             static_url_path='')
-CORS(app)
+
+# ── CORS — restrict to explicit origins in production ─────────────────────
+ALLOWED_ORIGINS = os.environ.get('ALLOWED_ORIGINS', '*').split(',')
+CORS(app, origins=ALLOWED_ORIGINS)
+
+# ── Security headers via flask-talisman ───────────────────────────────────
+# force_https=False: TLS is terminated upstream by Cloudflare/Replit proxy
+Talisman(
+    app,
+    force_https=False,
+    strict_transport_security=True,
+    strict_transport_security_max_age=31536000,
+    frame_options='DENY',
+    content_type_options=True,
+    content_security_policy={
+        'default-src': ["'self'"],
+        'img-src':     ["'self'", 'data:', 'https:', 'blob:'],
+        'script-src':  ["'self'", "'unsafe-inline'"],
+        'style-src':   ["'self'", "'unsafe-inline'"],
+        'connect-src': ["'self'", 'https://api.mapbox.com',
+                        'https://events.mapbox.com', 'https://*.sentry.io'],
+        'worker-src':  ["'self'", 'blob:'],
+        'font-src':    ["'self'", 'data:', 'https:'],
+    }
+)
 
 # Initialize Object Storage client
 try:
@@ -55,6 +96,16 @@ if ANTHROPIC_API_KEY:
         _anthropic_client = _anthropic_module.Anthropic(api_key=ANTHROPIC_API_KEY)
     except Exception as _e:
         print(f"Warning: Could not init Anthropic client: {_e}")
+
+# ── PostgreSQL (optional — falls back to JSON files if DATABASE_URL not set) ──
+from db import DB_AVAILABLE, get_db, create_tables, row_to_trail, row_to_rifugio, row_to_mdt
+from sqlalchemy import text as _sql
+
+if DB_AVAILABLE:
+    try:
+        create_tables()
+    except Exception as _dbe:
+        print(f"[db] WARNING: Table creation failed: {_dbe}")
 
 # ── JWT secret (derived from ADMIN_PASSWORD so no extra env var needed) ──
 JWT_SECRET = hashlib.sha256(ADMIN_PASSWORD.encode()).hexdigest()
@@ -172,12 +223,71 @@ def load_trail_segments():
     return _cached_json(segments_path)
 
 def load_complete_trails():
-    """Load complete trail data (TTL-cached)"""
+    """Load all trails — from PostgreSQL if available, else JSON file (TTL-cached)."""
+    if DB_AVAILABLE:
+        try:
+            with get_db() as conn:
+                rows = conn.execute(_sql("SELECT * FROM trails ORDER BY rating DESC NULLS LAST")).fetchall()
+            return {'trails': [row_to_trail(r) for r in rows]}
+        except Exception as e:
+            print(f"[db] load_complete_trails fallback to JSON: {e}")
     trails_path = os.path.join(BASE_DIR, 'data', 'trails.json')
     return _cached_json(trails_path)
 
+def save_trail(trail: dict):
+    """Upsert a single trail to PostgreSQL (or write full JSON file as fallback)."""
+    if DB_AVAILABLE:
+        try:
+            scalar_keys = {'id','name','region','difficulty','distance_km',
+                           'duration_hours','elevation_gain_m','status',
+                           'dog_friendly','family_friendly','rating'}
+            jsonb_data = {k: v for k, v in trail.items() if k not in scalar_keys}
+            with get_db() as conn:
+                conn.execute(_sql("""
+                    INSERT INTO trails (id, name, region, difficulty, distance_km,
+                        duration_hours, elevation_gain_m, status, dog_friendly,
+                        family_friendly, rating, data)
+                    VALUES (:id, :name, :region, :difficulty, :distance_km,
+                        :duration_hours, :elevation_gain_m, :status, :dog_friendly,
+                        :family_friendly, :rating, :data::jsonb)
+                    ON CONFLICT (id) DO UPDATE SET
+                        name=EXCLUDED.name, region=EXCLUDED.region,
+                        difficulty=EXCLUDED.difficulty, distance_km=EXCLUDED.distance_km,
+                        duration_hours=EXCLUDED.duration_hours,
+                        elevation_gain_m=EXCLUDED.elevation_gain_m,
+                        status=EXCLUDED.status, dog_friendly=EXCLUDED.dog_friendly,
+                        family_friendly=EXCLUDED.family_friendly,
+                        rating=EXCLUDED.rating, data=EXCLUDED.data
+                """), {
+                    'id': trail.get('id', ''),
+                    'name': trail.get('name', ''),
+                    'region': trail.get('region'),
+                    'difficulty': trail.get('difficulty'),
+                    'distance_km': trail.get('distance_km'),
+                    'duration_hours': trail.get('duration_hours'),
+                    'elevation_gain_m': trail.get('elevation_gain_m'),
+                    'status': trail.get('status', 'published'),
+                    'dog_friendly': bool(trail.get('dog_friendly', False)),
+                    'family_friendly': bool(trail.get('family_friendly', False)),
+                    'rating': trail.get('rating'),
+                    'data': json.dumps(jsonb_data),
+                })
+            return True
+        except Exception as e:
+            print(f"[db] save_trail fallback to JSON: {e}")
+    return False   # caller must do JSON write as fallback
+
 def load_reviews():
-    """Load reviews data (TTL-cached)"""
+    """Load reviews data — from PostgreSQL if available, else JSON (TTL-cached)."""
+    if DB_AVAILABLE:
+        try:
+            with get_db() as conn:
+                rows = conn.execute(_sql(
+                    "SELECT trail_id, user_email, rating, comment, created_at, data FROM reviews ORDER BY created_at DESC"
+                )).fetchall()
+            return [dict(r._mapping) for r in rows]
+        except Exception as e:
+            print(f"[db] load_reviews fallback to JSON: {e}")
     reviews_path = os.path.join(BASE_DIR, 'data', 'reviews.json')
     return _cached_json(reviews_path)
 
@@ -1122,7 +1232,16 @@ def get_all_plans():
 
 # User Analytics & Management
 def load_user_analytics():
-    """Load user analytics from JSON file"""
+    """Load user analytics — from PostgreSQL if available, else JSON."""
+    if DB_AVAILABLE:
+        try:
+            with get_db() as conn:
+                rows = conn.execute(_sql("SELECT trail_id, views, saves FROM user_analytics")).fetchall()
+            views = {r.trail_id: r.views for r in rows}
+            saves = {r.trail_id: r.saves for r in rows}
+            return {'trail_views': views, 'trail_saves': saves, 'users': {}}
+        except Exception as e:
+            print(f"[db] load_user_analytics fallback to JSON: {e}")
     analytics_path = os.path.join(BASE_DIR, 'data', 'user_analytics.json')
     try:
         with open(analytics_path, 'r') as f:
@@ -1131,7 +1250,23 @@ def load_user_analytics():
         return {'trail_views': {}, 'trail_saves': {}, 'users': {}}
 
 def save_user_analytics(analytics_data):
-    """Save user analytics to JSON file"""
+    """Save analytics — atomic upsert to DB if available, else JSON."""
+    if DB_AVAILABLE:
+        try:
+            views = analytics_data.get('trail_views', {})
+            saves = analytics_data.get('trail_saves', {})
+            all_ids = set(views.keys()) | set(saves.keys())
+            with get_db() as conn:
+                for tid in all_ids:
+                    conn.execute(_sql("""
+                        INSERT INTO user_analytics (trail_id, views, saves, updated_at)
+                        VALUES (:trail_id, :views, :saves, NOW())
+                        ON CONFLICT (trail_id) DO UPDATE
+                            SET views=EXCLUDED.views, saves=EXCLUDED.saves, updated_at=NOW()
+                    """), {'trail_id': tid, 'views': views.get(tid, 0), 'saves': saves.get(tid, 0)})
+            return
+        except Exception as e:
+            print(f"[db] save_user_analytics fallback to JSON: {e}")
     analytics_path = os.path.join(BASE_DIR, 'data', 'user_analytics.json')
     atomic_json_write(analytics_path, analytics_data)
 
@@ -1180,15 +1315,54 @@ def track_trail_save():
 
 # Rifugio Management
 def load_rifugios():
-    """Load rifugios from JSON file (TTL-cached)"""
+    """Load rifugios — from PostgreSQL if available, else JSON (TTL-cached)."""
+    if DB_AVAILABLE:
+        try:
+            with get_db() as conn:
+                rows = conn.execute(_sql("SELECT * FROM rifugios ORDER BY name")).fetchall()
+            return [row_to_rifugio(r) for r in rows]
+        except Exception as e:
+            print(f"[db] load_rifugios fallback to JSON: {e}")
     rifugios_path = os.path.join(BASE_DIR, 'data', 'rifugios.json')
     try:
         return _cached_json(rifugios_path)
     except FileNotFoundError:
         return []
 
+def save_rifugio(rifugio: dict):
+    """Upsert a single rifugio to PostgreSQL. Returns True if DB was used."""
+    if DB_AVAILABLE:
+        try:
+            scalar_keys = {'id','name','type','region','altitude','status'}
+            jsonb_data = {k: v for k, v in rifugio.items() if k not in scalar_keys}
+            with get_db() as conn:
+                conn.execute(_sql("""
+                    INSERT INTO rifugios (id, name, type, region, altitude, status, data)
+                    VALUES (:id, :name, :type, :region, :altitude, :status, :data::jsonb)
+                    ON CONFLICT (id) DO UPDATE SET
+                        name=EXCLUDED.name, type=EXCLUDED.type, region=EXCLUDED.region,
+                        altitude=EXCLUDED.altitude, status=EXCLUDED.status, data=EXCLUDED.data
+                """), {
+                    'id': rifugio.get('id', ''),
+                    'name': rifugio.get('name', ''),
+                    'type': rifugio.get('type'),
+                    'region': rifugio.get('region'),
+                    'altitude': rifugio.get('altitude'),
+                    'status': rifugio.get('status', 'published'),
+                    'data': json.dumps(jsonb_data),
+                })
+            return True
+        except Exception as e:
+            print(f"[db] save_rifugio fallback to JSON: {e}")
+    return False
+
 def save_rifugios(rifugios_data):
-    """Save rifugios to JSON file and bust cache."""
+    """Save all rifugios — upsert each to DB if available, else write JSON."""
+    if DB_AVAILABLE:
+        items = rifugios_data if isinstance(rifugios_data, list) else rifugios_data.get('rifugios', [])
+        for r in items:
+            save_rifugio(r)
+        return
     rifugios_path = os.path.join(BASE_DIR, 'data', 'rifugios.json')
     atomic_json_write(rifugios_path, rifugios_data)
     _invalidate_cache(rifugios_path)
@@ -1663,7 +1837,14 @@ def load_completed_hikes():
 # ============================================
 
 def load_multi_day_trails():
-    """Load multi-day trails from JSON file"""
+    """Load multi-day trails — from PostgreSQL if available, else JSON file."""
+    if DB_AVAILABLE:
+        try:
+            with get_db() as conn:
+                rows = conn.execute(_sql("SELECT * FROM multi_day_trails ORDER BY name")).fetchall()
+            return {'trails': [row_to_mdt(r) for r in rows]}
+        except Exception as e:
+            print(f"[db] load_multi_day_trails fallback to JSON: {e}")
     try:
         with open(MULTI_DAY_TRAILS_FILE, 'r', encoding='utf-8') as f:
             return json.load(f)
@@ -1674,7 +1855,29 @@ def load_multi_day_trails():
         return {'trails': []}
 
 def save_multi_day_trails(data):
-    """Save multi-day trails to JSON file"""
+    """Save multi-day trails — upsert to DB if available, else JSON."""
+    if DB_AVAILABLE:
+        try:
+            trails = data.get('trails', []) if isinstance(data, dict) else data
+            scalar_keys = {'id','name','difficulty','region','status'}
+            with get_db() as conn:
+                for t in trails:
+                    jsonb_data = {k: v for k, v in t.items() if k not in scalar_keys}
+                    conn.execute(_sql("""
+                        INSERT INTO multi_day_trails (id, name, difficulty, region, status, data)
+                        VALUES (:id, :name, :difficulty, :region, :status, :data::jsonb)
+                        ON CONFLICT (id) DO UPDATE SET
+                            name=EXCLUDED.name, difficulty=EXCLUDED.difficulty,
+                            region=EXCLUDED.region, status=EXCLUDED.status, data=EXCLUDED.data
+                    """), {
+                        'id': t.get('id', ''), 'name': t.get('name', ''),
+                        'difficulty': t.get('difficulty'), 'region': t.get('region'),
+                        'status': t.get('status', 'published'),
+                        'data': json.dumps(jsonb_data),
+                    })
+            return
+        except Exception as e:
+            print(f"[db] save_multi_day_trails fallback to JSON: {e}")
     atomic_json_write(MULTI_DAY_TRAILS_FILE, data)
 
 @app.route('/api/multi-day-trails', methods=['GET'])
