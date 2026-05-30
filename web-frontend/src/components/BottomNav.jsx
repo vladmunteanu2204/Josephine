@@ -28,20 +28,12 @@ const SavedIcon = () => (
   </svg>
 );
 
-const InsightsIcon = () => (
-  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-    <path d="M11 3C11 3 7 7 7 11.5C7 13.98 8.79 16 11 16C13.21 16 15 13.98 15 11.5C15 7 11 3 11 3Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
-    <path d="M8.5 16.5L9.5 19H12.5L13.5 16.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M9.5 19H12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-  </svg>
-);
 
 const tabs = [
-  { key: 'home',            label: 'Home',    Icon: HomeIcon    },
-  { key: 'catalog',         label: 'Explore', Icon: ExploreIcon },
-  { key: 'planner',         label: 'My Plan', Icon: PlanIcon    },
-  { key: 'savedTrails',     label: 'Saved',   Icon: SavedIcon   },
-  { key: 'recommendations', label: 'Insights',Icon: InsightsIcon},
+  { key: 'home',        label: 'Home',    Icon: HomeIcon    },
+  { key: 'catalog',     label: 'Explore', Icon: ExploreIcon },
+  { key: 'planner',     label: 'My Plan', Icon: PlanIcon    },
+  { key: 'savedTrails', label: 'Saved',   Icon: SavedIcon   },
 ];
 
 function BottomNav({ currentView, setCurrentView, onJosephineOpen }) {
@@ -72,7 +64,7 @@ function BottomNav({ currentView, setCurrentView, onJosephineOpen }) {
         </div>
       </button>
 
-      {/* Last 3 tabs */}
+      {/* Last 2 tabs */}
       {tabs.slice(2).map(({ key, label, Icon }) => (
         <button
           key={key}
