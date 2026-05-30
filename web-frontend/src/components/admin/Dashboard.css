@@ -1,0 +1,198 @@
+/* ============================================================
+   Admin Dashboard — Command Centre
+   ============================================================ */
+
+.dashboard { display: flex; flex-direction: column; gap: 28px; }
+
+/* Header */
+.dash-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.dash-title  { font-size: 22px; font-weight: 700; color: #f0ece6; margin: 0 0 4px; }
+.dash-subtitle { font-size: 13px; color: rgba(240,236,230,0.45); margin: 0; }
+.dash-refresh {
+  padding: 8px 16px;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 8px;
+  color: #c9a84c;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.dash-refresh:hover { background: rgba(201,168,76,0.2); }
+
+/* Loading / error */
+.dash-loading {
+  display: flex; align-items: center; gap: 12px;
+  color: rgba(240,236,230,0.5); font-size: 14px; padding: 40px 0;
+}
+.dash-spinner {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(201,168,76,0.3);
+  border-top-color: #c9a84c;
+  border-radius: 50%;
+  animation: dash-spin 0.8s linear infinite;
+}
+@keyframes dash-spin { to { transform: rotate(360deg); } }
+.dash-error { color: #ef4444; font-size: 14px; }
+.dash-error button {
+  margin-left: 12px; padding: 4px 10px; background: rgba(239,68,68,0.15);
+  border: 1px solid rgba(239,68,68,0.3); border-radius: 6px; color: #f87171;
+  cursor: pointer; font-size: 13px;
+}
+
+/* KPI row */
+.dash-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+}
+.dash-kpi {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 14px;
+  padding: 18px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: border-color 0.2s;
+}
+.dash-kpi:hover { border-color: rgba(201,168,76,0.4); }
+.dash-kpi__icon { font-size: 22px; flex-shrink: 0; }
+.dash-kpi__value { font-size: 28px; font-weight: 700; line-height: 1; }
+.dash-kpi__label { font-size: 11px; color: rgba(240,236,230,0.5); margin-top: 3px; }
+.dash-kpi__sub   { font-size: 10px; color: rgba(240,236,230,0.35); margin-top: 2px; }
+
+/* Section */
+.dash-section { }
+.dash-section-title {
+  font-size: 15px; font-weight: 600; color: #f0ece6;
+  margin: 0 0 14px; display: flex; align-items: center; gap: 10px;
+}
+.dash-month-badge {
+  font-size: 11px; font-weight: 500;
+  background: rgba(201,168,76,0.15);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: #c9a84c;
+  border-radius: 100px; padding: 2px 10px;
+}
+
+/* Trail health matrix */
+.dash-matrix-wrap {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.07);
+}
+.dash-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 900px;
+}
+.dash-matrix thead tr {
+  background: rgba(255,255,255,0.04);
+}
+.dash-matrix th {
+  padding: 10px 12px;
+  text-align: center;
+  color: rgba(240,236,230,0.4);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.dash-matrix th:first-child { text-align: left; }
+.dash-matrix-row {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.dash-matrix-row:hover { background: rgba(201,168,76,0.06); }
+.dash-matrix td {
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: rgba(240,236,230,0.8);
+}
+.dash-matrix-name { text-align: left; font-weight: 500; white-space: nowrap; }
+.dash-num { font-variant-numeric: tabular-nums; }
+
+.dash-diff-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #0a1a0c;
+  text-transform: uppercase;
+}
+
+.dash-check { font-size: 13px; font-weight: 700; }
+.dash-check--ok  { color: #4ade80; }
+.dash-check--no  { color: rgba(240,236,230,0.2); }
+
+.dash-season-pill {
+  display: inline-block;
+  font-size: 10px; font-weight: 600;
+  border-radius: 100px; padding: 2px 8px;
+}
+.dash-season-pill--on  { background: rgba(74,222,128,0.12); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
+.dash-season-pill--off { background: rgba(239,68,68,0.10); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+
+.dash-health-cell {
+  display: flex; align-items: center; gap: 8px; min-width: 120px;
+}
+.dash-health-bar {
+  flex: 1; height: 6px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden;
+}
+.dash-health-bar__fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+
+/* Activity row */
+.dash-activity {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.dash-activity-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  padding: 18px;
+}
+.dash-activity-title {
+  font-size: 13px; font-weight: 600; color: rgba(240,236,230,0.7);
+  margin: 0 0 14px;
+}
+.dash-activity-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.dash-activity-row:last-child { border-bottom: none; }
+.dash-activity-info { flex: 1; min-width: 0; }
+.dash-activity-info strong { display: block; font-size: 13px; color: #f0ece6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dash-activity-info span   { font-size: 11px; color: rgba(240,236,230,0.4); }
+
+.dash-status-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.dash-status-dot--pending  { background: #fbbf24; }
+.dash-status-dot--confirmed { background: #4ade80; }
+.dash-status-dot--declined { background: #ef4444; }
+.dash-status-dot--open     { background: #60a5fa; }
+
+.dash-badge {
+  font-size: 10px; font-weight: 600; border-radius: 100px; padding: 2px 8px;
+  text-transform: uppercase; flex-shrink: 0;
+}
+.dash-badge--pending   { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+.dash-badge--confirmed { background: rgba(74,222,128,0.12); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
+.dash-badge--declined  { background: rgba(239,68,68,0.12);  color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+
+.dash-empty { font-size: 13px; color: rgba(240,236,230,0.3); margin: 0; padding: 8px 0; }

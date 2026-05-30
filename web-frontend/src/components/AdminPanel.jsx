@@ -3,9 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { ENABLE_GAMIFICATION } from '../featureFlags';
 import axios from 'axios';
+import Dashboard from './admin/Dashboard';
 import TrailManager from './admin/TrailManager';
 import ReviewsModeration from './admin/ReviewsModeration';
 import ChallengesManager from './admin/ChallengesManager';
+import BookingInquiries from './admin/BookingInquiries';
+import RifugiosManager from './admin/RifugiosManager';
 import UserPlansManager from './UserPlansManager';
 import UserManagement from './UserManagement';
 import TrailAnalytics from './TrailAnalytics';
@@ -19,23 +22,43 @@ if (!import.meta.env.VITE_ADMIN_PASSWORD) {
   console.warn('[AdminPanel] VITE_ADMIN_PASSWORD env var is not set — admin API calls will be rejected by the server.');
 }
 
+const TABS = [
+  { id: 'dashboard',  label: '🎯 Dashboard' },
+  { id: 'trails',     label: '🗺️ Trails' },
+  { id: 'multiday',   label: '🏔️ Multi-Day' },
+  { id: 'rifugios',   label: '🏠 Rifugios' },
+  { id: 'bookings',   label: '📋 Bookings' },
+  { id: 'reviews',    label: '💬 Reviews' },
+  { id: 'plans',      label: '📅 User Plans' },
+  { id: 'users',      label: '👥 Users' },
+  { id: 'analytics',  label: '📊 Analytics' },
+  ...(ENABLE_GAMIFICATION ? [
+    { id: 'challenges',  label: '🏆 Challenges' },
+    { id: 'gamification',label: '🎮 Gamification' },
+  ] : []),
+];
+
 function AdminPanel({ onNavigate }) {
   const { t } = useTranslation();
   const { currentUser } = useAuth();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
-  const [activeTab, setActiveTab] = useState('trails');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
-    // Check if user is admin
     if (currentUser?.email === ADMIN_EMAIL) {
-      // Auto-authenticate admin user
       setIsAuthenticated(true);
       setAdminPassword(ADMIN_PASSWORD);
     }
     setIsCheckingAuth(false);
   }, [currentUser]);
+
+  // Allow Dashboard to jump to the trails tab with a specific trail pre-selected
+  const handleNavigateToTrail = (trailId) => {
+    setActiveTab('trails');
+    // TrailManager will need to handle this — for now just switch tab
+  };
 
   if (isCheckingAuth) {
     return (
@@ -64,8 +87,8 @@ function AdminPanel({ onNavigate }) {
                 Only the site administrator can access this area.
               </p>
             </div>
-            <button 
-              className="admin-login-btn" 
+            <button
+              className="admin-login-btn"
               onClick={() => onNavigate('home')}
               style={{ marginTop: '20px' }}
             >
@@ -85,7 +108,7 @@ function AdminPanel({ onNavigate }) {
             ← Back to Site
           </button>
           <div className="admin-title-section">
-            <h1>⚙️ Josephine Admin Panel</h1>
+            <h1>⚙️ Josephine Admin</h1>
             <button className="logout-btn" onClick={() => { setIsAuthenticated(false); setAdminPassword(''); }}>
               🔒 Logout
             </button>
@@ -95,68 +118,28 @@ function AdminPanel({ onNavigate }) {
 
       <div className="admin-container">
         <div className="admin-tabs">
-          <button
-            className={`admin-tab ${activeTab === 'trails' ? 'active' : ''}`}
-            onClick={() => setActiveTab('trails')}
-          >
-            🗺️ Trails
-          </button>
-          <button
-            className={`admin-tab ${activeTab === 'multiday' ? 'active' : ''}`}
-            onClick={() => setActiveTab('multiday')}
-          >
-            🏔️ Multi-Day Trails
-          </button>
-          <button
-            className={`admin-tab ${activeTab === 'reviews' ? 'active' : ''}`}
-            onClick={() => setActiveTab('reviews')}
-          >
-            💬 Reviews
-          </button>
-          {ENABLE_GAMIFICATION && (
+          {TABS.map(tab => (
             <button
-              className={`admin-tab ${activeTab === 'challenges' ? 'active' : ''}`}
-              onClick={() => setActiveTab('challenges')}
+              key={tab.id}
+              className={`admin-tab ${activeTab === tab.id ? 'active' : ''}`}
+              onClick={() => setActiveTab(tab.id)}
             >
-              🏆 Challenges
+              {tab.label}
             </button>
-          )}
-          <button
-            className={`admin-tab ${activeTab === 'plans' ? 'active' : ''}`}
-            onClick={() => setActiveTab('plans')}
-          >
-            📅 User Plans
-          </button>
-          <button
-            className={`admin-tab ${activeTab === 'users' ? 'active' : ''}`}
-            onClick={() => setActiveTab('users')}
-          >
-            👥 Users
-          </button>
-          <button
-            className={`admin-tab ${activeTab === 'analytics' ? 'active' : ''}`}
-            onClick={() => setActiveTab('analytics')}
-          >
-            📊 Analytics
-          </button>
-          {ENABLE_GAMIFICATION && (
-            <button
-              className={`admin-tab ${activeTab === 'gamification' ? 'active' : ''}`}
-              onClick={() => setActiveTab('gamification')}
-            >
-              🎮 Gamification
-            </button>
-          )}
+          ))}
         </div>
 
         <div className="admin-content">
-          {activeTab === 'trails' && <TrailManager adminPassword={adminPassword} />}
-          {activeTab === 'multiday' && <MultiDayTrailsManager adminPassword={adminPassword} />}
-          {activeTab === 'reviews' && <ReviewsModeration adminPassword={adminPassword} />}
-          {ENABLE_GAMIFICATION && activeTab === 'challenges' && <ChallengesManager adminPassword={adminPassword} />}
-          {activeTab === 'plans' && <UserPlansManager adminPassword={adminPassword} />}
-          {activeTab === 'users' && <UserManagement adminPassword={adminPassword} />}
-          {activeTab === 'analytics' && <TrailAnalytics adminPassword={adminPassword} />}
+          {activeTab === 'dashboard'    && <Dashboard adminPassword={adminPassword} onNavigateToTrail={handleNavigateToTrail} />}
+          {activeTab === 'trails'       && <TrailManager adminPassword={adminPassword} />}
+          {activeTab === 'multiday'     && <MultiDayTrailsManager adminPassword={adminPassword} />}
+          {activeTab === 'rifugios'     && <RifugiosManager adminPassword={adminPassword} />}
+          {activeTab === 'bookings'     && <BookingInquiries adminPassword={adminPassword} />}
+          {activeTab === 'reviews'      && <ReviewsModeration adminPassword={adminPassword} />}
+          {activeTab === 'plans'        && <UserPlansManager adminPassword={adminPassword} />}
+          {activeTab === 'users'        && <UserManagement adminPassword={adminPassword} />}
+          {activeTab === 'analytics'    && <TrailAnalytics adminPassword={adminPassword} />}
+          {ENABLE_GAMIFICATION && activeTab === 'challenges'   && <ChallengesManager adminPassword={adminPassword} />}
           {ENABLE_GAMIFICATION && activeTab === 'gamification' && <GamificationStats adminPassword={adminPassword} />}
         </div>
       </div>

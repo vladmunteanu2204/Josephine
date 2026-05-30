@@ -1197,14 +1197,148 @@ def submit_booking_inquiry():
 @app.route('/api/admin/booking-inquiries', methods=['GET'])
 @require_admin_auth
 def get_all_booking_inquiries():
-    """Get all booking inquiries (Admin)"""
+    """Get all booking inquiries with optional filtering (Admin)"""
     try:
         inquiries = load_booking_inquiries()
-        
-        # Sort by date (newest first)
+
+        # Filters
+        status_filter  = request.args.get('status')
+        rifugio_filter = request.args.get('rifugio_id')
+        date_from      = request.args.get('date_from')
+        date_to        = request.args.get('date_to')
+
+        if status_filter:
+            inquiries = [i for i in inquiries if i.get('status') == status_filter]
+        if rifugio_filter:
+            inquiries = [i for i in inquiries if i.get('rifugio_id') == rifugio_filter]
+        if date_from:
+            inquiries = [i for i in inquiries if i.get('check_in', '') >= date_from]
+        if date_to:
+            inquiries = [i for i in inquiries if i.get('check_in', '') <= date_to]
+
         inquiries.sort(key=lambda x: x.get('created_at', ''), reverse=True)
-        
-        return jsonify({'inquiries': inquiries})
+        return jsonify({'inquiries': inquiries, 'total': len(inquiries)})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/booking-inquiries/<inquiry_id>', methods=['PUT'])
+@require_admin_auth
+def update_booking_inquiry(inquiry_id):
+    """Update booking inquiry status (Admin)"""
+    try:
+        data = request.json or {}
+        inquiries = load_booking_inquiries()
+        idx = next((i for i, inq in enumerate(inquiries) if inq['id'] == inquiry_id), None)
+        if idx is None:
+            return jsonify({'error': 'Inquiry not found'}), 404
+
+        allowed_fields = ['status', 'admin_notes']
+        for field in allowed_fields:
+            if field in data:
+                inquiries[idx][field] = data[field]
+        inquiries[idx]['updated_at'] = datetime.utcnow().isoformat() + 'Z'
+        save_booking_inquiries(inquiries)
+        return jsonify({'success': True, 'inquiry': inquiries[idx]})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/booking-inquiries/<inquiry_id>', methods=['DELETE'])
+@require_admin_auth
+def delete_booking_inquiry(inquiry_id):
+    """Delete a booking inquiry (Admin)"""
+    try:
+        inquiries = load_booking_inquiries()
+        original = len(inquiries)
+        inquiries = [i for i in inquiries if i['id'] != inquiry_id]
+        if len(inquiries) == original:
+            return jsonify({'error': 'Inquiry not found'}), 404
+        save_booking_inquiries(inquiries)
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/dashboard', methods=['GET'])
+@require_admin_auth
+def get_dashboard_stats():
+    """Aggregated dashboard stats for the Command Centre (Admin)"""
+    try:
+        trails       = load_complete_trails()['trails']
+        rifugios     = load_rifugios()
+        inquiries    = load_booking_inquiries()
+        plans_data   = load_plans()
+        analytics    = load_user_analytics()
+        hikes_data   = load_completed_hikes()
+        current_month = datetime.now().strftime('%B')
+
+        # Trail health matrix
+        def trail_health(t):
+            score = 0
+            checks = {}
+            checks['has_name']        = bool(t.get('name'))
+            checks['has_region']      = bool(t.get('region'))
+            checks['has_difficulty']  = bool(t.get('difficulty'))
+            checks['has_coordinates'] = bool(t.get('coordinates'))
+            checks['has_wallpaper']   = bool(t.get('wallpaper') or t.get('image_url'))
+            checks['has_description'] = len(t.get('description', '')) >= 50
+            checks['has_note']        = bool((t.get('josephineNote') or {}).get('en'))
+            checks['has_tags']        = len(t.get('interests', t.get('tags', []))) > 0
+            checks['has_season']      = len(t.get('best_season', [])) > 0
+            checks['family_set']      = t.get('family_friendly') is not None
+            weights = {
+                'has_name': 10, 'has_region': 5, 'has_difficulty': 5,
+                'has_coordinates': 20, 'has_wallpaper': 15, 'has_description': 15,
+                'has_note': 15, 'has_tags': 10, 'has_season': 5, 'family_set': 5,
+            }
+            score = sum(weights[k] for k, v in checks.items() if v)
+            best_season = t.get('best_season', [])
+            in_season = current_month in best_season if best_season else True
+            return {
+                'id': t['id'], 'name': t['name'],
+                'difficulty': t.get('difficulty'),
+                'health_score': score,
+                'checks': checks,
+                'in_season': in_season,
+                'views': analytics.get('trail_views', {}).get(t['id'], 0),
+                'saves': analytics.get('trail_saves', {}).get(t['id'], 0),
+            }
+
+        trail_matrix = [trail_health(t) for t in trails]
+
+        # Pending bookings count
+        pending_bookings = len([i for i in inquiries if i.get('status') == 'pending'])
+
+        # Recent activity
+        recent_inquiries = sorted(inquiries, key=lambda x: x.get('created_at',''), reverse=True)[:5]
+        recent_hikes     = sorted(hikes_data.get('hikes',[]), key=lambda x: x.get('start_time',''), reverse=True)[:5]
+        recent_plans     = sorted(plans_data.get('plans',[]), key=lambda x: x.get('created_at',''), reverse=True)[:5]
+
+        return jsonify({
+            'kpis': {
+                'trails':          len(trails),
+                'rifugios':        len(rifugios),
+                'pending_bookings': pending_bookings,
+                'total_plans':     len(plans_data.get('plans', [])),
+                'total_hikes':     len(hikes_data.get('hikes', [])),
+                'total_views':     sum(analytics.get('trail_views', {}).values()),
+                'total_saves':     sum(analytics.get('trail_saves', {}).values()),
+            },
+            'trail_matrix':    trail_matrix,
+            'recent_inquiries': recent_inquiries,
+            'recent_hikes':    recent_hikes,
+            'recent_plans':    recent_plans,
+            'current_month':   current_month,
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/admin/trails/export', methods=['GET'])
+@require_admin_auth
+def export_trails():
+    """Export full trails.json as a file download (Admin)"""
+    try:
+        trails_path = os.path.join(BASE_DIR, 'data', 'trails.json')
+        return send_file(trails_path, mimetype='application/json',
+                         as_attachment=True, download_name='trails.json')
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

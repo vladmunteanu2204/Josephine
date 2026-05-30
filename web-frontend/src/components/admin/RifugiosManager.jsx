@@ -1,0 +1,341 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './RifugiosManager.css';
+
+const TYPE_LABELS = { rifugio: 'Rifugio', malga: 'Malga', bivacco: 'Bivacco' };
+const STATUS_COLORS = { open: '#4ade80', closed: '#ef4444', opening_soon: '#fbbf24' };
+
+const BLANK_FORM = {
+  id: '', name: '', type: 'rifugio', region: 'South Tyrol', altitude: 0,
+  coordinates: { lat: 0, lng: 0 },
+  contact: { phone: '', email: '', website: '', whatsapp: '' },
+  facilities: { beds: 0, showers: false, meals: false, wifi: false, dogs: false, payment_methods: [] },
+  description: '', access_info: '',
+  opening_season: { start_date: '', end_date: '' },
+  prices: { overnight: 0, breakfast: 0, dinner: 0, half_board: 0 },
+  photos: [], status: 'seasonal', special_closures: [],
+};
+
+export default function RifugiosManager({ adminPassword }) {
+  const [rifugios, setRifugios] = useState([]);
+  const [loading, setLoading]   = useState(true);
+  const [editing, setEditing]   = useState(null);   // null | 'new' | rifugio id
+  const [form, setForm]         = useState(BLANK_FORM);
+  const [photosInput, setPhotosInput] = useState('');
+  const [saving, setSaving]     = useState(false);
+  const [toast, setToast]       = useState(null);
+  const [search, setSearch]     = useState('');
+  const [typeFilter, setTypeFilter] = useState('');
+
+  const showToast = (msg, type = 'success') => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get('/api/rifugios', { params: { _admin: 1 } });
+      setRifugios(res.data.rifugios || []);
+    } catch (e) {
+      showToast(e.response?.data?.error || e.message, 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const openNew = () => {
+    setForm({ ...BLANK_FORM, id: `rif-${Date.now()}` });
+    setPhotosInput('');
+    setEditing('new');
+  };
+
+  const openEdit = (rif) => {
+    setForm({ ...BLANK_FORM, ...rif,
+      coordinates: rif.coordinates || { lat: 0, lng: 0 },
+      contact: { ...BLANK_FORM.contact, ...(rif.contact || {}) },
+      facilities: { ...BLANK_FORM.facilities, ...(rif.facilities || {}) },
+      opening_season: { ...BLANK_FORM.opening_season, ...(rif.opening_season || {}) },
+      prices: { ...BLANK_FORM.prices, ...(rif.prices || {}) },
+    });
+    setPhotosInput((rif.photos || []).join('\n'));
+    setEditing(rif.id);
+  };
+
+  const save = async () => {
+    if (!form.name.trim()) { showToast('Name is required', 'error'); return; }
+    setSaving(true);
+    try {
+      const payload = {
+        ...form,
+        photos: photosInput.split('\n').map(s => s.trim()).filter(Boolean),
+      };
+      if (editing === 'new') {
+        await axios.post('/api/admin/rifugios', payload, { headers: { 'X-Admin-Password': adminPassword } });
+        showToast('Rifugio created');
+      } else {
+        await axios.put(`/api/admin/rifugios/${editing}`, payload, { headers: { 'X-Admin-Password': adminPassword } });
+        showToast('Rifugio updated');
+      }
+      setEditing(null);
+      load();
+    } catch (e) {
+      showToast(e.response?.data?.error || e.message, 'error');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const del = async (id) => {
+    if (!confirm('Delete this rifugio? This cannot be undone.')) return;
+    try {
+      await axios.delete(`/api/admin/rifugios/${id}`, { headers: { 'X-Admin-Password': adminPassword } });
+      showToast('Rifugio deleted');
+      load();
+    } catch (e) {
+      showToast(e.response?.data?.error || e.message, 'error');
+    }
+  };
+
+  // helpers
+  const set = (path, val) => setForm(prev => {
+    const parts = path.split('.');
+    if (parts.length === 1) return { ...prev, [path]: val };
+    return { ...prev, [parts[0]]: { ...prev[parts[0]], [parts[1]]: val } };
+  });
+
+  const filtered = rifugios.filter(r => {
+    const q = search.toLowerCase();
+    const matchSearch = !q || r.name.toLowerCase().includes(q) || r.region?.toLowerCase().includes(q);
+    const matchType   = !typeFilter || r.type === typeFilter;
+    return matchSearch && matchType;
+  });
+
+  return (
+    <div className="rif-mgr">
+
+      {toast && <div className={`rif-toast rif-toast--${toast.type}`}>{toast.msg}</div>}
+
+      {/* Header */}
+      <div className="rif-mgr-header">
+        <div>
+          <h2 className="rif-mgr-title">🏠 Rifugios Manager</h2>
+          <p className="rif-mgr-sub">{rifugios.length} locations · manage opening seasons, facilities, prices</p>
+        </div>
+        <button className="rif-mgr-btn-new" onClick={openNew}>➕ Add Rifugio</button>
+      </div>
+
+      {/* Filters */}
+      <div className="rif-mgr-filters">
+        <input className="rif-mgr-search" placeholder="Search by name or region…" value={search} onChange={e => setSearch(e.target.value)} />
+        <select className="rif-mgr-select" value={typeFilter} onChange={e => setTypeFilter(e.target.value)}>
+          <option value="">All types</option>
+          <option value="rifugio">Rifugio</option>
+          <option value="malga">Malga</option>
+          <option value="bivacco">Bivacco</option>
+        </select>
+      </div>
+
+      {loading && <div className="rif-mgr-loading">Loading…</div>}
+
+      {/* Grid */}
+      {!loading && (
+        <div className="rif-mgr-grid">
+          {filtered.map(rif => (
+            <div key={rif.id} className="rif-mgr-card">
+              {rif.photos?.[0] && (
+                <div className="rif-mgr-card__photo-wrap">
+                  <img src={rif.photos[0]} alt={rif.name} className="rif-mgr-card__photo" />
+                  <div className="rif-mgr-card__photo-overlay" />
+                </div>
+              )}
+              <div className="rif-mgr-card__body">
+                <div className="rif-mgr-card__top">
+                  <span className="rif-mgr-type-badge">{TYPE_LABELS[rif.type] || rif.type}</span>
+                  <span
+                    className="rif-mgr-status-dot"
+                    style={{ background: STATUS_COLORS[rif.current_status] || '#6b7280' }}
+                    title={rif.current_status}
+                  />
+                </div>
+                <h4 className="rif-mgr-card__name">{rif.name}</h4>
+                <p className="rif-mgr-card__meta">{rif.region} · {rif.altitude}m</p>
+                {rif.opening_season?.start_date && (
+                  <p className="rif-mgr-card__season">
+                    Season: {rif.opening_season.start_date} – {rif.opening_season.end_date}
+                  </p>
+                )}
+                {rif.facilities?.beds > 0 && (
+                  <p className="rif-mgr-card__beds">🛏 {rif.facilities.beds} beds</p>
+                )}
+                <div className="rif-mgr-card__actions">
+                  <button className="rif-btn-edit" onClick={() => openEdit(rif)}>✏️ Edit</button>
+                  <button className="rif-btn-del"  onClick={() => del(rif.id)}>🗑️</button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Edit / Create drawer */}
+      {editing !== null && (
+        <div className="rif-drawer-overlay" onClick={() => setEditing(null)}>
+          <div className="rif-drawer" onClick={e => e.stopPropagation()}>
+            <div className="rif-drawer-header">
+              <h3>{editing === 'new' ? 'New Rifugio' : `Editing: ${form.name}`}</h3>
+              <button className="rif-drawer-close" onClick={() => setEditing(null)}>✕</button>
+            </div>
+
+            <div className="rif-drawer-body">
+
+              {/* Basic info */}
+              <fieldset className="rif-fieldset">
+                <legend>Basic Info</legend>
+                <div className="rif-form-grid">
+                  <div className="rif-fg">
+                    <label>Name *</label>
+                    <input value={form.name} onChange={e => set('name', e.target.value)} placeholder="Rifugio Bolzano" />
+                  </div>
+                  <div className="rif-fg">
+                    <label>ID</label>
+                    <input value={form.id} onChange={e => set('id', e.target.value)} disabled={editing !== 'new'} />
+                  </div>
+                  <div className="rif-fg">
+                    <label>Type</label>
+                    <select value={form.type} onChange={e => set('type', e.target.value)}>
+                      <option value="rifugio">Rifugio</option>
+                      <option value="malga">Malga</option>
+                      <option value="bivacco">Bivacco</option>
+                    </select>
+                  </div>
+                  <div className="rif-fg">
+                    <label>Region</label>
+                    <input value={form.region} onChange={e => set('region', e.target.value)} />
+                  </div>
+                  <div className="rif-fg">
+                    <label>Altitude (m)</label>
+                    <input type="number" value={form.altitude} onChange={e => set('altitude', +e.target.value)} />
+                  </div>
+                  <div className="rif-fg">
+                    <label>Status</label>
+                    <select value={form.status} onChange={e => set('status', e.target.value)}>
+                      <option value="seasonal">Seasonal</option>
+                      <option value="open">Always open</option>
+                      <option value="closed">Closed</option>
+                    </select>
+                  </div>
+                  <div className="rif-fg rif-fg--full">
+                    <label>Description</label>
+                    <textarea rows={3} value={form.description} onChange={e => set('description', e.target.value)} />
+                  </div>
+                  <div className="rif-fg rif-fg--full">
+                    <label>Access info</label>
+                    <textarea rows={2} value={form.access_info} onChange={e => set('access_info', e.target.value)} />
+                  </div>
+                </div>
+              </fieldset>
+
+              {/* Coordinates */}
+              <fieldset className="rif-fieldset">
+                <legend>Coordinates</legend>
+                <div className="rif-form-grid">
+                  <div className="rif-fg">
+                    <label>Latitude</label>
+                    <input type="number" step="0.000001" value={form.coordinates.lat} onChange={e => set('coordinates', { ...form.coordinates, lat: +e.target.value })} />
+                  </div>
+                  <div className="rif-fg">
+                    <label>Longitude</label>
+                    <input type="number" step="0.000001" value={form.coordinates.lng} onChange={e => set('coordinates', { ...form.coordinates, lng: +e.target.value })} />
+                  </div>
+                </div>
+              </fieldset>
+
+              {/* Opening season */}
+              <fieldset className="rif-fieldset">
+                <legend>Opening Season</legend>
+                <div className="rif-form-grid">
+                  <div className="rif-fg">
+                    <label>Opens</label>
+                    <input type="date" value={form.opening_season.start_date} onChange={e => set('opening_season', { ...form.opening_season, start_date: e.target.value })} />
+                  </div>
+                  <div className="rif-fg">
+                    <label>Closes</label>
+                    <input type="date" value={form.opening_season.end_date} onChange={e => set('opening_season', { ...form.opening_season, end_date: e.target.value })} />
+                  </div>
+                </div>
+              </fieldset>
+
+              {/* Prices */}
+              <fieldset className="rif-fieldset">
+                <legend>Prices (€)</legend>
+                <div className="rif-form-grid">
+                  {['overnight','breakfast','dinner','half_board'].map(k => (
+                    <div key={k} className="rif-fg">
+                      <label>{k.replace('_',' ')}</label>
+                      <input type="number" value={form.prices[k]} onChange={e => set('prices', { ...form.prices, [k]: +e.target.value })} />
+                    </div>
+                  ))}
+                </div>
+              </fieldset>
+
+              {/* Contact */}
+              <fieldset className="rif-fieldset">
+                <legend>Contact</legend>
+                <div className="rif-form-grid">
+                  {['phone','email','website','whatsapp'].map(k => (
+                    <div key={k} className="rif-fg">
+                      <label>{k.charAt(0).toUpperCase() + k.slice(1)}</label>
+                      <input value={form.contact[k]} onChange={e => set('contact', { ...form.contact, [k]: e.target.value })} />
+                    </div>
+                  ))}
+                </div>
+              </fieldset>
+
+              {/* Facilities */}
+              <fieldset className="rif-fieldset">
+                <legend>Facilities</legend>
+                <div className="rif-form-grid">
+                  <div className="rif-fg">
+                    <label>Beds</label>
+                    <input type="number" value={form.facilities.beds} onChange={e => set('facilities', { ...form.facilities, beds: +e.target.value })} />
+                  </div>
+                  {['showers','meals','wifi','dogs'].map(k => (
+                    <div key={k} className="rif-fg rif-fg--check">
+                      <label>
+                        <input type="checkbox" checked={form.facilities[k]} onChange={e => set('facilities', { ...form.facilities, [k]: e.target.checked })} />
+                        {k.charAt(0).toUpperCase() + k.slice(1)}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </fieldset>
+
+              {/* Photos */}
+              <fieldset className="rif-fieldset">
+                <legend>Photos (one URL per line)</legend>
+                <textarea
+                  className="rif-photos-input"
+                  rows={4}
+                  value={photosInput}
+                  onChange={e => setPhotosInput(e.target.value)}
+                  placeholder="https://…&#10;https://…"
+                />
+              </fieldset>
+
+            </div>
+
+            <div className="rif-drawer-footer">
+              <button className="rif-btn-cancel" onClick={() => setEditing(null)}>Cancel</button>
+              <button className="rif-btn-save" onClick={save} disabled={saving}>
+                {saving ? 'Saving…' : editing === 'new' ? 'Create Rifugio' : 'Save changes'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
