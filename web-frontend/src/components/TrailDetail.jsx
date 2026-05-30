@@ -253,13 +253,7 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio }) {
               <path d="M12 4L6 10L12 16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-          <button
-            className={`td-save-btn ${isSaved ? 'saved' : ''}`}
-            onClick={handleSaveToggle}
-            aria-label={isSaved ? t('trail.unsaveTrail') : t('trail.saveTrail')}
-          >
-            {isSaved ? '♥' : '♡'}
-          </button>
+          {/* heart removed — save is in the bottom CTA bar */}
         </div>
 
         {/* Hero text */}
@@ -278,26 +272,34 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio }) {
       {/* ── Stats strip ── */}
       <div className="td-stats">
         <div className="td-stat">
-          <span className="td-stat__value">{fullTrail.distance_km}</span>
-          <span className="td-stat__unit">km</span>
-          <span className="td-stat__label">{t('trail.distance')}</span>
+          <span className="td-stat__number">
+            <span className="td-stat__value">{fullTrail.distance_km}</span>
+            <span className="td-stat__unit"> km</span>
+          </span>
+          <span className="td-stat__label">{t('trail.distance', 'Distance')}</span>
         </div>
         <div className="td-stat-divider" />
         <div className="td-stat">
-          <span className="td-stat__value">{fullTrail.duration_hours}</span>
-          <span className="td-stat__unit">h</span>
-          <span className="td-stat__label">{t('trail.duration')}</span>
+          <span className="td-stat__number">
+            <span className="td-stat__value">{fullTrail.duration_hours}</span>
+            <span className="td-stat__unit"> h</span>
+          </span>
+          <span className="td-stat__label">{t('trail.duration', 'Duration')}</span>
         </div>
         <div className="td-stat-divider" />
         <div className="td-stat">
-          <span className="td-stat__value">{fullTrail.elevation_gain_m}</span>
-          <span className="td-stat__unit">m ↑</span>
-          <span className="td-stat__label">{t('trail.elevation')}</span>
+          <span className="td-stat__number">
+            <span className="td-stat__value">{fullTrail.elevation_gain_m}</span>
+            <span className="td-stat__unit"> m ↑</span>
+          </span>
+          <span className="td-stat__label">{t('trail.elevation', 'Elevation')}</span>
         </div>
         <div className="td-stat-divider" />
         <div className="td-stat">
-          <span className="td-stat__value" style={{ color: diff.color }}>{diff.label}</span>
-          <span className="td-stat__label">{t('trail.difficulty')}</span>
+          <span className="td-stat__number">
+            <span className="td-stat__value" style={{ color: diff.color }}>{diff.label}</span>
+          </span>
+          <span className="td-stat__label">{t('trail.difficulty', 'Difficulty')}</span>
         </div>
       </div>
 
@@ -405,8 +407,20 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio }) {
             {t('trail.startHike')}
           </button>
         ) : (
-          <button className="td-cta-btn" onClick={handleSaveToggle}>
-            {isSaved ? '♥ Saved' : 'Start this route →'}
+          <button
+            className={`td-cta-btn ${isSaved ? 'td-cta-btn--saved' : ''}`}
+            onClick={() => {
+              handleSaveToggle();
+              // Open Apple/Google Maps to trailhead if access_info has coordinates
+              const coords = fullTrail.coordinates?.[0];
+              if (coords && coords.length >= 2) {
+                const [lng, lat] = coords;
+                const url = `https://maps.apple.com/?daddr=${lat},${lng}&dirflg=d`;
+                window.open(url, '_blank', 'noopener');
+              }
+            }}
+          >
+            {isSaved ? '♥ Saved — View on map ↗' : 'Start this route →'}
           </button>
         )}
       </div>

@@ -181,6 +181,13 @@
   flex: 1;
 }
 
+.td-stat__number {
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+  line-height: 1;
+}
+
 .td-stat__value {
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: 22px;
@@ -193,7 +200,6 @@
   font-size: 11px;
   color: #c9a84c;
   font-weight: 600;
-  margin-left: 2px;
 }
 
 .td-stat__label {
@@ -389,6 +395,17 @@
   background: #d4b85c;
   transform: translateY(-1px);
   box-shadow: 0 6px 28px rgba(201,168,76,0.6);
+}
+
+.td-cta-btn--saved {
+  background: #1a2a1a;
+  color: #c9a84c;
+  border: 1px solid rgba(201,168,76,0.4);
+  box-shadow: none;
+}
+.td-cta-btn--saved:hover {
+  background: #1f321f;
+  transform: translateY(-1px);
 }
 
 @media (min-width: 900px) {

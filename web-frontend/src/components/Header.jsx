@@ -66,11 +66,10 @@ function Header({ currentView, setCurrentView }) {
 
   // Desktop nav items mapping to app views
   const desktopNavItems = [
-    { key: 'home',            label: t('nav.home',            'Home') },
-    { key: 'catalog',         label: t('nav.explore',         'Explore') },
-    { key: 'planner',         label: t('nav.myPlan',          'My Plan') },
-    { key: 'savedTrails',     label: t('nav.saved',           'Saved') },
-    { key: 'recommendations', label: t('nav.insights',        'Insights') },
+    { key: 'home',        label: t('nav.home',    'Home') },
+    { key: 'catalog',     label: t('nav.explore', 'Explore') },
+    { key: 'planner',     label: t('nav.myPlan',  'My Plan') },
+    { key: 'savedTrails', label: t('nav.saved',   'Saved') },
   ];
 
   return (
