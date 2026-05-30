@@ -408,40 +408,123 @@
 }
 
 /* Map View Placeholder */
-.map-view-placeholder {
+/* ── Catalog Map ── */
+.catalog-map-wrap {
+  width: 100%;
+  height: 560px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.catalog-map-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 400px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  color: rgba(255,255,255,0.4);
+  font-size: 14px;
+}
+
+.catalog-map-fallback__icon { font-size: 40px; opacity: 0.3; }
+
+/* Trail marker pin */
+.catalog-map-pin {
+  width: 28px;
+  height: 28px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: var(--pin-color, #c9a84c);
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 500px;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  padding: 60px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.45);
+  transition: transform 0.15s ease, box-shadow 0.15s;
+  border: 2px solid rgba(255,255,255,0.3);
 }
 
-.map-placeholder-content {
-  text-align: center;
-  max-width: 400px;
+.catalog-map-pin:hover {
+  transform: rotate(-45deg) scale(1.2);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.55);
 }
 
-.map-placeholder-icon {
-  font-size: 80px;
+.catalog-map-pin__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.9);
+  transform: rotate(45deg);
+}
+
+/* Popup */
+.catalog-map-popup .mapboxgl-popup-content {
+  background: #0f1a10 !important;
+  border: 1px solid rgba(201,168,76,0.25) !important;
+  border-radius: 14px !important;
+  padding: 0 !important;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.55) !important;
+  min-width: 0 !important;
+}
+
+.catalog-map-popup .mapboxgl-popup-tip { display: none; }
+
+.cmp-inner { width: 200px; }
+
+.cmp-img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
   display: block;
-  margin-bottom: 24px;
 }
 
-.map-placeholder-content h3 {
-  font-size: 24px;
-  color: white;
-  margin: 0 0 12px 0;
+.cmp-body { padding: 12px 14px 14px; }
+
+.cmp-region {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: rgba(201,168,76,0.8);
+  margin: 0 0 4px;
+  text-transform: uppercase;
 }
 
-.map-placeholder-content p {
-  color: rgba(255, 255, 255, 0.6);
+.cmp-name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: 16px;
-  line-height: 1.6;
+  font-weight: 400;
+  font-style: italic;
+  color: #f0ece6;
+  margin: 0 0 6px;
+  line-height: 1.2;
 }
+
+.cmp-stats {
+  font-size: 11px;
+  color: rgba(240,236,230,0.45);
+  margin: 0 0 10px;
+}
+
+.cmp-btn {
+  width: 100%;
+  padding: 9px 0;
+  background: #c9a84c;
+  border: none;
+  border-radius: 8px;
+  color: #1a1a0e;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cmp-btn:hover { background: #d4b85c; }
 
 .loading-catalog {
   text-align: center;

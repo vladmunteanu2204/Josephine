@@ -172,8 +172,10 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
 
     if (next <= LAST_STEP) {
       const step = PLANNING_STEPS[next];
+      // Add ← Back chip on steps 2+ so users can revise answers
+      const chips = next > 1 ? [...step.chips, '← Back'] : step.chips;
       setTimeout(() => {
-        appendJosephineMessage({ type: 'text', text: step.text, chips: step.chips });
+        appendJosephineMessage({ type: 'text', text: step.text, chips });
       }, 600);
     } else {
       callRecommendAPI(newData);
@@ -401,6 +403,23 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       return;
     }
 
+    // ← Back — go one step back in planning flow
+    if (chip === '← Back' && planningStep > 1) {
+      const prevStep = planningStep - 1;
+      setPlanningStep(prevStep);
+      const step = PLANNING_STEPS[prevStep];
+      const chips = prevStep > 1 ? [...step.chips, '← Back'] : step.chips;
+      appendUserMessage('← Change my answer');
+      setTimeout(() => {
+        appendJosephineMessage({
+          type: 'text',
+          text: `No problem — ${step.text}`,
+          chips,
+        });
+      }, 400);
+      return;
+    }
+
     // Multi-select mood (step 3)
     if (planningStep === 3) {
       if (chip === 'Done ✓') {
@@ -460,7 +479,11 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
         { role: 'user', content: trimmed },
         { role: 'assistant', content: res.data.reply },
       ]);
-      appendJosephineMessage({ type: 'text', text: res.data.reply, chips: null });
+      appendJosephineMessage({
+        type: 'text',
+        text: res.data.reply,
+        chips: ['Plan my day', 'Surprise me'],
+      });
     } catch {
       setTyping(false);
       appendJosephineMessage({
@@ -588,7 +611,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
                     return (
                       <button
                         key={chip}
-                        className={`jc-chip${isSelected ? ' selected' : ''}${chip === 'Done ✓' && selectedMoods.length > 0 ? ' jc-chip--done' : ''}`}
+                        className={`jc-chip${isSelected ? ' selected' : ''}${chip === 'Done ✓' && selectedMoods.length > 0 ? ' jc-chip--done' : ''}${chip === '← Back' ? ' jc-chip--back' : ''}`}
                         onClick={() => handleChip(chip)}
                       >
                         {isSelected ? `✓ ${chip}` : chip}

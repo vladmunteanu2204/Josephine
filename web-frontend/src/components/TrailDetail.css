@@ -408,3 +408,114 @@
   .td-stats { padding: 16px 12px; }
   .td-stat__value { font-size: 18px; }
 }
+
+/* ── Elevation Profile ── */
+.td-elev {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 20px 20px 14px;
+  overflow: hidden;
+}
+
+.td-elev__stats {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.td-elev__stat {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(240,236,230,0.85);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.td-elev__stat--muted { color: rgba(240,236,230,0.4); font-weight: 400; }
+
+.td-elev__arrow {
+  color: #c9a84c;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.td-elev__arrow--down { color: rgba(201,168,76,0.6); }
+
+.td-elev__svg {
+  display: block;
+  width: 100%;
+  height: 72px;
+  border-radius: 4px;
+}
+
+.td-elev__xaxis {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: rgba(240,236,230,0.3);
+  margin-top: 6px;
+  letter-spacing: 0.04em;
+}
+
+/* ── Nearby Rifugios ── */
+.td-rifugio-row {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: none;
+}
+
+.td-rifugio-row::-webkit-scrollbar { display: none; }
+
+.td-rifugio-card {
+  flex: 0 0 auto;
+  width: 180px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.td-rifugio-card:hover {
+  border-color: rgba(201,168,76,0.3);
+  transform: translateY(-2px);
+}
+
+.td-rifugio-card__img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  display: block;
+}
+
+.td-rifugio-card__body {
+  padding: 10px 12px 12px;
+}
+
+.td-rifugio-card__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f0ece6;
+  margin: 0 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.td-rifugio-card__meta {
+  font-size: 11px;
+  color: rgba(240,236,230,0.45);
+  margin: 0 0 3px;
+  text-transform: capitalize;
+}
+
+.td-rifugio-card__season {
+  font-size: 11px;
+  color: #c9a84c;
+  margin: 0;
+}

@@ -63,6 +63,7 @@ export function AuthProvider({ children }) {
   const [authError, setAuthError] = useState(null);
 
   async function signup(email, password, displayName) {
+    if (!auth) throw new Error('Authentication is not configured.');
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     if (displayName) {
       await updateProfile(userCredential.user, { displayName });
@@ -71,14 +72,17 @@ export function AuthProvider({ children }) {
   }
 
   function login(email, password) {
+    if (!auth) throw new Error('Authentication is not configured.');
     return signInWithEmailAndPassword(auth, email, password);
   }
 
   function logout() {
+    if (!auth) return Promise.resolve();
     return signOut(auth);
   }
 
   function resetPassword(email) {
+    if (!auth) throw new Error('Authentication is not configured.');
     const actionCodeSettings = {
       url: window.location.origin,
       handleCodeInApp: false
@@ -166,8 +170,14 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
+    // If Firebase wasn't initialized (no env vars), skip auth setup entirely
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
+
     let redirectCheckComplete = false;
-    
+
     // ===== COMPREHENSIVE OAUTH REDIRECT DEBUGGING =====
     const timestamp = new Date().toISOString();
     console.log('=== AUTH CONTEXT INITIALIZATION ===', timestamp);

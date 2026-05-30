@@ -1,8 +1,100 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import Map, { Marker, Popup, NavigationControl } from 'react-map-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import { useToast } from '../contexts/ToastContext';
 import './TrailCatalog.css';
+
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
+
+/* Approximate region centres for trails without coordinates */
+const REGION_CENTRES = {
+  'South Tyrol':            [11.35, 46.50],
+  'Dolomites':              [11.95, 46.48],
+  'Merano & Surroundings':  [11.16, 46.67],
+  'Bolzano & Surroundings': [11.35, 46.50],
+  'Val Pusteria':           [11.95, 46.79],
+  'Val Gardena':            [11.72, 46.56],
+  'Vinschgau':              [10.90, 46.68],
+  'Val Sarentino':          [11.45, 46.62],
+};
+
+const DIFF_COLORS = { easy: '#4ade80', medium: '#c9a84c', hard: '#ef4444' };
+
+function CatalogMap({ trails, onViewTrail }) {
+  const [popup, setPopup] = useState(null);
+
+  if (!MAPBOX_TOKEN) {
+    return (
+      <div className="catalog-map-fallback">
+        <span className="catalog-map-fallback__icon">◈</span>
+        <p>Map requires a Mapbox token (VITE_MAPBOX_TOKEN)</p>
+      </div>
+    );
+  }
+
+  const getCoords = (trail) => {
+    const c = trail.coordinates;
+    if (c?.length > 0 && c[0]?.length >= 2) return [c[0][0], c[0][1]];
+    return REGION_CENTRES[trail.region] || [11.35, 46.50];
+  };
+
+  return (
+    <div className="catalog-map-wrap">
+      <Map
+        initialViewState={{ longitude: 11.4, latitude: 46.6, zoom: 8.5 }}
+        style={{ width: '100%', height: '100%' }}
+        mapStyle="mapbox://styles/mapbox/dark-v11"
+        mapboxAccessToken={MAPBOX_TOKEN}
+        onClick={() => setPopup(null)}
+      >
+        <NavigationControl position="top-right" />
+        {trails.map(trail => {
+          const [lng, lat] = getCoords(trail);
+          const color = DIFF_COLORS[trail.difficulty] || '#c9a84c';
+          return (
+            <Marker key={trail.id} longitude={lng} latitude={lat} anchor="center"
+              onClick={e => { e.originalEvent.stopPropagation(); setPopup(trail); }}>
+              <div className="catalog-map-pin" style={{ '--pin-color': color }}
+                title={trail.name}>
+                <div className="catalog-map-pin__dot" />
+              </div>
+            </Marker>
+          );
+        })}
+        {popup && (
+          <Popup
+            longitude={getCoords(popup)[0]}
+            latitude={getCoords(popup)[1]}
+            anchor="bottom"
+            offset={16}
+            onClose={() => setPopup(null)}
+            closeButton={false}
+            className="catalog-map-popup"
+          >
+            <div className="cmp-inner">
+              {popup.thumbnail && (
+                <img src={popup.thumbnail} alt={popup.name} className="cmp-img"
+                  onError={e => e.target.style.display = 'none'} />
+              )}
+              <div className="cmp-body">
+                <p className="cmp-region">{popup.region}</p>
+                <p className="cmp-name">{popup.name}</p>
+                <p className="cmp-stats">
+                  {popup.distance_km} km · {popup.duration_hours}h · {popup.elevation_gain_m}m ↑
+                </p>
+                <button className="cmp-btn" onClick={() => { setPopup(null); onViewTrail(popup); }}>
+                  View trail →
+                </button>
+              </div>
+            </div>
+          </Popup>
+        )}
+      </Map>
+    </div>
+  );
+}
 
 const API_URL = '/api';
 
@@ -296,13 +388,7 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed }) {
               </div>
             )
           ) : (
-            <div className="map-view-placeholder">
-              <div className="map-placeholder-content">
-                <span className="map-placeholder-icon">◈</span>
-                <h3>{t('catalog.mapViewTitle')}</h3>
-                <p>{t('catalog.mapViewDesc')}</p>
-              </div>
-            </div>
+            <CatalogMap trails={filteredTrails} onViewTrail={viewTrail} />
           )}
         </main>
       </div>

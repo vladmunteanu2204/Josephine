@@ -10,6 +10,24 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+const hasFirebaseConfig = !!(
+  import.meta.env.VITE_FIREBASE_API_KEY &&
+  import.meta.env.VITE_FIREBASE_PROJECT_ID
+);
+
+let app = null;
+let auth = null;
+
+if (hasFirebaseConfig) {
+  try {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+  } catch (e) {
+    console.warn('[Firebase] Init failed — auth features disabled:', e.message);
+  }
+} else {
+  console.warn('[Firebase] No config found — auth features disabled. Set VITE_FIREBASE_* env vars to enable.');
+}
+
+export { auth };
 export default app;

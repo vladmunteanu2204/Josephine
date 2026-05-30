@@ -16,7 +16,125 @@ const DIFFICULTY_CONFIG = {
   hard:   { color: '#ef4444', label: 'Hard'     },
 };
 
-function TrailDetail({ trail, onBack, setIsGPSActive }) {
+/* ── Elevation Profile ─────────────────────────────────────── */
+function ElevationProfile({ trail }) {
+  const W = 500, H = 72;
+  const coords  = trail.coordinates || [];
+  const has3D   = coords.length >= 2 && coords[0]?.length === 3;
+  const gain    = trail.elevation_gain_m || 0;
+  const loss    = trail.elevation_loss_m || 0;
+  const type    = trail.trail_type || 'out_and_back';
+
+  let pts;
+  if (has3D) {
+    const elevs  = coords.map(c => c[2]);
+    const minE   = Math.min(...elevs);
+    const rangeE = Math.max(Math.max(...elevs) - minE, 1);
+    pts = elevs.map((e, i) => [
+      (i / (elevs.length - 1)) * W,
+      H - ((e - minE) / rangeE) * H * 0.9 - H * 0.05,
+    ]);
+  } else {
+    const peak = H * 0.88;
+    if (type === 'loop') {
+      pts = [[0,H],[W*0.15,H-peak*0.4],[W*0.5,H-peak],[W*0.85,H-peak*0.35],[W,H]];
+    } else if (type === 'point_to_point') {
+      const end = H - Math.max(0, (gain - loss) / (gain + 1)) * H * 0.6;
+      pts = [[0,H],[W*0.4,H-peak],[W*0.65,H-peak*0.8],[W,end]];
+    } else {
+      pts = [[0,H],[W*0.45,H-peak],[W*0.55,H-peak],[W,H]];
+    }
+  }
+
+  const curve = pts.map((p, i) => {
+    if (i === 0) return `M${p[0]},${p[1]}`;
+    const prev = pts[i-1];
+    const cx   = (prev[0] + p[0]) / 2;
+    return `C${cx},${prev[1]} ${cx},${p[1]} ${p[0]},${p[1]}`;
+  }).join(' ');
+
+  const fill = `${curve} L${W},${H} L0,${H} Z`;
+
+  return (
+    <div className="td-elev">
+      <div className="td-elev__stats">
+        <span className="td-elev__stat"><span className="td-elev__arrow">↑</span>{gain}m gain</span>
+        {loss > 0 && <span className="td-elev__stat"><span className="td-elev__arrow td-elev__arrow--down">↓</span>{loss}m loss</span>}
+        <span className="td-elev__stat td-elev__stat--muted">{trail.distance_km} km total</span>
+      </div>
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="td-elev__svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="elevGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="#c9a84c" stopOpacity="0.35"/>
+            <stop offset="100%" stopColor="#c9a84c" stopOpacity="0.04"/>
+          </linearGradient>
+        </defs>
+        <path d={fill}  fill="url(#elevGrad)" />
+        <path d={curve} fill="none" stroke="#c9a84c" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+      <div className="td-elev__xaxis">
+        <span>0 km</span>
+        <span>{(trail.distance_km / 2).toFixed(1)} km</span>
+        <span>{trail.distance_km} km</span>
+      </div>
+    </div>
+  );
+}
+
+/* ── Nearby Rifugios row ───────────────────────────────────── */
+function NearbyRifugios({ ids, onViewRifugio }) {
+  const [rifugios, setRifugios] = useState([]);
+
+  useEffect(() => {
+    if (!ids?.length) return;
+    axios.get('/api/rifugios')
+      .then(res => {
+        const all = Array.isArray(res.data) ? res.data : (res.data.rifugios || []);
+        setRifugios(all.filter(r => ids.includes(r.id)));
+      })
+      .catch(() => {});
+  }, [ids]);
+
+  if (!rifugios.length) return null;
+
+  return (
+    <section className="td-section">
+      <h2 className="td-section__title">Nearby Rifugios</h2>
+      <div className="td-rifugio-row">
+        {rifugios.map(rif => (
+          <div
+            key={rif.id}
+            className="td-rifugio-card"
+            onClick={() => onViewRifugio?.(rif)}
+            style={{ cursor: onViewRifugio ? 'pointer' : 'default' }}
+          >
+            {rif.photos?.[0] && (
+              <img
+                src={rif.photos[0]}
+                alt={rif.name}
+                className="td-rifugio-card__img"
+                onError={e => { e.target.style.display = 'none'; }}
+              />
+            )}
+            <div className="td-rifugio-card__body">
+              <p className="td-rifugio-card__name">{rif.name}</p>
+              <p className="td-rifugio-card__meta">
+                {rif.altitude ? `${rif.altitude}m` : ''}{rif.altitude && rif.type ? ' · ' : ''}{rif.type || ''}
+              </p>
+              {rif.opening_season?.start_date && (
+                <p className="td-rifugio-card__season">
+                  Open {rif.opening_season.start_date?.slice(5,10)} – {rif.opening_season.end_date?.slice(5,10)}
+                </p>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio }) {
   const { t, i18n } = useTranslation();
   const toast = useToast();
   const [fullTrail, setFullTrail] = useState(trail);
@@ -203,6 +321,14 @@ function TrailDetail({ trail, onBack, setIsGPSActive }) {
           </div>
         )}
 
+        {/* Elevation Profile */}
+        {(fullTrail.elevation_gain_m || fullTrail.coordinates?.length > 1) && (
+          <section className="td-section">
+            <h2 className="td-section__title">Elevation Profile</h2>
+            <ElevationProfile trail={fullTrail} />
+          </section>
+        )}
+
         {/* Weather */}
         {fullTrail.coordinates?.length > 0 && (
           <section className="td-section">
@@ -259,6 +385,9 @@ function TrailDetail({ trail, onBack, setIsGPSActive }) {
             <span className="td-meta-chip__value">{fullTrail.dog_friendly ? '✓ Yes' : 'No'}</span>
           </div>
         </div>
+
+        {/* Nearby Rifugios */}
+        <NearbyRifugios ids={fullTrail.nearby_rifugios} onViewRifugio={viewRifugio} />
 
         <ReviewsSection trailId={fullTrail.id} />
 

@@ -10,7 +10,10 @@ import time
 from datetime import datetime
 from functools import wraps
 from weather_service import weather_service
-from replit.object_storage import Client as ObjectStorageClient
+try:
+    from replit.object_storage import Client as ObjectStorageClient
+except ImportError:
+    ObjectStorageClient = None
 from PIL import Image
 import subprocess
 import tempfile
@@ -24,7 +27,9 @@ CORS(app)
 
 # Initialize Object Storage client
 try:
-    storage_client = ObjectStorageClient()
+    storage_client = ObjectStorageClient() if ObjectStorageClient else None
+    if storage_client is None:
+        print("Warning: Object Storage not available (replit package not installed)")
 except Exception as e:
     print(f"Warning: Object Storage not initialized: {e}")
     storage_client = None
@@ -2168,7 +2173,7 @@ def structured_answer(question: str):
             diff     = entity.get('difficulty', 'unknown')
             return (f"{name} is rated {diff} overall. "
                     f"Technically it's {tech}, with {exposure} exposure and {fitness} fitness demand. "
-                    f"{'It's well within reach for most hikers.' if diff == 'easy' else 'Make sure your footwear has good grip.' if diff == 'medium' else 'I'd recommend it only for confident, experienced hikers.'}")
+                    f"{'It is well within reach for most hikers.' if diff == 'easy' else 'Make sure your footwear has good grip.' if diff == 'medium' else 'I recommend it only for confident, experienced hikers.'}")
         else:
             return (f"{name} is a rifugio — the approach difficulty depends on which trail you take to reach it. "
                     f"Check the access info and pick a route that matches your level.")

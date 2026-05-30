@@ -1,6 +1,6 @@
-self.__SW_VERSION = 'v9';
+self.__SW_VERSION = 'v10';
 
-const CACHE_NAME = 'alpenvia-v9';
+const CACHE_NAME = 'alpenvia-v10';
 const STATIC_CACHE = 'alpenvia-static-v9';
 const DYNAMIC_CACHE = 'alpenvia-dynamic-v9';
 

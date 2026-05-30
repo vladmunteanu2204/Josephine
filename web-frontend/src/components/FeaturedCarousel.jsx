@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import './FeaturedCarousel.css';
 
@@ -6,10 +6,11 @@ function FeaturedCarousel({ trails, onViewTrail }) {
   const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const resumeTimerRef = useRef(null);
 
   useEffect(() => {
     if (!isAutoPlaying || !trails || trails.length === 0) return;
-    
+
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % trails.length);
     }, 5000);
@@ -19,18 +20,24 @@ function FeaturedCarousel({ trails, onViewTrail }) {
 
   if (!trails || trails.length === 0) return null;
 
-  const nextSlide = () => {
+  const pauseAndResume = () => {
     setIsAutoPlaying(false);
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    resumeTimerRef.current = setTimeout(() => setIsAutoPlaying(true), 5000);
+  };
+
+  const nextSlide = () => {
+    pauseAndResume();
     setCurrentIndex((prev) => (prev + 1) % trails.length);
   };
 
   const prevSlide = () => {
-    setIsAutoPlaying(false);
+    pauseAndResume();
     setCurrentIndex((prev) => (prev - 1 + trails.length) % trails.length);
   };
 
   const goToSlide = (index) => {
-    setIsAutoPlaying(false);
+    pauseAndResume();
     setCurrentIndex(index);
   };
 

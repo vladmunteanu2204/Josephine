@@ -83,6 +83,12 @@ function App() {
     setCurrentView('detail');
   };
 
+  const viewRifugio = (rifugio) => {
+    setPreviousView(currentView);
+    setSelectedRifugio(rifugio?.id || rifugio);
+    setCurrentView('rifugio-detail');
+  };
+
   const navigate = (view, param = null) => {
     // Redirect disabled feature routes to home
     if (!ENABLE_GAMIFICATION && (view === 'challenges' || view === 'leaderboards')) {
@@ -140,10 +146,11 @@ function App() {
           )}
           
           {currentView === 'detail' && selectedTrail && (
-            <TrailDetail 
+            <TrailDetail
               trail={selectedTrail}
               onBack={goBack}
               setIsGPSActive={setIsGPSActive}
+              viewRifugio={viewRifugio}
             />
           )}
 
