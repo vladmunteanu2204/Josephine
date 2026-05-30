@@ -22,7 +22,11 @@
     "explore": "Entdecken",
     "myPlan": "Mein Plan",
     "saved": "Gespeichert",
-    "insights": "Empfehlungen"
+    "insights": "Empfehlungen",
+    "smartRecommendations": "Empfehlungen",
+    "trailCatalog": "Wanderwege",
+    "rifugios": "Schutzhütten",
+    "hikePlanner": "Wanderplaner"
   },
   "header": {
     "profile": "Profil",

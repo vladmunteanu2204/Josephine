@@ -22,7 +22,11 @@
     "explore": "Explore",
     "myPlan": "My Plan",
     "saved": "Saved",
-    "insights": "Insights"
+    "insights": "Insights",
+    "smartRecommendations": "Smart Recommendations",
+    "trailCatalog": "Trail Catalog",
+    "rifugios": "Rifugios",
+    "hikePlanner": "Hike Planner"
   },
   "header": {
     "profile": "Profile",

@@ -22,7 +22,11 @@
     "explore": "Esplora",
     "myPlan": "Il Mio Piano",
     "saved": "Salvati",
-    "insights": "Suggerimenti"
+    "insights": "Suggerimenti",
+    "smartRecommendations": "Consigli Personalizzati",
+    "trailCatalog": "Catalogo Sentieri",
+    "rifugios": "Rifugi",
+    "hikePlanner": "Pianificatore Escursioni"
   },
   "header": {
     "profile": "Profilo",
