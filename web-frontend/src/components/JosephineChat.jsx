@@ -104,6 +104,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
   const [apiResults,   setApiResults]     = useState([]);
   const [selectedMoods, setSelectedMoods] = useState([]);
   const [refining, setRefining]           = useState(false);
+  const [chatHistory, setChatHistory]     = useState([]);
 
   const bottomRef = useRef(null);
   const inputRef  = useRef(null);
@@ -383,6 +384,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       setApiResults([]);
       setSelectedMoods([]);
       setRefining(false);
+      setChatHistory([]);
       setTimeout(() => {
         appendJosephineMessage({
           type:  'text',
@@ -431,7 +433,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
   };
 
   /* ── Freeform send ───────────────────────────────────────────────────── */
-  const sendMessage = (text) => {
+  const sendMessage = async (text) => {
     if (!text.trim()) return;
 
     // Step 6 (location)
@@ -442,28 +444,31 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       return;
     }
 
-    const userMsg = { id: Date.now() + Math.random(), from: 'user', type: 'text', text: text.trim(), chips: null };
-    setMessages(prev => [...prev, userMsg]);
+    const trimmed = text.trim();
+    appendUserMessage(trimmed);
     setInput('');
     setTyping(true);
 
-    setTimeout(() => {
+    try {
+      const res = await axios.post('/api/chat', {
+        message: trimmed,
+        history: chatHistory.slice(-10),
+      });
       setTyping(false);
-      const lower = text.toLowerCase();
-      let reply;
-      if (lower.includes('map') || lower.includes('show')) {
-        reply = { type: 'text', text: "I'll pull up the map for you!", chips: ['Open map'] };
-      } else if (lower.includes('plan') || lower.includes('hike') || lower.includes('trail')) {
-        reply = { type: 'text', text: "Let's find your perfect trail!", chips: ['Plan my day', 'Surprise me'] };
-      } else {
-        reply = {
-          type: 'text',
-          text: "That's a great question! Want me to help you find the perfect trail for today?",
-          chips: ['Plan my day', 'Surprise me', 'Show me the map'],
-        };
-      }
-      appendJosephineMessage(reply);
-    }, 1200);
+      setChatHistory(prev => [
+        ...prev,
+        { role: 'user', content: trimmed },
+        { role: 'assistant', content: res.data.reply },
+      ]);
+      appendJosephineMessage({ type: 'text', text: res.data.reply, chips: null });
+    } catch {
+      setTyping(false);
+      appendJosephineMessage({
+        type: 'text',
+        text: "The mountain winds are interfering — try again in a moment.",
+        chips: ['Plan my day', 'Surprise me'],
+      });
+    }
   };
 
   /* ── Render ──────────────────────────────────────────────────────────── */

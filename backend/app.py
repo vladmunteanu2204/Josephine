@@ -5,6 +5,8 @@ import json
 import random
 import io
 import fcntl
+import hashlib
+import time
 from datetime import datetime
 from functools import wraps
 from weather_service import weather_service
@@ -31,6 +33,11 @@ except Exception as e:
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
 if not ADMIN_PASSWORD:
     raise RuntimeError("ADMIN_PASSWORD environment variable must be set before starting the server")
+
+# Anthropic API key — optional; /api/chat degrades gracefully without it
+ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY')
+if not ANTHROPIC_API_KEY:
+    print("Warning: ANTHROPIC_API_KEY not set — /api/chat will use structured lookup only (no LLM)")
 
 def require_admin_auth(f):
     """Decorator to require admin authentication"""
@@ -1844,6 +1851,348 @@ def serve_media(filename):
     except Exception as e:
         print(f"Serve error: {str(e)}")
         return jsonify({'error': f'File retrieval failed: {str(e)}'}), 500
+
+# ============================================================
+# Josephine Chat — 3-layer Q&A Engine
+# Layer 1: planning chips (handled in frontend, never reaches here)
+# Layer 2: structured_answer()  — free, deterministic, ~80% coverage
+# Layer 3: Claude API (Haiku)   — paid, cached, rate-limited
+# ============================================================
+
+# -- Cache & rate-limit state (in-process, resets on restart) --
+_chat_cache = {}        # sha256(question) → (reply_str, timestamp)
+_rate_buckets = {}      # ip → [timestamp, ...]
+_system_prompt_cache = {'prompt': None, 'built_at': 0}
+
+CACHE_TTL              = 86_400   # 24 h
+MAX_LLM_CALLS_PER_HOUR = 5        # per IP
+
+
+def _cache_get(question: str):
+    key = hashlib.sha256(question.lower().strip().encode()).hexdigest()
+    entry = _chat_cache.get(key)
+    if entry and time.time() - entry[1] < CACHE_TTL:
+        return entry[0]
+    return None
+
+
+def _cache_set(question: str, reply: str):
+    key = hashlib.sha256(question.lower().strip().encode()).hexdigest()
+    _chat_cache[key] = (reply, time.time())
+
+
+def _rate_allowed(ip: str) -> bool:
+    now = time.time()
+    bucket = [t for t in _rate_buckets.get(ip, []) if now - t < 3600]
+    if len(bucket) >= MAX_LLM_CALLS_PER_HOUR:
+        _rate_buckets[ip] = bucket
+        return False
+    bucket.append(now)
+    _rate_buckets[ip] = bucket
+    return True
+
+
+def _build_system_prompt() -> str:
+    """Build (and cache in-process) the Josephine system prompt with all trail+rifugio data."""
+    # Rebuild at most once every 5 minutes so live edits propagate
+    if _system_prompt_cache['prompt'] and time.time() - _system_prompt_cache['built_at'] < 300:
+        return _system_prompt_cache['prompt']
+
+    # --- Trails: strip heavy fields not needed for Q&A ---
+    KEEP_TRAIL = {'id','name','region','difficulty','tagline','distance_km','duration_hours',
+                  'elevation_gain_m','elevation_loss_m','trail_type','interests','tags',
+                  'description','josephineNote','dog_friendly','family_friendly',
+                  'best_season','access_info','difficulty_details','rating','facilities',
+                  'pois'}
+    raw_trails = load_complete_trails().get('trails', [])
+    trails_clean = []
+    for t in raw_trails:
+        clean = {k: v for k, v in t.items() if k in KEEP_TRAIL}
+        # Slim down pois to name+type only
+        if 'pois' in clean:
+            clean['pois'] = [{'name': p.get('name'), 'type': p.get('type')} for p in clean['pois']]
+        trails_clean.append(clean)
+
+    # --- Rifugios: strip photos ---
+    raw_rifugios = load_rifugios()
+    rifugios_clean = [{k: v for k, v in r.items() if k != 'photos'} for r in raw_rifugios]
+
+    today = datetime.now().strftime('%B %d, %Y')
+
+    prompt = f"""You are Josephine, the alpine guide for Alpenvia — a hiking app covering the South Tyrol / Merano region of the Italian Alps.
+
+PERSONA
+• Speak in warm, first-person alpine voice: "I know this valley well…", "Last summer I noticed…"
+• Be concise — 2 to 4 sentences unless the user explicitly asks for detail.
+• Never invent trails, rifugios, or facts not present in your database below.
+• If you cannot answer from your data, say so honestly and suggest the user check the app's trail or rifugio pages.
+
+TODAY'S DATE: {today}
+
+HOW TO ANSWER SPECIFIC QUESTION TYPES
+• Opening / closing dates → check opening_season.start_date and opening_season.end_date; compare to today and say whether it is currently open, closed, or opening soon.
+• Access / directions / how to get there → use the access_info field.
+• Technical difficulty / danger / exposure → cite difficulty_details.technical and difficulty_details.exposure.
+• Dog-friendly → use dog_friendly boolean.
+• Family / kids → use family_friendly boolean.
+• Prices / overnight stay → use the prices and facilities fields of the rifugio.
+• Best time to visit / season → use best_season list.
+• Weather → you cannot fetch live weather, so direct the user to the Alpenvia weather tab for the latest forecast.
+
+TRAILS DATABASE
+{json.dumps(trails_clean, ensure_ascii=False, indent=2)}
+
+RIFUGIOS DATABASE
+{json.dumps(rifugios_clean, ensure_ascii=False, indent=2)}
+"""
+    _system_prompt_cache['prompt'] = prompt
+    _system_prompt_cache['built_at'] = time.time()
+    return prompt
+
+
+def _fuzzy_match_entity(question: str):
+    """
+    Returns (entity_type, entity_data) for the best trail or rifugio name match
+    found in the question, or (None, None) if nothing matches well enough.
+    """
+    q = question.lower()
+    trails   = load_complete_trails().get('trails', [])
+    rifugios = load_rifugios()
+
+    best_score = 0
+    best = (None, None)
+
+    def score(name: str) -> int:
+        name_l = name.lower()
+        words  = [w for w in name_l.split() if len(w) > 3]
+        # Full name match scores highest
+        if name_l in q:
+            return 100
+        # Word-level partial match
+        return sum(10 for w in words if w in q)
+
+    for t in trails:
+        s = score(t.get('name', ''))
+        if s > best_score:
+            best_score, best = s, ('trail', t)
+
+    for r in rifugios:
+        s = score(r.get('name', ''))
+        if s > best_score:
+            best_score, best = s, ('rifugio', r)
+
+    return best if best_score >= 10 else (None, None)
+
+
+def structured_answer(question: str):
+    """
+    Layer 2: deterministic answer from trail/rifugio data.
+    Returns a Josephine-voice string if the question can be answered,
+    or None if Claude (Layer 3) should handle it.
+    """
+    q = question.lower()
+
+    # -- Intent keyword sets --
+    OPENING_KW  = {'open','opening','close','closing','season','when','start','end','reopen','closed'}
+    ACCESS_KW   = {'access','reach','get to','get there','directions','how to go','way to',
+                   'from','fastest','quickest','route to','road','drive','hike to','walk to'}
+    TECH_KW     = {'technical','danger','dangerous','hard','difficult','exposure','exposed',
+                   'steep','via ferrata','risky','safe','safety'}
+    DOG_KW      = {'dog','dogs','canine','pet','bring my dog','with dog'}
+    FAMILY_KW   = {'family','kids','children','child','toddler','pushchair','stroller'}
+    PRICE_KW    = {'price','cost','overnight','stay','bed','beds','accommodation','sleep',
+                   'dinner','breakfast','half board','how much'}
+    WEATHER_KW  = {'weather','forecast','rain','snow','temperature','wind','storm','cloud'}
+
+    def has(kw_set):
+        return any(k in q for k in kw_set)
+
+    entity_type, entity = _fuzzy_match_entity(question)
+
+    # Weather — always deflect regardless of entity
+    if has(WEATHER_KW):
+        return ("I can't pull live weather from here, but the Alpenvia weather tab "
+                "shows the current forecast and a 7-day outlook for any trail coordinates. "
+                "Check it before you head out!")
+
+    # Need an entity for most answers
+    if entity is None:
+        return None   # fall through to Layer 3
+
+    name = entity.get('name', 'this location')
+
+    # OPENING / SEASON
+    if has(OPENING_KW):
+        if entity_type == 'rifugio':
+            season = entity.get('opening_season', {})
+            start, end = season.get('start_date'), season.get('end_date')
+            if start and end:
+                try:
+                    from datetime import datetime as dt
+                    today_d  = dt.now().date()
+                    start_d  = dt.strptime(start, '%Y-%m-%d').date()
+                    end_d    = dt.strptime(end,   '%Y-%m-%d').date()
+                    if today_d < start_d:
+                        days = (start_d - today_d).days
+                        status = f"currently closed — it opens in {days} day{'s' if days != 1 else ''}, on {start}"
+                    elif today_d > end_d:
+                        status = f"closed for the season (was open until {end})"
+                    else:
+                        status = f"open right now until {end}"
+                except Exception:
+                    status = f"open from {start} to {end}"
+                return (f"{name} is {status}. "
+                        f"If you're planning ahead, I'd book well in advance — the good rifugios fill up fast.")
+            else:
+                rtype = entity.get('type', 'rifugio')
+                if rtype == 'bivacco':
+                    return f"{name} is a bivacco — it stays open year-round, no reservation needed."
+                return f"I don't have specific season dates for {name} yet. Check their website or contact them directly."
+        else:  # trail
+            best_season = entity.get('best_season', [])
+            if best_season:
+                season_str = ', '.join(best_season)
+                current = datetime.now().strftime('%B')
+                in_season = current in best_season
+                state = "you're in the right window" if in_season else f"right now ({current}) is outside the ideal window"
+                return (f"The best time for {name} is {season_str} — {state}. "
+                        f"Outside that period the path can be snowy or access roads closed.")
+            return f"I don't have season restrictions for {name} — it should be walkable most of the year, conditions permitting."
+
+    # ACCESS / DIRECTIONS
+    if has(ACCESS_KW):
+        access = entity.get('access_info', '')
+        if access:
+            return f"To reach {name}: {access}"
+        return (f"I don't have turn-by-turn directions for {name} in my notes yet. "
+                f"I'd suggest checking the trail map in the app or a recent GPS track on Komoot.")
+
+    # TECHNICAL / DANGER
+    if has(TECH_KW):
+        if entity_type == 'trail':
+            dd = entity.get('difficulty_details', {})
+            tech     = dd.get('technical', entity.get('difficulty', 'unknown'))
+            exposure = dd.get('exposure',  'unknown')
+            fitness  = dd.get('fitness',   'unknown')
+            diff     = entity.get('difficulty', 'unknown')
+            return (f"{name} is rated {diff} overall. "
+                    f"Technically it's {tech}, with {exposure} exposure and {fitness} fitness demand. "
+                    f"{'It's well within reach for most hikers.' if diff == 'easy' else 'Make sure your footwear has good grip.' if diff == 'medium' else 'I'd recommend it only for confident, experienced hikers.'}")
+        else:
+            return (f"{name} is a rifugio — the approach difficulty depends on which trail you take to reach it. "
+                    f"Check the access info and pick a route that matches your level.")
+
+    # DOG-FRIENDLY
+    if has(DOG_KW):
+        if entity_type == 'trail':
+            dog_ok = entity.get('dog_friendly')
+            if dog_ok is True:
+                return f"Good news — {name} is dog-friendly! Keep your dog on a lead near the farms and wildlife areas."
+            elif dog_ok is False:
+                return f"{name} doesn't allow dogs, unfortunately. Wildlife protection rules in this area restrict it."
+            return f"I don't have confirmed dog-friendly info for {name} — check with the local forestry office to be sure."
+        else:  # rifugio
+            dogs_ok = entity.get('facilities', {}).get('dogs')
+            if dogs_ok is True:
+                return f"{name} welcomes dogs — just mention it when you book so they can prepare."
+            elif dogs_ok is False:
+                return f"{name} doesn't accept dogs, I'm afraid. If you're hiking with your dog, I can suggest an alternative."
+            return f"I'm not sure whether {name} accepts dogs — give them a call to confirm before you arrive."
+
+    # FAMILY / KIDS
+    if has(FAMILY_KW):
+        if entity_type == 'trail':
+            fam = entity.get('family_friendly')
+            diff = entity.get('difficulty', '')
+            if fam is True:
+                return (f"{name} is family-friendly — great choice for a day out with kids. "
+                        f"It's rated {diff}, so even younger hikers should manage well.")
+            elif fam is False:
+                return (f"{name} isn't really suitable for young children — "
+                        f"the terrain is {diff} and can be challenging for little legs.")
+            return f"I don't have family-suitability info for {name} specifically — the {entity.get('difficulty','unknown')} rating gives you a rough idea."
+        return f"{name} should be fine for families — rifugios are used to all ages. Call ahead to check facilities for kids."
+
+    # PRICES / STAY
+    if has(PRICE_KW):
+        if entity_type == 'rifugio':
+            prices = entity.get('prices', {})
+            beds   = entity.get('facilities', {}).get('beds', 0)
+            parts  = []
+            if prices.get('overnight'): parts.append(f"overnight €{prices['overnight']}")
+            if prices.get('half_board'): parts.append(f"half board €{prices['half_board']}")
+            if prices.get('breakfast'): parts.append(f"breakfast €{prices['breakfast']}")
+            if prices.get('dinner'):    parts.append(f"dinner €{prices['dinner']}")
+            price_str = ', '.join(parts) if parts else 'pricing not in my notes'
+            beds_str  = f" They have {beds} beds, so book early." if beds else ""
+            return f"{name}: {price_str}.{beds_str} Contact them directly to confirm availability."
+        return f"Prices for trails are free to walk — you're asking about the wrong kind of spend! Did you mean a rifugio nearby?"
+
+    # Entity matched but intent unclear → let Layer 3 handle
+    return None
+
+
+@app.route('/api/chat', methods=['POST'])
+def josephine_chat():
+    """
+    Josephine free-form Q&A — 3-layer engine.
+    Layer 2 (structured) fires first; Layer 3 (Claude) only if needed.
+    """
+    body    = request.get_json(silent=True) or {}
+    message = body.get('message', '').strip()
+    history = body.get('history', [])[-10:]   # last 5 pairs max
+
+    if not message:
+        return jsonify({'error': 'message required'}), 400
+
+    # ── Layer 2: structured lookup (free) ──────────────────────────────
+    structured = structured_answer(message)
+    if structured:
+        return jsonify({'reply': structured, 'mode': 'structured'})
+
+    # ── Layer 3: Claude Haiku (paid, with cache + rate limit) ──────────
+    if not ANTHROPIC_API_KEY:
+        return jsonify({
+            'reply': ("I know these mountains well, but that question needs a bit more thought. "
+                      "Try asking me about opening times, how to reach a place, trail difficulty, "
+                      "or whether dogs are allowed — I can answer those instantly!"),
+            'mode': 'no_key'
+        })
+
+    # Cache check (question-level, ignores history for cache key)
+    cached = _cache_get(message)
+    if cached:
+        return jsonify({'reply': cached, 'mode': 'cached'})
+
+    # Rate limit per IP
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr or '0.0.0.0').split(',')[0].strip()
+    if not _rate_allowed(ip):
+        return jsonify({
+            'reply': ("I've been answering a lot of questions today — give me a few minutes to catch my breath! "
+                      "While you wait, the 'Plan my day' button will find you the perfect trail right now."),
+            'mode': 'rate_limited'
+        })
+
+    try:
+        import anthropic
+        client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+        response = client.messages.create(
+            model='claude-haiku-4-5',
+            max_tokens=300,
+            system=_build_system_prompt(),
+            messages=history + [{'role': 'user', 'content': message}],
+        )
+        reply = response.content[0].text
+        _cache_set(message, reply)
+        return jsonify({'reply': reply, 'mode': 'llm'})
+
+    except Exception as e:
+        print(f"Josephine LLM error: {e}")
+        return jsonify({
+            'reply': "The mountain winds are interfering with my signal — try again in a moment!",
+            'mode': 'error'
+        })
+
 
 # Serve React frontend (catch-all route for SPA)
 @app.route('/', defaults={'path': ''})
