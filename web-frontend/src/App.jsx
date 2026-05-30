@@ -22,7 +22,6 @@ import RifugioDetail from './components/RifugioDetail';
 import MultiDayTrails from './components/MultiDayTrails';
 import MultiDayTrailDetail from './components/MultiDayTrailDetail';
 import SplashScreen from './components/SplashScreen';
-import OnboardingWizard from './components/OnboardingWizard';
 import Footer from './components/Footer';
 import JosephineWidget from './components/JosephineWidget';
 import BottomNav from './components/BottomNav';
@@ -36,9 +35,6 @@ function App() {
   const [selectedMultiDayTrail, setSelectedMultiDayTrail] = useState(null);
   const [catalogInitialTags, setCatalogInitialTags] = useState([]);
   const [showSplash, setShowSplash] = useState(true);
-  const [showOnboarding, setShowOnboarding] = useState(() => {
-    return !localStorage.getItem('onboardingCompleted');
-  });
   const [isGPSActive, setIsGPSActive] = useState(false);
 
   // Sync view to URL hash for back-button support and shareable links
@@ -221,9 +217,7 @@ function App() {
 
         <JosephineWidget setCurrentView={setCurrentView} />
 
-        {!showSplash && showOnboarding && (
-          <OnboardingWizard onComplete={() => setShowOnboarding(false)} />
-        )}
+
 
         {showSplash && (
           <SplashScreen onComplete={() => setShowSplash(false)} />
