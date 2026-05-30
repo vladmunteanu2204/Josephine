@@ -515,6 +515,128 @@
 .badge-medium { background: rgba(200, 160, 40, 0.2); color: #c9a84c; }
 .badge-hard   { background: rgba(200, 80, 80, 0.2);  color: #e07070; }
 
+/* ── Loading screen ── */
+.sr-loading-screen {
+  min-height: 100vh;
+  background: var(--bg-primary, #080e08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 40px 24px;
+}
+
+.sr-loading-mark {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sr-loading-mark-img {
+  width: 40px;
+  height: 40px;
+  opacity: 0.85;
+  position: relative;
+  z-index: 1;
+  animation: sr-pulse-img 1.8s ease-in-out infinite;
+}
+
+@keyframes sr-pulse-img {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.08); }
+}
+
+.sr-loading-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  animation: sr-ring-expand 1.8s ease-out infinite;
+}
+
+@keyframes sr-ring-expand {
+  0%   { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.sr-loading-phrase {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 20px;
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(240, 236, 230, 0.7);
+  text-align: center;
+  margin: 0;
+  min-height: 28px;
+  transition: opacity 0.3s;
+}
+
+.sr-loading-bars {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.sr-loading-bar {
+  width: 3px;
+  background: #c9a84c;
+  border-radius: 2px;
+  opacity: 0.5;
+  animation: sr-wave 1.4s ease-in-out infinite;
+}
+
+@keyframes sr-wave {
+  0%, 100% { transform: scaleY(0.4); opacity: 0.3; }
+  50%       { transform: scaleY(1);   opacity: 0.8; }
+}
+
+/* ── Josephine reasoning note (hero card) ── */
+.sr-josephine-reason {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(201, 168, 76, 0.06);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  border-left: 3px solid #c9a84c;
+  border-radius: 0 10px 10px 0;
+  padding: 10px 14px;
+  margin: 12px 0 18px;
+}
+
+.sr-reason-mark {
+  width: 16px;
+  height: 16px;
+  opacity: 0.75;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.sr-reason-text {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 15px;
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(240, 236, 230, 0.75);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Josephine note on list cards */
+.sr-list-card__reason {
+  font-size: 11px;
+  font-style: italic;
+  color: rgba(201, 168, 76, 0.65);
+  margin: 2px 0 5px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* ── Responsive ── */
 @media (max-width: 480px) {
   .sr-segment {

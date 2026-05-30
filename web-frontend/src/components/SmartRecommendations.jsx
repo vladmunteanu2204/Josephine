@@ -7,25 +7,34 @@ import './SmartRecommendations.css';
 const API_URL = '/api';
 
 const DURATION_OPTIONS = [
-  { label: '< 2h',    value: 1.5 },
-  { label: '2–4h',   value: 3   },
-  { label: '4–6h',   value: 5   },
-  { label: 'Full day', value: 8 },
+  { label: '< 2h',     value: 1.5 },
+  { label: '2–4h',     value: 3   },
+  { label: '4–6h',     value: 5   },
+  { label: 'Full day', value: 8   },
 ];
 
 const DIFFICULTY_OPTIONS = [
-  { key: 'easy',   dots: 1, label: 'Easy'   },
+  { key: 'easy',   dots: 1, label: 'Easy'     },
   { key: 'medium', dots: 2, label: 'Moderate' },
-  { key: 'hard',   dots: 3, label: 'Hard'   },
+  { key: 'hard',   dots: 3, label: 'Hard'     },
 ];
 
 const MOOD_OPTIONS = [
-  { id: 'alpine lakes',    icon: '◈', label: 'Alpine lakes'     },
-  { id: 'panoramic views', icon: '◈', label: 'Panoramic views'  },
-  { id: 'via ferrata',     icon: '◈', label: 'Via ferrata'      },
-  { id: 'forests',         icon: '◈', label: 'Forests'          },
-  { id: 'cultural routes', icon: '◈', label: 'Culture'          },
-  { id: 'loop',            icon: '◈', label: 'Loop trails'      },
+  { id: 'alpine lakes',    label: 'Alpine lakes'    },
+  { id: 'panoramic views', label: 'Panoramic views' },
+  { id: 'via ferrata',     label: 'Via ferrata'     },
+  { id: 'forests',         label: 'Forests'         },
+  { id: 'cultural routes', label: 'Culture'         },
+  { id: 'loop',            label: 'Loop trails'     },
+];
+
+const DIFF_COLOR = { easy: '#4ade80', medium: '#c9a84c', hard: '#ef4444' };
+
+const LOADING_PHRASES = [
+  'Reading the mountain winds…',
+  'Checking trail conditions…',
+  'Asking the locals…',
+  'Almost there…',
 ];
 
 function DifficultyDots({ count }) {
@@ -38,11 +47,37 @@ function DifficultyDots({ count }) {
   );
 }
 
+function LoadingScreen() {
+  const [phraseIdx, setPhraseIdx] = React.useState(0);
+
+  React.useEffect(() => {
+    const id = setInterval(() => {
+      setPhraseIdx(i => (i + 1) % LOADING_PHRASES.length);
+    }, 1400);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <div className="sr-loading-screen">
+      <div className="sr-loading-mark">
+        <img src="/josephine-mark.svg" alt="" className="sr-loading-mark-img" onError={e => e.currentTarget.style.opacity = '0'} />
+        <div className="sr-loading-pulse" />
+      </div>
+      <p className="sr-loading-phrase">{LOADING_PHRASES[phraseIdx]}</p>
+      <div className="sr-loading-bars">
+        {[4,7,5,9,6,8,5,7,4,6].map((h, i) => (
+          <span key={i} className="sr-loading-bar" style={{ height: `${h * 3}px`, animationDelay: `${i * 0.1}s` }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function SmartRecommendations({ viewTrail }) {
   const { t } = useTranslation();
   const toast = useToast();
 
-  // Form state
+  // Form state — persisted across back-from-results
   const [duration, setDuration]     = useState(3);
   const [difficulty, setDifficulty] = useState('medium');
   const [moods, setMoods]           = useState([]);
@@ -50,9 +85,9 @@ function SmartRecommendations({ viewTrail }) {
   const [startArea, setStartArea]   = useState('');
 
   // Results state
-  const [results, setResults]   = useState([]);
-  const [loading, setLoading]   = useState(false);
-  const [error, setError]       = useState('');
+  const [results, setResults]       = useState([]);
+  const [loading, setLoading]       = useState(false);
+  const [error, setError]           = useState('');
   const [showResults, setShowResults] = useState(false);
 
   const [savedTrailIds, setSavedTrailIds] = useState(() => {
@@ -67,9 +102,8 @@ function SmartRecommendations({ viewTrail }) {
     return parsed;
   });
 
-  const toggleMood = (id) => {
+  const toggleMood = (id) =>
     setMoods(prev => prev.includes(id) ? prev.filter(m => m !== id) : [...prev, id]);
-  };
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -92,7 +126,8 @@ function SmartRecommendations({ viewTrail }) {
     }
   };
 
-  const reset = () => {
+  // Go back to form — keep all selections intact, just hide results
+  const goBackToForm = () => {
     setShowResults(false);
     setResults([]);
     setError('');
@@ -111,7 +146,8 @@ function SmartRecommendations({ viewTrail }) {
       : toast.success(`${trail.name} saved!`);
   };
 
-  const DIFF_COLOR = { easy: '#4ade80', medium: '#c9a84c', hard: '#ef4444' };
+  // ── Loading screen ────────────────────────────────────────────────────────
+  if (loading) return <LoadingScreen />;
 
   // ── Results view ──────────────────────────────────────────────────────────
   if (showResults) {
@@ -119,12 +155,11 @@ function SmartRecommendations({ viewTrail }) {
     return (
       <div className="sr-results-page">
 
-        {/* Back */}
-        <button className="sr-back-btn" onClick={reset}>
+        <button className="sr-back-btn" onClick={goBackToForm}>
           <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
             <path d="M12 4L6 10L12 16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          New search
+          Refine search
         </button>
 
         {error && <p className="sr-error" style={{ padding: '0 20px 16px' }}>{error}</p>}
@@ -136,7 +171,7 @@ function SmartRecommendations({ viewTrail }) {
           </div>
         ) : (
           <>
-            {/* ── Hero card (Josephine's pick) ── */}
+            {/* ── Hero card — Josephine's pick ── */}
             {hero && (
               <div className="sr-hero-card" onClick={() => viewTrail(hero)}>
                 <div className="sr-hero-card__img-wrap">
@@ -149,7 +184,7 @@ function SmartRecommendations({ viewTrail }) {
                   <div className="sr-hero-card__overlay" />
 
                   <span className="sr-hero-card__pick-badge">
-                    <img src="/josephine-mark.svg" alt="" className="sr-pick-badge-mark" onError={e => e.currentTarget.style.display='none'} />
+                    <img src="/josephine-mark.svg" alt="" className="sr-pick-badge-mark" onError={e => e.currentTarget.style.display = 'none'} />
                     Josephine's Pick
                   </span>
 
@@ -180,7 +215,16 @@ function SmartRecommendations({ viewTrail }) {
                     <span className="sr-hero-dot">·</span>
                     <span>{hero.elevation_gain_m}m ↑</span>
                   </div>
-                  <button className="sr-hero-cta" onClick={() => viewTrail(hero)}>
+
+                  {/* Josephine's reasoning */}
+                  {hero.josephine_note && (
+                    <div className="sr-josephine-reason">
+                      <img src="/josephine-mark.svg" alt="" className="sr-reason-mark" onError={e => e.currentTarget.style.display = 'none'} />
+                      <p className="sr-reason-text">{hero.josephine_note}</p>
+                    </div>
+                  )}
+
+                  <button className="sr-hero-cta" onClick={e => { e.stopPropagation(); viewTrail(hero); }}>
                     View Details →
                   </button>
                 </div>
@@ -195,7 +239,8 @@ function SmartRecommendations({ viewTrail }) {
                   <div key={trail.id} className="sr-list-card" onClick={() => viewTrail(trail)}>
                     <div className="sr-list-card__img-wrap">
                       <img
-                        src={trail.thumbnail || trail.image_url || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&auto=format&fit=crop&q=60'}
+                        src={trail.wallpaper || trail.thumbnail || trail.image_url ||
+                          'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&auto=format&fit=crop&q=60'}
                         alt={trail.name}
                         className="sr-list-card__img"
                       />
@@ -203,6 +248,7 @@ function SmartRecommendations({ viewTrail }) {
                     <div className="sr-list-card__body">
                       <p className="sr-list-card__region">{trail.region}</p>
                       <h3 className="sr-list-card__name">{trail.name}</h3>
+                      <p className="sr-list-card__reason">{trail.josephine_note}</p>
                       <div className="sr-list-card__stats">
                         <span>{trail.distance_km} km</span>
                         <span>·</span>
@@ -229,11 +275,10 @@ function SmartRecommendations({ viewTrail }) {
     );
   }
 
-  // ── Single-page form ──────────────────────────────────────────────────────
+  // ── Form ──────────────────────────────────────────────────────────────────
   return (
     <div className="sr-page">
 
-      {/* Header */}
       <div className="sr-header">
         <div className="sr-header-inner">
           <div className="sr-josephine-mark">
@@ -281,7 +326,7 @@ function SmartRecommendations({ viewTrail }) {
           </div>
         </div>
 
-        {/* Mood / interests */}
+        {/* Mood */}
         <div className="sr-section">
           <p className="sr-label">I'm in the mood for… <span className="sr-label-hint">(pick any)</span></p>
           <div className="sr-mood-grid">
@@ -332,19 +377,9 @@ function SmartRecommendations({ viewTrail }) {
 
         {/* CTA */}
         <div className="sr-cta-wrap">
-          <button
-            className="sr-cta"
-            onClick={handleSubmit}
-            disabled={loading}
-          >
-            {loading ? (
-              <span className="sr-cta-loading">Finding your trails…</span>
-            ) : (
-              <>
-                <span className="sr-cta-text">Surprise me, Josephine</span>
-                <span className="sr-cta-arrow">↓</span>
-              </>
-            )}
+          <button className="sr-cta" onClick={handleSubmit}>
+            <span className="sr-cta-text">Surprise me, Josephine</span>
+            <span className="sr-cta-arrow">↓</span>
           </button>
         </div>
 
