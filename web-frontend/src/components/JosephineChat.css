@@ -393,3 +393,131 @@
   background: #d4b85c;
   transform: scale(1.05);
 }
+
+/* ── Trail card (inline in chat) ──────────────────────────────────────── */
+
+.jc-msg--card {
+  max-width: calc(100% - 38px);
+}
+
+.jc-trail-card {
+  width: 280px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0f1a0f;
+  border: 1px solid rgba(201,168,76,0.2);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+.jc-trail-card__photo-wrap {
+  position: relative;
+  height: 130px;
+  overflow: hidden;
+}
+
+.jc-trail-card__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.jc-trail-card:hover .jc-trail-card__photo {
+  transform: scale(1.04);
+}
+
+.jc-trail-card__photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8,14,8,0.1) 0%, rgba(8,14,8,0.65) 100%);
+}
+
+.jc-trail-card__pick-badge {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #c9a84c;
+  background: rgba(8,14,8,0.8);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 100px;
+  padding: 3px 10px 3px 6px;
+  backdrop-filter: blur(8px);
+  text-transform: uppercase;
+}
+
+.jc-trail-card__mark {
+  width: 12px;
+  height: 12px;
+  opacity: 0.85;
+}
+
+.jc-trail-card__body {
+  padding: 14px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.jc-trail-card__region {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(240,236,230,0.4);
+  margin: 0;
+}
+
+.jc-trail-card__name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 19px;
+  font-weight: 600;
+  color: #f0ece6;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.jc-trail-card__stats {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(240,236,230,0.55);
+  margin-top: 2px;
+}
+
+.jc-trail-card__dot {
+  color: rgba(240,236,230,0.2);
+}
+
+.jc-trail-card__note {
+  font-size: 12px;
+  color: rgba(240,236,230,0.6);
+  line-height: 1.5;
+  margin: 4px 0 2px;
+  font-style: italic;
+}
+
+.jc-trail-card__cta {
+  margin-top: 10px;
+  width: 100%;
+  padding: 11px;
+  border-radius: 10px;
+  background: #c9a84c;
+  border: none;
+  color: #1a1a0e;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+
+.jc-trail-card__cta:hover {
+  background: #d4b85c;
+}

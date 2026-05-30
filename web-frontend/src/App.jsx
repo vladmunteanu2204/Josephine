@@ -200,7 +200,7 @@ function App() {
           )}
 
           {currentView === 'josephine' && (
-            <JosephineChat onBack={goBack} setCurrentView={setCurrentView} />
+            <JosephineChat onBack={goBack} setCurrentView={setCurrentView} viewTrail={viewTrail} />
           )}
         </main>
 
