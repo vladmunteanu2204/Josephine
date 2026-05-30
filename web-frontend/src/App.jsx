@@ -23,7 +23,6 @@ import MultiDayTrails from './components/MultiDayTrails';
 import MultiDayTrailDetail from './components/MultiDayTrailDetail';
 import SplashScreen from './components/SplashScreen';
 import Footer from './components/Footer';
-import JosephineWidget from './components/JosephineWidget';
 import BottomNav from './components/BottomNav';
 import JosephineChat from './components/JosephineChat';
 
@@ -215,7 +214,6 @@ function App() {
           onJosephineOpen={() => setCurrentView('recommendations')}
         />
 
-        <JosephineWidget setCurrentView={setCurrentView} />
 
 
 

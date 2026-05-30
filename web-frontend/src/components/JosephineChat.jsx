@@ -107,10 +107,13 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
   const [chatHistory, setChatHistory]     = useState([]);
 
   const bottomRef = useRef(null);
+  const greetingShownRef = useRef(false);
   const inputRef  = useRef(null);
 
   /* Session memory greeting ─────────────────────────────────────────── */
   useEffect(() => {
+    if (greetingShownRef.current) return;   // StrictMode double-fire guard
+    greetingShownRef.current = true;
     const prev = loadSession();
     if (prev?.lastTrail && prev?.lastDifficulty) {
       setTimeout(() => {
