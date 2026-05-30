@@ -241,8 +241,15 @@ def get_trails():
     duration_max = request.args.get('duration_max', type=float)
     interest = request.args.get('interest')
     
-    filtered_trails = trails['trails']
-    
+    all_trails = trails['trails']
+    is_admin = request.args.get('_admin') == '1'
+
+    # Public endpoint: only show published trails; admin bypass shows all
+    if not is_admin:
+        all_trails = [t for t in all_trails if t.get('status', 'published') == 'published']
+
+    filtered_trails = all_trails
+
     if difficulty:
         filtered_trails = [t for t in filtered_trails if t['difficulty'].lower() == difficulty.lower()]
     
@@ -714,6 +721,46 @@ def delete_trail(trail_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/admin/trails/<trail_id>/publish', methods=['POST'])
+@require_admin_auth
+def publish_trail(trail_id):
+    """Publish or unpublish a trail (Admin). Body: {status: 'published'|'draft'}"""
+    try:
+        new_status = (request.get_json(silent=True) or {}).get('status', 'published')
+        if new_status not in ('published', 'draft'):
+            return jsonify({'error': "status must be 'published' or 'draft'"}), 400
+        trails = load_complete_trails()
+        trail = next((t for t in trails['trails'] if t['id'] == trail_id), None)
+        if not trail:
+            return jsonify({'error': 'Trail not found'}), 404
+        trail['status'] = new_status
+        trails_path = os.path.join(BASE_DIR, 'data', 'trails.json')
+        atomic_json_write(trails_path, trails)
+        return jsonify({'success': True, 'status': new_status})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/admin/rifugios/<rifugio_id>/publish', methods=['POST'])
+@require_admin_auth
+def publish_rifugio(rifugio_id):
+    """Publish or unpublish a rifugio (Admin). Body: {status: 'published'|'draft'}"""
+    try:
+        new_status = (request.get_json(silent=True) or {}).get('status', 'published')
+        if new_status not in ('published', 'draft'):
+            return jsonify({'error': "status must be 'published' or 'draft'"}), 400
+        rifugios = load_rifugios()
+        rifugio = next((r for r in rifugios if r['id'] == rifugio_id), None)
+        if not rifugio:
+            return jsonify({'error': 'Rifugio not found'}), 404
+        rifugio['status'] = new_status
+        rifugios_path = os.path.join(BASE_DIR, 'backend', 'data', 'rifugios.json')
+        atomic_json_write(rifugios_path, rifugios)
+        return jsonify({'success': True, 'status': new_status})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/api/admin/gpx/parse', methods=['POST'])
 @require_admin_auth
 def parse_gpx():
@@ -1100,9 +1147,14 @@ def get_rifugios():
         status_filter = request.args.get('status')  # open, closed, opening_soon
         search_query = request.args.get('search', '').lower()
         
+        # Public endpoint: only show published rifugios; admin bypass shows all
+        is_admin = request.args.get('_admin') == '1'
+        if not is_admin:
+            rifugios = [r for r in rifugios if r.get('status', 'published') == 'published']
+
         # Apply filters
         filtered_rifugios = rifugios
-        
+
         if type_filter:
             filtered_rifugios = [r for r in filtered_rifugios if r.get('type') == type_filter]
         
@@ -1903,7 +1955,8 @@ def _build_system_prompt() -> str:
                   'elevation_gain_m','elevation_loss_m','trail_type','interests','tags',
                   'description','josephineNote','dog_friendly','family_friendly',
                   'best_season','access_info','difficulty_details','rating','facilities',
-                  'pois'}
+                  'pois','transport','trailhead_info','nearby_rifugios','crowding',
+                  'weather_notes','highlights','opening_season','year_round'}
     raw_trails = load_complete_trails().get('trails', [])
     trails_clean = []
     for t in raw_trails:
@@ -1913,9 +1966,31 @@ def _build_system_prompt() -> str:
             clean['pois'] = [{'name': p.get('name'), 'type': p.get('type')} for p in clean['pois']]
         trails_clean.append(clean)
 
-    # --- Rifugios: strip photos ---
+    # --- Rifugios: strip photos, keep Q&A fields ---
+    KEEP_RIFUGIO = {'id','name','type','region','altitude','contact','facilities','description',
+                    'access_info','opening_season','prices','status','nearby_trails',
+                    'transport','josephine_note','highlights','booking_required','booking_note'}
     raw_rifugios = load_rifugios()
-    rifugios_clean = [{k: v for k, v in r.items() if k != 'photos'} for r in raw_rifugios]
+    rifugios_clean = [{k: v for k, v in r.items() if k in KEEP_RIFUGIO} for r in raw_rifugios]
+
+    # --- Multi-day adventures: slim summary for Josephine context ---
+    try:
+        with open(MULTI_DAY_TRAILS_FILE) as f:
+            adventures_raw = json.load(f).get('trails', [])
+        adventures_clean = []
+        for adv in adventures_raw:
+            slim = {k: adv[k] for k in ('id','name','region','difficulty','total_distance_km',
+                                         'duration_days','highlights','booking_strategy',
+                                         'emergency_contacts','josephine_adventure_note',
+                                         'best_season_start','best_season_end') if k in adv}
+            slim['stages'] = [
+                {k: s.get(k) for k in ('stage_number','name','distance_km','duration_hours',
+                                        'stops','exit_routes','weather_risk')}
+                for s in adv.get('stages', [])
+            ]
+            adventures_clean.append(slim)
+    except Exception:
+        adventures_clean = []
 
     today = datetime.now().strftime('%B %d, %Y')
 
@@ -1931,19 +2006,26 @@ TODAY'S DATE: {today}
 
 HOW TO ANSWER SPECIFIC QUESTION TYPES
 • Opening / closing dates → check opening_season.start_date and opening_season.end_date; compare to today and say whether it is currently open, closed, or opening soon.
-• Access / directions / how to get there → use the access_info field.
+• Access / directions / how to get there → use access_info and transport fields (transport.bus, transport.car).
 • Technical difficulty / danger / exposure → cite difficulty_details.technical and difficulty_details.exposure.
-• Dog-friendly → use dog_friendly boolean.
+• Dog-friendly → use dog_friendly (trails) or facilities.dogs (rifugios).
 • Family / kids → use family_friendly boolean.
 • Prices / overnight stay → use the prices and facilities fields of the rifugio.
 • Best time to visit / season → use best_season list.
-• Weather → you cannot fetch live weather, so direct the user to the Alpenvia weather tab for the latest forecast.
+• Weather → you cannot fetch live weather; direct to Alpenvia weather tab. Use weather_notes for known local patterns.
+• Transport / parking / bus → use transport.bus and transport.car fields.
+• Crowding / busy periods → use crowding.level, crowding.peak_months, crowding.quiet_tip.
+• Highlights / what to see → use highlights array.
+• Emergency exit / recovery routing → use exit_routes from the relevant adventure stage; present rejoining_options as numbered choices.
 
 TRAILS DATABASE
 {json.dumps(trails_clean, ensure_ascii=False, indent=2)}
 
 RIFUGIOS DATABASE
 {json.dumps(rifugios_clean, ensure_ascii=False, indent=2)}
+
+HUT-TO-HUT ADVENTURES DATABASE
+{json.dumps(adventures_clean, ensure_ascii=False, indent=2)}
 """
     _system_prompt_cache['prompt'] = prompt
     _system_prompt_cache['built_at'] = time.time()
@@ -2002,7 +2084,16 @@ def structured_answer(question: str):
     FAMILY_KW   = {'family','kids','children','child','toddler','pushchair','stroller'}
     PRICE_KW    = {'price','cost','overnight','stay','bed','beds','accommodation','sleep',
                    'dinner','breakfast','half board','how much'}
-    WEATHER_KW  = {'weather','forecast','rain','snow','temperature','wind','storm','cloud'}
+    WEATHER_KW   = {'weather','forecast','rain','snow','temperature','wind','storm','cloud'}
+    TRANSPORT_KW = {'bus','transport','get there','get to it','car park','parking','drive',
+                    'public transport','how to reach','reach by','from merano','from bolzano',
+                    'from bressanone','from brunico','from trento','shuttle','cable car'}
+    CROWD_KW     = {'crowded','busy','quiet','crowd','too many people','peak season',
+                    'avoid crowds','avoid the crowds','when is it less busy','less busy'}
+    RECOVERY_KW  = {'exit','had to leave','left the trail','had to descend','emergency exit',
+                    'get back on','rejoin','rejoin the trail','missed a stage','fell behind',
+                    'skipped','evacuate','caught in weather','bad weather','storm came',
+                    'injured','couldn\'t continue'}
 
     def has(kw_set):
         return any(k in q for k in kw_set)
@@ -2127,6 +2218,85 @@ def structured_answer(question: str):
             beds_str  = f" They have {beds} beds, so book early." if beds else ""
             return f"{name}: {price_str}.{beds_str} Contact them directly to confirm availability."
         return f"Prices for trails are free to walk — you're asking about the wrong kind of spend! Did you mean a rifugio nearby?"
+
+    # TRANSPORT / BUS / PARKING
+    if has(TRANSPORT_KW):
+        transport = entity.get('transport', {})
+        if transport:
+            parts = []
+            if transport.get('bus'):
+                parts.append(f"By bus: {transport['bus']}")
+            if transport.get('car'):
+                parts.append(f"By car: {transport['car']}")
+            if parts:
+                return f"Getting to {name} — {' | '.join(parts)}"
+        access = entity.get('access_info', '')
+        if access:
+            return f"To reach {name}: {access}"
+        return (f"I don't have transport details for {name} in my notes yet. "
+                f"Check the trail map in the app or search 'sad.it' for bus timetables in South Tyrol.")
+
+    # CROWDING
+    if has(CROWD_KW):
+        crowding = entity.get('crowding', {})
+        if crowding:
+            level = crowding.get('level', 'unknown')
+            peak  = ', '.join(crowding.get('peak_months', [])) if crowding.get('peak_months') else 'summer'
+            tip   = crowding.get('quiet_tip', '')
+            reply = f"{name} typically sees {level} visitor numbers, with the busiest period in {peak}."
+            if tip:
+                reply += f" My tip: {tip}"
+            return reply
+        return (f"I don't have crowd information for {name} in my data. "
+                f"Generally, South Tyrol trails are busiest in July and August — weekday mornings are always quieter.")
+
+    # RECOVERY ROUTING (hut-to-hut adventure exits)
+    if has(RECOVERY_KW):
+        # Try to match a multi-day adventure
+        try:
+            with open(MULTI_DAY_TRAILS_FILE) as f:
+                adventures = json.load(f).get('trails', [])
+        except Exception:
+            adventures = []
+
+        best_adv = None
+        best_score = 0
+        for adv in adventures:
+            adv_name = adv.get('name', '').lower()
+            adv_words = [w for w in adv_name.split() if len(w) > 3]
+            sc = sum(10 for w in adv_words if w in q)
+            if adv_name in q:
+                sc = 100
+            if sc > best_score:
+                best_score, best_adv = sc, adv
+
+        if best_adv and best_score >= 10:
+            # Try to detect day/stage number
+            import re
+            day_match = re.search(r'\b(?:day|stage|giorno|etappe)\s*(\d+)\b', q)
+            stage_num = int(day_match.group(1)) if day_match else None
+            stages = best_adv.get('stages', [])
+            stage = None
+            if stage_num:
+                stage = next((s for s in stages if s.get('stage_number') == stage_num), None)
+            if not stage and stages:
+                stage = stages[0]  # default to first stage
+
+            if stage and stage.get('exit_routes'):
+                exit_r = stage['exit_routes'][0]
+                reply = (f"No problem — for {best_adv['name']}, Stage {stage.get('stage_number', '?')}: "
+                         f"{exit_r.get('description', '')} "
+                         f"Transport: {exit_r.get('transport', 'check local transport')}.")
+                rejoining = exit_r.get('rejoining_options', [])
+                if rejoining:
+                    reply += " To get back on trail, you have two options: "
+                    reply += " OR ".join(f"({i+1}) {o.get('how','')}" for i, o in enumerate(rejoining[:2]))
+                return reply
+
+        return (f"For emergency exits and recovery routing on a multi-day adventure, "
+                f"the key rule is: follow any red-white-red marked path downhill to the nearest valley. "
+                f"Then call mountain rescue (118) or SAD transport (sad.it). "
+                f"Tell me which specific adventure and day you're on and I'll give you precise options.")
 
     # Entity matched but intent unclear → let Layer 3 handle
     return None

@@ -21,7 +21,10 @@
       "meals": true,
       "wifi": false,
       "dogs": true,
-      "payment_methods": ["cash", "card"]
+      "payment_methods": [
+        "cash",
+        "card"
+      ]
     },
     "description": "Historic alpine refuge located in the heart of the Catinaccio group, offering stunning views of the Rosengarten massif. Traditional South Tyrolean hospitality with home-cooked meals and comfortable accommodation.",
     "access_info": "Accessible from Carezza Lake via trail 541 (2.5 hours) or from Tires via trail 584 (3 hours). Well-marked paths suitable for experienced hikers.",
@@ -40,10 +43,25 @@
       "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800",
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
     ],
-    "status": "seasonal",
+    "status": "published",
     "special_closures": [],
     "created_at": "2025-01-15T10:00:00Z",
-    "updated_at": "2025-10-30T20:00:00Z"
+    "updated_at": "2025-10-30T20:00:00Z",
+    "transport": {
+      "car": "From Carezza Lake (SS241), park at Passo di Costalunga car park (free, 100 spaces). Trailhead at car park.",
+      "bus": "SAD bus line 180 from Bolzano to Carezza Lake (summer only, twice daily). Stop: Carezza al Lago."
+    },
+    "nearby_trails": [
+      "hochmuth_tirolo"
+    ],
+    "josephine_note": "Ask for the Schlutzkrapfen — the cook makes them from scratch every morning. Eat at the terrace table on the east side for the best view of the Rosengarten at sunset.",
+    "highlights": [
+      "Sunset on the Rosengarten massif — turns deep red at dusk",
+      "Traditional South Tyrolean half-board dinner included",
+      "120-year history as a mountaineers' refuge"
+    ],
+    "booking_required": true,
+    "booking_note": "Book 3–4 weeks ahead in July and August. Phone or email; they prefer phone. Cash only."
   },
   {
     "id": "rif-002",
@@ -67,7 +85,11 @@
       "meals": true,
       "wifi": true,
       "dogs": false,
-      "payment_methods": ["cash", "card", "bancomat"]
+      "payment_methods": [
+        "cash",
+        "card",
+        "bancomat"
+      ]
     },
     "description": "Modern mountain hut on Plose summit with panoramic 360° views of the Dolomites. Accessible by cable car for families and hikers of all levels. Known for exceptional cuisine and sunset dinners.",
     "access_info": "Cable car from Bressanone/Brixen (20 minutes) or hiking from Sant'Andrea (4 hours). Multiple trails available for various skill levels.",
@@ -86,10 +108,23 @@
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
     ],
-    "status": "open",
+    "status": "published",
     "special_closures": [],
     "created_at": "2025-01-20T12:00:00Z",
-    "updated_at": "2025-10-30T20:00:00Z"
+    "updated_at": "2025-10-30T20:00:00Z",
+    "transport": {
+      "car": "Drive Val Gardena road (SS242) to Selva, then follow signs to Passo Gardena. Park at Passo Gardena (free, 50 spaces).",
+      "bus": "SAD bus line 471 (Val Gardena express) to Selva di Val Gardena, then taxi or hike 2.5h on trail 666."
+    },
+    "nearby_trails": [],
+    "josephine_note": "The wood-panelled dining room feels like stepping back into 1920s alpine Austria. Order the Knödel soup — it arrives in a cast-iron pot big enough for two.",
+    "highlights": [
+      "Stunning Sella Group massif views from the terrace",
+      "Original 1920s wood-panelled alpine interior",
+      "Crossroads of Dolomites classic routes — hiker traffic passes all day"
+    ],
+    "booking_required": true,
+    "booking_note": "Essential to book in July–August — fills 4–6 weeks ahead. Online booking at their website."
   },
   {
     "id": "mal-001",
@@ -113,7 +148,9 @@
       "meals": true,
       "wifi": false,
       "dogs": true,
-      "payment_methods": ["cash"]
+      "payment_methods": [
+        "cash"
+      ]
     },
     "description": "Authentic alpine dairy farm (malga) in a picturesque mountain village. Famous for traditional South Tyrolean cuisine and homemade dairy products. Day visits only - no overnight accommodation.",
     "access_info": "Easy 1-hour walk from Valles/Vals parking area. Family-friendly trail through forests and meadows.",
@@ -131,10 +168,23 @@
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
       "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800"
     ],
-    "status": "seasonal",
+    "status": "published",
     "special_closures": [],
     "created_at": "2025-01-25T14:00:00Z",
-    "updated_at": "2025-10-30T20:00:00Z"
+    "updated_at": "2025-10-30T20:00:00Z",
+    "transport": {
+      "car": "Drive Passeier valley road (SS44) north from Merano to St. Leonhard in Passeier. Follow signs for Pfelders/Plan. Park at Pfelders village end (free).",
+      "bus": "SAD bus line 211 from Merano to St. Leonhard, then taxi to Pfelders (no bus to Pfelders). Taxi: +39 0473 656156."
+    },
+    "nearby_trails": [],
+    "josephine_note": "Ring the bell at the gate — the Hofer family has run this malga for four generations. They'll bring out fresh Graukäse and Schüttelbrot before you even sit down. The dairy operates May–October.",
+    "highlights": [
+      "Fresh Graukäse (grey cheese) made on-site daily",
+      "Four-generation family farm — authentic Passeier alpine tradition",
+      "Wildflower meadow at 1,850m — outstanding in late June"
+    ],
+    "booking_required": false,
+    "booking_note": "Walk-in only; no overnight accommodation. Open daily 9am–5pm in season."
   },
   {
     "id": "biv-001",
@@ -175,10 +225,23 @@
     "photos": [
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
     ],
-    "status": "open",
+    "status": "published",
     "special_closures": [],
     "created_at": "2025-02-01T16:00:00Z",
-    "updated_at": "2025-10-30T20:00:00Z"
+    "updated_at": "2025-10-30T20:00:00Z",
+    "transport": {
+      "car": "Park at Lago di Braies (€8/day in season). Hike trail 1 for 3.5h to the bivacco. No road access.",
+      "bus": "SAD bus line 442 to Lago di Braies (summer only). Stop: Lago di Braies. Then 3.5h hike."
+    },
+    "nearby_trails": [],
+    "josephine_note": "Arrive before sunset — the view west over the Dolomite needles from the door is unlike anything else. Bring your own sleeping bag liner; the blankets are basic. Emergency bivouac: always leave a note in the logbook.",
+    "highlights": [
+      "360° Dolomite summit panorama — one of the finest in the range",
+      "Stargazing from 2,400m with zero light pollution",
+      "Logbook with entries going back to 1952 — fascinating reading"
+    ],
+    "booking_required": false,
+    "booking_note": "No booking — first come first served, 8 emergency places. Self-catering only; bring food and a sleeping bag liner."
   },
   {
     "id": "rif-003",
@@ -202,7 +265,10 @@
       "meals": true,
       "wifi": true,
       "dogs": false,
-      "payment_methods": ["cash", "card"]
+      "payment_methods": [
+        "cash",
+        "card"
+      ]
     },
     "description": "Historic WWI refuge with museum, offering breathtaking views of the Dolomites. Accessible by cable car or challenging hike. Experience alpine history while enjoying modern comforts and gourmet cuisine.",
     "access_info": "Lagazuoi cable car from Passo Falzarego (10 minutes) or via ferrata routes for experienced climbers (3-4 hours).",
@@ -221,9 +287,24 @@
       "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800",
       "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800"
     ],
-    "status": "closed",
+    "status": "published",
     "special_closures": [],
     "created_at": "2025-02-05T18:00:00Z",
-    "updated_at": "2025-10-30T20:00:00Z"
+    "updated_at": "2025-10-30T20:00:00Z",
+    "transport": {
+      "car": "From Merano take SS38 north, exit at Lagundo, then road to Tirolo. Park at Tirolo village (free, 10-min walk to cable car). Or drive to Hochmuth via forestry road (4WD recommended).",
+      "bus": "SAD bus line 206 from Merano to Tirolo (every 30 min). Stop: Tirolo Paese. Then 2h hike on trail 27."
+    },
+    "nearby_trails": [
+      "hochmuth_tirolo"
+    ],
+    "josephine_note": "The Almrösti here is the real deal — crispy on the outside, creamy inside, served with house-smoked speck. If you're lucky, the host will play accordion in the evening.",
+    "highlights": [
+      "Classic Tirolean Almrösti with house-smoked Speck",
+      "Evening accordion sessions in the original 1958 dining room",
+      "Sunrise over Merano city and the Adige valley 800m below"
+    ],
+    "booking_required": true,
+    "booking_note": "Book 1–2 weeks ahead in July–August. Phone preferred: listed in contact."
   }
 ]

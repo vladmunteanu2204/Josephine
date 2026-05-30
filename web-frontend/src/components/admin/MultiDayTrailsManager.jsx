@@ -140,7 +140,10 @@ function MultiDayTrailsManager({ adminPassword }) {
       overnight_rifugio_details: null,
       waypoints: [],
       highlights: [],
-      photos: []
+      photos: [],
+      stops: [],
+      exit_routes: [],
+      weather_risk: ''
     };
     
     setEditingTrail({
@@ -502,6 +505,57 @@ function MultiDayTrailsManager({ adminPassword }) {
                       rows="3"
                       placeholder={t('admin.stageDescriptionPlaceholder')}
                     />
+                  </div>
+
+                  {/* Weather Risk */}
+                  <div className="form-group">
+                    <label>⛈ Weather Risk Note</label>
+                    <input
+                      type="text"
+                      value={stage.weather_risk || ''}
+                      onChange={(e) => updateStage(index, 'weather_risk', e.target.value)}
+                      placeholder="e.g. Exposed ridge — descend if thunder approaches"
+                    />
+                  </div>
+
+                  {/* Food/Drink Stops */}
+                  <div className="form-group">
+                    <label>🍺 Food & Drink Stops (JSON array)</label>
+                    <textarea
+                      rows={4}
+                      style={{ fontFamily: 'monospace', fontSize: '12px' }}
+                      value={Array.isArray(stage.stops) ? JSON.stringify(stage.stops, null, 2) : (stage.stops || '[]')}
+                      onChange={(e) => {
+                        try {
+                          const parsed = JSON.parse(e.target.value);
+                          updateStage(index, 'stops', parsed);
+                        } catch {
+                          /* ignore parse errors while typing */
+                        }
+                      }}
+                      placeholder={'[\n  {"name":"Malga X","type":"food_drink","km_from_start":3.5,"what":"drinks, cheese","open_months":"Jun–Sep"}\n]'}
+                    />
+                    <small style={{ opacity: 0.5, fontSize: '11px' }}>Fields: name, type, km_from_start, what, open_months</small>
+                  </div>
+
+                  {/* Exit Routes */}
+                  <div className="form-group">
+                    <label>🚨 Exit Routes / Emergency Descents (JSON array)</label>
+                    <textarea
+                      rows={6}
+                      style={{ fontFamily: 'monospace', fontSize: '12px' }}
+                      value={Array.isArray(stage.exit_routes) ? JSON.stringify(stage.exit_routes, null, 2) : (stage.exit_routes || '[]')}
+                      onChange={(e) => {
+                        try {
+                          const parsed = JSON.parse(e.target.value);
+                          updateStage(index, 'exit_routes', parsed);
+                        } catch {
+                          /* ignore parse errors while typing */
+                        }
+                      }}
+                      placeholder={'[\n  {\n    "name":"Descent to Corvara",\n    "urgency":"emergency_or_planned",\n    "description":"From Passo X, take trail 11 south…",\n    "duration_minutes":120,\n    "transport":"SAD bus 442 from Corvara (hourly)",\n    "nearest_town":"Corvara in Badia",\n    "rejoining_options":[\n      {"description":"Return to yesterday\'s endpoint","how":"Bus 442 to La Villa…"}\n    ]\n  }\n]'}
+                    />
+                    <small style={{ opacity: 0.5, fontSize: '11px' }}>Fields: name, urgency, description, duration_minutes, transport, nearest_town, rejoining_options[]</small>
                   </div>
                 </div>
               ))}

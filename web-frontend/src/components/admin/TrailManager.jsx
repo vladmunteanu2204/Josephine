@@ -58,14 +58,28 @@ function TrailManager({ adminPassword }) {
     loadTrails();
   }, []);
 
+  const [statusFilter, setStatusFilter] = useState('all'); // 'all' | 'published' | 'draft'
+
   const loadTrails = async () => {
     try {
-      const response = await axios.get('/api/trails');
+      const response = await axios.get('/api/trails?_admin=1');
       setTrails(response.data.trails || []);
       setLoading(false);
     } catch (error) {
       console.error('Error loading trails:', error);
       setLoading(false);
+    }
+  };
+
+  const handlePublish = async (trailId, newStatus) => {
+    try {
+      await axios.post(`/api/admin/trails/${trailId}/publish`,
+        { status: newStatus },
+        { headers: { 'X-Admin-Password': adminPassword } }
+      );
+      loadTrails();
+    } catch (error) {
+      alert('Failed to update status: ' + (error.response?.data?.error || error.message));
     }
   };
 
@@ -1037,6 +1051,22 @@ function TrailManager({ adminPassword }) {
         </div>
       )}
 
+      {/* Status filter pills */}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '14px', flexWrap: 'wrap' }}>
+        {[
+          { key: 'all', label: `All (${trails.length})` },
+          { key: 'published', label: `✓ Published (${trails.filter(t => (t.status || 'published') === 'published').length})` },
+          { key: 'draft', label: `📝 Drafts (${trails.filter(t => t.status === 'draft').length})` },
+        ].map(p => (
+          <button key={p.key} onClick={() => setStatusFilter(p.key)} style={{
+            padding: '6px 14px', borderRadius: '100px', fontSize: '12px', cursor: 'pointer',
+            background: statusFilter === p.key ? 'rgba(201,168,76,0.15)' : 'rgba(255,255,255,0.04)',
+            border: statusFilter === p.key ? '1px solid rgba(201,168,76,0.5)' : '1px solid rgba(255,255,255,0.1)',
+            color: statusFilter === p.key ? '#c9a84c' : 'rgba(240,236,230,0.6)',
+          }}>{p.label}</button>
+        ))}
+      </div>
+
       <div className="trails-table">
         <table>
           <thead>
@@ -1047,38 +1077,63 @@ function TrailManager({ adminPassword }) {
               <th>Distance</th>
               <th>Duration</th>
               <th>Elevation</th>
+              <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {trails.map(trail => (
-              <tr key={trail.id}>
-                <td className="trail-name">{trail.name}</td>
-                <td>{trail.region}</td>
-                <td>
-                  <span className={`difficulty-badge diff-${trail.difficulty}`}>
-                    {trail.difficulty}
-                  </span>
-                </td>
-                <td>{trail.distance_km} km</td>
-                <td>{trail.duration_hours}h</td>
-                <td>{trail.elevation_gain_m}m</td>
-                <td className="actions-cell">
-                  <button 
-                    className="btn-edit"
-                    onClick={() => handleEdit(trail)}
-                  >
-                    ✏️ Edit
-                  </button>
-                  <button 
-                    className="btn-delete"
-                    onClick={() => handleDelete(trail.id)}
-                  >
-                    🗑️ Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {trails
+              .filter(t => statusFilter === 'all' || (statusFilter === 'draft' ? t.status === 'draft' : (t.status || 'published') === 'published'))
+              .map(trail => {
+              const isDraft = trail.status === 'draft';
+              return (
+                <tr key={trail.id} style={isDraft ? { opacity: 0.75 } : {}}>
+                  <td className="trail-name">{trail.name}</td>
+                  <td>{trail.region}</td>
+                  <td>
+                    <span className={`difficulty-badge diff-${trail.difficulty}`}>
+                      {trail.difficulty}
+                    </span>
+                  </td>
+                  <td>{trail.distance_km} km</td>
+                  <td>{trail.duration_hours}h</td>
+                  <td>{trail.elevation_gain_m}m</td>
+                  <td>
+                    <span style={{
+                      padding: '2px 9px', borderRadius: '100px', fontSize: '11px', fontWeight: 600,
+                      background: isDraft ? 'rgba(251,191,36,0.1)' : 'rgba(74,222,128,0.1)',
+                      color: isDraft ? '#fbbf24' : '#4ade80',
+                      border: `1px solid ${isDraft ? 'rgba(251,191,36,0.3)' : 'rgba(74,222,128,0.3)'}`,
+                    }}>{isDraft ? 'Draft' : 'Published'}</span>
+                  </td>
+                  <td className="actions-cell">
+                    {isDraft ? (
+                      <button
+                        style={{ padding: '5px 10px', background: 'rgba(74,222,128,0.12)', border: '1px solid rgba(74,222,128,0.3)', borderRadius: '6px', color: '#4ade80', fontSize: '12px', cursor: 'pointer', marginRight: '4px' }}
+                        onClick={() => handlePublish(trail.id, 'published')}
+                      >✓ Publish</button>
+                    ) : (
+                      <button
+                        style={{ padding: '5px 10px', background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.25)', borderRadius: '6px', color: '#fbbf24', fontSize: '12px', cursor: 'pointer', marginRight: '4px' }}
+                        onClick={() => handlePublish(trail.id, 'draft')}
+                      >↩ Unpublish</button>
+                    )}
+                    <button
+                      className="btn-edit"
+                      onClick={() => handleEdit(trail)}
+                    >
+                      ✏️ Edit
+                    </button>
+                    <button
+                      className="btn-delete"
+                      onClick={() => handleDelete(trail.id)}
+                    >
+                      🗑️ Delete
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

@@ -28,8 +28,17 @@
         "Cross dramatic mountain passes",
         "Immerse in alpine culture and cuisine"
       ],
-      "tags": ["multi-day", "hut-to-hut", "dolomites", "classic-route", "alpine"],
-      "rifugio_ids": ["bolzano-hutte", "puez-hutte"],
+      "tags": [
+        "multi-day",
+        "hut-to-hut",
+        "dolomites",
+        "classic-route",
+        "alpine"
+      ],
+      "rifugio_ids": [
+        "bolzano-hutte",
+        "puez-hutte"
+      ],
       "stages": [
         {
           "stage_number": 1,
@@ -59,7 +68,11 @@
             "altitude": 2116,
             "beds": 60,
             "contact": "+39 0474 501057",
-            "facilities": ["meals", "showers", "wifi"]
+            "facilities": [
+              "meals",
+              "showers",
+              "wifi"
+            ]
           },
           "waypoints": [
             {
@@ -91,7 +104,47 @@
           ],
           "photos": [
             "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600"
-          ]
+          ],
+          "trail_markers": [],
+          "stops": [
+            {
+              "name": "Malga en route",
+              "type": "food_drink",
+              "km_from_start": 5.0,
+              "what": "Cold drinks, local cheese, energy snacks",
+              "open_months": "June–September",
+              "coordinates": null
+            }
+          ],
+          "sleep": {
+            "rifugio_name": "Rifugio Sennes",
+            "must_book": true,
+            "booking_note": "Book 3–4 weeks ahead in high season. Phone preferred.",
+            "half_board_recommended": true
+          },
+          "exit_routes": [
+            {
+              "id": "exit-alta-via-1-s1-a",
+              "name": "Descent to nearest valley",
+              "urgency": "emergency_or_planned",
+              "description": "Retrace to the last waypoint and follow signs to the nearest valley settlement. Follow any red-white-red trail markers downhill. If lost, call mountain rescue: 118.",
+              "duration_minutes": 90,
+              "difficulty": "medium",
+              "transport": "SAD bus from nearest valley town — check sad.it for timetables.",
+              "nearest_town": "Nearest valley settlement",
+              "rejoining_options": [
+                {
+                  "description": "Return to yesterday's endpoint and continue",
+                  "how": "Take local transport back to the rifugio you stayed at last night, rest, and continue the next stage fresh the following day."
+                },
+                {
+                  "description": "Skip ahead to next rifugio",
+                  "how": "Check with mountain rescue or local taxi whether a road approach to the next night's rifugio is possible from the valley."
+                }
+              ]
+            }
+          ],
+          "weather_risk": "Check the morning forecast. Leave early — afternoon storms are common in the Dolomites from June to August. Turn back if you see anvil-shaped clouds building."
         },
         {
           "stage_number": 2,
@@ -121,7 +174,10 @@
             "altitude": 2060,
             "beds": 48,
             "contact": "+39 0474 501097",
-            "facilities": ["meals", "showers"]
+            "facilities": [
+              "meals",
+              "showers"
+            ]
           },
           "waypoints": [
             {
@@ -146,7 +202,47 @@
           ],
           "photos": [
             "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=600"
-          ]
+          ],
+          "trail_markers": [],
+          "stops": [
+            {
+              "name": "Malga en route",
+              "type": "food_drink",
+              "km_from_start": 5.7,
+              "what": "Cold drinks, local cheese, energy snacks",
+              "open_months": "June–September",
+              "coordinates": null
+            }
+          ],
+          "sleep": {
+            "rifugio_name": "Rifugio Fanes",
+            "must_book": true,
+            "booking_note": "Book 3–4 weeks ahead in high season. Phone preferred.",
+            "half_board_recommended": true
+          },
+          "exit_routes": [
+            {
+              "id": "exit-alta-via-1-s2-a",
+              "name": "Descent to nearest valley",
+              "urgency": "emergency_or_planned",
+              "description": "Retrace to the last waypoint and follow signs to the nearest valley settlement. Follow any red-white-red trail markers downhill. If lost, call mountain rescue: 118.",
+              "duration_minutes": 90,
+              "difficulty": "medium",
+              "transport": "SAD bus from nearest valley town — check sad.it for timetables.",
+              "nearest_town": "Nearest valley settlement",
+              "rejoining_options": [
+                {
+                  "description": "Return to yesterday's endpoint and continue",
+                  "how": "Take local transport back to the rifugio you stayed at last night, rest, and continue the next stage fresh the following day."
+                },
+                {
+                  "description": "Skip ahead to next rifugio",
+                  "how": "Check with mountain rescue or local taxi whether a road approach to the next night's rifugio is possible from the valley."
+                }
+              ]
+            }
+          ],
+          "weather_risk": "Check the morning forecast. Leave early — afternoon storms are common in the Dolomites from June to August. Turn back if you see anvil-shaped clouds building."
         },
         {
           "stage_number": 3,
@@ -176,7 +272,11 @@
             "altitude": 2042,
             "beds": 55,
             "contact": "+39 0474 501159",
-            "facilities": ["meals", "showers", "wifi"]
+            "facilities": [
+              "meals",
+              "showers",
+              "wifi"
+            ]
           },
           "waypoints": [
             {
@@ -194,7 +294,47 @@
           ],
           "photos": [
             "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600"
-          ]
+          ],
+          "trail_markers": [],
+          "stops": [
+            {
+              "name": "Malga en route",
+              "type": "food_drink",
+              "km_from_start": 4.7,
+              "what": "Cold drinks, local cheese, energy snacks",
+              "open_months": "June–September",
+              "coordinates": null
+            }
+          ],
+          "sleep": {
+            "rifugio_name": "Rifugio Lavarella",
+            "must_book": true,
+            "booking_note": "Book 3–4 weeks ahead in high season. Phone preferred.",
+            "half_board_recommended": true
+          },
+          "exit_routes": [
+            {
+              "id": "exit-alta-via-1-s3-a",
+              "name": "Descent to nearest valley",
+              "urgency": "emergency_or_planned",
+              "description": "Retrace to the last waypoint and follow signs to the nearest valley settlement. Follow any red-white-red trail markers downhill. If lost, call mountain rescue: 118.",
+              "duration_minutes": 90,
+              "difficulty": "medium",
+              "transport": "SAD bus from nearest valley town — check sad.it for timetables.",
+              "nearest_town": "Nearest valley settlement",
+              "rejoining_options": [
+                {
+                  "description": "Return to yesterday's endpoint and continue",
+                  "how": "Take local transport back to the rifugio you stayed at last night, rest, and continue the next stage fresh the following day."
+                },
+                {
+                  "description": "Skip ahead to next rifugio",
+                  "how": "Check with mountain rescue or local taxi whether a road approach to the next night's rifugio is possible from the valley."
+                }
+              ]
+            }
+          ],
+          "weather_risk": "Check the morning forecast. Leave early — afternoon storms are common in the Dolomites from June to August. Turn back if you see anvil-shaped clouds building."
         },
         {
           "stage_number": 4,
@@ -224,7 +364,10 @@
             "altitude": 1985,
             "beds": 42,
             "contact": "+39 0436 2939",
-            "facilities": ["meals", "showers"]
+            "facilities": [
+              "meals",
+              "showers"
+            ]
           },
           "waypoints": [
             {
@@ -249,7 +392,47 @@
           ],
           "photos": [
             "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600"
-          ]
+          ],
+          "trail_markers": [],
+          "stops": [
+            {
+              "name": "Malga en route",
+              "type": "food_drink",
+              "km_from_start": 6.6,
+              "what": "Cold drinks, local cheese, energy snacks",
+              "open_months": "June–September",
+              "coordinates": null
+            }
+          ],
+          "sleep": {
+            "rifugio_name": "Rifugio Scotoni",
+            "must_book": true,
+            "booking_note": "Book 3–4 weeks ahead in high season. Phone preferred.",
+            "half_board_recommended": true
+          },
+          "exit_routes": [
+            {
+              "id": "exit-alta-via-1-s4-a",
+              "name": "Descent to nearest valley",
+              "urgency": "emergency_or_planned",
+              "description": "Retrace to the last waypoint and follow signs to the nearest valley settlement. Follow any red-white-red trail markers downhill. If lost, call mountain rescue: 118.",
+              "duration_minutes": 90,
+              "difficulty": "medium",
+              "transport": "SAD bus from nearest valley town — check sad.it for timetables.",
+              "nearest_town": "Nearest valley settlement",
+              "rejoining_options": [
+                {
+                  "description": "Return to yesterday's endpoint and continue",
+                  "how": "Take local transport back to the rifugio you stayed at last night, rest, and continue the next stage fresh the following day."
+                },
+                {
+                  "description": "Skip ahead to next rifugio",
+                  "how": "Check with mountain rescue or local taxi whether a road approach to the next night's rifugio is possible from the valley."
+                }
+              ]
+            }
+          ],
+          "weather_risk": "Check the morning forecast. Leave early — afternoon storms are common in the Dolomites from June to August. Turn back if you see anvil-shaped clouds building."
         },
         {
           "stage_number": 5,
@@ -298,7 +481,47 @@
           ],
           "photos": [
             "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=600"
-          ]
+          ],
+          "trail_markers": [],
+          "stops": [
+            {
+              "name": "Malga en route",
+              "type": "food_drink",
+              "km_from_start": 5.2,
+              "what": "Cold drinks, local cheese, energy snacks",
+              "open_months": "June–September",
+              "coordinates": null
+            }
+          ],
+          "sleep": {
+            "rifugio_name": null,
+            "must_book": true,
+            "booking_note": "Book 3–4 weeks ahead in high season. Phone preferred.",
+            "half_board_recommended": true
+          },
+          "exit_routes": [
+            {
+              "id": "exit-alta-via-1-s5-a",
+              "name": "Descent to nearest valley",
+              "urgency": "emergency_or_planned",
+              "description": "Retrace to the last waypoint and follow signs to the nearest valley settlement. Follow any red-white-red trail markers downhill. If lost, call mountain rescue: 118.",
+              "duration_minutes": 90,
+              "difficulty": "medium",
+              "transport": "SAD bus from nearest valley town — check sad.it for timetables.",
+              "nearest_town": "Nearest valley settlement",
+              "rejoining_options": [
+                {
+                  "description": "Return to yesterday's endpoint and continue",
+                  "how": "Take local transport back to the rifugio you stayed at last night, rest, and continue the next stage fresh the following day."
+                },
+                {
+                  "description": "Skip ahead to next rifugio",
+                  "how": "Check with mountain rescue or local taxi whether a road approach to the next night's rifugio is possible from the valley."
+                }
+              ]
+            }
+          ],
+          "weather_risk": "Check the morning forecast. Leave early — afternoon storms are common in the Dolomites from June to August. Turn back if you see anvil-shaped clouds building."
         }
       ],
       "equipment_checklist": [
@@ -333,7 +556,25 @@
       },
       "status": "published",
       "created_at": "2025-01-15T10:00:00Z",
-      "updated_at": "2025-01-15T10:00:00Z"
+      "updated_at": "2025-01-15T10:00:00Z",
+      "booking_strategy": "Book all rifugios 4–6 weeks ahead in July–August. Most accept phone or email; some have online booking. Cancel at least 48h ahead to free your spot.",
+      "gear_checklist": [
+        "Trekking poles",
+        "Waterproof jacket and trousers",
+        "Headlamp with spare batteries",
+        "First aid kit",
+        "Emergency whistle",
+        "Sunscreen SPF 50+",
+        "2L water capacity",
+        "Warm mid-layer (temperatures drop fast above 2,000m)",
+        "Hiking boots (ankle support)"
+      ],
+      "emergency_contacts": {
+        "mountain_rescue": "118 (Italy) or +39 0471 797171 (CNSAS Dolomiti)",
+        "weather": "www.provincia.bz.it/meteo",
+        "local_police": "113"
+      },
+      "josephine_adventure_note": "This is one of my favourite multi-day routes. Don't rush the first morning — the light on the Dolomites at 7am is something you'll remember for life."
     }
   ]
 }

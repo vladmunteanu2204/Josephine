@@ -32,6 +32,8 @@ export default function RifugiosManager({ adminPassword }) {
     setTimeout(() => setToast(null), 3000);
   };
 
+  const [statusFilter, setStatusFilter] = useState('all');
+
   const load = async () => {
     setLoading(true);
     try {
@@ -41,6 +43,19 @@ export default function RifugiosManager({ adminPassword }) {
       showToast(e.response?.data?.error || e.message, 'error');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const publish = async (id, newStatus) => {
+    try {
+      await axios.post(`/api/admin/rifugios/${id}/publish`,
+        { status: newStatus },
+        { headers: { 'X-Admin-Password': adminPassword } }
+      );
+      showToast(newStatus === 'published' ? 'Rifugio published' : 'Moved to draft');
+      load();
+    } catch (e) {
+      showToast(e.response?.data?.error || e.message, 'error');
     }
   };
 
@@ -110,7 +125,8 @@ export default function RifugiosManager({ adminPassword }) {
     const q = search.toLowerCase();
     const matchSearch = !q || r.name.toLowerCase().includes(q) || r.region?.toLowerCase().includes(q);
     const matchType   = !typeFilter || r.type === typeFilter;
-    return matchSearch && matchType;
+    const matchStatus = statusFilter === 'all' || (statusFilter === 'draft' ? r.status === 'draft' : (r.status || 'published') === 'published');
+    return matchSearch && matchType && matchStatus;
   });
 
   return (
@@ -136,6 +152,22 @@ export default function RifugiosManager({ adminPassword }) {
           <option value="malga">Malga</option>
           <option value="bivacco">Bivacco</option>
         </select>
+      </div>
+
+      {/* Status filter pills */}
+      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        {[
+          { key: 'all', label: `All (${rifugios.length})` },
+          { key: 'published', label: `✓ Published (${rifugios.filter(r => (r.status || 'published') === 'published').length})` },
+          { key: 'draft', label: `📝 Drafts (${rifugios.filter(r => r.status === 'draft').length})` },
+        ].map(p => (
+          <button key={p.key} onClick={() => setStatusFilter(p.key)} style={{
+            padding: '6px 14px', borderRadius: '100px', fontSize: '12px', cursor: 'pointer',
+            background: statusFilter === p.key ? 'rgba(201,168,76,0.15)' : 'rgba(255,255,255,0.04)',
+            border: statusFilter === p.key ? '1px solid rgba(201,168,76,0.5)' : '1px solid rgba(255,255,255,0.1)',
+            color: statusFilter === p.key ? '#c9a84c' : 'rgba(240,236,230,0.6)',
+          }}>{p.label}</button>
+        ))}
       </div>
 
       {loading && <div className="rif-mgr-loading">Loading…</div>}
@@ -171,7 +203,23 @@ export default function RifugiosManager({ adminPassword }) {
                   <p className="rif-mgr-card__beds">🛏 {rif.facilities.beds} beds</p>
                 )}
                 <div className="rif-mgr-card__actions">
-                  <button className="rif-btn-edit" onClick={() => openEdit(rif)}>✏️ Edit</button>
+                  {rif.status === 'draft' ? (
+                    <button
+                      style={{ flex: 1, padding: '7px 0', background: 'rgba(74,222,128,0.1)', border: '1px solid rgba(74,222,128,0.3)', borderRadius: '8px', color: '#4ade80', fontSize: '12px', cursor: 'pointer' }}
+                      onClick={() => publish(rif.id, 'published')}
+                    >✓ Publish</button>
+                  ) : (
+                    <button className="rif-btn-edit" onClick={() => openEdit(rif)}>✏️ Edit</button>
+                  )}
+                  {rif.status !== 'draft' && (
+                    <button
+                      style={{ padding: '7px 10px', background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.25)', borderRadius: '8px', color: '#fbbf24', fontSize: '12px', cursor: 'pointer' }}
+                      onClick={() => publish(rif.id, 'draft')}
+                    >↩</button>
+                  )}
+                  {rif.status === 'draft' && (
+                    <button className="rif-btn-edit" style={{ marginLeft: '4px' }} onClick={() => openEdit(rif)}>✏️</button>
+                  )}
                   <button className="rif-btn-del"  onClick={() => del(rif.id)}>🗑️</button>
                 </div>
               </div>
