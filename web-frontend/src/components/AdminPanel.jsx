@@ -14,7 +14,10 @@ import MultiDayTrailsManager from './admin/MultiDayTrailsManager';
 import './AdminPanel.css';
 
 const ADMIN_EMAIL = 'vladmunteanu2204@gmail.com';
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'alpenvia_admin_2025';
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || '';
+if (!import.meta.env.VITE_ADMIN_PASSWORD) {
+  console.warn('[AdminPanel] VITE_ADMIN_PASSWORD env var is not set — admin API calls will be rejected by the server.');
+}
 
 function AdminPanel({ onNavigate }) {
   const { t } = useTranslation();

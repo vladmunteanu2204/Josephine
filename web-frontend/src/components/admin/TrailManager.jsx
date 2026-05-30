@@ -35,6 +35,7 @@ function TrailManager({ adminPassword }) {
     best_season: [],
     trail_type: 'loop',
     dog_friendly: false,
+    family_friendly: false,
     coordinates: null,
     checkpoints: []
   });
@@ -79,7 +80,8 @@ function TrailManager({ adminPassword }) {
       photos: trail.photos || '',
       videos: trail.videos || '',
       checkpoints: trail.checkpoints || [],
-      josephineNote: trail.josephineNote || { en: '', it: '', de: '' }
+      josephineNote: trail.josephineNote || { en: '', it: '', de: '' },
+      family_friendly: trail.family_friendly ?? false
     });
     // Set the string inputs for editing
     setTagsInput((trail.tags || []).join(', '));
@@ -115,6 +117,7 @@ function TrailManager({ adminPassword }) {
       best_season: [],
       trail_type: 'loop',
       dog_friendly: false,
+      family_friendly: false,
       coordinates: null
     });
   };
@@ -764,6 +767,17 @@ function TrailManager({ adminPassword }) {
                     onChange={(e) => setFormData({ ...formData, dog_friendly: e.target.checked })}
                   />
                   Dog Friendly
+                </label>
+              </div>
+
+              <div className="form-group checkbox-group">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={formData.family_friendly ?? false}
+                    onChange={(e) => setFormData({ ...formData, family_friendly: e.target.checked })}
+                  />
+                  Family Friendly
                 </label>
               </div>
             </div>

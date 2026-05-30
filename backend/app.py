@@ -770,25 +770,61 @@ def parse_gpx():
 @app.route('/api/admin/reviews/<review_id>', methods=['DELETE'])
 @require_admin_auth
 def delete_review(review_id):
-    """Delete a review (Admin)"""
+    """Delete a review and update trail statistics (Admin)"""
     try:
-        trail_id = request.json.get('trail_id')
+        body = request.get_json(silent=True) or {}
+        trail_id = body.get('trail_id')
         if not trail_id:
             return jsonify({'error': 'trail_id required'}), 400
-        
-        return jsonify({'success': True, 'message': 'Review deletion not yet implemented in backend persistence'})
+
+        reviews_path = os.path.join(BASE_DIR, 'data', 'reviews.json')
+        with open(reviews_path, 'r') as f:
+            reviews_data = json.load(f)
+
+        trail_reviews = reviews_data.get('reviews', {}).get(trail_id, [])
+        original_count = len(trail_reviews)
+        trail_reviews = [r for r in trail_reviews if r.get('id') != review_id]
+
+        if len(trail_reviews) == original_count:
+            return jsonify({'error': 'Review not found'}), 404
+
+        reviews_data['reviews'][trail_id] = trail_reviews
+
+        # Recalculate statistics for this trail
+        if trail_reviews:
+            avg = sum(r['rating'] for r in trail_reviews) / len(trail_reviews)
+            reviews_data.setdefault('statistics', {})[trail_id] = {
+                'average_rating': round(avg, 2),
+                'total_reviews': len(trail_reviews)
+            }
+        else:
+            reviews_data.setdefault('statistics', {}).pop(trail_id, None)
+            reviews_data['reviews'].pop(trail_id, None)
+
+        atomic_json_write(reviews_path, reviews_data)
+        return jsonify({'success': True, 'remaining': len(trail_reviews)})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# Challenges Management
-challenges_data = {
-    'challenges': []
-}
+# Challenges Management — file-backed persistence
+CHALLENGES_FILE = os.path.join(BASE_DIR, 'data', 'challenges.json')
+
+def load_challenges():
+    """Load challenges from JSON file"""
+    try:
+        with open(CHALLENGES_FILE, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {'challenges': []}
+
+def save_challenges(data):
+    """Save challenges to JSON file"""
+    atomic_json_write(CHALLENGES_FILE, data)
 
 @app.route('/api/challenges', methods=['GET'])
 def get_challenges():
     """Get all challenges"""
-    return jsonify(challenges_data)
+    return jsonify(load_challenges())
 
 @app.route('/api/admin/challenges', methods=['POST'])
 @require_admin_auth
@@ -796,10 +832,13 @@ def create_challenge():
     """Create a new challenge (Admin)"""
     try:
         challenge_data = request.json
-        if any(c['id'] == challenge_data['id'] for c in challenges_data['challenges']):
+        data = load_challenges()
+        if any(c['id'] == challenge_data['id'] for c in data['challenges']):
             return jsonify({'error': 'Challenge ID already exists'}), 400
-        
-        challenges_data['challenges'].append(challenge_data)
+
+        challenge_data['created_at'] = datetime.utcnow().isoformat() + 'Z'
+        data['challenges'].append(challenge_data)
+        save_challenges(data)
         return jsonify({'success': True, 'challenge': challenge_data}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -810,11 +849,14 @@ def update_challenge(challenge_id):
     """Update a challenge (Admin)"""
     try:
         challenge_data = request.json
-        idx = next((i for i, c in enumerate(challenges_data['challenges']) if c['id'] == challenge_id), None)
+        data = load_challenges()
+        idx = next((i for i, c in enumerate(data['challenges']) if c['id'] == challenge_id), None)
         if idx is None:
             return jsonify({'error': 'Challenge not found'}), 404
-        
-        challenges_data['challenges'][idx] = challenge_data
+
+        challenge_data['updated_at'] = datetime.utcnow().isoformat() + 'Z'
+        data['challenges'][idx] = challenge_data
+        save_challenges(data)
         return jsonify({'success': True, 'challenge': challenge_data})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -824,11 +866,13 @@ def update_challenge(challenge_id):
 def delete_challenge(challenge_id):
     """Delete a challenge (Admin)"""
     try:
-        original_count = len(challenges_data['challenges'])
-        challenges_data['challenges'] = [c for c in challenges_data['challenges'] if c['id'] != challenge_id]
-        if len(challenges_data['challenges']) == original_count:
+        data = load_challenges()
+        original_count = len(data['challenges'])
+        data['challenges'] = [c for c in data['challenges'] if c['id'] != challenge_id]
+        if len(data['challenges']) == original_count:
             return jsonify({'error': 'Challenge not found'}), 404
-        
+
+        save_challenges(data)
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'error': str(e)}), 500

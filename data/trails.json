@@ -111,9 +111,9 @@
         "family friendly"
       ],
       "josephineNote": {
-        "en": "Come in early morning before the tour buses arrive — the church against the Odle peaks in the mist is one of the most beautiful things I know in South Tyrol.",
-        "it": "Vieni di mattina presto, prima che arrivino i pullman — la chiesa con le Odle nella nebbia è una delle cose più belle che conosco in Alto Adige.",
-        "de": "Komm früh morgens, bevor die Reisebusse kommen — die Kirche vor den Geislerspitzen im Morgennebel ist eines der schönsten Bilder, die ich in Südtirol kenne."
+        "en": "Come in early morning before the tour buses arrive \u2014 the church against the Odle peaks in the mist is one of the most beautiful things I know in South Tyrol.",
+        "it": "Vieni di mattina presto, prima che arrivino i pullman \u2014 la chiesa con le Odle nella nebbia \u00e8 una delle cose pi\u00f9 belle che conosco in Alto Adige.",
+        "de": "Komm fr\u00fch morgens, bevor die Reisebusse kommen \u2014 die Kirche vor den Geislerspitzen im Morgennebel ist eines der sch\u00f6nsten Bilder, die ich in S\u00fcdtirol kenne."
       }
     },
     {
@@ -3832,7 +3832,7 @@
           46.699851
         ]
       ],
-      "description": "A spectacular mountain ascent from Dorf Tirol to the historic Muthöfe farms, following the ancient Trail 23 (Muter Weg). This classic South Tyrolean hike climbs through mixed forests and alpine meadows, passing traditional mountain farms that have stood for over 800 years on the steep southern slopes of Mutspitze. The trail offers constantly improving panoramic views over Merano, the Adige Valley, and the surrounding peaks. At the summit station, enjoy refreshments at Gasthaus Hochmuth while taking in breathtaking 360-degree vistas. The route combines cultural heritage with natural beauty, showcasing the traditional alpine farming lifestyle against a backdrop of dramatic mountain scenery. Starting right from Dorf Tirol, this trail is perfect for GPS tracking testing with its real-world coordinates, measurable elevation gain, and multiple checkpoint POIs along the route.",
+      "description": "A spectacular mountain ascent from Dorf Tirol to the historic Muth\u00f6fe farms, following the ancient Trail 23 (Muter Weg). This classic South Tyrolean hike climbs through mixed forests and alpine meadows, passing traditional mountain farms that have stood for over 800 years on the steep southern slopes of Mutspitze. The trail offers constantly improving panoramic views over Merano, the Adige Valley, and the surrounding peaks. At the summit station, enjoy refreshments at Gasthaus Hochmuth while taking in breathtaking 360-degree vistas. The route combines cultural heritage with natural beauty, showcasing the traditional alpine farming lifestyle against a backdrop of dramatic mountain scenery. Starting right from Dorf Tirol, this trail is perfect for GPS tracking testing with its real-world coordinates, measurable elevation gain, and multiple checkpoint POIs along the route.",
       "difficulty": "medium",
       "difficulty_details": {
         "exposure": "low",
@@ -3863,7 +3863,7 @@
         "mountain farms",
         "cultural heritage"
       ],
-      "name": "Hochmuth Trail (Muthöfe Route)",
+      "name": "Hochmuth Trail (Muth\u00f6fe Route)",
       "pois": [
         {
           "coordinates": [
@@ -3917,9 +3917,9 @@
       "wallpaper": "/api/media/wallpaper/f20576d2-6b60-4d67-93aa-1161559a7014.webp",
       "photos": "/api/media/photos/918bfd94-e527-4f14-96d6-6399a7fe6dfe.webp, /api/media/photos/0a2d9c18-fd32-40e6-9a66-1c87682c9d5f.webp, /api/media/photos/e10d8260-8855-4f64-8474-cfc6276bf70d.webp",
       "josephineNote": {
-        "en": "The Muthöfe farms at the top still serve homemade Speck and Käsknödel — sit on the bench, eat slowly, and look at the view. That is the whole point.",
-        "it": "Le malghe Muthöfe in cima servono ancora speck e Käsknödel fatti in casa — siediti sulla panca, mangia lentamente e guarda il panorama. È questo il punto.",
-        "de": "Die Muthöfe oben servieren noch selbstgemachten Speck und Käsknödel — setz dich auf die Bank, iss langsam und schau auf die Aussicht. Das ist der ganze Zweck."
+        "en": "The Muth\u00f6fe farms at the top still serve homemade Speck and K\u00e4skn\u00f6del \u2014 sit on the bench, eat slowly, and look at the view. That is the whole point.",
+        "it": "Le malghe Muth\u00f6fe in cima servono ancora speck e K\u00e4skn\u00f6del fatti in casa \u2014 siediti sulla panca, mangia lentamente e guarda il panorama. \u00c8 questo il punto.",
+        "de": "Die Muth\u00f6fe oben servieren noch selbstgemachten Speck und K\u00e4skn\u00f6del \u2014 setz dich auf die Bank, iss langsam und schau auf die Aussicht. Das ist der ganze Zweck."
       }
     },
     {
@@ -13859,10 +13859,11 @@
       "videos": "/api/media/videos/194d6c93-7dd9-45d4-8c9e-eeb6d1f7db5c.mp4",
       "wallpaper": "/api/media/wallpaper/d68c9d73-594c-4192-b236-996d67e79e60.jpg",
       "josephineNote": {
-        "en": "This one rewards patience — the lake at the top is that deep, impossible blue that only high-altitude meltwater gives you. Worth every step.",
-        "it": "Questo sentiero ricompensa la pazienza — il lago in cima è di quel blu profondo e impossibile che solo l'acqua di fusione d'alta quota può darti. Vale ogni passo.",
-        "de": "Dieser Weg belohnt Geduld — der See oben leuchtet in dem tiefen, unwirklichen Blau, das nur Hochgebirgsschmelzwasser so haben kann. Jeden Schritt wert."
-      }
+        "en": "This one rewards patience \u2014 the lake at the top is that deep, impossible blue that only high-altitude meltwater gives you. Worth every step.",
+        "it": "Questo sentiero ricompensa la pazienza \u2014 il lago in cima \u00e8 di quel blu profondo e impossibile che solo l'acqua di fusione d'alta quota pu\u00f2 darti. Vale ogni passo.",
+        "de": "Dieser Weg belohnt Geduld \u2014 der See oben leuchtet in dem tiefen, unwirklichen Blau, das nur Hochgebirgsschmelzwasser so haben kann. Jeden Schritt wert."
+      },
+      "family_friendly": false
     },
     {
       "id": "schenna",
@@ -15650,10 +15651,11 @@
         }
       ],
       "josephineNote": {
-        "en": "Schenna sits just above Merano — this loop through vineyards and orchards gives you the full South Tyrolean picture: vines, castles, and mountains all at once.",
-        "it": "Scena è proprio sopra Merano — questo anello tra vigneti e frutteti ti dà l'immagine completa dell'Alto Adige: viti, castelli e montagne tutto insieme.",
-        "de": "Schenna liegt direkt über Meran — dieser Rundweg durch Weinberge und Obstgärten zeigt dir das volle Südtiroler Bild: Reben, Burgen und Berge auf einmal."
-      }
+        "en": "Schenna sits just above Merano \u2014 this loop through vineyards and orchards gives you the full South Tyrolean picture: vines, castles, and mountains all at once.",
+        "it": "Scena \u00e8 proprio sopra Merano \u2014 questo anello tra vigneti e frutteti ti d\u00e0 l'immagine completa dell'Alto Adige: viti, castelli e montagne tutto insieme.",
+        "de": "Schenna liegt direkt \u00fcber Meran \u2014 dieser Rundweg durch Weinberge und Obstg\u00e4rten zeigt dir das volle S\u00fcdtiroler Bild: Reben, Burgen und Berge auf einmal."
+      },
+      "family_friendly": true
     },
     {
       "id": "cascada_loop",
@@ -17530,9 +17532,10 @@
       ],
       "josephineNote": {
         "en": "Dorf Tirol is the kind of village that makes you understand why people have been coming here for centuries. The waterfall at the end is a proper reward.",
-        "it": "Dorf Tirol è il tipo di paese che ti fa capire perché la gente viene qui da secoli. La cascata alla fine è una vera ricompensa.",
-        "de": "Dorf Tirol ist das Dorf, das dir erklärt, warum die Menschen seit Jahrhunderten hierher kommen. Der Wasserfall am Ende ist eine echte Belohnung."
-      }
+        "it": "Dorf Tirol \u00e8 il tipo di paese che ti fa capire perch\u00e9 la gente viene qui da secoli. La cascata alla fine \u00e8 una vera ricompensa.",
+        "de": "Dorf Tirol ist das Dorf, das dir erkl\u00e4rt, warum die Menschen seit Jahrhunderten hierher kommen. Der Wasserfall am Ende ist eine echte Belohnung."
+      },
+      "family_friendly": true
     },
     {
       "id": "Mastaun",
@@ -19361,10 +19364,11 @@
         }
       ],
       "josephineNote": {
-        "en": "The Mastaun Alm is the kind of place you want to not tell anyone about — quiet, genuine, with fresh cheese and a view that goes on forever.",
-        "it": "La malga Mastaun è il tipo di posto che vorresti non dire a nessuno — tranquilla, genuina, con formaggio fresco e un panorama che non finisce mai.",
-        "de": "Die Mastaun Alm ist der Ort, den du für dich behalten möchtest — ruhig, echt, mit frischem Käse und einer Aussicht, die nie endet."
-      }
+        "en": "The Mastaun Alm is the kind of place you want to not tell anyone about \u2014 quiet, genuine, with fresh cheese and a view that goes on forever.",
+        "it": "La malga Mastaun \u00e8 il tipo di posto che vorresti non dire a nessuno \u2014 tranquilla, genuina, con formaggio fresco e un panorama che non finisce mai.",
+        "de": "Die Mastaun Alm ist der Ort, den du f\u00fcr dich behalten m\u00f6chtest \u2014 ruhig, echt, mit frischem K\u00e4se und einer Aussicht, die nie endet."
+      },
+      "family_friendly": false
     }
   ]
 }
