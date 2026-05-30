@@ -14,7 +14,8 @@
     "close": "Chiudi",
     "edit": "Modifica",
     "cancel": "Annulla",
-    "unsaveTrail": "Rimuovi dai salvati"
+    "unsaveTrail": "Rimuovi dai salvati",
+    "back": "Indietro"
   },
   "nav": {
     "home": "Home",
@@ -42,7 +43,15 @@
     "exploreYourPath": "Esplora il Tuo Percorso",
     "tagline": "Il tuo compagno locale in montagna.",
     "scrollToExplore": "Scopri cosa c'è là fuori",
-    "originLine": "Creata nel cuore dell'Alto Adige, Italia"
+    "originLine": "Creata nel cuore dell'Alto Adige, Italia",
+    "planCta": "Pianifica la mia giornata con Josephine",
+    "josephineGreeting": "Buongiorno ✦",
+    "josephineGreetingAfternoon": "Buon pomeriggio ✦",
+    "josephineGreetingEvening": "Buona sera ✦",
+    "josephineGreetingNight": "Stai ancora pianificando? ✦",
+    "josephineCta": "Sì, andiamo →",
+    "scroll": "SCORRI",
+    "region": "ALTO ADIGE · DOLOMITI"
   },
   "menu": {
     "navigation": "Navigazione"
@@ -260,8 +269,20 @@
     "currentPlan": "Piano Attuale",
     "upgrade": "Aggiorna",
     "features": "Funzionalità",
-    "freeFeatures": ["Visualizza tutti i sentieri", "Raccomandazioni base", "Dettagli sentiero", "Recensioni community"],
-    "premiumFeatures": ["Sentieri salvati illimitati", "Raccomandazioni avanzate", "Mappe offline", "Supporto prioritario", "Contenuti esclusivi", "Accesso anticipato ai nuovi sentieri"]
+    "freeFeatures": [
+      "Visualizza tutti i sentieri",
+      "Raccomandazioni base",
+      "Dettagli sentiero",
+      "Recensioni community"
+    ],
+    "premiumFeatures": [
+      "Sentieri salvati illimitati",
+      "Raccomandazioni avanzate",
+      "Mappe offline",
+      "Supporto prioritario",
+      "Contenuti esclusivi",
+      "Accesso anticipato ai nuovi sentieri"
+    ]
   },
   "footer": {
     "madeIn": "Creata con ❤️ nel cuore dell'Alto Adige, Italia",
@@ -893,21 +914,91 @@
     "stageDescriptionPlaceholder": "Descrivi questa tappa del trekking...",
     "overnightRifugioName": "Nome Rifugio Pernottamento",
     "overnightRifugioPlaceholder": "es. Rifugio Sennes",
-    "stageName": "Nome Tappa",
     "distanceKm": "Distanza (km)",
     "elevationGainM": "Dislivello Positivo (m)",
     "elevationLossM": "Dislivello Negativo (m)",
-    "stageDescription": "Descrizione Tappa",
-    "noStagesYet": "Nessuna tappa ancora. Clicca \"Aggiungi Tappa\" per creare il primo giorno del tuo trekking multi-giorno!",
-    "totalDistance": "Distanza Totale",
     "totalElevationGain": "Dislivello Positivo Totale",
     "totalElevationLoss": "Dislivello Negativo Totale",
     "draft": "Bozza",
-    "published": "Pubblicato",
-    "trailStages": "Tappe del Percorso",
-    "addStage": "Aggiungi Tappa",
-    "stage": "Tappa",
-    "unnamed": "Senza Nome",
-    "remove": "Rimuovi"
+    "published": "Pubblicato"
+  },
+  "cinema": {
+    "exploreCta": "Scopri questo sentiero →"
+  },
+  "convo": {
+    "eyebrow": "UNA CONVERSAZIONE CON JOSEPHINE",
+    "startCta": "Inizia la tua conversazione →",
+    "user1": "Ho 3 ore e voglio sentirmi piccolo.",
+    "josephine1": "Il crinale di Seceda. Vai alle 7 — prima che aprano le cabinovie. Avrai tutto l'orizzonte delle Dolomiti per te.",
+    "user2": "È difficile?",
+    "josephine2": "Sforzo medio, ricompensa pura. Gli ultimi 200 metri sono ripidi, ma ogni passo guadagna il panorama."
+  },
+  "paths": {
+    "multiDayEyebrow": "ESCURSIONI DI PIÙ GIORNI",
+    "multiDayTitle": "Di rifugio in rifugio.\nGiorno dopo giorno.",
+    "multiDayDays": "{{count}} giorni",
+    "multiDayCta": "Esplora →",
+    "dayTrailsEyebrow": "SENTIERI GIORNALIERI",
+    "dayTrailsTitle": "Un sentiero.\nTutta la tua giornata.",
+    "dayTrailsCta": "Trova il tuo sentiero →"
+  },
+  "josephineChat": {
+    "greeting": "Ciao! ✦ Sono Josephine, la tua compagna alpina. Conosco queste montagne a fondo — i sentieri nascosti, i migliori rifugi, i momenti che tolgono il fiato.",
+    "weatherPrompt": "Il tempo è perfetto oggi per un'escursione panoramica. Che tipo di avventura stai cercando?",
+    "chipPlanMyDay": "Pianifica la mia giornata",
+    "chipSurpriseMe": "Sorprendimi",
+    "chipShowMap": "Mostrami la mappa",
+    "chipBack": "← Indietro",
+    "chipChangeAnswer": "← Cambia risposta",
+    "chipStartOver": "Ricomincia",
+    "chipShowElse": "Mostrami qualcos'altro",
+    "chipSameVibe": "Stessa atmosfera",
+    "chipSomethingDifferent": "Qualcosa di diverso",
+    "welcomeBack": "Bentornato! L'ultima volta hai scelto un sentiero {{difficulty}} vicino a {{region}}. Stessa atmosfera oggi, o qualcosa di diverso?",
+    "noApiKey": "Conosco bene queste montagne, ma ho bisogno di un momento per rispondere. Prova a chiedermi degli orari di apertura, della difficoltà dei sentieri o di come raggiungere un rifugio!",
+    "windError": "I venti di montagna interferiscono — riprova tra un momento.",
+    "step1Question": "Quanto tempo hai oggi?",
+    "step1_1": "1–2h",
+    "step1_2": "3–4h",
+    "step1_3": "5–6h",
+    "step1_4": "Giornata intera",
+    "step2Question": "Come ti senti oggi?",
+    "step2_1": "Con calma",
+    "step2_2": "Buona energia",
+    "step2_3": "Al massimo",
+    "step3Question": "Cosa ti chiama? Scegli quanto vuoi, poi tocca Fine ✓",
+    "step3_1": "Laghi alpini",
+    "step3_2": "Panorami",
+    "step3_3": "Foreste",
+    "step3_4": "Percorsi culturali",
+    "step3_5": "Anello",
+    "step3_6": "Cascate",
+    "step3Done": "Fine ✓",
+    "step4Question": "Stai camminando con il tuo cane?",
+    "step4_1": "Sì, la porto con me!",
+    "step4_2": "Niente cane oggi",
+    "step5Question": "Da dove parti?",
+    "step5Skip": "Salta",
+    "step5Placeholder": "Scrivi una località…",
+    "noMatchIntro": "Hmm, non ho trovato il percorso perfetto questa volta",
+    "noMatchSub": "Provo con criteri diversi",
+    "retryChip": "Riprova",
+    "loadingTrail": "Sto cercando il sentiero perfetto per te…",
+    "refineQuestion": "Vuoi modificare qualcosa?",
+    "refineMore": "Più opzioni",
+    "inputPlaceholder": "Chiedi qualcosa a Josephine…",
+    "josephinePickBadge": "Scelta di Josephine",
+    "viewDetails": "Vedi tutti i dettagli →",
+    "refineShorter": "Capito — cerco qualcosa di più breve per te.",
+    "refineEasier": "Nessun problema — trovo qualcosa di più facile.",
+    "chipTellMore": "Dimmi di più",
+    "chipTooLong": "Troppo lungo",
+    "chipTooHard": "Troppo difficile",
+    "statusPlanning": "Pianificando la tua giornata…",
+    "statusFinding": "Trovando il tuo sentiero…",
+    "statusRefining": "Raffinando la scelta…",
+    "statusOnline": "Online · Guida alpina",
+    "step5_1": "Sì, vengono i bambini!",
+    "step5_2": "Solo adulti"
   }
 }

@@ -1,60 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import './JosephineChat.css';
 
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&auto=format&fit=crop&q=70';
 const SESSION_KEY  = 'josephine_session';
 
-/* ── Conversation steps ─────────────────────────────────────────────── */
-const PLANNING_STEPS = {
-  1: {
-    text: "How much time do you have today?",
-    chips: ["1–2h", "3–4h", "5–6h", "Full day"],
-    dataKey: 'duration_hours',
-    chipMap: { "1–2h": 1.5, "3–4h": 3, "5–6h": 5, "Full day": 8 },
-  },
-  2: {
-    text: "How are you feeling today?",
-    chips: ["Take it easy", "Good energy", "Push hard"],
-    dataKey: 'difficulty',
-    chipMap: { "Take it easy": 'easy', "Good energy": 'medium', "Push hard": 'hard' },
-  },
-  3: {
-    // multi-select — handled specially in handleChip
-    text: "What's calling you? Pick as many as you like, then tap Done ✓",
-    chips: ["Alpine lakes", "Panoramic views", "Forests", "Cultural routes", "Loop trail", "Waterfalls", "Done ✓"],
-    dataKey: 'interests',
-  },
-  4: {
-    text: "Are you hiking with your dog?",
-    chips: ["Yes, bringing her!", "No dog today"],
-    dataKey: 'withDog',
-    chipMap: { "Yes, bringing her!": true, "No dog today": false },
-  },
-  // Fix 3: family-friendly step
-  5: {
-    text: "Is this for the whole family?",
-    chips: ["Yes, kids coming!", "Just adults"],
-    dataKey: 'family_friendly',
-    chipMap: { "Yes, kids coming!": true, "Just adults": false },
-  },
-  6: {
-    text: "Where are you starting from? (type below or skip)",
-    chips: ["Skip"],
-    dataKey: 'startArea',
-  },
-};
-
 const LAST_STEP = 6;
-
-const MOOD_VALUE_MAP = {
-  "Alpine lakes":    'alpine lakes',
-  "Panoramic views": 'panoramic views',
-  "Forests":         'forests',
-  "Cultural routes": 'cultural routes',
-  "Loop trail":      'loop',
-  "Waterfalls":      'waterfalls',
-};
 
 /* ── Session memory ─────────────────────────────────────────────────── */
 function loadSession() {
@@ -66,35 +18,97 @@ function saveSession(data) {
   catch {}
 }
 
-const INITIAL_MESSAGES = [
-  {
-    id: 1,
-    from: 'josephine',
-    type: 'text',
-    text: "Ciao! ✦ I'm Josephine, your alpine companion. I know these mountains inside out — the hidden paths, the best rifugios, the moments that take your breath away.",
-    chips: null,
-  },
-  {
-    id: 2,
-    from: 'josephine',
-    type: 'text',
-    text: "The weather is perfect today for a panoramic hike. What kind of adventure are you after?",
-    chips: ['Plan my day', 'Surprise me', 'Show me the map'],
-  },
-  {
-    id: 3,
-    from: 'josephine',
-    type: 'voice',
-    text: null,
-    duration: '0:08',
-    bars: [3,5,8,6,9,5,7,4,6,8,5,3,7,5,9],
-    chips: null,
-  },
-];
 
 /* ── Component ───────────────────────────────────────────────────────── */
 function JosephineChat({ onBack, setCurrentView, viewTrail }) {
-  const [messages, setMessages]           = useState(INITIAL_MESSAGES);
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language?.slice(0, 2) || 'en';
+
+  /* Build translated planning steps (inside component so t() works) */
+  const PLANNING_STEPS = {
+    1: {
+      text: t('josephineChat.step1Question'),
+      chips: [t('josephineChat.step1_1'), t('josephineChat.step1_2'), t('josephineChat.step1_3'), t('josephineChat.step1_4')],
+      dataKey: 'duration_hours',
+      chipMap: {
+        [t('josephineChat.step1_1')]: 1.5,
+        [t('josephineChat.step1_2')]: 3,
+        [t('josephineChat.step1_3')]: 5,
+        [t('josephineChat.step1_4')]: 8,
+      },
+    },
+    2: {
+      text: t('josephineChat.step2Question'),
+      chips: [t('josephineChat.step2_1'), t('josephineChat.step2_2'), t('josephineChat.step2_3')],
+      dataKey: 'difficulty',
+      chipMap: {
+        [t('josephineChat.step2_1')]: 'easy',
+        [t('josephineChat.step2_2')]: 'medium',
+        [t('josephineChat.step2_3')]: 'hard',
+      },
+    },
+    3: {
+      text: t('josephineChat.step3Question'),
+      chips: [
+        t('josephineChat.step3_1'), t('josephineChat.step3_2'), t('josephineChat.step3_3'),
+        t('josephineChat.step3_4'), t('josephineChat.step3_5'), t('josephineChat.step3_6'),
+        t('josephineChat.step3Done'),
+      ],
+      dataKey: 'interests',
+    },
+    4: {
+      text: t('josephineChat.step4Question'),
+      chips: [t('josephineChat.step4_1'), t('josephineChat.step4_2')],
+      dataKey: 'withDog',
+      chipMap: {
+        [t('josephineChat.step4_1')]: true,
+        [t('josephineChat.step4_2')]: false,
+      },
+    },
+    5: {
+      text: t('josephineChat.step4Question', 'Is this for the whole family?'),
+      chips: [t('josephineChat.step5_1', 'Yes, kids coming!'), t('josephineChat.step5_2', 'Just adults')],
+      dataKey: 'family_friendly',
+      chipMap: {
+        [t('josephineChat.step5_1', 'Yes, kids coming!')]: true,
+        [t('josephineChat.step5_2', 'Just adults')]: false,
+      },
+    },
+    6: {
+      text: t('josephineChat.step5Question'),
+      chips: [t('josephineChat.step5Skip')],
+      dataKey: 'startArea',
+    },
+  };
+
+  /* Mood → semantic value map (translated chip → English value for API) */
+  const MOOD_VALUE_MAP = {
+    [t('josephineChat.step3_1')]: 'alpine lakes',
+    [t('josephineChat.step3_2')]: 'panoramic views',
+    [t('josephineChat.step3_3')]: 'forests',
+    [t('josephineChat.step3_4')]: 'cultural routes',
+    [t('josephineChat.step3_5')]: 'loop',
+    [t('josephineChat.step3_6')]: 'waterfalls',
+  };
+
+  const INITIAL_MESSAGES = [
+    {
+      id: 1, from: 'josephine', type: 'text',
+      text: t('josephineChat.greeting'),
+      chips: null,
+    },
+    {
+      id: 2, from: 'josephine', type: 'text',
+      text: t('josephineChat.weatherPrompt'),
+      chips: [t('josephineChat.chipPlanMyDay'), t('josephineChat.chipSurpriseMe'), t('josephineChat.chipShowMap')],
+    },
+    {
+      id: 3, from: 'josephine', type: 'voice',
+      text: null, duration: '0:08', bars: [3,5,8,6,9,5,7,4,6,8,5,3,7,5,9], chips: null,
+    },
+  ];
+
+  const [messages, setMessages]           = useState(() => INITIAL_MESSAGES);
   const [input, setInput]                 = useState('');
   const [typing, setTyping]               = useState(false);
 
@@ -119,8 +133,8 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       setTimeout(() => {
         appendJosephineMessage({
           type: 'text',
-          text: `Welcome back! Last time you went for a ${prev.lastDifficulty} trail near ${prev.lastRegion || 'the mountains'}. Same vibe today, or something different?`,
-          chips: ['Same vibe', 'Something different', 'Surprise me'],
+          text: t('josephineChat.welcomeBack', { difficulty: prev.lastDifficulty, region: prev.lastRegion || t('common.theMountains', 'the mountains') }),
+          chips: [t('josephineChat.chipSameVibe'), t('josephineChat.chipSomethingDifferent'), t('josephineChat.chipSurpriseMe')],
         });
       }, 800);
     }
@@ -176,7 +190,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
     if (next <= LAST_STEP) {
       const step = PLANNING_STEPS[next];
       // Add ← Back chip on steps 2+ so users can revise answers
-      const chips = next > 1 ? [...step.chips, '← Back'] : step.chips;
+      const chips = next > 1 ? [...step.chips, t('josephineChat.chipBack')] : step.chips;
       setTimeout(() => {
         appendJosephineMessage({ type: 'text', text: step.text, chips });
       }, 600);
@@ -228,7 +242,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
           appendJosephineMessage({
             type:  'trail-card',
             trail,
-            chips: ['Tell me more', 'Show me something else', 'Too long', 'Too hard', 'Start over'],
+            chips: [t('josephineChat.chipTellMore','Tell me more'), t('josephineChat.chipShowElse'), t('josephineChat.chipTooLong','Too long'), t('josephineChat.chipTooHard','Too hard'), t('josephineChat.chipStartOver','Start over')],
           });
         }, 400);
       } else {
@@ -236,8 +250,8 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
         setTimeout(() => {
           appendJosephineMessage({
             type:  'text',
-            text:  "Hmm, I couldn't find a trail matching those exactly. Want to try adjusting your preferences?",
-            chips: ['Start over'],
+            text:  t('josephineChat.noMatchIntro'),
+            chips: [t('josephineChat.chipStartOver','Start over')],
           });
         }, 400);
       }
@@ -247,8 +261,8 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       setTimeout(() => {
         appendJosephineMessage({
           type:  'text',
-          text:  "I couldn't reach the mountain spirits right now. Try again?",
-          chips: ['Try again', 'Start over'],
+          text:  t('josephineChat.windError'),
+          chips: [t('josephineChat.retryChip'), t('josephineChat.chipStartOver','Start over')],
         });
       }, 400);
     }
@@ -257,19 +271,19 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
   /* ── Chip handler ────────────────────────────────────────────────────── */
   const handleChip = (chip) => {
     // Navigation
-    if (['Open map', 'Show me on the map', 'Show me the map'].includes(chip)) {
+    if ([t('josephineChat.chipShowMap'), 'Open map', 'Show me on the map', 'Show me the map'].includes(chip)) {
       appendUserMessage(chip);
       setCurrentView?.('catalog');
       return;
     }
 
     // Entry
-    if (chip === 'Plan my day') {
+    if (chip === t('josephineChat.chipPlanMyDay')) {
       appendUserMessage(chip);
       startPlanningFlow();
       return;
     }
-    if (chip === 'Same vibe') {
+    if (chip === t('josephineChat.chipSameVibe')) {
       appendUserMessage(chip);
       const prev = loadSession();
       if (prev) {
@@ -282,12 +296,12 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       }
       return;
     }
-    if (chip === 'Something different') {
+    if (chip === t('josephineChat.chipSomethingDifferent')) {
       appendUserMessage(chip);
       startPlanningFlow(null);
       return;
     }
-    if (chip === 'Surprise me' || chip === 'Yes, surprise me') {
+    if (chip === t('josephineChat.chipSurpriseMe') || chip === 'Surprise me' || chip === 'Yes, surprise me') {
       appendUserMessage(chip);
       const d = { duration_hours: 3, difficulty: 'medium', interests: [], withDog: false, family_friendly: false, startArea: '' };
       setPlanningData(d);
@@ -313,7 +327,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
     }
 
     // Post-result cycling
-    if (chip === 'Show me something else') {
+    if (chip === t('josephineChat.chipShowElse')) {
       appendUserMessage(chip);
       const nextIdx = resultIndex + 1;
       setResultIndex(nextIdx);
@@ -323,7 +337,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
           appendJosephineMessage({
             type:  'trail-card',
             trail,
-            chips: ['Tell me more', 'Show me something else', 'Too long', 'Too hard', 'Start over'],
+            chips: [t('josephineChat.chipTellMore','Tell me more'), t('josephineChat.chipShowElse'), t('josephineChat.chipTooLong','Too long'), t('josephineChat.chipTooHard','Too hard'), t('josephineChat.chipStartOver','Start over')],
           });
         }, 300);
       } else {
@@ -333,7 +347,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
     }
 
     // Fix 5: Tell me more — inline detail bubble
-    if (chip === 'Tell me more') {
+    if (chip === t('josephineChat.chipTellMore','Tell me more')) {
       appendUserMessage(chip);
       const trail = apiResults[resultIndex % Math.max(apiResults.length, 1)];
       if (trail) {
@@ -347,41 +361,41 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
           appendJosephineMessage({
             type:  'text',
             text:  `${trail.name} — ${trail.distance_km}km, ${trail.elevation_gain_m}m elevation gain. ${extras}\n\n${trail.description || ''}`.trim(),
-            chips: ['View full details', 'Show me something else', 'Start over'],
+            chips: [t('josephineChat.viewDetails'), t('josephineChat.chipShowElse'), t('josephineChat.chipStartOver','Start over')],
           });
         }, 500);
       }
       return;
     }
 
-    if (chip === 'View full details') {
+    if (chip === t('josephineChat.viewDetails')) {
       const trail = apiResults[resultIndex % Math.max(apiResults.length, 1)];
       if (trail) viewTrail?.(trail);
       return;
     }
 
     // Refinement
-    if (chip === 'Too long') {
+    if (chip === t('josephineChat.chipTooLong','Too long')) {
       appendUserMessage(chip);
       setRefining(true);
       setTimeout(() => {
-        appendJosephineMessage({ type: 'text', text: "Got it — looking for something shorter for you.", chips: null });
+        appendJosephineMessage({ type: 'text', text: t('josephineChat.refineShorter',"Got it — looking for something shorter for you."), chips: null });
         callRecommendAPI(planningData, 0, { durationDown: true });
       }, 400);
       return;
     }
-    if (chip === 'Too hard') {
+    if (chip === t('josephineChat.chipTooHard','Too hard')) {
       appendUserMessage(chip);
       setRefining(true);
       setTimeout(() => {
-        appendJosephineMessage({ type: 'text', text: "No problem — I'll find something gentler.", chips: null });
+        appendJosephineMessage({ type: 'text', text: t('josephineChat.refineEasier',"No problem — I'll find something gentler."), chips: null });
         callRecommendAPI(planningData, 0, { difficultyDown: true });
       }, 400);
       return;
     }
 
     // Start over
-    if (chip === 'Start over') {
+    if (chip === t('josephineChat.chipStartOver','Start over')) {
       appendUserMessage(chip);
       setPlanningStep(0);
       setPlanningData({});
@@ -393,26 +407,26 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       setTimeout(() => {
         appendJosephineMessage({
           type:  'text',
-          text:  "Of course! What kind of adventure are you after today?",
-          chips: ['Plan my day', 'Surprise me', 'Show me the map'],
+          text:  t('josephineChat.weatherPrompt'),
+          chips: [t('josephineChat.chipPlanMyDay'), t('josephineChat.chipSurpriseMe'), t('josephineChat.chipShowMap')],
         });
       }, 400);
       return;
     }
 
-    if (chip === 'Try again') {
+    if (chip === t('josephineChat.retryChip')) {
       appendUserMessage(chip);
       callRecommendAPI(planningData, resultIndex);
       return;
     }
 
     // ← Back — go one step back in planning flow
-    if (chip === '← Back' && planningStep > 1) {
+    if (chip === t('josephineChat.chipBack') && planningStep > 1) {
       const prevStep = planningStep - 1;
       setPlanningStep(prevStep);
       const step = PLANNING_STEPS[prevStep];
-      const chips = prevStep > 1 ? [...step.chips, '← Back'] : step.chips;
-      appendUserMessage('← Change my answer');
+      const chips = prevStep > 1 ? [...step.chips, t('josephineChat.chipBack')] : step.chips;
+      appendUserMessage(t('josephineChat.chipChangeAnswer'));
       setTimeout(() => {
         appendJosephineMessage({
           type: 'text',
@@ -425,7 +439,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
 
     // Multi-select mood (step 3)
     if (planningStep === 3) {
-      if (chip === 'Done ✓') {
+      if (chip === t('josephineChat.step3Done')) {
         appendUserMessage(selectedMoods.length > 0 ? selectedMoods.join(', ') : 'Skip');
         const interests = selectedMoods.map(m => MOOD_VALUE_MAP[m] ?? m.toLowerCase());
         setSelectedMoods([]);
@@ -438,8 +452,8 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
 
     // Mid-flow single-select steps
     if (planningStep >= 1 && planningStep <= LAST_STEP) {
-      if (planningStep === LAST_STEP && chip === 'Skip') {
-        appendUserMessage('Skip');
+      if (planningStep === LAST_STEP && chip === t('josephineChat.step5Skip')) {
+        appendUserMessage(t('josephineChat.step5Skip'));
         advancePlanningStep({ startArea: '' });
         return;
       }
@@ -475,6 +489,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       const res = await axios.post('/api/chat', {
         message: trimmed,
         history: chatHistory.slice(-10),
+        lang,
       });
       setTyping(false);
       setChatHistory(prev => [
@@ -485,24 +500,24 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       appendJosephineMessage({
         type: 'text',
         text: res.data.reply,
-        chips: ['Plan my day', 'Surprise me'],
+        chips: [t('josephineChat.chipPlanMyDay'), t('josephineChat.chipSurpriseMe')],
       });
     } catch {
       setTyping(false);
       appendJosephineMessage({
         type: 'text',
-        text: "The mountain winds are interfering — try again in a moment.",
-        chips: ['Plan my day', 'Surprise me'],
+        text: t('josephineChat.windError'),
+        chips: [t('josephineChat.chipPlanMyDay'), t('josephineChat.chipSurpriseMe')],
       });
     }
   };
 
   /* ── Render ──────────────────────────────────────────────────────────── */
   const statusText =
-    planningStep >= 1 && planningStep <= LAST_STEP ? 'Planning your day…' :
-    planningStep === LAST_STEP + 1 ? 'Finding your trail…' :
-    refining ? 'Refining your pick…' :
-    'Online · Alpine guide';
+    planningStep >= 1 && planningStep <= LAST_STEP ? t('josephineChat.statusPlanning','Planning your day…') :
+    planningStep === LAST_STEP + 1 ? t('josephineChat.statusFinding','Finding your trail…') :
+    refining ? t('josephineChat.statusRefining','Refining your pick…') :
+    t('josephineChat.statusOnline','Online · Alpine guide');
 
   return (
     <div className="jc-page">
@@ -581,7 +596,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
                     )}
                     <span className="jc-trail-card__pick-badge">
                       <img src="/josephine-mark.svg" alt="" className="jc-trail-card__mark" onError={e => e.currentTarget.style.display='none'} />
-                      Josephine's Pick
+                      {t('josephineChat.josephinePickBadge')}
                     </span>
                   </div>
                   <div className="jc-trail-card__body">
@@ -599,7 +614,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
                       <p className="jc-trail-card__note">{msg.trail.josephine_note}</p>
                     )}
                     <button className="jc-trail-card__cta" onClick={() => viewTrail?.(msg.trail)}>
-                      View full details →
+                      {t('josephineChat.viewDetails')}
                     </button>
                   </div>
                 </div>
@@ -609,12 +624,12 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
               {msg.chips?.length > 0 && (
                 <div className="jc-chips">
                   {msg.chips.map(chip => {
-                    const isMoodChip = planningStep === 3 && chip !== 'Done ✓';
+                    const isMoodChip = planningStep === 3 && chip !== t('josephineChat.step3Done');
                     const isSelected = isMoodChip && selectedMoods.includes(chip);
                     return (
                       <button
                         key={chip}
-                        className={`jc-chip${isSelected ? ' selected' : ''}${chip === 'Done ✓' && selectedMoods.length > 0 ? ' jc-chip--done' : ''}${chip === '← Back' ? ' jc-chip--back' : ''}`}
+                        className={`jc-chip${isSelected ? ' selected' : ''}${chip === t('josephineChat.step3Done') && selectedMoods.length > 0 ? ' jc-chip--done' : ''}${chip === t('josephineChat.chipBack') ? ' jc-chip--back' : ''}`}
                         onClick={() => handleChip(chip)}
                       >
                         {isSelected ? `✓ ${chip}` : chip}
@@ -645,7 +660,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
           <input
             ref={inputRef}
             className="jc-input"
-            placeholder={planningStep === LAST_STEP ? 'Type a location…' : 'Ask Josephine anything…'}
+            placeholder={planningStep === LAST_STEP ? t('josephineChat.step5Placeholder') : t('josephineChat.inputPlaceholder')}
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(input); } }}

@@ -5,25 +5,10 @@ import './Home.css';
 
 const API_URL = '/api';
 
-const JOSEPHINE_MESSAGES = [
-  "The Dolomites are calling — want me to find a trail that fits your day perfectly?",
-  "Golden hour in the mountains is something else. Shall I find you a sunset hike?",
-  "Some of the best trails are crowd-free if you know when to go. Let me help.",
-  "A perfect mountain day starts with the right trail. Want a recommendation?",
-  "Whether you have two hours or a full day, I know just the trail for you.",
-];
-
 const HERO_IMAGES = [
   'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600',
   'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600',
   'https://images.unsplash.com/photo-1515091943-9d5c0ad475af?w=1600',
-];
-
-const CONVO = [
-  { from: 'user',      text: "I have 3 hours and I want to feel small." },
-  { from: 'josephine', text: "Seceda ridge. Go at 7am — before the cable cars open. You'll have the entire Dolomites horizon to yourself." },
-  { from: 'user',      text: "Is it hard?" },
-  { from: 'josephine', text: "Medium effort, pure reward. The last 200 metres are steep, but every step earns the view." },
 ];
 
 function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
@@ -32,7 +17,22 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
   const [activeTrail, setActiveTrail] = useState(0);
   const [multiDayTrail, setMultiDayTrail] = useState(null);
   const [dogFriendlyCount, setDogFriendlyCount] = useState(null);
-  const [josephineMsg] = useState(() => JOSEPHINE_MESSAGES[Math.floor(Math.random() * JOSEPHINE_MESSAGES.length)]);
+
+  const JOSEPHINE_MESSAGES = [
+    t('home.josephineMsg1', "The Dolomites are calling — want me to find a trail that fits your day perfectly?"),
+    t('home.josephineMsg2', "Golden hour in the mountains is something else. Shall I find you a sunset hike?"),
+    t('home.josephineMsg3', "Some of the best trails are crowd-free if you know when to go. Let me help."),
+    t('home.josephineMsg4', "A perfect mountain day starts with the right trail. Want a recommendation?"),
+    t('home.josephineMsg5', "Whether you have two hours or a full day, I know just the trail for you."),
+  ];
+  const CONVO = [
+    { from: 'user',      text: t('convo.user1') },
+    { from: 'josephine', text: t('convo.josephine1') },
+    { from: 'user',      text: t('convo.user2') },
+    { from: 'josephine', text: t('convo.josephine2') },
+  ];
+
+  const [josephineMsg] = useState(() => Math.floor(Math.random() * 5));
   const [heroBg] = useState(() => HERO_IMAGES[Math.floor(Math.random() * HERO_IMAGES.length)]);
   const [convoVisible, setConvoVisible] = useState(false);
 
@@ -121,10 +121,10 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
 
   const getGreeting = () => {
     const h = new Date().getHours();
-    if (h >= 5  && h < 12) return 'Good morning ✦';
-    if (h >= 12 && h < 17) return 'Good afternoon ✦';
-    if (h >= 17 && h < 21) return 'Good evening ✦';
-    return 'Still planning? ✦';
+    if (h >= 5  && h < 12) return t('hero.josephineGreeting');
+    if (h >= 12 && h < 17) return t('hero.josephineGreetingAfternoon');
+    if (h >= 17 && h < 21) return t('hero.josephineGreetingEvening');
+    return t('hero.josephineGreetingNight');
   };
 
   const currentTrail = featuredTrails[activeTrail];
@@ -147,7 +147,7 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
 
           {/* Left: headline */}
           <div className="hp-hero__left">
-            <p className="hp-hero__eyebrow">SOUTH TYROL · DOLOMITES</p>
+            <p className="hp-hero__eyebrow">{t('hero.region')}</p>
             <h1 className="hp-hero__title">
               {t('hero.title')}<br />
               <em>{t('hero.titleAccent')}</em>
@@ -157,7 +157,7 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
               className="hp-hero__cta"
               onClick={() => setCurrentView('josephine')}
             >
-              Plan my day with Josephine
+              {t('hero.planCta')}
             </button>
           </div>
 
@@ -192,12 +192,12 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
                   </span>
                 </div>
                 <p className="hp-card__greeting">{getGreeting()}</p>
-                <p className="hp-card__msg">{josephineMsg}</p>
+                <p className="hp-card__msg">{JOSEPHINE_MESSAGES[josephineMsg]}</p>
                 <button
                   className="hp-card__btn"
                   onClick={() => setCurrentView('josephine')}
                 >
-                  Yes, let's go →
+                  {t('hero.josephineCta')}
                 </button>
               </div>
             </div>
@@ -209,7 +209,7 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
           ref={el => heroLayersRef.current.cue = el}
           onClick={() => document.getElementById('hp-cinema')?.scrollIntoView({ behavior: 'smooth' })}
         >
-          <span className="hp-hero__cue-text">SCROLL</span>
+          <span className="hp-hero__cue-text">{t('hero.scroll')}</span>
           <span className="hp-hero__cue-arrow">↓</span>
         </div>
       </section>
@@ -251,7 +251,7 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
               className="hp-cinema__cta"
               onClick={() => viewTrail?.(currentTrail)}
             >
-              Explore this trail →
+              {t('cinema.exploreCta')}
             </button>
           </div>
         )}
@@ -294,7 +294,7 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
       ══════════════════════════════════════════ */}
       <section className="hp-convo" ref={convoRef}>
         <div className="hp-convo__inner">
-          <p className="hp-convo__eyebrow">A CONVERSATION WITH JOSEPHINE</p>
+          <p className="hp-convo__eyebrow">{t('convo.eyebrow')}</p>
 
           <div className="hp-convo__thread">
             {CONVO.map((msg, i) => (
@@ -320,7 +320,7 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
             className="hp-convo__cta"
             onClick={() => setCurrentView('josephine')}
           >
-            Start your conversation →
+            {t('convo.startCta')}
           </button>
         </div>
       </section>
@@ -337,17 +337,18 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
         >
           <div className="hp-paths__scrim" />
           <div className="hp-paths__body">
-            <p className="hp-paths__eyebrow">MULTI-DAY JOURNEYS</p>
+            <p className="hp-paths__eyebrow">{t('paths.multiDayEyebrow')}</p>
             <h3 className="hp-paths__title">
-              Hut to hut.<br />
-              Day by day.
+              {t('paths.multiDayTitle').split('\n').map((line, i) => (
+                <span key={i}>{line}{i === 0 && <br />}</span>
+              ))}
             </h3>
             {multiDayTrail && (
               <p className="hp-paths__sub">
-                {multiDayTrail.name} · {multiDayTrail.total_days || multiDayTrail.stages?.length || '?'} days
+                {multiDayTrail.name} · {t('paths.multiDayDays', { count: multiDayTrail.total_days || multiDayTrail.stages?.length || '?' })}
               </p>
             )}
-            <span className="hp-paths__link">Explore routes →</span>
+            <span className="hp-paths__link">{t('paths.multiDayCta')}</span>
           </div>
         </div>
 
@@ -358,15 +359,16 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
         >
           <div className="hp-paths__scrim" />
           <div className="hp-paths__body">
-            <p className="hp-paths__eyebrow hp-paths__eyebrow--narya">NARYA · CANINE COMPANION</p>
+            <p className="hp-paths__eyebrow hp-paths__eyebrow--narya">{t('paths.dayTrailsEyebrow')}</p>
             <h3 className="hp-paths__title">
-              Paw-approved<br />
-              adventures.
+              {t('paths.dayTrailsTitle').split('\n').map((line, i) => (
+                <span key={i}>{line}{i === 0 && <br />}</span>
+              ))}
             </h3>
             {dogFriendlyCount !== null && (
-              <p className="hp-paths__sub">{dogFriendlyCount} dog-friendly trails curated</p>
+              <p className="hp-paths__sub">{t('home.dogFriendlyCount', { count: dogFriendlyCount, defaultValue: `${dogFriendlyCount} dog-friendly trails` })}</p>
             )}
-            <span className="hp-paths__link hp-paths__link--narya">Find dog trails →</span>
+            <span className="hp-paths__link hp-paths__link--narya">{t('paths.dayTrailsCta')}</span>
           </div>
         </div>
 

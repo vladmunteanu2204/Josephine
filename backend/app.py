@@ -2316,6 +2316,30 @@ def josephine_chat():
     body    = request.get_json(silent=True) or {}
     message = body.get('message', '').strip()
     history = body.get('history', [])[-10:]   # last 5 pairs max
+    lang    = body.get('lang', 'en')[:2].lower()   # 'en', 'it', 'de'
+
+    # Language instruction appended to system prompt
+    LANG_INSTRUCTIONS = {
+        'it': "IMPORTANT: Respond in Italian (italiano). All your answers must be in Italian.",
+        'de': "IMPORTANT: Respond in German (Deutsch). All your answers must be in German.",
+    }
+    lang_instruction = LANG_INSTRUCTIONS.get(lang, '')
+
+    # Fallback messages in the right language
+    NO_KEY_REPLIES = {
+        'it': ("Conosco bene queste montagne, ma questa domanda richiede un po' più di riflessione. "
+               "Prova a chiedermi gli orari di apertura, come raggiungere un posto, "
+               "la difficoltà del sentiero o se sono ammessi i cani — rispondo subito!"),
+        'de': ("Ich kenne diese Berge gut, aber diese Frage braucht etwas mehr Überlegung. "
+               "Frag mich nach Öffnungszeiten, wie man einen Ort erreicht, der Wegschwierigkeit "
+               "oder ob Hunde erlaubt sind — das beantworte ich sofort!"),
+    }
+    RATE_LIMIT_REPLIES = {
+        'it': ("Ho risposto a molte domande oggi — dammi qualche minuto per riprendere fiato! "
+               "Nel frattempo, il pulsante 'Pianifica la mia giornata' ti troverà subito il sentiero perfetto."),
+        'de': ("Ich habe heute viele Fragen beantwortet — gib mir ein paar Minuten zum Durchatmen! "
+               "Inzwischen findet dir der Button 'Meinen Tag planen' sofort den perfekten Weg."),
+    }
 
     if not message:
         return jsonify({'error': 'message required'}), 400
@@ -2328,14 +2352,16 @@ def josephine_chat():
     # ── Layer 3: Claude Haiku (paid, with cache + rate limit) ──────────
     if not ANTHROPIC_API_KEY:
         return jsonify({
-            'reply': ("I know these mountains well, but that question needs a bit more thought. "
-                      "Try asking me about opening times, how to reach a place, trail difficulty, "
-                      "or whether dogs are allowed — I can answer those instantly!"),
+            'reply': NO_KEY_REPLIES.get(lang,
+                "I know these mountains well, but that question needs a bit more thought. "
+                "Try asking me about opening times, how to reach a place, trail difficulty, "
+                "or whether dogs are allowed — I can answer those instantly!"),
             'mode': 'no_key'
         })
 
-    # Cache check (question-level, ignores history for cache key)
-    cached = _cache_get(message)
+    # Cache key includes language so EN/IT/DE are cached separately
+    cache_key = f"{lang}:{message}"
+    cached = _cache_get(cache_key)
     if cached:
         return jsonify({'reply': cached, 'mode': 'cached'})
 
@@ -2343,22 +2369,26 @@ def josephine_chat():
     ip = request.headers.get('X-Forwarded-For', request.remote_addr or '0.0.0.0').split(',')[0].strip()
     if not _rate_allowed(ip):
         return jsonify({
-            'reply': ("I've been answering a lot of questions today — give me a few minutes to catch my breath! "
-                      "While you wait, the 'Plan my day' button will find you the perfect trail right now."),
+            'reply': RATE_LIMIT_REPLIES.get(lang,
+                "I've been answering a lot of questions today — give me a few minutes to catch my breath! "
+                "While you wait, the 'Plan my day' button will find you the perfect trail right now."),
             'mode': 'rate_limited'
         })
 
     try:
         import anthropic
         client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+        system_prompt = _build_system_prompt()
+        if lang_instruction:
+            system_prompt = system_prompt + f"\n\n{lang_instruction}"
         response = client.messages.create(
             model='claude-haiku-4-5',
             max_tokens=300,
-            system=_build_system_prompt(),
+            system=system_prompt,
             messages=history + [{'role': 'user', 'content': message}],
         )
         reply = response.content[0].text
-        _cache_set(message, reply)
+        _cache_set(cache_key, reply)
         return jsonify({'reply': reply, 'mode': 'llm'})
 
     except Exception as e:

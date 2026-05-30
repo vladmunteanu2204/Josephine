@@ -14,7 +14,8 @@
     "close": "Close",
     "edit": "Edit",
     "cancel": "Cancel",
-    "unsaveTrail": "Unsave trail"
+    "unsaveTrail": "Unsave trail",
+    "back": "Back"
   },
   "nav": {
     "home": "Home",
@@ -42,7 +43,15 @@
     "exploreYourPath": "Explore Your Path",
     "tagline": "Your local companion in the mountains.",
     "scrollToExplore": "Discover what's out there",
-    "originLine": "Crafted in the heart of South Tyrol, Italy"
+    "originLine": "Crafted in the heart of South Tyrol, Italy",
+    "planCta": "Plan my day with Josephine",
+    "josephineGreeting": "Good morning ✦",
+    "josephineGreetingAfternoon": "Good afternoon ✦",
+    "josephineGreetingEvening": "Good evening ✦",
+    "josephineGreetingNight": "Still planning? ✦",
+    "josephineCta": "Yes, let's go →",
+    "scroll": "SCROLL",
+    "region": "SOUTH TYROL · DOLOMITES"
   },
   "menu": {
     "navigation": "Navigation"
@@ -260,8 +269,20 @@
     "currentPlan": "Current Plan",
     "upgrade": "Upgrade",
     "features": "Features",
-    "freeFeatures": ["View all trails", "Basic recommendations", "Trail details", "Community reviews"],
-    "premiumFeatures": ["Unlimited saved trails", "Advanced recommendations", "Offline maps", "Priority support", "Exclusive content", "Early access to new trails"]
+    "freeFeatures": [
+      "View all trails",
+      "Basic recommendations",
+      "Trail details",
+      "Community reviews"
+    ],
+    "premiumFeatures": [
+      "Unlimited saved trails",
+      "Advanced recommendations",
+      "Offline maps",
+      "Priority support",
+      "Exclusive content",
+      "Early access to new trails"
+    ]
   },
   "footer": {
     "madeIn": "Crafted with ❤️ in South Tyrol, Italy",
@@ -701,24 +722,6 @@
     "exportImage": "Export Summary",
     "close": "Close"
   },
-  "common": {
-    "loading": "Loading...",
-    "error": "An error occurred",
-    "backToTrails": "Back to Trails",
-    "backToHome": "Back to Home",
-    "viewOnMap": "View on Map",
-    "save": "Save",
-    "login": "Login",
-    "logout": "Logout",
-    "signup": "Sign Up",
-    "profile": "Profile",
-    "myTrails": "My Trails",
-    "close": "Close",
-    "edit": "Edit",
-    "cancel": "Cancel",
-    "unsaveTrail": "Unsave trail",
-    "back": "Back"
-  },
   "rifugio": {
     "title": "Alpine Huts & Rifugios",
     "subtitle": "Discover authentic mountain accommodations in the Alps",
@@ -911,21 +914,91 @@
     "stageDescriptionPlaceholder": "Describe this stage of the trek...",
     "overnightRifugioName": "Overnight Rifugio Name",
     "overnightRifugioPlaceholder": "e.g., Rifugio Sennes",
-    "stageName": "Stage Name",
     "distanceKm": "Distance (km)",
     "elevationGainM": "Elevation Gain (m)",
     "elevationLossM": "Elevation Loss (m)",
-    "stageDescription": "Stage Description",
-    "noStagesYet": "No stages yet. Click \"Add Stage\" to create the first day of your multi-day trek!",
-    "totalDistance": "Total Distance",
     "totalElevationGain": "Total Elevation Gain",
     "totalElevationLoss": "Total Elevation Loss",
     "draft": "Draft",
-    "published": "Published",
-    "trailStages": "Trail Stages",
-    "addStage": "Add Stage",
-    "stage": "Stage",
-    "unnamed": "Unnamed",
-    "remove": "Remove"
+    "published": "Published"
+  },
+  "cinema": {
+    "exploreCta": "Explore this trail →"
+  },
+  "convo": {
+    "eyebrow": "A CONVERSATION WITH JOSEPHINE",
+    "startCta": "Start your conversation →",
+    "user1": "I have 3 hours and I want to feel small.",
+    "josephine1": "Seceda ridge. Go at 7am — before the cable cars open. You'll have the entire Dolomites horizon to yourself.",
+    "user2": "Is it hard?",
+    "josephine2": "Medium effort, pure reward. The last 200 metres are steep, but every step earns the view."
+  },
+  "paths": {
+    "multiDayEyebrow": "MULTI-DAY JOURNEYS",
+    "multiDayTitle": "Hut to hut.\nDay by day.",
+    "multiDayDays": "{{count}} days",
+    "multiDayCta": "Explore →",
+    "dayTrailsEyebrow": "DAY TRAILS",
+    "dayTrailsTitle": "One trail.\nYour whole day.",
+    "dayTrailsCta": "Find your trail →"
+  },
+  "josephineChat": {
+    "greeting": "Ciao! ✦ I'm Josephine, your alpine companion. I know these mountains inside out — the hidden paths, the best rifugios, the moments that take your breath away.",
+    "weatherPrompt": "The weather is perfect today for a panoramic hike. What kind of adventure are you after?",
+    "chipPlanMyDay": "Plan my day",
+    "chipSurpriseMe": "Surprise me",
+    "chipShowMap": "Show me the map",
+    "chipBack": "← Back",
+    "chipChangeAnswer": "← Change my answer",
+    "chipStartOver": "Start over",
+    "chipShowElse": "Show me something else",
+    "chipSameVibe": "Same vibe",
+    "chipSomethingDifferent": "Something different",
+    "welcomeBack": "Welcome back! Last time you went for a {{difficulty}} trail near {{region}}. Same vibe today, or something different?",
+    "noApiKey": "I know these mountains well, but I'd need a moment to think about that one. Try asking me about opening times, trail difficulty, or how to reach a rifugio!",
+    "windError": "The mountain winds are interfering — try again in a moment.",
+    "step1Question": "How much time do you have today?",
+    "step1_1": "1–2h",
+    "step1_2": "3–4h",
+    "step1_3": "5–6h",
+    "step1_4": "Full day",
+    "step2Question": "How are you feeling today?",
+    "step2_1": "Take it easy",
+    "step2_2": "Good energy",
+    "step2_3": "Push hard",
+    "step3Question": "What's calling you? Pick as many as you like, then tap Done ✓",
+    "step3_1": "Alpine lakes",
+    "step3_2": "Panoramic views",
+    "step3_3": "Forests",
+    "step3_4": "Cultural routes",
+    "step3_5": "Loop trail",
+    "step3_6": "Waterfalls",
+    "step3Done": "Done ✓",
+    "step4Question": "Are you hiking with your dog?",
+    "step4_1": "Yes, bringing her!",
+    "step4_2": "No dog today",
+    "step5Question": "Where are you starting from?",
+    "step5Skip": "Skip",
+    "step5Placeholder": "Type a location…",
+    "noMatchIntro": "Hmm, I couldn't find the perfect match this time",
+    "noMatchSub": "Let me try different criteria",
+    "retryChip": "Try again",
+    "loadingTrail": "Let me find the perfect trail for you…",
+    "refineQuestion": "Want to adjust anything?",
+    "refineMore": "More options",
+    "inputPlaceholder": "Ask Josephine anything…",
+    "josephinePickBadge": "Josephine's Pick",
+    "viewDetails": "View full details →",
+    "refineShorter": "Got it — looking for something shorter for you.",
+    "refineEasier": "No problem — I'll find something gentler.",
+    "chipTellMore": "Tell me more",
+    "chipTooLong": "Too long",
+    "chipTooHard": "Too hard",
+    "statusPlanning": "Planning your day…",
+    "statusFinding": "Finding your trail…",
+    "statusRefining": "Refining your pick…",
+    "statusOnline": "Online · Alpine guide",
+    "step5_1": "Yes, kids coming!",
+    "step5_2": "Just adults"
   }
 }
