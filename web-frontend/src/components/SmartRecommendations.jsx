@@ -111,54 +111,120 @@ function SmartRecommendations({ viewTrail }) {
       : toast.success(`${trail.name} saved!`);
   };
 
+  const DIFF_COLOR = { easy: '#4ade80', medium: '#c9a84c', hard: '#ef4444' };
+
   // ── Results view ──────────────────────────────────────────────────────────
   if (showResults) {
+    const [hero, ...rest] = results;
     return (
       <div className="sr-results-page">
-        <div className="sr-results-header">
-          <button className="sr-back-btn" onClick={reset}>← New search</button>
-          <h2 className="sr-results-title">Josephine picked these for you</h2>
-          <p className="sr-results-verified">✓ Verified routes only</p>
-        </div>
 
-        {error && <div className="error" style={{ margin: '0 20px 20px' }}>{error}</div>}
+        {/* Back */}
+        <button className="sr-back-btn" onClick={reset}>
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+            <path d="M12 4L6 10L12 16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          New search
+        </button>
 
-        {results.length > 0 ? (
-          <div className="trail-grid" style={{ padding: '0 20px 40px' }}>
-            {results.map(trail => (
-              <div key={trail.id} className="trail-card" onClick={() => viewTrail(trail)}>
-                <button
-                  className={`save-btn ${savedTrailIds.includes(trail.id) ? 'saved' : ''}`}
-                  onClick={(e) => toggleSave(trail, e)}
-                  aria-label={savedTrailIds.includes(trail.id) ? 'Unsave' : 'Save'}
-                >
-                  {savedTrailIds.includes(trail.id) ? '♥' : '♡'}
-                </button>
-                <img src={trail.thumbnail} alt={trail.name} className="trail-image" />
-                <div className="trail-content">
-                  <div className="trail-header">
-                    <h3 className="trail-name">{trail.name}</h3>
-                    <span className={`badge badge-${trail.difficulty}`}>{t(`catalog.${trail.difficulty}`)}</span>
-                  </div>
-                  <p className="trail-region">{trail.region}</p>
-                  <div className="trail-stats">
-                    <div className="stat"><span className="stat-icon">▸</span><span>{trail.distance_km} km</span></div>
-                    <div className="stat"><span className="stat-icon">▸</span><span>{trail.duration_hours}h</span></div>
-                    <div className="stat"><span className="stat-icon">▸</span><span>{trail.elevation_gain_m}m ↑</span></div>
-                  </div>
-                  <div className="trail-tags">
-                    {trail.tags.slice(0, 3).map((tag, i) => <span key={i} className="tag">{tag}</span>)}
-                  </div>
-                </div>
-              </div>
-            ))}
+        {error && <p className="sr-error" style={{ padding: '0 20px 16px' }}>{error}</p>}
+
+        {results.length === 0 ? (
+          <div className="sr-empty">
+            <div className="sr-empty-icon">◈</div>
+            <p>{t('recommendations.noResults')}</p>
           </div>
         ) : (
-          <div className="empty-state" style={{ padding: '60px 20px', textAlign: 'center' }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>◈</div>
-            <p style={{ color: 'rgba(240,236,230,0.6)' }}>{t('recommendations.noResults')}</p>
-          </div>
+          <>
+            {/* ── Hero card (Josephine's pick) ── */}
+            {hero && (
+              <div className="sr-hero-card" onClick={() => viewTrail(hero)}>
+                <div className="sr-hero-card__img-wrap">
+                  <img
+                    src={hero.wallpaper || hero.image_url || hero.thumbnail ||
+                      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop&q=70'}
+                    alt={hero.name}
+                    className="sr-hero-card__img"
+                  />
+                  <div className="sr-hero-card__overlay" />
+
+                  <span className="sr-hero-card__pick-badge">
+                    <img src="/josephine-mark.svg" alt="" className="sr-pick-badge-mark" onError={e => e.currentTarget.style.display='none'} />
+                    Josephine's Pick
+                  </span>
+
+                  <button
+                    className={`sr-hero-save-btn ${savedTrailIds.includes(hero.id) ? 'saved' : ''}`}
+                    onClick={e => toggleSave(hero, e)}
+                    aria-label="Save trail"
+                  >
+                    {savedTrailIds.includes(hero.id) ? '♥' : '♡'}
+                  </button>
+                </div>
+
+                <div className="sr-hero-card__body">
+                  <div className="sr-hero-card__meta">
+                    <span className="sr-hero-region">{hero.region}</span>
+                    <span
+                      className="sr-hero-diff"
+                      style={{ color: DIFF_COLOR[hero.difficulty] || '#c9a84c', borderColor: DIFF_COLOR[hero.difficulty] || '#c9a84c' }}
+                    >
+                      {hero.difficulty}
+                    </span>
+                  </div>
+                  <h2 className="sr-hero-card__name">{hero.name}</h2>
+                  <div className="sr-hero-card__stats">
+                    <span>{hero.distance_km} km</span>
+                    <span className="sr-hero-dot">·</span>
+                    <span>{hero.duration_hours}h</span>
+                    <span className="sr-hero-dot">·</span>
+                    <span>{hero.elevation_gain_m}m ↑</span>
+                  </div>
+                  <button className="sr-hero-cta" onClick={() => viewTrail(hero)}>
+                    View Details →
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ── Rest of results ── */}
+            {rest.length > 0 && (
+              <div className="sr-rest-list">
+                <p className="sr-rest-label">More suggestions</p>
+                {rest.map(trail => (
+                  <div key={trail.id} className="sr-list-card" onClick={() => viewTrail(trail)}>
+                    <div className="sr-list-card__img-wrap">
+                      <img
+                        src={trail.thumbnail || trail.image_url || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&auto=format&fit=crop&q=60'}
+                        alt={trail.name}
+                        className="sr-list-card__img"
+                      />
+                    </div>
+                    <div className="sr-list-card__body">
+                      <p className="sr-list-card__region">{trail.region}</p>
+                      <h3 className="sr-list-card__name">{trail.name}</h3>
+                      <div className="sr-list-card__stats">
+                        <span>{trail.distance_km} km</span>
+                        <span>·</span>
+                        <span>{trail.duration_hours}h</span>
+                        <span>·</span>
+                        <span style={{ color: DIFF_COLOR[trail.difficulty] }}>{trail.difficulty}</span>
+                      </div>
+                    </div>
+                    <button
+                      className={`sr-list-save-btn ${savedTrailIds.includes(trail.id) ? 'saved' : ''}`}
+                      onClick={e => toggleSave(trail, e)}
+                      aria-label="Save"
+                    >
+                      {savedTrailIds.includes(trail.id) ? '♥' : '♡'}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
         )}
+        <div style={{ height: 60 }} />
       </div>
     );
   }
