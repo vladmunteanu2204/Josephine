@@ -318,11 +318,21 @@ def get_recommendations():
                 score += 2
                 reasons.append(f"close to your {duration_hours}h window")
 
-            # Interest / mood matching against trail interests array
-            trail_interests = [i.lower() for i in trail.get('interests', [])]
+            # Interest / mood matching — check both 'interests' and 'tags' fields
+            # so trails with empty interests but populated tags still surface
+            trail_keywords = set(
+                [i.lower() for i in trail.get('interests', [])] +
+                [t.lower() for t in trail.get('tags', [])]
+            )
             for interest in mood_interests:
-                if interest.lower() in trail_interests:
+                interest_lower = interest.lower()
+                # Direct match
+                if interest_lower in trail_keywords:
                     score += 2
+                    reasons.append(interest)
+                # Partial/keyword match (e.g. "cultural routes" matches "cultural heritage")
+                elif any(interest_lower.split()[0] in kw for kw in trail_keywords):
+                    score += 1
                     reasons.append(interest)
 
             # Loop type

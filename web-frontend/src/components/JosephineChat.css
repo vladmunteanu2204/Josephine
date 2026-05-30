@@ -314,6 +314,25 @@
   border-color: rgba(201,168,76,0.6);
 }
 
+/* Fix 2: selected mood chip */
+.jc-chip.selected {
+  background: rgba(201,168,76,0.2);
+  border-color: #c9a84c;
+  color: #f0ece6;
+}
+
+/* Fix 2: "Done ✓" chip when moods are selected */
+.jc-chip--done {
+  background: #c9a84c;
+  border-color: #c9a84c;
+  color: #1a1a0e;
+  font-weight: 700;
+}
+
+.jc-chip--done:hover {
+  background: #d4b85c;
+}
+
 /* ── Input bar ── */
 .jc-input-bar {
   display: flex;

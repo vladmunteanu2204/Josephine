@@ -3,14 +3,15 @@ import axios from 'axios';
 import './JosephineChat.css';
 
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&auto=format&fit=crop&q=70';
+const SESSION_KEY  = 'josephine_session';
 
-/* ── Planning step config ─────────────────────────────────────────────── */
+/* ── Fix 1: clearer, gapless duration options ───────────────────────── */
 const PLANNING_STEPS = {
   1: {
     text: "How much time do you have today?",
-    chips: ["< 2h", "Half a day", "Full day"],
+    chips: ["1–2h", "3–4h", "5–6h", "Full day"],
     dataKey: 'duration_hours',
-    chipMap: { "< 2h": 1.5, "Half a day": 3, "Full day": 8 },
+    chipMap: { "1–2h": 1.5, "3–4h": 3, "5–6h": 5, "Full day": 8 },
   },
   2: {
     text: "How are you feeling today?",
@@ -19,16 +20,10 @@ const PLANNING_STEPS = {
     chipMap: { "Take it easy": 'easy', "Good energy": 'medium', "Push hard": 'hard' },
   },
   3: {
-    text: "What's calling you? (or skip)",
-    chips: ["Alpine lakes", "Panoramic views", "Forests", "Something cultural", "Loop trail", "Skip"],
+    /* Fix 2: multi-select — handled specially in handleChip */
+    text: "What's calling you? Pick as many as you like, then tap Done ✓",
+    chips: ["Alpine lakes", "Panoramic views", "Forests", "Cultural routes", "Loop trail", "Waterfalls", "Done ✓"],
     dataKey: 'interests',
-    chipMap: {
-      "Alpine lakes": 'alpine lakes',
-      "Panoramic views": 'panoramic views',
-      "Forests": 'forests',
-      "Something cultural": 'cultural routes',
-      "Loop trail": 'loop',
-    },
   },
   4: {
     text: "Are you hiking with your dog?",
@@ -37,11 +32,40 @@ const PLANNING_STEPS = {
     chipMap: { "Yes, bringing her!": true, "No dog today": false },
   },
   5: {
-    text: "Where are you starting from? (or tap skip)",
+    text: "Where are you starting from? (type below or skip)",
     chips: ["Skip"],
     dataKey: 'startArea',
   },
 };
+
+/* Fix 2: mood→interest value mapping */
+const MOOD_VALUE_MAP = {
+  "Alpine lakes":     'alpine lakes',
+  "Panoramic views":  'panoramic views',
+  "Forests":          'forests',
+  "Cultural routes":  'cultural routes',
+  "Loop trail":       'loop',
+  "Waterfalls":       'waterfalls',
+};
+
+/* Fix 4: refinement follow-up questions */
+const REFINEMENT_CHIPS = [
+  { chip: 'Too long',   question: "Got it — how about something shorter?",    adjustment: { durationDown: true } },
+  { chip: 'Too hard',   question: "No problem — I'll find something gentler.", adjustment: { difficultyDown: true } },
+  { chip: 'Too far',    question: "Closer to where you are — got it.",         adjustment: { nearMe: true } },
+  { chip: 'Not my vibe',question: "Tell me more — what are you in the mood for?", adjustment: { reMood: true } },
+];
+
+/* Fix 5: load/save session memory ──────────────────────────────────── */
+function loadSession() {
+  try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null'); }
+  catch { return null; }
+}
+
+function saveSession(data) {
+  try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(data)); }
+  catch {}
+}
 
 const INITIAL_MESSAGES = [
   {
@@ -55,7 +79,7 @@ const INITIAL_MESSAGES = [
     id: 2,
     from: 'josephine',
     type: 'text',
-    text: "The weather is perfect today for a panoramic hike. Visibility is exceptional — you'll see all the way to the Marmolada glacier. What kind of adventure are you after?",
+    text: "The weather is perfect today for a panoramic hike. What kind of adventure are you after?",
     chips: ['Plan my day', 'Surprise me', 'Show me the map'],
   },
   {
@@ -69,45 +93,82 @@ const INITIAL_MESSAGES = [
   },
 ];
 
-/* ── Component ────────────────────────────────────────────────────────── */
+/* ── Component ───────────────────────────────────────────────────────── */
 function JosephineChat({ onBack, setCurrentView, viewTrail }) {
-  const [messages, setMessages]         = useState(INITIAL_MESSAGES);
-  const [input, setInput]               = useState('');
-  const [typing, setTyping]             = useState(false);
+  const [messages, setMessages]             = useState(INITIAL_MESSAGES);
+  const [input, setInput]                   = useState('');
+  const [typing, setTyping]                 = useState(false);
 
   // Planning state machine
-  const [planningStep, setPlanningStep] = useState(0);
-  const [planningData, setPlanningData] = useState({});
-  const [resultIndex,  setResultIndex]  = useState(0);
-  const [apiResults,   setApiResults]   = useState([]);
+  const [planningStep, setPlanningStep]     = useState(0);
+  const [planningData, setPlanningData]     = useState({});
+  const [resultIndex,  setResultIndex]      = useState(0);
+  const [apiResults,   setApiResults]       = useState([]);
+
+  // Fix 2: multi-select moods
+  const [selectedMoods, setSelectedMoods]   = useState([]);
+
+  // Fix 4: refinement mode
+  const [refining, setRefining]             = useState(false);
 
   const bottomRef = useRef(null);
   const inputRef  = useRef(null);
+
+  /* Fix 5: greet returning users ─────────────────────────────────────── */
+  useEffect(() => {
+    const prev = loadSession();
+    if (prev?.lastTrail && prev?.lastDifficulty) {
+      setTimeout(() => {
+        appendJosephineMessage({
+          type: 'text',
+          text: `Welcome back! Last time you went for a ${prev.lastDifficulty} trail near ${prev.lastRegion || 'the mountains'}. Same vibe today, or something different?`,
+          chips: ['Same vibe', 'Something different', 'Surprise me'],
+        });
+      }, 800);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, typing]);
 
-  /* ── Helpers ── */
+  /* ── Helpers ─────────────────────────────────────────────────────────── */
   const appendJosephineMessage = (partial) => {
-    setMessages(prev => [...prev, { id: Date.now(), from: 'josephine', ...partial }]);
+    setMessages(prev => [...prev, { id: Date.now() + Math.random(), from: 'josephine', ...partial }]);
   };
 
   const appendUserMessage = (text) => {
-    setMessages(prev => [...prev, { id: Date.now(), from: 'user', type: 'text', text, chips: null }]);
+    setMessages(prev => [...prev, { id: Date.now() + Math.random(), from: 'user', type: 'text', text, chips: null }]);
   };
 
-  /* ── Planning flow ── */
-  const startPlanningFlow = () => {
+  /* ── Planning flow ───────────────────────────────────────────────────── */
+  const startPlanningFlow = (prefill = null) => {
     setPlanningStep(1);
-    setPlanningData({});
+    setPlanningData(prefill || {});
     setResultIndex(0);
     setApiResults([]);
-    // Small delay so it feels like she's thinking
-    setTimeout(() => {
-      const step = PLANNING_STEPS[1];
-      appendJosephineMessage({ type: 'text', text: step.text, chips: step.chips });
-    }, 600);
+    setSelectedMoods([]);
+    setRefining(false);
+
+    /* Fix 5: if session has previous data, offer to reuse */
+    const prev = loadSession();
+    if (prefill === null && prev?.duration_hours) {
+      const durationLabel = Object.entries(PLANNING_STEPS[1].chipMap)
+        .find(([, v]) => v === prev.duration_hours)?.[0] || `${prev.duration_hours}h`;
+      setTimeout(() => {
+        appendJosephineMessage({
+          type: 'text',
+          text: `Last time you had ${durationLabel}. Same today?`,
+          chips: [`Yes, ${durationLabel}`, 'No, different'],
+        });
+      }, 500);
+    } else {
+      setTimeout(() => {
+        const step = PLANNING_STEPS[1];
+        appendJosephineMessage({ type: 'text', text: step.text, chips: step.chips });
+      }, 500);
+    }
   };
 
   const advancePlanningStep = (dataUpdate) => {
@@ -122,14 +183,25 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
         appendJosephineMessage({ type: 'text', text: step.text, chips: step.chips });
       }, 600);
     } else {
-      // next === 6 → call API
       callRecommendAPI(newData);
     }
   };
 
-  const callRecommendAPI = async (data, startIdx = 0) => {
+  const callRecommendAPI = async (data, startIdx = 0, adjustments = {}) => {
     setPlanningStep(6);
     setTyping(true);
+    setRefining(false);
+
+    // Apply fix-4 adjustments if refinement was requested
+    let duration   = data.duration_hours ?? 3;
+    let difficulty = data.difficulty ?? 'medium';
+
+    if (adjustments.durationDown) {
+      duration = Math.max(1.5, duration - 1.5);
+    }
+    if (adjustments.difficultyDown) {
+      difficulty = difficulty === 'hard' ? 'medium' : 'easy';
+    }
 
     const interests = [
       ...(data.interests || []),
@@ -138,10 +210,10 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
 
     try {
       const response = await axios.post('/api/ai/recommend', {
-        duration_hours: data.duration_hours ?? 3,
-        difficulty:     data.difficulty ?? 'medium',
+        duration_hours: duration,
+        difficulty,
         interests,
-        start_area:     data.startArea ?? '',
+        start_area: data.startArea ?? '',
       });
       const results = response.data.results || [];
       setApiResults(results);
@@ -151,14 +223,25 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
 
       const trail = results[startIdx % Math.max(results.length, 1)];
       if (trail) {
+        // Fix 5: save session
+        saveSession({
+          duration_hours: duration,
+          difficulty,
+          interests,
+          lastTrail: trail.id,
+          lastDifficulty: trail.difficulty,
+          lastRegion: trail.region,
+        });
         setTimeout(() => {
           appendJosephineMessage({
             type: 'trail-card',
             trail,
-            chips: ['Show me something else', 'Start over'],
+            /* Fix 4: refinement chips alongside standard ones */
+            chips: ['Show me something else', 'Too long', 'Too hard', 'Start over'],
           });
         }, 400);
       } else {
+        setTyping(false);
         setTimeout(() => {
           appendJosephineMessage({
             type: 'text',
@@ -167,7 +250,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
           });
         }, 400);
       }
-    } catch (e) {
+    } catch {
       setTyping(false);
       setPlanningStep(0);
       setTimeout(() => {
@@ -180,7 +263,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
     }
   };
 
-  /* ── Chip handler ── */
+  /* ── Chip handler ────────────────────────────────────────────────────── */
   const handleChip = (chip) => {
     // Navigation
     if (chip === 'Open map' || chip === 'Show me on the map' || chip === 'Show me the map') {
@@ -196,6 +279,31 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       return;
     }
 
+    if (chip === 'Same vibe') {
+      appendUserMessage(chip);
+      const prev = loadSession();
+      if (prev) {
+        const defaults = {
+          duration_hours: prev.duration_hours,
+          difficulty: prev.difficulty,
+          interests: prev.interests || [],
+          withDog: false,
+          startArea: '',
+        };
+        setPlanningData(defaults);
+        callRecommendAPI(defaults, 0);
+      } else {
+        startPlanningFlow();
+      }
+      return;
+    }
+
+    if (chip === 'Something different') {
+      appendUserMessage(chip);
+      startPlanningFlow(null);
+      return;
+    }
+
     if (chip === 'Surprise me' || chip === 'Yes, surprise me') {
       appendUserMessage(chip);
       const defaults = { duration_hours: 3, difficulty: 'medium', interests: [], withDog: false, startArea: '' };
@@ -204,7 +312,26 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       return;
     }
 
-    // Post-result
+    // Fix 5: "Yes, Xh" quick reuse chip
+    if (chip.startsWith('Yes, ') && planningStep === 1) {
+      const prev = loadSession();
+      if (prev?.duration_hours) {
+        appendUserMessage(chip);
+        advancePlanningStep({ duration_hours: prev.duration_hours });
+        return;
+      }
+    }
+
+    if (chip === 'No, different' && planningStep === 1) {
+      appendUserMessage(chip);
+      const step = PLANNING_STEPS[1];
+      setTimeout(() => {
+        appendJosephineMessage({ type: 'text', text: step.text, chips: step.chips });
+      }, 400);
+      return;
+    }
+
+    // Post-result cycling
     if (chip === 'Show me something else') {
       appendUserMessage(chip);
       const nextIdx = resultIndex + 1;
@@ -215,12 +342,41 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
           appendJosephineMessage({
             type: 'trail-card',
             trail,
-            chips: ['Show me something else', 'Start over'],
+            chips: ['Show me something else', 'Too long', 'Too hard', 'Start over'],
           });
         }, 300);
       } else {
         callRecommendAPI(planningData, nextIdx);
       }
+      return;
+    }
+
+    // Fix 4: refinement chips
+    if (chip === 'Too long') {
+      appendUserMessage(chip);
+      setRefining(true);
+      setTimeout(() => {
+        appendJosephineMessage({
+          type: 'text',
+          text: "Got it — looking for something shorter for you.",
+          chips: null,
+        });
+        callRecommendAPI(planningData, 0, { durationDown: true });
+      }, 400);
+      return;
+    }
+
+    if (chip === 'Too hard') {
+      appendUserMessage(chip);
+      setRefining(true);
+      setTimeout(() => {
+        appendJosephineMessage({
+          type: 'text',
+          text: "No problem — I'll find something gentler.",
+          chips: null,
+        });
+        callRecommendAPI(planningData, 0, { difficultyDown: true });
+      }, 400);
       return;
     }
 
@@ -230,13 +386,15 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       setPlanningData({});
       setResultIndex(0);
       setApiResults([]);
+      setSelectedMoods([]);
+      setRefining(false);
       setTimeout(() => {
         appendJosephineMessage({
           type: 'text',
           text: "Of course! What kind of adventure are you after today?",
           chips: ['Plan my day', 'Surprise me', 'Show me the map'],
         });
-      }, 500);
+      }, 400);
       return;
     }
 
@@ -246,40 +404,45 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       return;
     }
 
-    // Mid-flow planning chips (steps 1–5)
-    if (planningStep >= 1 && planningStep <= 5) {
-      appendUserMessage(chip);
-      const step = PLANNING_STEPS[planningStep];
-
-      if (planningStep === 3) {
-        if (chip === 'Skip') {
-          advancePlanningStep({ interests: [] });
-        } else {
-          const mapped = step.chipMap?.[chip] ?? chip;
-          advancePlanningStep({ interests: [mapped] });
-        }
+    // Fix 2: multi-select mood chips at step 3
+    if (planningStep === 3) {
+      if (chip === 'Done ✓') {
+        appendUserMessage(selectedMoods.length > 0 ? selectedMoods.join(', ') : 'Skip');
+        const interests = selectedMoods.map(m => MOOD_VALUE_MAP[m] ?? m.toLowerCase());
+        setSelectedMoods([]);
+        advancePlanningStep({ interests });
         return;
       }
+      // Toggle selection — don't advance yet
+      setSelectedMoods(prev =>
+        prev.includes(chip) ? prev.filter(m => m !== chip) : [...prev, chip]
+      );
+      return;
+    }
 
+    // Mid-flow steps 1, 2, 4 — single select
+    if (planningStep >= 1 && planningStep <= 5) {
       if (planningStep === 5 && chip === 'Skip') {
+        appendUserMessage('Skip');
         advancePlanningStep({ startArea: '' });
         return;
       }
-
+      appendUserMessage(chip);
+      const step = PLANNING_STEPS[planningStep];
       const mapped = step.chipMap?.[chip] ?? chip;
       advancePlanningStep({ [step.dataKey]: mapped });
       return;
     }
 
-    // Fallback: treat chip as freeform input
+    // Fallback freeform
     sendMessage(chip);
   };
 
-  /* ── Send message (freeform) ── */
+  /* ── Send message (freeform + step 5 location) ───────────────────────── */
   const sendMessage = (text) => {
     if (!text.trim()) return;
 
-    // Step 5: capture location input
+    // Step 5: capture location
     if (planningStep === 5) {
       appendUserMessage(text.trim());
       setInput('');
@@ -287,7 +450,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       return;
     }
 
-    const userMsg = { id: Date.now(), from: 'user', type: 'text', text: text.trim(), chips: null };
+    const userMsg = { id: Date.now() + Math.random(), from: 'user', type: 'text', text: text.trim(), chips: null };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setTyping(true);
@@ -297,17 +460,9 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       let reply;
       const lower = text.toLowerCase();
       if (lower.includes('map') || lower.includes('show')) {
-        reply = {
-          type: 'text',
-          text: "I'll pull up the map for you right away!",
-          chips: ['Open map', 'Back to chat'],
-        };
-      } else if (lower.includes('surprise') || lower.includes('yes') || lower.includes('plan')) {
-        reply = {
-          type: 'text',
-          text: "Great! Let me plan the perfect day for you.",
-          chips: ['Plan my day', 'Surprise me'],
-        };
+        reply = { type: 'text', text: "I'll pull up the map for you!", chips: ['Open map'] };
+      } else if (lower.includes('plan') || lower.includes('hike') || lower.includes('trail')) {
+        reply = { type: 'text', text: "Let's find your perfect trail!", chips: ['Plan my day', 'Surprise me'] };
       } else {
         reply = {
           type: 'text',
@@ -319,7 +474,12 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
     }, 1200);
   };
 
-  /* ── Render ── */
+  /* ── Render ──────────────────────────────────────────────────────────── */
+  const statusText = planningStep >= 1 && planningStep <= 5 ? 'Planning your day…'
+    : planningStep === 6 ? 'Finding your trail…'
+    : refining ? 'Refining your pick…'
+    : 'Online · Alpine guide';
+
   return (
     <div className="jc-page">
 
@@ -330,22 +490,15 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
             <path d="M12 4L6 10L12 16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </button>
-
         <div className="jc-header__identity">
           <div className="jc-header__avatar">
             <img src="/josephine-mark.svg" alt="" className="jc-header__mark" onError={e => e.currentTarget.style.opacity = '0'} />
           </div>
           <div>
             <p className="jc-header__name">Josephine</p>
-            <p className="jc-header__status">
-              <span className="jc-header__online-dot" />
-              {planningStep >= 1 && planningStep <= 5 ? 'Planning your day…' :
-               planningStep === 6 ? 'Finding your trail…' :
-               'Online · Alpine guide'}
-            </p>
+            <p className="jc-header__status"><span className="jc-header__online-dot" />{statusText}</p>
           </div>
         </div>
-
         <button className="jc-menu-btn" aria-label="More options">
           <span /><span /><span />
         </button>
@@ -353,22 +506,15 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
 
       {/* Portrait */}
       <div className="jc-portrait">
-        <img
-          src="/josephine-pose-neutral.png"
-          alt="Josephine"
-          className="jc-portrait__img"
-          onError={e => e.currentTarget.style.display = 'none'}
-        />
+        <img src="/josephine-pose-neutral.png" alt="Josephine" className="jc-portrait__img" onError={e => e.currentTarget.style.display = 'none'} />
         <div className="jc-portrait__gradient" />
       </div>
 
       {/* Messages */}
       <div className="jc-messages">
         {messages.map(msg => (
-          <div
-            key={msg.id}
-            className={`jc-msg jc-msg--${msg.from}${msg.type === 'trail-card' ? ' jc-msg--card' : ''}`}
-          >
+          <div key={msg.id} className={`jc-msg jc-msg--${msg.from}${msg.type === 'trail-card' ? ' jc-msg--card' : ''}`}>
+
             {msg.from === 'josephine' && (
               <div className="jc-msg__avatar">
                 <img src="/josephine-mark.svg" alt="" onError={e => e.currentTarget.style.opacity = '0'} />
@@ -407,12 +553,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
                     />
                     <div className="jc-trail-card__photo-overlay" />
                     <span className="jc-trail-card__pick-badge">
-                      <img
-                        src="/josephine-mark.svg"
-                        alt=""
-                        className="jc-trail-card__mark"
-                        onError={e => e.currentTarget.style.display = 'none'}
-                      />
+                      <img src="/josephine-mark.svg" alt="" className="jc-trail-card__mark" onError={e => e.currentTarget.style.display = 'none'} />
                       Josephine's Pick
                     </span>
                   </div>
@@ -429,39 +570,41 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
                     {msg.trail.josephine_note && (
                       <p className="jc-trail-card__note">{msg.trail.josephine_note}</p>
                     )}
-                    <button
-                      className="jc-trail-card__cta"
-                      onClick={() => viewTrail?.(msg.trail)}
-                    >
+                    <button className="jc-trail-card__cta" onClick={() => viewTrail?.(msg.trail)}>
                       View full details →
                     </button>
                   </div>
                 </div>
               )}
 
-              {/* Chips */}
+              {/* Chips — Fix 2: highlight selected moods */}
               {msg.chips?.length > 0 && (
                 <div className="jc-chips">
-                  {msg.chips.map(chip => (
-                    <button key={chip} className="jc-chip" onClick={() => handleChip(chip)}>
-                      {chip}
-                    </button>
-                  ))}
+                  {msg.chips.map(chip => {
+                    const isMoodChip = planningStep === 3 && chip !== 'Done ✓';
+                    const isSelected = isMoodChip && selectedMoods.includes(chip);
+                    return (
+                      <button
+                        key={chip}
+                        className={`jc-chip${isSelected ? ' selected' : ''}${chip === 'Done ✓' && selectedMoods.length > 0 ? ' jc-chip--done' : ''}`}
+                        onClick={() => handleChip(chip)}
+                      >
+                        {isSelected ? `✓ ${chip}` : chip}
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>
           </div>
         ))}
 
-        {/* Typing indicator */}
         {typing && (
           <div className="jc-msg jc-msg--josephine">
             <div className="jc-msg__avatar">
               <img src="/josephine-mark.svg" alt="" onError={e => e.currentTarget.style.opacity = '0'} />
             </div>
-            <div className="jc-bubble jc-bubble--typing">
-              <span /><span /><span />
-            </div>
+            <div className="jc-bubble jc-bubble--typing"><span /><span /><span /></div>
           </div>
         )}
 
@@ -477,12 +620,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
             placeholder={planningStep === 5 ? 'Type a location…' : 'Ask Josephine anything…'}
             value={input}
             onChange={e => setInput(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage(input);
-              }
-            }}
+            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(input); } }}
           />
           <button className="jc-mic-btn" aria-label="Voice input">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -492,12 +630,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
             </svg>
           </button>
         </div>
-        <button
-          className="jc-send-btn"
-          onClick={() => sendMessage(input)}
-          disabled={!input.trim()}
-          aria-label="Send"
-        >
+        <button className="jc-send-btn" onClick={() => sendMessage(input)} disabled={!input.trim()} aria-label="Send">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path d="M22 2L11 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
