@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import Map, { Marker, Popup, NavigationControl } from 'react-map-gl';
@@ -102,7 +102,7 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed }) {
   const { t } = useTranslation();
   const toast = useToast();
   const [trails, setTrails] = useState([]);
-  const [filteredTrails, setFilteredTrails] = useState([]);
+  // filteredTrails derived via useMemo — no extra setState render cycle
   const [loading, setLoading] = useState(true);
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
   const [selectedTags, setSelectedTags] = useState(initialTags);
@@ -133,10 +133,6 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed }) {
     }
   }, [initialTags]);
 
-  useEffect(() => {
-    applyFilters();
-  }, [selectedDifficulty, selectedTags, searchQuery, trails]);
-
   const loadTrails = async () => {
     try {
       const response = await axios.get(`${API_URL}/trails`);
@@ -149,25 +145,22 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed }) {
     }
   };
 
-  const applyFilters = () => {
+  const filteredTrails = useMemo(() => {
     let filtered = [...trails];
 
-    // Filter by difficulty
     if (selectedDifficulty !== 'all') {
-      filtered = filtered.filter(t => t.difficulty.toLowerCase() === selectedDifficulty);
+      filtered = filtered.filter(t => t.difficulty?.toLowerCase() === selectedDifficulty);
     }
 
-    // Filter by tags
     if (selectedTags.length > 0) {
       filtered = filtered.filter(trail => {
         const trailTags = trail.tags || trail.interests || [];
-        return selectedTags.some(tag => 
+        return selectedTags.some(tag =>
           trailTags.some(tt => tt.toLowerCase().includes(tag.toLowerCase()))
         );
       });
     }
 
-    // Filter by search query
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(trail =>
@@ -177,8 +170,8 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed }) {
       );
     }
 
-    setFilteredTrails(filtered);
-  };
+    return filtered;
+  }, [trails, selectedDifficulty, selectedTags, searchQuery]);
 
   const toggleTag = (tag) => {
     setSelectedTags(prev =>

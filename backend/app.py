@@ -526,11 +526,21 @@ def get_recommendations():
 
         duration_hours  = data.get('duration_hours', data.get('duration', 3))
         difficulty      = data.get('difficulty', 'medium')
-        interests       = data.get('interests', [])
+        interests       = sorted(data.get('interests', []))
         with_dog        = 'dog-friendly' in interests
         family_friendly = data.get('family_friendly', False)
         start_area      = data.get('start_area', data.get('starting_area', ''))
         mood_interests  = [i for i in interests if i != 'dog-friendly']
+
+        # Cache recommendations by params — stable within the same calendar day
+        today_str = datetime.now().strftime('%Y-%m-%d')
+        rec_cache_key = hashlib.sha256(
+            f"{today_str}|{duration_hours}|{difficulty}|{','.join(interests)}|{family_friendly}|{start_area}".encode()
+        ).hexdigest()
+        if rec_cache_key in _chat_cache:
+            cached_entry = _chat_cache[rec_cache_key]
+            if time.time() - cached_entry[1] < 300:   # 5-min TTL
+                return jsonify(json.loads(cached_entry[0]))
 
         # Fix 2: current month for season awareness
         current_month = datetime.now().strftime('%B')   # e.g. "June"
@@ -693,7 +703,10 @@ def get_recommendations():
                 'in_season':        current_month in trail.get('best_season', [current_month]),
             })
 
-        return jsonify({'results': results})
+        payload = {'results': results}
+        # Cache the serialised result (reuse _chat_cache dict, different key prefix)
+        _chat_cache[rec_cache_key] = (json.dumps(payload), time.time())
+        return jsonify(payload)
 
     except Exception as e:
         print(f"Error in recommendations: {str(e)}")
@@ -1270,48 +1283,87 @@ def save_user_analytics(analytics_data):
     analytics_path = os.path.join(BASE_DIR, 'data', 'user_analytics.json')
     atomic_json_write(analytics_path, analytics_data)
 
+# ── Analytics write buffer — batch increments, flush every 30s ────────────
+_analytics_buffer: dict = {'views': {}, 'saves': {}}
+_video_jobs: dict = {}   # job_id → {status, url, ...}
+_analytics_buf_lock = threading.Lock()
+_analytics_last_flush = [time.time()]
+ANALYTICS_FLUSH_INTERVAL = 30  # seconds
+
+def _flush_analytics_buffer():
+    """Write buffered analytics increments to storage. Called periodically."""
+    with _analytics_buf_lock:
+        if not _analytics_buffer['views'] and not _analytics_buffer['saves']:
+            return
+        views_delta = dict(_analytics_buffer['views'])
+        saves_delta = dict(_analytics_buffer['saves'])
+        _analytics_buffer['views'].clear()
+        _analytics_buffer['saves'].clear()
+
+    try:
+        if DB_AVAILABLE:
+            with get_db() as conn:
+                for tid, delta in views_delta.items():
+                    conn.execute(_sql("""
+                        INSERT INTO user_analytics (trail_id, views, saves, updated_at)
+                        VALUES (:tid, :delta, 0, NOW())
+                        ON CONFLICT (trail_id) DO UPDATE
+                            SET views = user_analytics.views + :delta, updated_at = NOW()
+                    """), {'tid': tid, 'delta': delta})
+                for tid, delta in saves_delta.items():
+                    conn.execute(_sql("""
+                        INSERT INTO user_analytics (trail_id, views, saves, updated_at)
+                        VALUES (:tid, 0, :delta, NOW())
+                        ON CONFLICT (trail_id) DO UPDATE
+                            SET saves = user_analytics.saves + :delta, updated_at = NOW()
+                    """), {'tid': tid, 'delta': delta})
+        else:
+            analytics = load_user_analytics()
+            for tid, delta in views_delta.items():
+                analytics.setdefault('trail_views', {})[tid] = analytics['trail_views'].get(tid, 0) + delta
+            for tid, delta in saves_delta.items():
+                analytics.setdefault('trail_saves', {})[tid] = analytics['trail_saves'].get(tid, 0) + delta
+            save_user_analytics(analytics)
+    except Exception as e:
+        print(f"[analytics] flush error: {e}")
+        # Re-queue lost increments
+        with _analytics_buf_lock:
+            for tid, delta in views_delta.items():
+                _analytics_buffer['views'][tid] = _analytics_buffer['views'].get(tid, 0) + delta
+            for tid, delta in saves_delta.items():
+                _analytics_buffer['saves'][tid] = _analytics_buffer['saves'].get(tid, 0) + delta
+
+def _maybe_flush_analytics():
+    """Flush if ANALYTICS_FLUSH_INTERVAL seconds have elapsed."""
+    now = time.time()
+    if now - _analytics_last_flush[0] >= ANALYTICS_FLUSH_INTERVAL:
+        _analytics_last_flush[0] = now
+        threading.Thread(target=_flush_analytics_buffer, daemon=True).start()
+
 @app.route('/api/analytics/trail/view', methods=['POST'])
 def track_trail_view():
-    """Track trail view for analytics"""
-    try:
-        trail_id = request.json.get('trail_id')
-        if not trail_id:
-            return jsonify({'error': 'trail_id required'}), 400
-        
-        analytics = load_user_analytics()
-        trail_views = analytics.get('trail_views', {})
-        trail_views[trail_id] = trail_views.get(trail_id, 0) + 1
-        analytics['trail_views'] = trail_views
-        save_user_analytics(analytics)
-        
-        return jsonify({'success': True})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    """Track trail view — buffered, flushed every 30s."""
+    trail_id = (request.json or {}).get('trail_id')
+    if not trail_id:
+        return jsonify({'error': 'trail_id required'}), 400
+    with _analytics_buf_lock:
+        _analytics_buffer['views'][trail_id] = _analytics_buffer['views'].get(trail_id, 0) + 1
+    _maybe_flush_analytics()
+    return jsonify({'success': True})
 
 @app.route('/api/analytics/trail/save', methods=['POST'])
 def track_trail_save():
-    """Track trail save for analytics"""
-    try:
-        trail_id = request.json.get('trail_id')
-        action = request.json.get('action', 'save')  # 'save' or 'unsave'
-        
-        if not trail_id:
-            return jsonify({'error': 'trail_id required'}), 400
-        
-        analytics = load_user_analytics()
-        trail_saves = analytics.get('trail_saves', {})
-        
-        if action == 'save':
-            trail_saves[trail_id] = trail_saves.get(trail_id, 0) + 1
-        elif action == 'unsave' and trail_id in trail_saves:
-            trail_saves[trail_id] = max(0, trail_saves[trail_id] - 1)
-        
-        analytics['trail_saves'] = trail_saves
-        save_user_analytics(analytics)
-        
-        return jsonify({'success': True})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    """Track trail save/unsave — buffered, flushed every 30s."""
+    body     = request.json or {}
+    trail_id = body.get('trail_id')
+    action   = body.get('action', 'save')
+    if not trail_id:
+        return jsonify({'error': 'trail_id required'}), 400
+    with _analytics_buf_lock:
+        delta = 1 if action == 'save' else -1
+        _analytics_buffer['saves'][trail_id] = _analytics_buffer['saves'].get(trail_id, 0) + delta
+    _maybe_flush_analytics()
+    return jsonify({'success': True})
 
 # Rifugio Management
 def load_rifugios():
@@ -1622,12 +1674,21 @@ def delete_booking_inquiry(inquiry_id):
 def get_dashboard_stats():
     """Aggregated dashboard stats for the Command Centre (Admin)"""
     try:
-        trails       = load_complete_trails()['trails']
-        rifugios     = load_rifugios()
-        inquiries    = load_booking_inquiries()
-        plans_data   = load_plans()
-        analytics    = load_user_analytics()
-        hikes_data   = load_completed_hikes()
+        from concurrent.futures import ThreadPoolExecutor
+        # Load all 6 data sources in parallel — ~6× faster than sequential
+        with ThreadPoolExecutor(max_workers=6) as ex:
+            f_trails   = ex.submit(lambda: load_complete_trails()['trails'])
+            f_rifugios = ex.submit(load_rifugios)
+            f_inq      = ex.submit(load_booking_inquiries)
+            f_plans    = ex.submit(load_plans)
+            f_anal     = ex.submit(load_user_analytics)
+            f_hikes    = ex.submit(load_completed_hikes)
+        trails     = f_trails.result()
+        rifugios   = f_rifugios.result()
+        inquiries  = f_inq.result()
+        plans_data = f_plans.result()
+        analytics  = f_anal.result()
+        hikes_data = f_hikes.result()
         current_month = datetime.now().strftime('%B')
 
         # Trail health matrix
@@ -1672,7 +1733,7 @@ def get_dashboard_stats():
         recent_hikes     = sorted(hikes_data.get('hikes',[]), key=lambda x: x.get('start_time',''), reverse=True)[:5]
         recent_plans     = sorted(plans_data.get('plans',[]), key=lambda x: x.get('created_at',''), reverse=True)[:5]
 
-        return jsonify({
+        resp = jsonify({
             'kpis': {
                 'trails':          len(trails),
                 'rifugios':        len(rifugios),
@@ -1688,6 +1749,8 @@ def get_dashboard_stats():
             'recent_plans':    recent_plans,
             'current_month':   current_month,
         })
+        resp.headers['Cache-Control'] = 'private, max-age=30'
+        return resp
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -1785,19 +1848,27 @@ def get_trail_analytics():
         hikes_data = load_completed_hikes()
         trails = load_complete_trails()['trails']
         
+        # Pre-group hikes by trail_id — O(n) instead of O(trails × hikes)
+        hikes_by_trail: dict = {}
+        for h in hikes_data.get('hikes', []):
+            tid = h.get('trail_id')
+            if tid:
+                hikes_by_trail.setdefault(tid, []).append(h)
+
         # Calculate metrics for each trail
         trail_stats = []
         for trail in trails:
             trail_id = trail['id']
             views = analytics.get('trail_views', {}).get(trail_id, 0)
             saves = analytics.get('trail_saves', {}).get(trail_id, 0)
-            completions = len([h for h in hikes_data['hikes'] if h.get('trail_id') == trail_id])
-            
+            trail_hikes = hikes_by_trail.get(trail_id, [])
+            completions = len(trail_hikes)
+
             # Calculate average duration
-            completed_hikes = [h for h in hikes_data['hikes'] if h.get('trail_id') == trail_id]
             avg_duration = 0
-            if completed_hikes:
-                durations = [h['stats']['duration_hours'] for h in completed_hikes if h['stats']['duration_hours'] > 0]
+            if trail_hikes:
+                durations = [h['stats']['duration_hours'] for h in trail_hikes
+                             if h.get('stats', {}).get('duration_hours', 0) > 0]
                 avg_duration = sum(durations) / len(durations) if durations else 0
             
             trail_stats.append({
@@ -1908,7 +1979,9 @@ def get_multi_day_trails():
         if trail_type:
             trails = [t for t in trails if t.get('type') == trail_type]
         
-        return jsonify({'trails': trails})
+        resp = jsonify({'trails': trails})
+        resp.headers['Cache-Control'] = 'public, max-age=300'
+        return resp
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -2180,10 +2253,35 @@ def upload_media():
             compressed_content, final_filename = compress_image(file_content, file.filename)
             print(f"Compressed to: {final_filename} ({len(compressed_content) / 1024:.1f}KB)")
         elif file_type == 'videos':
-            # Compress videos with FFmpeg
-            print(f"Compressing video: {file.filename} ({original_size / 1024 / 1024:.1f}MB)")
-            compressed_content, final_filename = compress_video(file_content, file.filename)
-            print(f"Compressed to: {final_filename} ({len(compressed_content) / 1024 / 1024:.1f}MB)")
+            # Upload original immediately, compress in background thread
+            raw_ext      = os.path.splitext(file.filename)[1]
+            raw_key      = f"videos/raw_{uuid.uuid4()}{raw_ext}"
+            storage_client.upload_from_bytes(raw_key, file_content)
+            job_id = str(uuid.uuid4())
+            _video_jobs[job_id] = {'status': 'processing', 'raw_key': raw_key}
+
+            def _bg_compress(jid, raw_key, fc, fname):
+                try:
+                    comp, cfname = compress_video(fc, fname)
+                    final_key = f"videos/{uuid.uuid4()}{os.path.splitext(cfname)[1]}"
+                    storage_client.upload_from_bytes(final_key, comp)
+                    storage_client.delete(raw_key)
+                    _video_jobs[jid] = {
+                        'status': 'done',
+                        'url': f"/api/media/{final_key}",
+                        'size': len(comp),
+                    }
+                except Exception as ex:
+                    _video_jobs[jid] = {'status': 'error', 'message': str(ex)}
+
+            threading.Thread(target=_bg_compress,
+                             args=(job_id, raw_key, file_content, file.filename),
+                             daemon=True).start()
+            return jsonify({
+                'success': True, 'async': True, 'job_id': job_id,
+                'poll_url': f"/api/admin/upload/video-status/{job_id}",
+                'message': 'Video uploaded; compression running in background',
+            }), 202
         
         # Generate unique filename with correct extension
         file_ext = os.path.splitext(final_filename)[1]
@@ -2208,21 +2306,37 @@ def upload_media():
         print(f"Upload error: {str(e)}")
         return jsonify({'error': f'Upload failed: {str(e)}'}), 500
 
+@app.route('/api/admin/upload/video-status/<job_id>', methods=['GET'])
+@require_admin_auth
+def video_job_status(job_id):
+    """Poll the status of a background video compression job."""
+    job = _video_jobs.get(job_id)
+    if not job:
+        return jsonify({'error': 'Job not found'}), 404
+    return jsonify(job)
+
+
 @app.route('/api/media/<path:filename>', methods=['GET'])
 def serve_media(filename):
-    """Serve media files from Object Storage"""
+    """Redirect to Object Storage public URL — avoids buffering through Flask."""
     try:
         if not storage_client:
             return jsonify({'error': 'Object Storage not available'}), 503
-        
+
+        # Try to get a public URL directly (zero Flask bandwidth)
+        try:
+            public_url = storage_client.get_url(filename)
+            from flask import redirect
+            return redirect(public_url, code=302)
+        except AttributeError:
+            pass  # SDK version doesn't support get_url — fall back to stream
+
         if not storage_client.exists(filename):
             return jsonify({'error': 'File not found'}), 404
-        
+
         file_content = storage_client.download_as_bytes(filename)
-        
         import mimetypes
         mime_type = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
-        
         return send_file(
             io.BytesIO(file_content),
             mimetype=mime_type,

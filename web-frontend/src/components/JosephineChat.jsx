@@ -706,4 +706,4 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
   );
 }
 
-export default JosephineChat;
+export default React.memo(JosephineChat);

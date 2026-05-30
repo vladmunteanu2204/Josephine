@@ -4,6 +4,7 @@ import * as Sentry from '@sentry/react';
 import App from './App';
 import './index.css';
 import './i18n';
+import { reportWebVitals } from './vitals';
 
 // Initialise Sentry before rendering — only when DSN is configured
 if (import.meta.env.VITE_SENTRY_DSN) {
@@ -42,6 +43,8 @@ function ErrorScreen() {
     </div>
   );
 }
+
+reportWebVitals();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

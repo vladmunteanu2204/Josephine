@@ -1,30 +1,51 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import './App.css';
 import { ENABLE_HIKE_TRACKING, ENABLE_GAMIFICATION } from './featureFlags';
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
+// Always-visible shell (eager)
 import Header from './components/Header';
 import Home from './components/Home';
-import SmartRecommendations from './components/SmartRecommendations';
-import TrailCatalog from './components/TrailCatalog';
-import TrailDetail from './components/TrailDetail';
-import Profile from './components/Profile';
-import SavedTrails from './components/SavedTrails';
-import Settings from './components/Settings';
-import Leaderboards from './components/Leaderboards';
-import HikePlanner from './components/HikePlanner';
-import TermsAndConditions from './components/TermsAndConditions';
-import PrivacyPolicy from './components/PrivacyPolicy';
-import AdminPanel from './components/AdminPanel';
-import Challenges from './components/Challenges';
-import Rifugios from './components/Rifugios';
-import RifugioDetail from './components/RifugioDetail';
-import MultiDayTrails from './components/MultiDayTrails';
-import MultiDayTrailDetail from './components/MultiDayTrailDetail';
 import SplashScreen from './components/SplashScreen';
 import Footer from './components/Footer';
 import BottomNav from './components/BottomNav';
-import JosephineChat from './components/JosephineChat';
+
+// Route views — lazy-loaded on first visit
+const SmartRecommendations = lazy(() => import('./components/SmartRecommendations'));
+const TrailCatalog         = lazy(() => import('./components/TrailCatalog'));
+const TrailDetail          = lazy(() => import('./components/TrailDetail'));
+const Profile              = lazy(() => import('./components/Profile'));
+const SavedTrails          = lazy(() => import('./components/SavedTrails'));
+const Settings             = lazy(() => import('./components/Settings'));
+const Leaderboards         = lazy(() => import('./components/Leaderboards'));
+const HikePlanner          = lazy(() => import('./components/HikePlanner'));
+const TermsAndConditions   = lazy(() => import('./components/TermsAndConditions'));
+const PrivacyPolicy        = lazy(() => import('./components/PrivacyPolicy'));
+const AdminPanel           = lazy(() => import('./components/AdminPanel'));
+const Challenges           = lazy(() => import('./components/Challenges'));
+const Rifugios             = lazy(() => import('./components/Rifugios'));
+const RifugioDetail        = lazy(() => import('./components/RifugioDetail'));
+const MultiDayTrails       = lazy(() => import('./components/MultiDayTrails'));
+const MultiDayTrailDetail  = lazy(() => import('./components/MultiDayTrailDetail'));
+const JosephineChat        = lazy(() => import('./components/JosephineChat'));
+
+// Minimal loading fallback — dark bg matches app shell
+function ViewLoader() {
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      minHeight: '60vh', background: '#080e08',
+    }}>
+      <div style={{
+        width: 32, height: 32, borderRadius: '50%',
+        border: '2px solid rgba(201,168,76,0.2)',
+        borderTopColor: '#c9a84c',
+        animation: 'spin 0.8s linear infinite',
+      }} />
+      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+    </div>
+  );
+}
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
@@ -124,6 +145,7 @@ function App() {
           {(!isGPSActive || !ENABLE_HIKE_TRACKING) && <Header currentView={currentView} setCurrentView={setCurrentView} />}
         
         <main className="main-content">
+          <Suspense fallback={<ViewLoader />}>
           {currentView === 'home' && (
             <Home
               setCurrentView={setCurrentView}
@@ -204,6 +226,7 @@ function App() {
           {currentView === 'josephine' && (
             <JosephineChat onBack={goBack} setCurrentView={setCurrentView} viewTrail={viewTrail} />
           )}
+          </Suspense>
         </main>
 
         <Footer setCurrentView={setCurrentView} />
