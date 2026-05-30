@@ -959,6 +959,8 @@
     "welcomeBack": "Welcome back! Last time you went for a {{difficulty}} trail near {{region}}. Same vibe today, or something different?",
     "noApiKey": "I know these mountains well, but I'd need a moment to think about that one. Try asking me about opening times, trail difficulty, or how to reach a rifugio!",
     "windError": "The mountain winds are interfering — try again in a moment.",
+    "searchingNear": "On it — let me find something near {{area}} for you…",
+    "searching": "Let me find you something good…",
     "step1Question": "How much time do you have today?",
     "step1_1": "1–2h",
     "step1_2": "3–4h",

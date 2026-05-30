@@ -611,11 +611,24 @@ def get_recommendations():
 
             # ── Location ─────────────────────────────────────────────────
             if start_area:
-                region_match = start_area.lower() in trail.get('region', '').lower()
-                name_match   = start_area.lower() in trail.get('name', '').lower()
-                if region_match or name_match:
-                    score += 4
+                area_l = start_area.lower()
+                # Check region, name, access_info, trailhead_info, and description
+                # so village names like "Tirolo" match trails in "Merano & Surroundings"
+                # that mention Tirolo in their access or trailhead text.
+                search_fields = ' '.join([
+                    trail.get('region', ''),
+                    trail.get('name', ''),
+                    trail.get('access_info', ''),
+                    str(trail.get('trailhead_info', {}).get('parking', '')),
+                    trail.get('description', '')[:200],  # first 200 chars of description
+                    str(trail.get('transport', {}).get('car', '')),
+                ]).lower()
+                if area_l in search_fields:
+                    score += 6
                     reasons.append(f"near {start_area}")
+                elif any(word in search_fields for word in area_l.split() if len(word) > 3):
+                    # Partial word match (e.g. "merano" in "Merano & Surroundings")
+                    score += 2
 
             # ── Fix 2: Season awareness ───────────────────────────────────
             best_season = trail.get('best_season', [])

@@ -492,6 +492,51 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
   };
 
   /* ── Freeform send ───────────────────────────────────────────────────── */
+  /**
+   * Detect if the user is asking for a trail recommendation by location/description
+   * rather than asking a factual question. These should route to callRecommendAPI,
+   * not to /api/chat which only handles factual lookups.
+   *
+   * Returns { isRecommendRequest: true, startArea, difficulty, interests } or null.
+   */
+  const parseRecommendIntent = (text) => {
+    const t_lower = text.toLowerCase();
+
+    // Trigger phrases that signal "find me a hike"
+    const RECOMMEND_TRIGGERS = [
+      'give me a hike', 'find me a hike', 'suggest a hike', 'recommend a hike',
+      'give me a trail', 'find me a trail', 'suggest a trail',
+      'give me something', 'find something', 'show me a hike', 'show me a trail',
+      'any hike', 'a hike from', 'a trail from', 'hike starting from',
+      'trail starting from', 'hike near', 'trail near', 'something near',
+      'where can i hike', 'where should i hike', 'what trail',
+    ];
+
+    const isRecommend = RECOMMEND_TRIGGERS.some(trigger => t_lower.includes(trigger));
+    if (!isRecommend) return null;
+
+    // Extract location after "from", "near", "starting from", "around"
+    const locationMatch = text.match(
+      /(?:from|near|around|starting from|starting at|close to)\s+([A-Za-zÀ-ÿ\s]+?)(?:\s*$|\s*[,.])/i
+    );
+    const startArea = locationMatch ? locationMatch[1].trim() : '';
+
+    // Extract difficulty hints
+    let difficulty = 'medium';
+    if (/\b(easy|beginner|gentle|relaxed)\b/i.test(text)) difficulty = 'easy';
+    if (/\b(hard|difficult|challenging|strenuous|expert)\b/i.test(text)) difficulty = 'hard';
+
+    // Extract interest hints
+    const interests = [];
+    if (/\blake|lakes\b/i.test(text)) interests.push('alpine lakes');
+    if (/\bview|panoram|summit\b/i.test(text)) interests.push('panoramic views');
+    if (/\bforest|wood\b/i.test(text)) interests.push('forests');
+    if (/\bloop\b/i.test(text)) interests.push('loop');
+    if (/\bdog\b/i.test(text)) interests.push('dog-friendly');
+
+    return { isRecommendRequest: true, startArea, difficulty, interests };
+  };
+
   const sendMessage = async (text) => {
     if (!text.trim()) return;
 
@@ -504,6 +549,31 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
     }
 
     const trimmed = text.trim();
+
+    // Intercept recommendation requests and route to the planning engine
+    const recommendIntent = parseRecommendIntent(trimmed);
+    if (recommendIntent) {
+      appendUserMessage(trimmed);
+      setInput('');
+      appendJosephineMessage({
+        type: 'text',
+        text: recommendIntent.startArea
+          ? t('josephineChat.searchingNear', { area: recommendIntent.startArea }) ||
+            `On it — let me find something near ${recommendIntent.startArea}…`
+          : t('josephineChat.searching') || `Let me find you something…`,
+        chips: null,
+      });
+      callRecommendAPI({
+        duration_hours:  3,
+        difficulty:      recommendIntent.difficulty,
+        interests:       recommendIntent.interests,
+        withDog:         recommendIntent.interests.includes('dog-friendly'),
+        family_friendly: false,
+        startArea:       recommendIntent.startArea,
+      });
+      return;
+    }
+
     appendUserMessage(trimmed);
     setInput('');
     setTyping(true);

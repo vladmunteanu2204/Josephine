@@ -959,6 +959,8 @@
     "welcomeBack": "Bentornato! L'ultima volta hai scelto un sentiero {{difficulty}} vicino a {{region}}. Stessa atmosfera oggi, o qualcosa di diverso?",
     "noApiKey": "Conosco bene queste montagne, ma ho bisogno di un momento per rispondere. Prova a chiedermi degli orari di apertura, della difficoltà dei sentieri o di come raggiungere un rifugio!",
     "windError": "I venti di montagna interferiscono — riprova tra un momento.",
+    "searchingNear": "Ci penso io — cerco qualcosa vicino a {{area}}…",
+    "searching": "Lascia che ti trovi qualcosa di bello…",
     "step1Question": "Quanto tempo hai oggi?",
     "step1_1": "1–2h",
     "step1_2": "3–4h",
