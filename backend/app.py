@@ -13,6 +13,7 @@ import threading
 import jwt
 from datetime import datetime, timedelta
 from functools import wraps
+import media as media_module  # image upload / R2 delivery
 from weather_service import weather_service
 try:
     from replit.object_storage import Client as ObjectStorageClient
@@ -440,7 +441,12 @@ def process_trail_media(trail):
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
-    return jsonify({'ok': True, 'service': 'alpenvia', 'status': 'healthy'})
+    return jsonify({
+        'ok': True,
+        'service': 'alpenvia',
+        'status': 'healthy',
+        'media': media_module.status(),
+    })
 
 @app.route('/api/trails', methods=['GET'])
 def get_trails():
@@ -2196,81 +2202,69 @@ def get_gamification_analytics():
 @app.route('/api/admin/upload/media', methods=['POST'])
 @require_admin_auth
 def upload_media():
-    """Upload media file to Object Storage (Admin)"""
+    """
+    Upload an image or video for a trail.
+
+    Form fields:
+        file        — the file (multipart)
+        type        — 'photos' | 'wallpaper' | 'videos'
+        trail_id    — trail ID for folder organisation (images only)
+        alt         — accessible alt text
+
+    Images: generates 3 WebP variants (thumb/card/hero) → R2 → CDN URLs.
+    Videos: raw upload to legacy storage, background FFmpeg compression.
+
+    Returns:
+        images: { thumb, card, hero, alt, uploaded_at }  — for image uploads
+        url:    '/api/media/...'                          — for video uploads (async)
+    """
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file provided'}), 400
+
+    file = request.files['file']
+    if not file.filename:
+        return jsonify({'error': 'Empty filename'}), 400
+
+    file_type = request.form.get('type', 'photos')
+    trail_id  = request.form.get('trail_id', 'general')
+    alt_text  = request.form.get('alt', '')
+    file_ext  = os.path.splitext(file.filename)[1].lower()
+
+    # Size limits
+    file.seek(0, 2)
+    file_size = file.tell()
+    file.seek(0)
+
+    MAX_PHOTO_SIZE = 20 * 1024 * 1024   # 20 MB — PIL can handle; variants will be ≪1MB each
+    MAX_VIDEO_SIZE = 200 * 1024 * 1024  # 200 MB
+
+    IMAGE_EXTS = {'.jpg', '.jpeg', '.png', '.webp', '.heic', '.tiff'}
+    VIDEO_EXTS = {'.mp4', '.webm', '.mov', '.avi'}
+
     try:
-        if not storage_client:
-            return jsonify({'error': 'Object Storage not available'}), 503
-        
-        if 'file' not in request.files:
-            return jsonify({'error': 'No file provided'}), 400
-        
-        file = request.files['file']
-        if file.filename == '':
-            return jsonify({'error': 'Empty filename'}), 400
-        
-        file_type = request.form.get('type', 'media')
-        
-        import mimetypes
-        import uuid
-        
-        file_ext = os.path.splitext(file.filename)[1].lower()
-        
-        # File size validation
-        file.seek(0, 2)
-        file_size = file.tell()
-        file.seek(0)
-        
-        MAX_PHOTO_SIZE = 16 * 1024 * 1024
-        MAX_VIDEO_SIZE = 100 * 1024 * 1024
-        
-        if file_type in ['wallpaper', 'photos']:
-            if file_size > MAX_PHOTO_SIZE:
-                return jsonify({'error': f'Photo size exceeds 16MB limit. Your file: {file_size / 1024 / 1024:.1f}MB'}), 400
-        elif file_type == 'videos':
+        # ── Video path ────────────────────────────────────────────────────
+        if file_type == 'videos':
             if file_size > MAX_VIDEO_SIZE:
-                return jsonify({'error': f'Video size exceeds 100MB limit. Your file: {file_size / 1024 / 1024:.1f}MB'}), 400
-        
-        # File type validation
-        image_extensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif']
-        video_extensions = ['.mp4', '.webm', '.mov', '.avi']
-        
-        if file_type in ['wallpaper', 'photos'] and file_ext not in image_extensions:
-            return jsonify({'error': f'Invalid image format. Allowed: {", ".join(image_extensions)}'}), 400
-        elif file_type == 'videos' and file_ext not in video_extensions:
-            return jsonify({'error': f'Invalid video format. Allowed: {", ".join(video_extensions)}'}), 400
-        
-        # Read file content
-        file_content = file.read()
-        original_size = len(file_content)
-        
-        # Compress based on file type
-        compressed_content = file_content
-        final_filename = file.filename
-        
-        if file_type in ['wallpaper', 'photos']:
-            # Compress images to WebP
-            print(f"Compressing image: {file.filename} ({original_size / 1024:.1f}KB)")
-            compressed_content, final_filename = compress_image(file_content, file.filename)
-            print(f"Compressed to: {final_filename} ({len(compressed_content) / 1024:.1f}KB)")
-        elif file_type == 'videos':
-            # Upload original immediately, compress in background thread
-            raw_ext      = os.path.splitext(file.filename)[1]
-            raw_key      = f"videos/raw_{uuid.uuid4()}{raw_ext}"
+                return jsonify({'error': f'Video exceeds 200MB. Size: {file_size/1024/1024:.1f}MB'}), 400
+            if file_ext not in VIDEO_EXTS:
+                return jsonify({'error': f'Invalid video format. Allowed: {", ".join(VIDEO_EXTS)}'}), 400
+            if not storage_client:
+                return jsonify({'error': 'Legacy Object Storage not available for video uploads'}), 503
+
+            file_content = file.read()
+            raw_ext  = file_ext
+            raw_key  = f"videos/raw_{uuid.uuid4()}{raw_ext}"
             storage_client.upload_from_bytes(raw_key, file_content)
             job_id = str(uuid.uuid4())
             _video_jobs[job_id] = {'status': 'processing', 'raw_key': raw_key}
 
-            def _bg_compress(jid, raw_key, fc, fname):
+            def _bg_compress(jid, rk, fc, fname):
                 try:
                     comp, cfname = compress_video(fc, fname)
                     final_key = f"videos/{uuid.uuid4()}{os.path.splitext(cfname)[1]}"
                     storage_client.upload_from_bytes(final_key, comp)
-                    storage_client.delete(raw_key)
-                    _video_jobs[jid] = {
-                        'status': 'done',
-                        'url': f"/api/media/{final_key}",
-                        'size': len(comp),
-                    }
+                    storage_client.delete(rk)
+                    _video_jobs[jid] = {'status': 'done', 'url': f"/api/media/{final_key}", 'size': len(comp)}
                 except Exception as ex:
                     _video_jobs[jid] = {'status': 'error', 'message': str(ex)}
 
@@ -2280,31 +2274,35 @@ def upload_media():
             return jsonify({
                 'success': True, 'async': True, 'job_id': job_id,
                 'poll_url': f"/api/admin/upload/video-status/{job_id}",
-                'message': 'Video uploaded; compression running in background',
+                'message': 'Video uploading; compression running in background',
             }), 202
-        
-        # Generate unique filename with correct extension
-        file_ext = os.path.splitext(final_filename)[1]
-        unique_filename = f"{file_type}/{uuid.uuid4()}{file_ext}"
-        
-        # Upload compressed file
-        storage_client.upload_from_bytes(unique_filename, compressed_content)
-        
-        file_url = f"/api/media/{unique_filename}"
-        compression_ratio = (1 - len(compressed_content) / original_size) * 100 if original_size > 0 else 0
-        
-        return jsonify({
-            'success': True,
-            'url': file_url,
-            'filename': unique_filename,
-            'size': len(compressed_content),
-            'originalSize': original_size,
-            'compressionRatio': f"{compression_ratio:.1f}%"
-        }), 201
-    
+
+        # ── Image path ────────────────────────────────────────────────────
+        if file_size > MAX_PHOTO_SIZE:
+            return jsonify({'error': f'Image exceeds 20MB. Size: {file_size/1024/1024:.1f}MB'}), 400
+        if file_ext not in IMAGE_EXTS:
+            return jsonify({'error': f'Invalid image format. Allowed: {", ".join(IMAGE_EXTS)}'}), 400
+
+        file_bytes = file.read()
+        original_kb = len(file_bytes) // 1024
+
+        images = media_module.upload_trail_image(
+            file_bytes=file_bytes,
+            trail_id=trail_id,
+            alt_text=alt_text or file.filename,
+            legacy_storage_client=storage_client,
+        )
+
+        print(f"[upload] {file.filename} ({original_kb}KB) → {trail_id}: "
+              f"thumb={len(file_bytes)//1024}KB → see R2 for actual sizes")
+
+        return jsonify({'success': True, 'images': images}), 201
+
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
     except Exception as e:
-        print(f"Upload error: {str(e)}")
-        return jsonify({'error': f'Upload failed: {str(e)}'}), 500
+        print(f"[upload] error: {e}")
+        return jsonify({'error': f'Upload failed: {e}'}), 500
 
 @app.route('/api/admin/upload/video-status/<job_id>', methods=['GET'])
 @require_admin_auth

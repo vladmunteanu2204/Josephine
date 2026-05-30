@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { trailImg, trailImgAlt } from '../utils/trailImage';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import './MultiDayTrails.css';
@@ -224,7 +225,7 @@ function MultiDayTrails({ onNavigate }) {
                 >
                   <div className="trail-card-image">
                     <img 
-                      src={trail.thumbnail || trail.hero_image || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400'} 
+                      src={trailImg(trail, 'card')} 
                       alt={trail.name}
                       loading="lazy"
                     />

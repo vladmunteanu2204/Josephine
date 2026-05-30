@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { trailImg, trailImgAlt } from '../utils/trailImage';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import './Home.css';
@@ -223,7 +224,7 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
           <div
             key={trail.id}
             className={`hp-cinema__slide ${i === activeTrail ? 'hp-cinema__slide--active' : ''}`}
-            style={{ backgroundImage: `url('${trail.image_url || trail.thumbnail}')` }}
+            style={{ backgroundImage: `url('${trailImg(trail, 'card')}')` }}
           />
         ))}
         <div className="hp-cinema__scrim" />

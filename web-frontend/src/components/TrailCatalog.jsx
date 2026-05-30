@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { trailImg, trailImgAlt } from '../utils/trailImage';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import Map, { Marker, Popup, NavigationControl } from 'react-map-gl';
@@ -338,7 +339,7 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed }) {
                       {isTrailSaved(trail.id) ? '❤️' : '🤍'}
                     </button>
                     <img 
-                      src={trail.thumbnail || trail.image_url} 
+                      src={trailImg(trail, 'thumb')} 
                       alt={trail.name}
                       className="trail-image-catalog"
                     />

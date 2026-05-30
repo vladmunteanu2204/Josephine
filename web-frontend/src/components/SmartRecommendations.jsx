@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { trailImg, trailImgAlt } from '../utils/trailImage';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useToast } from '../contexts/ToastContext';
@@ -187,8 +188,7 @@ function SmartRecommendations({ viewTrail, onBack }) {
               <div className="sr-hero-card" onClick={() => viewTrail(hero)}>
                 <div className="sr-hero-card__img-wrap">
                   <img
-                    src={hero.wallpaper || hero.image_url || hero.thumbnail ||
-                      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop&q=70'}
+                    src={trailImg(hero, 'hero')}
                     alt={hero.name}
                     className="sr-hero-card__img"
                   />
@@ -250,8 +250,7 @@ function SmartRecommendations({ viewTrail, onBack }) {
                   <div key={trail.id} className="sr-list-card" onClick={() => viewTrail(trail)}>
                     <div className="sr-list-card__img-wrap">
                       <img
-                        src={trail.wallpaper || trail.thumbnail || trail.image_url ||
-                          'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&auto=format&fit=crop&q=60'}
+                        src={trailImg(trail, 'thumb')}
                         alt={trail.name}
                         className="sr-list-card__img"
                       />

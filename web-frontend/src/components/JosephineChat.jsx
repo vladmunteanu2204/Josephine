@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { trailImg, trailImgAlt } from '../utils/trailImage';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import './JosephineChat.css';
@@ -607,7 +608,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
                 <div className="jc-trail-card">
                   <div className="jc-trail-card__photo-wrap">
                     <img
-                      src={msg.trail.wallpaper || msg.trail.image_url || msg.trail.thumbnail || FALLBACK_IMG}
+                      src={trailImg(msg.trail, 'card')}
                       alt={msg.trail.name}
                       className="jc-trail-card__photo"
                     />

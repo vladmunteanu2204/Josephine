@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { trailImg, trailImgAlt } from '../utils/trailImage';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import './SavedTrails.css';
@@ -100,7 +101,7 @@ function SavedTrails({ onNavigate }) {
                 <div key={trail.id} className="saved-trail-card">
                   <div className="card-image-wrapper">
                     <img 
-                      src={trail.thumbnail || trail.gallery?.[0] || '/placeholder-trail.jpg'} 
+                      src={trailImg(trail, 'thumb')} 
                       alt={trail.name}
                       className="card-image"
                     />

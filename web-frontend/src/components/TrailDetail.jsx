@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useToast } from '../contexts/ToastContext';
+import { trailImg, trailImgAlt, trailGallery } from '../utils/trailImage';
 import ReviewsSection from './ReviewsSection';
 import TrailMap from './TrailMap';
 import MediaGallery from './MediaGallery';
@@ -225,8 +226,7 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio }) {
   }
 
   const diff = DIFFICULTY_CONFIG[fullTrail.difficulty] || DIFFICULTY_CONFIG.medium;
-  const heroImg = fullTrail.wallpaper || fullTrail.image_url || fullTrail.thumbnail ||
-    'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&auto=format&fit=crop&q=80';
+  const heroImg = trailImg(fullTrail, 'hero');
 
   // Josephine note
   const lang = (i18n.language || 'en').split('-')[0];
