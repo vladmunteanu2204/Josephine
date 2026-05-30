@@ -347,6 +347,13 @@ def get_recommendations():
 
             scored_trails.append({'trail': trail, 'score': score, 'reasons': reasons})
 
+        # Add a small daily jitter so results feel fresh each day.
+        # Seed = today's date, so results are stable within a day but
+        # rotate naturally without feeling random/broken.
+        daily_rng = random.Random(datetime.now().strftime('%Y-%m-%d'))
+        for item in scored_trails:
+            item['score'] += daily_rng.uniform(0, 0.8)
+
         scored_trails.sort(key=lambda x: x['score'], reverse=True)
         top_scored = scored_trails[:5]
 

@@ -132,7 +132,7 @@ function App() {
           )}
 
           {currentView === 'recommendations' && (
-            <SmartRecommendations viewTrail={viewTrail} />
+            <SmartRecommendations viewTrail={viewTrail} onBack={goBack} />
           )}
 
           {currentView === 'catalog' && (

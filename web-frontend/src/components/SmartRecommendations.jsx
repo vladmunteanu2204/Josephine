@@ -73,7 +73,7 @@ function LoadingScreen() {
   );
 }
 
-function SmartRecommendations({ viewTrail }) {
+function SmartRecommendations({ viewTrail, onBack }) {
   const { t } = useTranslation();
   const toast = useToast();
 
@@ -133,6 +133,11 @@ function SmartRecommendations({ viewTrail }) {
     setError('');
   };
 
+  // Adaptive CTA label — reflects whether the user made intentional choices
+  const hasFilters = moods.length > 0 || withDog || startArea.trim().length > 0;
+  const isDefault  = duration === 3 && difficulty === 'medium' && !hasFilters;
+  const ctaLabel   = isDefault ? 'Surprise me, Josephine' : 'Find my trail →';
+
   const toggleSave = (trail, e) => {
     e.stopPropagation();
     const isSaved = savedTrailIds.includes(trail.id);
@@ -155,12 +160,18 @@ function SmartRecommendations({ viewTrail }) {
     return (
       <div className="sr-results-page">
 
-        <button className="sr-back-btn" onClick={goBackToForm}>
-          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-            <path d="M12 4L6 10L12 16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          Refine search
-        </button>
+        <div className="sr-results-nav">
+          {onBack && (
+            <button className="sr-back-btn" onClick={onBack}>
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                <path d="M12 4L6 10L12 16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          )}
+          <button className="sr-refine-btn" onClick={goBackToForm}>
+            ↺ Refine search
+          </button>
+        </div>
 
         {error && <p className="sr-error" style={{ padding: '0 20px 16px' }}>{error}</p>}
 
@@ -378,8 +389,8 @@ function SmartRecommendations({ viewTrail }) {
         {/* CTA */}
         <div className="sr-cta-wrap">
           <button className="sr-cta" onClick={handleSubmit}>
-            <span className="sr-cta-text">Surprise me, Josephine</span>
-            <span className="sr-cta-arrow">↓</span>
+            <span className="sr-cta-text">{ctaLabel}</span>
+            {isDefault && <span className="sr-cta-arrow">↓</span>}
           </button>
         </div>
 

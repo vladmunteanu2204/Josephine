@@ -650,20 +650,42 @@
   }
 }
 
-/* ── Results page: back button ── */
-.sr-back-btn {
-  display: inline-flex;
+/* ── Results nav bar ── */
+.sr-results-nav {
+  display: flex;
   align-items: center;
-  gap: 6px;
-  background: none;
-  border: none;
-  color: rgba(240,236,230,0.55);
-  font-size: 14px;
-  cursor: pointer;
-  padding: 20px 20px 0;
-  transition: color 0.2s;
+  gap: 12px;
+  padding: 18px 20px 4px;
 }
-.sr-back-btn:hover { color: #c9a84c; }
+
+.sr-back-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(240,236,230,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.sr-back-btn:hover { background: rgba(255,255,255,0.1); color: #f0ece6; }
+
+.sr-refine-btn {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 100px;
+  color: rgba(240,236,230,0.5);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.sr-refine-btn:hover { border-color: rgba(201,168,76,0.4); color: #c9a84c; }
 
 /* ── Hero card (first / Josephine's Pick) ── */
 .sr-hero-card {
