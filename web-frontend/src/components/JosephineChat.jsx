@@ -123,6 +123,28 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
   const bottomRef = useRef(null);
   const greetingShownRef = useRef(false);
   const inputRef  = useRef(null);
+  const prevLangRef = useRef(lang);
+
+  /* Reset conversation when language changes ───────────────────────── */
+  useEffect(() => {
+    if (prevLangRef.current === lang) return;
+    prevLangRef.current = lang;
+    // Rebuild initial messages in the new language
+    setMessages([
+      { id: 1, from: 'josephine', type: 'text', text: t('josephineChat.greeting'), chips: null },
+      { id: 2, from: 'josephine', type: 'text', text: t('josephineChat.weatherPrompt'),
+        chips: [t('josephineChat.chipPlanMyDay'), t('josephineChat.chipSurpriseMe'), t('josephineChat.chipShowMap')] },
+      { id: 3, from: 'josephine', type: 'voice', text: null, duration: '0:08',
+        bars: [3,5,8,6,9,5,7,4,6,8,5,3,7,5,9], chips: null },
+    ]);
+    setPlanningStep(0);
+    setPlanningData({});
+    setResultIndex(0);
+    setApiResults([]);
+    setSelectedMoods([]);
+    setChatHistory([]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang]);
 
   /* Session memory greeting ─────────────────────────────────────────── */
   useEffect(() => {

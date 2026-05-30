@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import './BottomNav.css';
 
 const HomeIcon = () => (
@@ -29,14 +30,14 @@ const SavedIcon = () => (
 );
 
 
-const tabs = [
-  { key: 'home',        label: 'Home',    Icon: HomeIcon    },
-  { key: 'catalog',     label: 'Explore', Icon: ExploreIcon },
-  { key: 'planner',     label: 'My Plan', Icon: PlanIcon    },
-  { key: 'savedTrails', label: 'Saved',   Icon: SavedIcon   },
-];
-
 function BottomNav({ currentView, setCurrentView, onJosephineOpen }) {
+  const { t } = useTranslation();
+  const tabs = [
+    { key: 'home',        label: t('nav.home',    'Home'),    Icon: HomeIcon    },
+    { key: 'catalog',     label: t('nav.explore', 'Explore'), Icon: ExploreIcon },
+    { key: 'planner',     label: t('nav.myPlan',  'My Plan'), Icon: PlanIcon    },
+    { key: 'savedTrails', label: t('nav.saved',   'Saved'),   Icon: SavedIcon   },
+  ];
   return (
     <nav className="jph-bottom-nav" aria-label="Main navigation">
       {/* First 2 tabs */}

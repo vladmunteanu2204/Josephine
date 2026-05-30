@@ -19,12 +19,10 @@
   },
   "nav": {
     "home": "Home",
-    "smartRecommendations": "Pianifica la Mia Giornata",
-    "trailCatalog": "Catalogo Sentieri",
-    "rifugios": "Rifugi",
-    "hikePlanner": "Pianificatore Escursioni",
-    "login": "Accedi",
-    "profile": "Profilo"
+    "explore": "Esplora",
+    "myPlan": "Il Mio Piano",
+    "saved": "Salvati",
+    "insights": "Suggerimenti"
   },
   "header": {
     "profile": "Profilo",

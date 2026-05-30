@@ -19,12 +19,10 @@
   },
   "nav": {
     "home": "Home",
-    "smartRecommendations": "Meinen Tag planen",
-    "trailCatalog": "Wanderwege-Katalog",
-    "rifugios": "Rifugios",
-    "hikePlanner": "Wanderplaner",
-    "login": "Anmelden",
-    "profile": "Profil"
+    "explore": "Entdecken",
+    "myPlan": "Mein Plan",
+    "saved": "Gespeichert",
+    "insights": "Empfehlungen"
   },
   "header": {
     "profile": "Profil",
