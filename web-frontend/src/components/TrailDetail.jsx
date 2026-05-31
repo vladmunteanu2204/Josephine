@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useToast } from '../contexts/ToastContext';
+import { useAuth } from '../contexts/AuthContext';
 import { trailImg, trailImgAlt, trailGallery } from '../utils/trailImage';
 import ReviewsSection from './ReviewsSection';
 import TrailMap from './TrailMap';
@@ -9,6 +10,7 @@ import MediaGallery from './MediaGallery';
 import ActiveHikeTracker from './ActiveHikeTracker';
 import WeatherWidget from './WeatherWidget';
 import { ENABLE_HIKE_TRACKING } from '../featureFlags';
+import AuthPromptModal from './AuthPromptModal';
 import './TrailDetail.css';
 
 const DIFFICULTY_CONFIG = {
@@ -135,9 +137,11 @@ function NearbyRifugios({ ids, onViewRifugio }) {
   );
 }
 
-function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio }) {
+function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin }) {
   const { t, i18n } = useTranslation();
   const toast = useToast();
+  const { currentUser } = useAuth();
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const [fullTrail, setFullTrail] = useState(trail);
   const [loading, setLoading]     = useState(false);
   const [isHikeActive, setIsHikeActive] = useState(false);
@@ -179,6 +183,7 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio }) {
   }, []);
 
   const handleSaveToggle = () => {
+    if (!currentUser) { setShowAuthPrompt(true); return; }
     const saved = JSON.parse(localStorage.getItem('savedTrails') || '[]');
     let next;
     if (isSaved) {
@@ -424,6 +429,13 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio }) {
           </button>
         )}
       </div>
+
+      <AuthPromptModal
+        isOpen={showAuthPrompt}
+        onClose={() => setShowAuthPrompt(false)}
+        onLogin={() => onShowLogin?.()}
+        message="Sign in to save this trail and start tracking your routes."
+      />
     </div>
   );
 }

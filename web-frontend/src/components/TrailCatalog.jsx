@@ -5,6 +5,8 @@ import axios from 'axios';
 import Map, { Marker, Popup, NavigationControl } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useToast } from '../contexts/ToastContext';
+import { useAuth } from '../contexts/AuthContext';
+import AuthPromptModal from './AuthPromptModal';
 import './TrailCatalog.css';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -99,9 +101,11 @@ function CatalogMap({ trails, onViewTrail }) {
 
 const API_URL = '/api';
 
-function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed }) {
+function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin }) {
   const { t } = useTranslation();
   const toast = useToast();
+  const { currentUser } = useAuth();
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const [trails, setTrails] = useState([]);
   // filteredTrails derived via useMemo — no extra setState render cycle
   const [loading, setLoading] = useState(true);
@@ -182,6 +186,7 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed }) {
 
   const toggleSaveTrail = (trail, e) => {
     e.stopPropagation();
+    if (!currentUser) { setShowAuthPrompt(true); return; }
     const isSaved = savedTrailIds.includes(trail.id);
     
     let newSaved;
@@ -386,6 +391,13 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed }) {
           )}
         </main>
       </div>
+
+      <AuthPromptModal
+        isOpen={showAuthPrompt}
+        onClose={() => setShowAuthPrompt(false)}
+        onLogin={() => onShowLogin?.()}
+        message="Sign in to save trails and access them across all your devices."
+      />
     </div>
   );
 }

@@ -6,7 +6,7 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "cwd": "/Users/munteanuvlad/Downloads/AlpenviaMobile-3/web-frontend",
-      "port": 5001
+      "port": 5173
     }
   ]
 }

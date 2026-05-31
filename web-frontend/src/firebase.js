@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -20,7 +20,8 @@ let auth = null;
 
 if (hasFirebaseConfig) {
   try {
-    app = initializeApp(firebaseConfig);
+    // Avoid "duplicate app" error on Vite HMR re-execution
+    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
     auth = getAuth(app);
   } catch (e) {
     console.warn('[Firebase] Init failed — auth features disabled:', e.message);

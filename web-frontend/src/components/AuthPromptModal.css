@@ -1,0 +1,123 @@
+/* ============================================================
+   Auth Prompt Modal — lightweight gate for members-only actions
+   ============================================================ */
+
+.apm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 8, 4, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  animation: apm-in 0.2s ease;
+}
+
+@keyframes apm-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.apm-card {
+  position: relative;
+  background: rgba(8, 14, 8, 0.98);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 24px;
+  padding: 40px 32px 32px;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65);
+  animation: apm-slide 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes apm-slide {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+.apm-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  color: rgba(240, 236, 230, 0.4);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  line-height: 1;
+}
+.apm-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f0ece6;
+}
+
+.apm-mark-wrap {
+  margin-bottom: 16px;
+}
+.apm-mark {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  opacity: 0.85;
+}
+
+.apm-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 28px;
+  font-weight: 300;
+  font-style: italic;
+  color: #f0ece6;
+  margin: 0 0 12px;
+  letter-spacing: 0.01em;
+}
+
+.apm-msg {
+  font-size: 14px;
+  color: rgba(240, 236, 230, 0.55);
+  line-height: 1.65;
+  margin: 0 0 28px;
+}
+
+.apm-signin-btn {
+  width: 100%;
+  padding: 14px;
+  background: #c9a84c;
+  border: none;
+  border-radius: 100px;
+  color: #1a1a0e;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 20px rgba(201, 168, 76, 0.35);
+  margin-bottom: 12px;
+}
+.apm-signin-btn:hover {
+  background: #d4b85c;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px rgba(201, 168, 76, 0.5);
+}
+
+.apm-skip {
+  background: none;
+  border: none;
+  color: rgba(240, 236, 230, 0.35);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s;
+  font-family: inherit;
+}
+.apm-skip:hover { color: rgba(240, 236, 230, 0.6); }

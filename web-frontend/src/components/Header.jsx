@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import HamburgerMenu from './HamburgerMenu';
@@ -6,6 +6,7 @@ import LanguageBottomSheet from './LanguageBottomSheet';
 import Login from './Login';
 import Signup from './Signup';
 import UserMenuPortal from './UserMenuPortal';
+import AuthPromptModal from './AuthPromptModal';
 import './Header.css';
 
 const languageLabels = {
@@ -15,15 +16,36 @@ const languageLabels = {
 };
 
 
-function Header({ currentView, setCurrentView }) {
+function Header({ currentView, setCurrentView, showLoginModal, setShowLoginModal }) {
   const { t, i18n } = useTranslation();
   const { currentUser, logout } = useAuth();
-  const [showLogin, setShowLogin] = useState(false);
+  // Use App-level login modal state if provided, else local fallback
+  const [localShowLogin, setLocalShowLogin] = useState(false);
+  const showLogin    = showLoginModal    ?? localShowLogin;
+  const setShowLogin = setShowLoginModal ?? setLocalShowLogin;
   const [showSignup, setShowSignup] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showHamburger, setShowHamburger] = useState(false);
   const [showLanguageSheet, setShowLanguageSheet] = useState(false);
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
+  const [authPromptMsg, setAuthPromptMsg] = useState('');
   const avatarButtonRef = useRef(null);
+
+  // Views that require login
+  const GATED_VIEWS = ['planner', 'savedTrails', 'profile', 'challenges', 'leaderboards'];
+
+  const handleNavClick = useCallback((key) => {
+    if (GATED_VIEWS.includes(key) && !currentUser) {
+      setAuthPromptMsg(
+        key === 'savedTrails'
+          ? 'Sign in to see your saved trails across all your devices.'
+          : 'Sign in to access trip planning and personalised features.'
+      );
+      setShowAuthPrompt(true);
+      return;
+    }
+    setCurrentView(key);
+  }, [currentUser, setCurrentView]);
 
   const handleLogout = async () => {
     try {
@@ -104,7 +126,7 @@ function Header({ currentView, setCurrentView }) {
               <button
                 key={item.key}
                 className={`jph-header__nav-item ${currentView === item.key ? 'active' : ''}`}
-                onClick={() => setCurrentView(item.key)}
+                onClick={() => handleNavClick(item.key)}
               >
                 {item.label}
               </button>
@@ -205,6 +227,13 @@ function Header({ currentView, setCurrentView }) {
           switchToLogin={() => { setShowSignup(false); setShowLogin(true); }}
         />
       )}
+
+      <AuthPromptModal
+        isOpen={showAuthPrompt}
+        onClose={() => setShowAuthPrompt(false)}
+        onLogin={() => { setShowAuthPrompt(false); setShowLogin(true); }}
+        message={authPromptMsg}
+      />
     </>
   );
 }

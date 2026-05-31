@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../contexts/AuthContext';
+import AuthPromptModal from './AuthPromptModal';
 import './BottomNav.css';
 
 const HomeIcon = () => (
@@ -30,8 +32,27 @@ const SavedIcon = () => (
 );
 
 
-function BottomNav({ currentView, setCurrentView, onJosephineOpen }) {
+const GATED_VIEWS = ['planner', 'savedTrails'];
+
+function BottomNav({ currentView, setCurrentView, onJosephineOpen, onShowLogin }) {
   const { t } = useTranslation();
+  const { currentUser } = useAuth();
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
+  const [authPromptMsg, setAuthPromptMsg] = useState('');
+
+  const handleTabClick = (key) => {
+    if (GATED_VIEWS.includes(key) && !currentUser) {
+      setAuthPromptMsg(
+        key === 'savedTrails'
+          ? 'Sign in to see your saved trails across all your devices.'
+          : 'Sign in to access trip planning and personalised features.'
+      );
+      setShowAuthPrompt(true);
+      return;
+    }
+    setCurrentView(key);
+  };
+
   const tabs = [
     { key: 'home',        label: t('nav.home',    'Home'),    Icon: HomeIcon    },
     { key: 'catalog',     label: t('nav.explore', 'Explore'), Icon: ExploreIcon },
@@ -39,13 +60,14 @@ function BottomNav({ currentView, setCurrentView, onJosephineOpen }) {
     { key: 'savedTrails', label: t('nav.saved',   'Saved'),   Icon: SavedIcon   },
   ];
   return (
+    <>
     <nav className="jph-bottom-nav" aria-label="Main navigation">
       {/* First 2 tabs */}
       {tabs.slice(0, 2).map(({ key, label, Icon }) => (
         <button
           key={key}
           className={`jph-bottom-nav__tab ${currentView === key ? 'active' : ''}`}
-          onClick={() => setCurrentView(key)}
+          onClick={() => handleTabClick(key)}
           aria-label={label}
           aria-current={currentView === key ? 'page' : undefined}
         >
@@ -70,7 +92,7 @@ function BottomNav({ currentView, setCurrentView, onJosephineOpen }) {
         <button
           key={key}
           className={`jph-bottom-nav__tab ${currentView === key ? 'active' : ''}`}
-          onClick={() => setCurrentView(key)}
+          onClick={() => handleTabClick(key)}
           aria-label={label}
           aria-current={currentView === key ? 'page' : undefined}
         >
@@ -79,6 +101,14 @@ function BottomNav({ currentView, setCurrentView, onJosephineOpen }) {
         </button>
       ))}
     </nav>
+
+      <AuthPromptModal
+        isOpen={showAuthPrompt}
+        onClose={() => setShowAuthPrompt(false)}
+        onLogin={() => { setShowAuthPrompt(false); onShowLogin?.(); }}
+        message={authPromptMsg}
+      />
+    </>
   );
 }
 

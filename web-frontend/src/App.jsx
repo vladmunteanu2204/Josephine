@@ -1,7 +1,7 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import './App.css';
 import { ENABLE_HIKE_TRACKING, ENABLE_GAMIFICATION } from './featureFlags';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 // Always-visible shell (eager)
 import Header from './components/Header';
@@ -28,6 +28,21 @@ const RifugioDetail        = lazy(() => import('./components/RifugioDetail'));
 const MultiDayTrails       = lazy(() => import('./components/MultiDayTrails'));
 const MultiDayTrailDetail  = lazy(() => import('./components/MultiDayTrailDetail'));
 const JosephineChat        = lazy(() => import('./components/JosephineChat'));
+
+// Redirects guests away from members-only views and shows the login prompt.
+// AuthProvider already holds children until auth is resolved, so currentUser
+// is always final (never in a loading state) by the time this renders.
+function GuestGuard({ setCurrentView, onShowLogin, children }) {
+  const { currentUser } = useAuth();
+  useEffect(() => {
+    if (!currentUser) {
+      setCurrentView('home');
+      onShowLogin?.();
+    }
+  }, [currentUser, setCurrentView, onShowLogin]);
+  if (!currentUser) return null;
+  return children;
+}
 
 // Minimal loading fallback — dark bg matches app shell
 function ViewLoader() {
@@ -56,6 +71,7 @@ function App() {
   const [catalogInitialTags, setCatalogInitialTags] = useState([]);
   const [showSplash, setShowSplash] = useState(true);
   const [isGPSActive, setIsGPSActive] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   // Sync view to URL hash for back-button support and shareable links
   useEffect(() => {
@@ -142,7 +158,7 @@ function App() {
     <div className="app">
       <ToastProvider>
         <AuthProvider>
-          {(!isGPSActive || !ENABLE_HIKE_TRACKING) && <Header currentView={currentView} setCurrentView={setCurrentView} />}
+          {(!isGPSActive || !ENABLE_HIKE_TRACKING) && <Header currentView={currentView} setCurrentView={setCurrentView} showLoginModal={showLoginModal} setShowLoginModal={setShowLoginModal} />}
         
         <main className="main-content">
           <Suspense fallback={<ViewLoader />}>
@@ -159,24 +175,29 @@ function App() {
           )}
 
           {currentView === 'catalog' && (
-            <TrailCatalog viewTrail={viewTrail} initialTags={catalogInitialTags} onTagsConsumed={() => setCatalogInitialTags([])} />
+            <TrailCatalog viewTrail={viewTrail} initialTags={catalogInitialTags} onTagsConsumed={() => setCatalogInitialTags([])} onShowLogin={() => setShowLoginModal(true)} />
           )}
-          
+
           {currentView === 'detail' && selectedTrail && (
             <TrailDetail
               trail={selectedTrail}
               onBack={goBack}
               setIsGPSActive={setIsGPSActive}
               viewRifugio={viewRifugio}
+              onShowLogin={() => setShowLoginModal(true)}
             />
           )}
 
           {currentView === 'profile' && (
-            <Profile onNavigate={navigate} />
+            <GuestGuard setCurrentView={setCurrentView} onShowLogin={() => setShowLoginModal(true)}>
+              <Profile onNavigate={navigate} />
+            </GuestGuard>
           )}
 
           {currentView === 'savedTrails' && (
-            <SavedTrails onNavigate={navigate} />
+            <GuestGuard setCurrentView={setCurrentView} onShowLogin={() => setShowLoginModal(true)}>
+              <SavedTrails onNavigate={navigate} />
+            </GuestGuard>
           )}
 
           {currentView === 'settings' && (
@@ -184,11 +205,15 @@ function App() {
           )}
 
           {ENABLE_GAMIFICATION && currentView === 'leaderboards' && (
-            <Leaderboards onNavigate={navigate} />
+            <GuestGuard setCurrentView={setCurrentView} onShowLogin={() => setShowLoginModal(true)}>
+              <Leaderboards onNavigate={navigate} />
+            </GuestGuard>
           )}
 
           {currentView === 'planner' && (
-            <HikePlanner onNavigate={navigate} />
+            <GuestGuard setCurrentView={setCurrentView} onShowLogin={() => setShowLoginModal(true)}>
+              <HikePlanner onNavigate={navigate} />
+            </GuestGuard>
           )}
 
           {currentView === 'terms' && (
@@ -204,7 +229,9 @@ function App() {
           )}
 
           {ENABLE_GAMIFICATION && currentView === 'challenges' && (
-            <Challenges onNavigate={navigate} />
+            <GuestGuard setCurrentView={setCurrentView} onShowLogin={() => setShowLoginModal(true)}>
+              <Challenges onNavigate={navigate} />
+            </GuestGuard>
           )}
 
           {currentView === 'rifugios' && (
@@ -235,6 +262,7 @@ function App() {
           currentView={currentView}
           setCurrentView={setCurrentView}
           onJosephineOpen={() => setCurrentView('recommendations')}
+          onShowLogin={() => setShowLoginModal(true)}
         />
 
 
