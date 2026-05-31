@@ -9,7 +9,7 @@ import './Profile.css';
 
 function Profile({ onNavigate }) {
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { currentUser: user } = useAuth();
   const [isEditingName, setIsEditingName] = useState(false);
   const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [isChangingPassword, setIsChangingPassword] = useState(false);

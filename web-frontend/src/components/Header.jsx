@@ -16,7 +16,7 @@ const languageLabels = {
 };
 
 
-function Header({ currentView, setCurrentView, showLoginModal, setShowLoginModal }) {
+function Header({ currentView, setCurrentView, showLoginModal, setShowLoginModal, navigateToRifugios }) {
   const { t, i18n } = useTranslation();
   const { currentUser, logout } = useAuth();
   // Use App-level login modal state if provided, else local fallback
@@ -94,6 +94,7 @@ function Header({ currentView, setCurrentView, showLoginModal, setShowLoginModal
     { key: 'savedTrails', label: t('nav.saved',   'Saved') },
   ];
 
+
   return (
     <>
       <header className="jph-header">
@@ -116,13 +117,33 @@ function Header({ currentView, setCurrentView, showLoginModal, setShowLoginModal
             />
             <div className="jph-header__wordmark-block">
               <span className="jph-header__wordmark">Josephine</span>
-              <span className="jph-header__sub">YOUR HUMAN ALPINE COMPANION</span>
+              <span className="jph-header__sub">YOUR ALPINE COMPANION</span>
             </div>
           </div>
 
           {/* ── Desktop centre nav ── */}
           <nav className="jph-header__desktop-nav" aria-label="Main navigation">
-            {desktopNavItems.map(item => (
+            {/* Home & Explore */}
+            {desktopNavItems.slice(0, 2).map(item => (
+              <button
+                key={item.key}
+                className={`jph-header__nav-item ${currentView === item.key ? 'active' : ''}`}
+                onClick={() => handleNavClick(item.key)}
+              >
+                {item.label}
+              </button>
+            ))}
+
+            {/* Mountain Huts */}
+            <button
+              className={`jph-header__nav-item ${currentView === 'rifugios' ? 'active' : ''}`}
+              onClick={() => navigateToRifugios?.('')}
+            >
+              Mountain Huts
+            </button>
+
+            {/* My Plan & Saved */}
+            {desktopNavItems.slice(2).map(item => (
               <button
                 key={item.key}
                 className={`jph-header__nav-item ${currentView === item.key ? 'active' : ''}`}
@@ -207,6 +228,7 @@ function Header({ currentView, setCurrentView, showLoginModal, setShowLoginModal
         currentView={currentView}
         onNavigate={handleMenuNavigation}
         onLogout={handleLogout}
+        navigateToRifugios={navigateToRifugios}
       />
 
       <LanguageBottomSheet

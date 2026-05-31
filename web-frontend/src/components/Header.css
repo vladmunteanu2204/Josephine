@@ -3,8 +3,10 @@
    ============================================================ */
 
 .jph-header {
-  background: #1a2a1c;
-  border-bottom: 1px solid rgba(201, 168, 76, 0.18);
+  background: rgba(12, 24, 13, 0.88);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.12);
   position: sticky;
   top: var(--safe-top);
   left: 0;
@@ -12,8 +14,8 @@
   z-index: var(--z-navbar);
   overflow: visible;
   box-shadow:
-    0 1px 0 rgba(201, 168, 76, 0.08),
-    0 4px 24px rgba(0, 0, 0, 0.45);
+    0 1px 0 rgba(201, 168, 76, 0.06),
+    0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
 /* Subtle gold accent line at very bottom of header */
@@ -38,7 +40,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 20px;
+  padding: 10px 20px;
   gap: 12px;
   max-width: 100%;
 }
@@ -82,24 +84,26 @@
 
 .jph-header__wordmark {
   font-family: 'Cormorant Garamond', 'Garamond', Georgia, serif;
-  font-size: 22px;
+  font-size: 21px;
   font-weight: 400;
   font-style: italic;
   color: #f0ece6;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
   display: block;
-  text-shadow: 0 1px 8px rgba(0,0,0,0.4);
+  text-shadow: 0 1px 12px rgba(0,0,0,0.5);
+  line-height: 1;
 }
 
 .jph-header__sub {
   font-family: 'Inter', sans-serif;
-  font-size: 7.5px;
-  font-weight: 400;
-  color: #c9a84c;
-  letter-spacing: 0.22em;
+  font-size: 6.5px;
+  font-weight: 500;
+  color: rgba(201, 168, 76, 0.7);
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   display: block;
-  opacity: 0.85;
+  margin-top: 2px;
+  line-height: 1;
 }
 
 /* ── Right actions area ── */
@@ -114,15 +118,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
   border-radius: 10px;
-  background: rgba(240, 236, 230, 0.06);
-  border: 1px solid rgba(240, 236, 230, 0.1);
-  color: rgba(240, 236, 230, 0.7);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(240, 236, 230, 0.65);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.18s ease;
   position: relative;
 }
 
@@ -224,16 +228,17 @@
 .jph-header__nav-item {
   background: none;
   border: none;
-  padding: 8px 16px;
+  padding: 7px 14px;
   font-family: 'Inter', sans-serif;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 500;
-  color: rgba(240, 236, 230, 0.65);
+  color: rgba(240, 236, 230, 0.60);
   cursor: pointer;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.015em;
   border-radius: 8px;
-  transition: all 0.2s ease;
+  transition: all 0.18s ease;
   position: relative;
+  white-space: nowrap;
 }
 
 .jph-header__nav-item::after {
@@ -362,3 +367,88 @@
   }
 }
 
+
+/* ── Mountain Huts dropdown ── */
+.jph-header__dropdown-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.jph-header__nav-item--huts {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.jph-header__dropdown-caret {
+  font-size: 10px;
+  opacity: 0.55;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+.jph-header__dropdown-caret.open {
+  transform: rotate(180deg);
+}
+.jph-header__dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0f1a0f;
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 14px;
+  padding: 8px;
+  min-width: 220px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+  z-index: 1000;
+  /* Subtle fade-in */
+  animation: dropdown-in 0.15s ease;
+}
+@keyframes dropdown-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(-6px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+/* Invisible bridge so mouse can travel from button to dropdown */
+.jph-header__dropdown::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 0;
+  right: 0;
+  height: 12px;
+}
+.jph-header__dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+.jph-header__dropdown-item:hover {
+  background: rgba(255,255,255,0.07);
+}
+.jph-header__dropdown-emoji {
+  font-size: 18px;
+  flex-shrink: 0;
+  width: 26px;
+  text-align: center;
+}
+.jph-header__dropdown-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.jph-header__dropdown-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f0ece6;
+}
+.jph-header__dropdown-desc {
+  font-size: 11px;
+  color: rgba(240,236,230,0.45);
+}

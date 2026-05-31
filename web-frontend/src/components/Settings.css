@@ -315,3 +315,34 @@ input:checked + .toggle-slider:before {
     width: 24px;
   }
 }
+
+.account-info {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.account-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.account-info-row + .account-info-row {
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.account-info-label {
+  font-size: 13px;
+  color: rgba(240,236,230,0.5);
+  font-weight: 500;
+}
+
+.account-info-value {
+  font-size: 13px;
+  color: rgba(240,236,230,0.85);
+  font-weight: 400;
+}

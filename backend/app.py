@@ -1451,19 +1451,20 @@ def save_booking_inquiries(inquiries_data):
 def get_rifugio_status(rifugio):
     """Determine current status of rifugio based on dates"""
     from datetime import datetime, timedelta
-    
+
+    # Bivacchi are always open — unmanned emergency shelters
+    if rifugio.get('type') == 'bivacco':
+        return 'open'
+
     today = datetime.now().date()
     opening_season = rifugio.get('opening_season', {})
-    
+
     try:
         start_date_str = opening_season.get('start_date', '')
         end_date_str = opening_season.get('end_date', '')
-        
+
         if not start_date_str or not end_date_str:
-            # Bivacco or always open
-            if rifugio.get('type') == 'bivacco':
-                return 'open'
-            return rifugio.get('status', 'closed')
+            return 'closed'
         
         start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
         end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()

@@ -174,7 +174,7 @@ function SplashScreen({ onComplete }) {
       {/* ── Wordmark + tagline ── */}
       <div className="jph-splash__brand">
         <h1 className="jph-splash__wordmark">Josephine</h1>
-        <p className="jph-splash__tagline">YOUR HUMAN ALPINE COMPANION</p>
+        <p className="jph-splash__tagline">YOUR ALPINE COMPANION</p>
       </div>
 
       {/* ── Bottom: origin + progress + loading text ── */}

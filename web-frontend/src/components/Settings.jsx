@@ -6,7 +6,7 @@ import './Settings.css';
 
 function Settings({ onNavigate }) {
   const { t, i18n } = useTranslation();
-  const { user, logout } = useAuth();
+  const { currentUser: user, logout } = useAuth();
   const toast = useToast();
   const [settings, setSettings] = useState({
     language: i18n.language || 'en',
@@ -204,6 +204,21 @@ function Settings({ onNavigate }) {
             <h2>👤 {t('settings.account')}</h2>
             <p className="section-description">{t('settings.accountDescription')}</p>
           </div>
+
+          {user && (
+            <div className="account-info">
+              <div className="account-info-row">
+                <span className="account-info-label">{t('auth.email', 'Email')}</span>
+                <span className="account-info-value">{user.email}</span>
+              </div>
+              {user.displayName && (
+                <div className="account-info-row">
+                  <span className="account-info-label">{t('profile.displayName', 'Name')}</span>
+                  <span className="account-info-value">{user.displayName}</span>
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="account-actions">
             <button onClick={logout} className="btn-logout">

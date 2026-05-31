@@ -70,7 +70,7 @@
     "browseTrailCatalogDesc": "Browse every verified trail, rifugio and mountain experience.",
     "todaysFeaturedTrail": "Today's Featured Trail",
     "noTrailsAvailable": "No trails available",
-    "verifiedRoutes": "Every place verified and locally curated for South Tyrol & Trentino",
+    "verifiedRoutes": "Every place verified and locally curated for South Tyrol",
     "loadingRecommendation": "Loading...",
     "exploreByTheme": "What kind of day?",
     "exploreByThemeDesc": "Tell Josephine your mood and she'll find the right alpine experience.",
@@ -145,11 +145,14 @@
     "trailUnsaved": "Trail removed from saved",
     "elevationProfile": "Elevation Profile",
     "startHike": "Start this Hike",
-    "gpsTrackingFeatures": "GPS tracking with safety features"
+    "gpsTrackingFeatures": "GPS tracking with safety features",
+    "reviewFieldsRequired": "Please fill in all required fields",
+    "reviewSubmitted": "Thank you for your review!",
+    "reviewError": "Failed to submit review. Please try again."
   },
   "catalog": {
     "title": "Trail Catalog",
-    "subtitle": "Explore our verified routes in South Tyrol & Trentino",
+    "subtitle": "Explore our verified routes in South Tyrol",
     "search": "Search trails...",
     "filterByDifficulty": "Filter by Difficulty",
     "filters": "Filters",
@@ -203,11 +206,13 @@
     "loopTrails": "Loop Trails",
     "startArea": "Starting area",
     "recommendedTrails": "Recommended Trails for You",
-    "verifiedOnly": "Verified routes only — curated for South Tyrol & Trentino",
+    "verifiedOnly": "Verified routes only — curated for South Tyrol",
     "results": "Recommendations for You",
     "noResults": "No trails match your criteria. Try adjusting your preferences.",
     "saveTrail": "Save Trail",
     "unsaveTrail": "Remove from saved",
+    "trailSaved": "Trail saved!",
+    "trailUnsaved": "Trail removed from saved",
     "failedToLoad": "Failed to load recommendations. Please try again."
   },
   "auth": {
@@ -646,14 +651,14 @@
     "goToSlide": "Go to slide",
     "slide1": {
       "title": "Meet Josephine",
-      "description": "Josephine is your friendly local guide for South Tyrol and Trentino. Tell her what kind of alpine day you want — and she'll find something beautiful.",
+      "description": "Josephine is your friendly local guide for South Tyrol. Tell her what kind of alpine day you want — and she'll find something beautiful.",
       "feature1": "Discover trails, rifugios and local mountain moments",
       "feature2": "Warm, human recommendations — no algorithms",
       "feature3": "Locally curated for the Dolomites"
     },
     "slide2": {
       "title": "Local curation you can trust",
-      "description": "Every trail and rifugio in Josephine is verified and handpicked from South Tyrol and Trentino. From lakeside paths to hidden malgas.",
+      "description": "Every trail and rifugio in Josephine is verified and handpicked from South Tyrol. From lakeside paths to hidden malgas.",
       "feature1": "Verified routes by local experts",
       "feature2": "Rifugios, malgas and bivouacs included",
       "feature3": "Seasonal status and opening hours"

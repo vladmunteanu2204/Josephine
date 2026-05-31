@@ -29,8 +29,8 @@
     "description": "Historic alpine refuge located in the heart of the Catinaccio group, offering stunning views of the Rosengarten massif. Traditional South Tyrolean hospitality with home-cooked meals and comfortable accommodation.",
     "access_info": "Accessible from Carezza Lake via trail 541 (2.5 hours) or from Tires via trail 584 (3 hours). Well-marked paths suitable for experienced hikers.",
     "opening_season": {
-      "start_date": "2025-06-15",
-      "end_date": "2025-09-30"
+      "start_date": "2026-06-15",
+      "end_date": "2026-09-30"
     },
     "prices": {
       "overnight": 45,
@@ -94,8 +94,8 @@
     "description": "Modern mountain hut on Plose summit with panoramic 360° views of the Dolomites. Accessible by cable car for families and hikers of all levels. Known for exceptional cuisine and sunset dinners.",
     "access_info": "Cable car from Bressanone/Brixen (20 minutes) or hiking from Sant'Andrea (4 hours). Multiple trails available for various skill levels.",
     "opening_season": {
-      "start_date": "2025-05-20",
-      "end_date": "2025-10-15"
+      "start_date": "2026-05-20",
+      "end_date": "2026-10-15"
     },
     "prices": {
       "overnight": 55,
@@ -155,8 +155,8 @@
     "description": "Authentic alpine dairy farm (malga) in a picturesque mountain village. Famous for traditional South Tyrolean cuisine and homemade dairy products. Day visits only - no overnight accommodation.",
     "access_info": "Easy 1-hour walk from Valles/Vals parking area. Family-friendly trail through forests and meadows.",
     "opening_season": {
-      "start_date": "2025-06-01",
-      "end_date": "2025-09-20"
+      "start_date": "2026-06-01",
+      "end_date": "2026-09-20"
     },
     "prices": {
       "overnight": 0,
@@ -213,8 +213,8 @@
     "description": "Emergency shelter (bivouac) in the Latemar range. Unmanned, always open. Basic accommodation for alpinists and experienced hikers. Bring your own food, sleeping bag, and emergency supplies.",
     "access_info": "Challenging alpine route from Passo Costalunga via ferrata sections (5 hours). Experienced hikers with via ferrata equipment only.",
     "opening_season": {
-      "start_date": "2025-01-01",
-      "end_date": "2025-12-31"
+      "start_date": "2026-01-01",
+      "end_date": "2026-12-31"
     },
     "prices": {
       "overnight": 0,
@@ -273,8 +273,8 @@
     "description": "Historic WWI refuge with museum, offering breathtaking views of the Dolomites. Accessible by cable car or challenging hike. Experience alpine history while enjoying modern comforts and gourmet cuisine.",
     "access_info": "Lagazuoi cable car from Passo Falzarego (10 minutes) or via ferrata routes for experienced climbers (3-4 hours).",
     "opening_season": {
-      "start_date": "2025-12-01",
-      "end_date": "2025-04-15"
+      "start_date": "2026-12-01",
+      "end_date": "2026-04-15"
     },
     "prices": {
       "overnight": 65,
@@ -341,8 +341,8 @@
       "bus": "SAD bus line 340 to Misurina village, then hiking access via Tre Croci pass"
     },
     "opening_season": {
-      "start_date": "2025-06-01",
-      "end_date": "2025-10-15"
+      "start_date": "2026-06-01",
+      "end_date": "2026-10-15"
     },
     "prices": {
       "overnight": 62,
@@ -404,8 +404,8 @@
       "bus": "SAD bus line 240 to Merano, then local bus 241 to Passeier Valley villages"
     },
     "opening_season": {
-      "start_date": "2025-07-01",
-      "end_date": "2025-09-15"
+      "start_date": "2026-07-01",
+      "end_date": "2026-09-15"
     },
     "prices": {
       "overnight": 48,
@@ -473,8 +473,8 @@
       "bus": "SAD bus line 423 directly to cable car station in Cortina"
     },
     "opening_season": {
-      "start_date": "2025-04-01",
-      "end_date": "2025-11-15"
+      "start_date": "2026-04-01",
+      "end_date": "2026-11-15"
     },
     "prices": {
       "overnight": 95,
@@ -537,8 +537,8 @@
       "bus": "SAD bus line 240 to Merano, then line 241 to Algund village for trail access"
     },
     "opening_season": {
-      "start_date": "2025-05-01",
-      "end_date": "2025-10-31"
+      "start_date": "2026-05-01",
+      "end_date": "2026-10-31"
     },
     "prices": {
       "overnight": 58,
@@ -598,8 +598,8 @@
       "bus": "SAD bus line 341 to Passo Ghedina pass area"
     },
     "opening_season": {
-      "start_date": "2025-01-01",
-      "end_date": "2025-12-31"
+      "start_date": "2026-01-01",
+      "end_date": "2026-12-31"
     },
     "prices": {
       "overnight": 0,
@@ -662,8 +662,8 @@
       "bus": "SAD bus line 340 to Misurina village, then hiking access via pass (45 minutes)"
     },
     "opening_season": {
-      "start_date": "2025-05-15",
-      "end_date": "2025-10-31"
+      "start_date": "2026-05-15",
+      "end_date": "2026-10-31"
     },
     "prices": {
       "overnight": 54,
@@ -726,8 +726,8 @@
       "bus": "SAD bus line 341 directly to Selva Val Gardena cable car station"
     },
     "opening_season": {
-      "start_date": "2025-06-01",
-      "end_date": "2025-10-15"
+      "start_date": "2026-06-01",
+      "end_date": "2026-10-15"
     },
     "prices": {
       "overnight": 78,
@@ -787,8 +787,8 @@
       "bus": "No direct bus service. Nearest SAD bus stop is Gomagoi (Val Venosta); taxi or private transport required for Passo dello Stelvio access."
     },
     "opening_season": {
-      "start_date": "2025-01-01",
-      "end_date": "2025-12-31"
+      "start_date": "2026-01-01",
+      "end_date": "2026-12-31"
     },
     "prices": {
       "overnight": 0,
@@ -852,8 +852,8 @@
       "bus": "ATAP bus service to Auronzo di Cadore; nearest stop Auronzo Centro (15km from trailhead)"
     },
     "opening_season": {
-      "start_date": "2025-05-15",
-      "end_date": "2025-10-31"
+      "start_date": "2026-05-15",
+      "end_date": "2026-10-31"
     },
     "prices": {
       "overnight": 65,
@@ -916,8 +916,8 @@
       "bus": "SAD line 342 serves Ortisei; hut 1.5 km uphill from bus stop"
     },
     "opening_season": {
-      "start_date": "2025-06-01",
-      "end_date": "2025-09-30"
+      "start_date": "2026-06-01",
+      "end_date": "2026-09-30"
     },
     "prices": {
       "overnight": 55,
@@ -982,8 +982,8 @@
       "bus": "Dolomiti superski shuttle bus to Tre Croci pass from Dobbiaco (20 minutes); nearest town buses stop in Dobbiaco"
     },
     "opening_season": {
-      "start_date": "2025-04-15",
-      "end_date": "2025-11-15"
+      "start_date": "2026-04-15",
+      "end_date": "2026-11-15"
     },
     "prices": {
       "overnight": 72,
@@ -1043,8 +1043,8 @@
       "bus": "No direct access. SAD buses serve Merano; approach requires full trekking approach from valley"
     },
     "opening_season": {
-      "start_date": "2025-01-01",
-      "end_date": "2025-12-31"
+      "start_date": "2026-01-01",
+      "end_date": "2026-12-31"
     },
     "prices": {
       "overnight": 0,
@@ -1107,8 +1107,8 @@
       "bus": "STSA bus line 260 from Merano to Solda village (90 minutes); nearest stop Solda town center"
     },
     "opening_season": {
-      "start_date": "2025-05-20",
-      "end_date": "2025-10-31"
+      "start_date": "2026-05-20",
+      "end_date": "2026-10-31"
     },
     "prices": {
       "overnight": 78,
@@ -1170,8 +1170,8 @@
       "bus": "SAD Line 338 (Ortisei–Selva, stop Ortisei Ciasa Gherdeina, 200m from trailhead)"
     },
     "opening_season": {
-      "start_date": "2025-05-15",
-      "end_date": "2025-10-15"
+      "start_date": "2026-05-15",
+      "end_date": "2026-10-15"
     },
     "prices": {
       "overnight": 65,
@@ -1235,8 +1235,8 @@
       "bus": "SAD Line 432 to Dürnstein village (30 min walk to trailhead via trail 33)"
     },
     "opening_season": {
-      "start_date": "2025-03-01",
-      "end_date": "2025-11-30"
+      "start_date": "2026-03-01",
+      "end_date": "2026-11-30"
     },
     "prices": {
       "overnight": 78,
@@ -1299,8 +1299,8 @@
       "bus": "SAD Line 1A to Obermais stop; trailhead 200m south at Kirchplatz"
     },
     "opening_season": {
-      "start_date": "2025-04-01",
-      "end_date": "2025-11-15"
+      "start_date": "2026-04-01",
+      "end_date": "2026-11-15"
     },
     "prices": {
       "overnight": 72,
@@ -1363,8 +1363,8 @@
       "bus": "SAD Line 220 to Karthaus church (50m from Parkplatz); 4 daily connections to Merano"
     },
     "opening_season": {
-      "start_date": "2025-01-01",
-      "end_date": "2025-12-31"
+      "start_date": "2026-01-01",
+      "end_date": "2026-12-31"
     },
     "prices": {
       "overnight": 0,
@@ -1428,8 +1428,8 @@
       "bus": "SAD bus line 4 from Merano to Hafling village; then hiking (no direct bus to Passo del Giogo in summer)"
     },
     "opening_season": {
-      "start_date": "2025-05-20",
-      "end_date": "2025-10-15"
+      "start_date": "2026-05-20",
+      "end_date": "2026-10-15"
     },
     "prices": {
       "overnight": 68,
@@ -1492,8 +1492,8 @@
       "bus": "SAD bus line 450 from Bolzano to Sarentino village (daily, ~1.5 hours); then private transfer or hiking required to Passo Sarner"
     },
     "opening_season": {
-      "start_date": "2025-01-01",
-      "end_date": "2025-12-31"
+      "start_date": "2026-01-01",
+      "end_date": "2026-12-31"
     },
     "prices": {
       "overnight": 0,
@@ -1557,8 +1557,8 @@
       "bus": "SAD bus line 6 from Cortina d'Ampezzo to Auronzo di Cadore; no direct bus to hut"
     },
     "opening_season": {
-      "start_date": "2025-06-15",
-      "end_date": "2025-09-30"
+      "start_date": "2026-06-15",
+      "end_date": "2026-09-30"
     },
     "prices": {
       "overnight": 65,
@@ -1620,8 +1620,8 @@
       "bus": "No direct bus; nearest is SAD line 6 to Tre Cime parking area (requires hiking up)"
     },
     "opening_season": {
-      "start_date": "2025-07-01",
-      "end_date": "2025-09-15"
+      "start_date": "2026-07-01",
+      "end_date": "2026-09-15"
     },
     "prices": {
       "overnight": 70,
@@ -1681,8 +1681,8 @@
       "bus": "SAD line 6 to Tre Cime parking area; then 3+ hours hiking"
     },
     "opening_season": {
-      "start_date": "2025-01-01",
-      "end_date": "2025-12-31"
+      "start_date": "2026-01-01",
+      "end_date": "2026-12-31"
     },
     "prices": {
       "overnight": 0,
@@ -1710,5 +1710,815 @@
     ],
     "booking_required": false,
     "booking_note": "No booking needed. Unmanned shelter, open year-round. Free. Respect the space; leave it clean for the next person. Report any damage to CAI Pusteria."
+  },
+  {
+    "id": "rif-mer-01",
+    "name": "Rifugio Hochmuth",
+    "type": "rifugio",
+    "region": "South Tyrol",
+    "altitude": 1490,
+    "coordinates": {
+      "lat": 46.6912,
+      "lng": 11.1478
+    },
+    "contact": {
+      "phone": "+39 0473 221047",
+      "email": "info@rifugiohochmuth.it",
+      "website": "https://www.hochmuth.com",
+      "whatsapp": "+39 333 4521098"
+    },
+    "facilities": {
+      "beds": 28,
+      "showers": true,
+      "meals": true,
+      "wifi": false,
+      "dogs": true,
+      "payment_methods": [
+        "cash",
+        "card"
+      ]
+    },
+    "description": "Classic Tyrolean hut perched on the plateau above Tirolo, with sweeping views over Merano and the Adige Valley. Family-run since 1958, it serves hearty meals and is the natural finish for the Hochmuth Trail — one of South Tyrol's most popular walks.",
+    "access_info": "Via trail 27 from Tirolo village (1.5 hours) or trail 9A from Merano Obermais (2 hours). Well-marked, moderate ascent. Accessible by mountain bike on the lower section.",
+    "opening_season": {
+      "start_date": "2026-04-01",
+      "end_date": "2026-11-15"
+    },
+    "prices": {
+      "overnight": 60,
+      "breakfast": 10,
+      "dinner": 26,
+      "half_board": 82
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800"
+    ],
+    "status": "published",
+    "special_closures": [],
+    "nearby_trails": [
+      "hochmuth_tirolo"
+    ],
+    "josephine_note": "Order the Schlutzkrapfen — the cook makes them from scratch and they arrive still steaming. The terrace table facing Merano is the best seat in South Tyrol for a Sunday lunch.",
+    "highlights": [
+      "Panoramic view over Merano and Adige Valley",
+      "Traditional Tyrolean Schlutzkrapfen made fresh daily",
+      "Natural finish of the famous Hochmuth Trail"
+    ],
+    "booking_required": true,
+    "booking_note": "Book 1–2 weeks ahead on weekends. Phone preferred. Cash and card accepted."
+  },
+  {
+    "id": "rif-mer-02",
+    "name": "Rifugio Taser",
+    "type": "rifugio",
+    "region": "South Tyrol",
+    "altitude": 1585,
+    "coordinates": {
+      "lat": 46.6601,
+      "lng": 11.0934
+    },
+    "contact": {
+      "phone": "+39 0473 290810",
+      "email": "info@taserhütte.it",
+      "website": "https://www.taserhütte.it",
+      "whatsapp": "+39 333 8812345"
+    },
+    "facilities": {
+      "beds": 22,
+      "showers": true,
+      "meals": true,
+      "wifi": false,
+      "dogs": true,
+      "payment_methods": [
+        "cash"
+      ]
+    },
+    "description": "Quiet refuge on the Taser high plateau above Schenna, surrounded by larch forest and meadows. One of the less-visited huts near Merano — a local favourite for its peaceful setting and generous South Tyrolean portions.",
+    "access_info": "Trail 4 from Schenna village (1.5 hours) or trail 7 from Hafling (2 hours). Both well-maintained and suitable for families with older children.",
+    "opening_season": {
+      "start_date": "2026-05-01",
+      "end_date": "2026-10-31"
+    },
+    "prices": {
+      "overnight": 55,
+      "breakfast": 9,
+      "dinner": 22,
+      "half_board": 72
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1515091943-9d5c0ad475af?w=800",
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+    ],
+    "status": "published",
+    "special_closures": [],
+    "nearby_trails": [
+      "schenna"
+    ],
+    "josephine_note": "The owner keeps a small vegetable garden — whatever is ripe ends up on the menu that evening. Arrive before 4pm on weekdays and you might have the whole terrace to yourself.",
+    "highlights": [
+      "Secluded larch-forest setting",
+      "Garden-fresh seasonal menu",
+      "Peaceful alternative to the busier Merano huts"
+    ],
+    "booking_required": false,
+    "booking_note": "Walk-ins welcome. Phone ahead only if coming as a group of 5 or more."
+  },
+  {
+    "id": "rif-mer-03",
+    "name": "Rifugio Val di Nova",
+    "type": "rifugio",
+    "region": "South Tyrol",
+    "altitude": 1760,
+    "coordinates": {
+      "lat": 46.7045,
+      "lng": 11.1823
+    },
+    "contact": {
+      "phone": "+39 0473 640218",
+      "email": "info@valdinova.it",
+      "website": "https://www.rifugiovaldinova.it",
+      "whatsapp": "+39 348 1234567"
+    },
+    "facilities": {
+      "beds": 34,
+      "showers": true,
+      "meals": true,
+      "wifi": true,
+      "dogs": false,
+      "payment_methods": [
+        "cash",
+        "card"
+      ]
+    },
+    "description": "Alpine hut at the entrance of Val di Nova in the Gruppo di Tessa Nature Park, popular with trail runners and trekkers on the Meraner Höhenweg long-distance route. The hut sits at a natural crossroads with access to some of the finest ridge walks above Merano.",
+    "access_info": "Trail 24 from Merano Obermais (2 hours) or the upper cable car from Merano to Falzeben and trail 23 (45 minutes). Very well marked.",
+    "opening_season": {
+      "start_date": "2026-05-15",
+      "end_date": "2026-10-15"
+    },
+    "prices": {
+      "overnight": 65,
+      "breakfast": 11,
+      "dinner": 27,
+      "half_board": 88
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800",
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+    ],
+    "status": "published",
+    "special_closures": [],
+    "nearby_trails": [
+      "cascada_loop",
+      "hochmuth_tirolo"
+    ],
+    "josephine_note": "This is a key stop on the Meraner Höhenweg — hikers arrive with real hunger. The apple strudel here is worth the climb alone. Stay overnight and start the ridge walk early before the clouds build.",
+    "highlights": [
+      "Key stop on the Meraner Höhenweg long-distance route",
+      "Spectacular Group di Tessa Nature Park setting",
+      "Excellent apple strudel made fresh daily"
+    ],
+    "booking_required": true,
+    "booking_note": "Book 2–3 weeks ahead July–August. Online booking or phone. Card and cash accepted."
+  },
+  {
+    "id": "rif-mer-04",
+    "name": "Rifugio Falzeben",
+    "type": "rifugio",
+    "region": "South Tyrol",
+    "altitude": 1820,
+    "coordinates": {
+      "lat": 46.6756,
+      "lng": 11.1123
+    },
+    "contact": {
+      "phone": "+39 0473 279030",
+      "email": "info@falzeben.it",
+      "website": "https://www.falzeben.it",
+      "whatsapp": "+39 333 9087654"
+    },
+    "facilities": {
+      "beds": 42,
+      "showers": true,
+      "meals": true,
+      "wifi": true,
+      "dogs": true,
+      "payment_methods": [
+        "cash",
+        "card"
+      ]
+    },
+    "description": "One of the most accessible huts above Merano, reachable in 20 minutes by cable car from the city. Falzeben sits on a sunny plateau with views south over Merano and north toward the Texelgruppe peaks. A beloved local destination for day trips and multi-day hiking base.",
+    "access_info": "Cable car from Merano (Seilbahn Meran 2000) to Falzeben station — 20 minutes, runs daily May–October. Or hike trail 34 from Hafling village (1 hour). Family friendly.",
+    "opening_season": {
+      "start_date": "2026-05-01",
+      "end_date": "2026-11-01"
+    },
+    "prices": {
+      "overnight": 68,
+      "breakfast": 12,
+      "dinner": 28,
+      "half_board": 90
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800",
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800"
+    ],
+    "status": "published",
+    "special_closures": [],
+    "nearby_trails": [
+      "schenna",
+      "cascada_loop"
+    ],
+    "josephine_note": "Perfect for non-hikers in your group — take the cable car up and they can sit on the sun terrace with a glass of local Vernatsch while you tackle the ridge. The Speckknödel here are legendary.",
+    "highlights": [
+      "Cable car access — perfect for mixed-ability groups",
+      "Sun terrace with panoramic Merano valley views",
+      "Famous Speckknödel soup"
+    ],
+    "booking_required": false,
+    "booking_note": "Walk-ins welcome for day meals. Book overnight 1–2 weeks ahead in summer."
+  },
+  {
+    "id": "rif-mer-05",
+    "name": "Rifugio Gampen",
+    "type": "rifugio",
+    "region": "South Tyrol",
+    "altitude": 1743,
+    "coordinates": {
+      "lat": 46.7234,
+      "lng": 11.1456
+    },
+    "contact": {
+      "phone": "+39 0473 643921",
+      "email": "gampen@rifugi.bz",
+      "website": "https://www.rifugiogampen.it",
+      "whatsapp": "+39 348 7654321"
+    },
+    "facilities": {
+      "beds": 30,
+      "showers": true,
+      "meals": true,
+      "wifi": false,
+      "dogs": true,
+      "payment_methods": [
+        "cash",
+        "card"
+      ]
+    },
+    "description": "Traditional mountain hut at Gampenpass above Naturns, on the ancient Vinschgau trade route. The hut retains its original stone architecture and offers an atmosphere that feels unchanged since the 1930s. Popular starting point for walks into the Texelgruppe Nature Park.",
+    "access_info": "Drive Gampenpass road from Naturns (paved, 20 minutes) or hike trail 1 from Naturns village (2.5 hours). Parking available at the pass.",
+    "opening_season": {
+      "start_date": "2026-04-15",
+      "end_date": "2026-11-10"
+    },
+    "prices": {
+      "overnight": 58,
+      "breakfast": 10,
+      "dinner": 24,
+      "half_board": 78
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+      "https://images.unsplash.com/photo-1515091943-9d5c0ad475af?w=800"
+    ],
+    "status": "published",
+    "special_closures": [],
+    "nearby_trails": [],
+    "josephine_note": "The stone walls of this hut are 90 years old and they keep everything cool — even on August days it feels like a different world. The Vinschgauer bread baked on-site is extraordinary with local butter.",
+    "highlights": [
+      "Original 1930s stone architecture",
+      "Gateway to Texelgruppe Nature Park",
+      "Authentic historic atmosphere — no Wi-Fi, no noise"
+    ],
+    "booking_required": false,
+    "booking_note": "Walk-ins welcome. Overnight bookings recommended for July–August weekends."
+  },
+  {
+    "id": "mal-mer-01",
+    "name": "Malga Verano",
+    "type": "malga",
+    "region": "South Tyrol",
+    "altitude": 1500,
+    "coordinates": {
+      "lat": 46.6534,
+      "lng": 11.1289
+    },
+    "contact": {
+      "phone": "+39 0473 279345",
+      "email": "info@malgaverano.it",
+      "website": "",
+      "whatsapp": ""
+    },
+    "facilities": {
+      "beds": 0,
+      "showers": false,
+      "meals": true,
+      "wifi": false,
+      "dogs": true,
+      "payment_methods": [
+        "cash"
+      ]
+    },
+    "description": "Working dairy farm above the village of Verano (Vöran), producing Graukäse and fresh ricotta. The farm family has grazed cattle on this plateau for six generations. Day visitors are welcomed for cheese plates, cold drinks and simple meals at wooden tables outside.",
+    "access_info": "Easy walk from Verano village car park via trail 42 (45 minutes, flat terrain). Ideal for families and non-hikers.",
+    "opening_season": {
+      "start_date": "2026-06-10",
+      "end_date": "2026-10-10"
+    },
+    "prices": {
+      "overnight": 0,
+      "breakfast": 0,
+      "dinner": 0,
+      "half_board": 0
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800"
+    ],
+    "status": "published",
+    "special_closures": [],
+    "nearby_trails": [],
+    "josephine_note": "Ring the bell at the wooden gate — the cheese plate they bring out (Graukäse, Schüttelbrot, local butter) costs almost nothing and is some of the best food in South Tyrol.",
+    "highlights": [
+      "Six-generation family dairy farm",
+      "Fresh Graukäse made on-site",
+      "Easy walk — accessible for all ages"
+    ],
+    "booking_required": false,
+    "booking_note": "Walk-in only. Open daily 9am–5pm in season."
+  },
+  {
+    "id": "mal-mer-02",
+    "name": "Malga Seefeld",
+    "type": "malga",
+    "region": "South Tyrol",
+    "altitude": 1678,
+    "coordinates": {
+      "lat": 46.7112,
+      "lng": 11.1678
+    },
+    "contact": {
+      "phone": "+39 0473 641285",
+      "email": "malgaseefeld@gmail.com",
+      "website": "",
+      "whatsapp": "+39 346 8812345"
+    },
+    "facilities": {
+      "beds": 0,
+      "showers": false,
+      "meals": true,
+      "wifi": false,
+      "dogs": true,
+      "payment_methods": [
+        "cash"
+      ]
+    },
+    "description": "Peaceful alpine dairy above Naturns with a small pond (Seefeld — 'field by the lake') reflecting the surrounding peaks. The farm produces butter and fresh cheese June through October, and serves simple traditional meals on its outdoor terrace. A favourite stop on the Meraner Höhenweg circuit.",
+    "access_info": "Trail 8 from Naturns village (2 hours) or trail 22 from Gampenpass (45 minutes). Well-signed. Part of the Meraner Höhenweg long-distance route.",
+    "opening_season": {
+      "start_date": "2026-06-01",
+      "end_date": "2026-10-05"
+    },
+    "prices": {
+      "overnight": 0,
+      "breakfast": 0,
+      "dinner": 0,
+      "half_board": 0
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+    ],
+    "status": "published",
+    "special_closures": [],
+    "nearby_trails": [],
+    "josephine_note": "The small pond in front of the malga reflects the Texel peaks perfectly at midday. Sit down with a Buttermilch and fresh Schüttelbrot and let yourself stop — properly stop — for an hour.",
+    "highlights": [
+      "Reflective mountain pond setting",
+      "On the Meraner Höhenweg route",
+      "Fresh buttermilk and house-made cheese boards"
+    ],
+    "booking_required": false,
+    "booking_note": "Walk-in only. Open daily when cows are on the high pasture — typically 9am–4pm."
+  },
+  {
+    "id": "mal-mer-03",
+    "name": "Malga Kirchsteiger",
+    "type": "malga",
+    "region": "South Tyrol",
+    "altitude": 1420,
+    "coordinates": {
+      "lat": 46.6823,
+      "lng": 11.2012
+    },
+    "contact": {
+      "phone": "+39 0473 290567",
+      "email": "",
+      "website": "",
+      "whatsapp": ""
+    },
+    "facilities": {
+      "beds": 0,
+      "showers": false,
+      "meals": true,
+      "wifi": false,
+      "dogs": true,
+      "payment_methods": [
+        "cash"
+      ]
+    },
+    "description": "Small family malga on the southern slopes above Schenna, producing traditional Schüttelbrot (cracker bread) alongside fresh dairy products. One of the few malghe where visitors can watch the bread-baking process — the stone oven has been in continuous use since 1894.",
+    "access_info": "Trail 6 from Schenna village (1 hour, gentle ascent through apple orchards). Suitable for all fitness levels.",
+    "opening_season": {
+      "start_date": "2026-06-15",
+      "end_date": "2026-09-30"
+    },
+    "prices": {
+      "overnight": 0,
+      "breakfast": 0,
+      "dinner": 0,
+      "half_board": 0
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800"
+    ],
+    "status": "published",
+    "special_closures": [],
+    "nearby_trails": [
+      "schenna"
+    ],
+    "josephine_note": "Visit on a Tuesday or Friday — those are the baking days. The smell of Schüttelbrot coming from the stone oven is unlike anything else. Buy a bag to take home.",
+    "highlights": [
+      "Stone bread oven in use since 1894",
+      "Watch traditional Schüttelbrot being baked",
+      "Gentle walk through apple orchards from Schenna"
+    ],
+    "booking_required": false,
+    "booking_note": "Walk-in only. Baking days: Tuesday and Friday. Cheese and bread available daily when open."
+  },
+  {
+    "id": "mal-mer-04",
+    "name": "Malga Leiter",
+    "type": "malga",
+    "region": "South Tyrol",
+    "altitude": 1890,
+    "coordinates": {
+      "lat": 46.6345,
+      "lng": 11.1134
+    },
+    "contact": {
+      "phone": "+39 0473 222134",
+      "email": "malga.leiter@gmail.com",
+      "website": "",
+      "whatsapp": "+39 335 6543210"
+    },
+    "facilities": {
+      "beds": 0,
+      "showers": false,
+      "meals": true,
+      "wifi": false,
+      "dogs": true,
+      "payment_methods": [
+        "cash"
+      ]
+    },
+    "description": "High-altitude malga at the edge of the Texelgruppe Nature Park, reached by a scenic ridge trail above Merano. The Leiter family has managed the pasture since 1912. The altitude means this is one of the last malghe to open and first to close — but the cheese is exceptional and the views extraordinary.",
+    "access_info": "Trail 34 from Hafling cable car station (1.5 hours, moderate with some steep sections) or trail 35 from Merano 2000 ski area (2 hours). Not suitable for young children.",
+    "opening_season": {
+      "start_date": "2026-07-01",
+      "end_date": "2026-09-20"
+    },
+    "prices": {
+      "overnight": 0,
+      "breakfast": 0,
+      "dinner": 0,
+      "half_board": 0
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1515091943-9d5c0ad475af?w=800"
+    ],
+    "status": "published",
+    "special_closures": [],
+    "nearby_trails": [],
+    "josephine_note": "The short season makes this special. Come in July when the wildflowers are at peak. The aged Almkäse (mountain cheese) here is sold by the wheel — buy a piece and it'll last weeks.",
+    "highlights": [
+      "Short season makes it rare and special",
+      "Edge of Texelgruppe Nature Park",
+      "Exceptional aged mountain cheese"
+    ],
+    "booking_required": false,
+    "booking_note": "Walk-in only. Usually open 9am–3pm when weather permits."
+  },
+  {
+    "id": "mal-mer-05",
+    "name": "Malga Pfelderer",
+    "type": "malga",
+    "region": "South Tyrol",
+    "altitude": 1625,
+    "coordinates": {
+      "lat": 46.7456,
+      "lng": 11.1089
+    },
+    "contact": {
+      "phone": "+39 0473 656220",
+      "email": "pfelderer@malga.it",
+      "website": "",
+      "whatsapp": ""
+    },
+    "facilities": {
+      "beds": 0,
+      "showers": false,
+      "meals": true,
+      "wifi": false,
+      "dogs": true,
+      "payment_methods": [
+        "cash"
+      ]
+    },
+    "description": "Classic Passeier Valley malga at the end of the Pfelders valley road, a traditional endpoint for families from Merano making a Sunday drive. The farm dairy opens a simple kitchen in summer serving cold plates, soups and house-pressed apple juice alongside the cheese products.",
+    "access_info": "Drive Passeiertal (SS44) north from Merano to St. Leonhard, then follow signs to Pfelders (15 km, paved). Park at the village end and walk 20 minutes to the malga. Or hike trail 211 from St. Leonhard (2.5 hours).",
+    "opening_season": {
+      "start_date": "2026-06-01",
+      "end_date": "2026-10-15"
+    },
+    "prices": {
+      "overnight": 0,
+      "breakfast": 0,
+      "dinner": 0,
+      "half_board": 0
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800"
+    ],
+    "status": "published",
+    "special_closures": [],
+    "nearby_trails": [],
+    "josephine_note": "On Sunday mornings the whole valley comes here — it's a ritual. Arrive before 10am for the freshest ricotta. The house-pressed apple juice is from their own orchard below.",
+    "highlights": [
+      "Classic Passeier Valley Sunday destination",
+      "House-pressed apple juice from own orchard",
+      "Easy access by car — ideal for families"
+    ],
+    "booking_required": false,
+    "booking_note": "Walk-in only. Busy on Sunday mornings — arrive early."
+  },
+  {
+    "id": "biv-mer-01",
+    "name": "Bivacco Talbauer",
+    "type": "bivacco",
+    "region": "South Tyrol",
+    "altitude": 2180,
+    "coordinates": {
+      "lat": 46.6712,
+      "lng": 11.0823
+    },
+    "contact": {
+      "phone": "",
+      "email": "cai.merano@cai.it",
+      "website": "https://www.cai.it",
+      "whatsapp": null
+    },
+    "facilities": {
+      "beds": 8,
+      "showers": false,
+      "meals": false,
+      "wifi": false,
+      "dogs": true,
+      "payment_methods": []
+    },
+    "description": "Small emergency shelter maintained by CAI Merano above the Talbauer plateau, on the high route connecting the Texelgruppe peaks. 8 emergency bunks with foam mats. No utilities — bring all supplies. Year-round access for experienced mountaineers.",
+    "access_info": "Trail 35 from Hafling/Avelengo (3 hours, exposed sections above 1900m) or trail 36 from Merano 2000 ski station (2 hours). Route-finding required in poor visibility.",
+    "opening_season": {
+      "start_date": "2026-01-01",
+      "end_date": "2026-12-31"
+    },
+    "prices": {
+      "overnight": 0,
+      "breakfast": 0,
+      "dinner": 0,
+      "half_board": 0
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+    ],
+    "status": "published",
+    "special_closures": [],
+    "nearby_trails": [],
+    "josephine_note": "Useful emergency waypoint on the Texelgruppe traverse. Bring your own sleeping bag, stove and food. The spring 100m below the shelter is reliable in summer; check the logbook for current conditions.",
+    "highlights": [
+      "Emergency shelter on Texelgruppe high route",
+      "Year-round access",
+      "Reliable water source nearby in summer"
+    ],
+    "booking_required": false,
+    "booking_note": "No booking — free, first-come. Sign the logbook on arrival. Bring all supplies."
+  },
+  {
+    "id": "biv-mer-02",
+    "name": "Bivacco Riffler",
+    "type": "bivacco",
+    "region": "South Tyrol",
+    "altitude": 2615,
+    "coordinates": {
+      "lat": 46.7089,
+      "lng": 11.0534
+    },
+    "contact": {
+      "phone": "",
+      "email": "cai.merano@cai.it",
+      "website": "",
+      "whatsapp": null
+    },
+    "facilities": {
+      "beds": 6,
+      "showers": false,
+      "meals": false,
+      "wifi": false,
+      "dogs": false,
+      "payment_methods": []
+    },
+    "description": "Exposed emergency bivouac below the Riffler summit ridge in the Texelgruppe massif. 6 emergency places with no amenities. Reserved for alpinists engaged in technical routes on the Texel peaks. Not accessible to casual hikers.",
+    "access_info": "Alpine route only — from Malga Lazins via trail 37B (4 hours, grade II scrambling, some fixed cables). Helmet and harness recommended. Technical alpinism experience required.",
+    "opening_season": {
+      "start_date": "2026-01-01",
+      "end_date": "2026-12-31"
+    },
+    "prices": {
+      "overnight": 0,
+      "breakfast": 0,
+      "dinner": 0,
+      "half_board": 0
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800"
+    ],
+    "status": "published",
+    "special_closures": [],
+    "nearby_trails": [],
+    "josephine_note": "This is serious alpine terrain. Check conditions with CAI Merano before attempting. In good conditions the sunrise from the ridge above the bivouac is extraordinary. Always leave a route plan with someone.",
+    "highlights": [
+      "High-altitude alpine shelter in the Texelgruppe",
+      "Gateway to technical Texel peak routes",
+      "Free and year-round for experienced alpinists"
+    ],
+    "booking_required": false,
+    "booking_note": "Emergency use only. No booking possible. Register your route with CAI Merano for safety."
+  },
+  {
+    "id": "biv-mer-03",
+    "name": "Bivacco Schneekoppe",
+    "type": "bivacco",
+    "region": "South Tyrol",
+    "altitude": 2340,
+    "coordinates": {
+      "lat": 46.7234,
+      "lng": 11.1945
+    },
+    "contact": {
+      "phone": "",
+      "email": "",
+      "website": "",
+      "whatsapp": null
+    },
+    "facilities": {
+      "beds": 4,
+      "showers": false,
+      "meals": false,
+      "wifi": false,
+      "dogs": true,
+      "payment_methods": []
+    },
+    "description": "Tiny 4-person shelter on the ridge above Val di Nova, built in 1971 as an emergency refuge for hikers caught by afternoon storms on the exposed Gruppe di Tessa trails. Maintained by local alpine volunteers. Small but well-constructed, with a small logbook and emergency whistle posted inside.",
+    "access_info": "From Rifugio Val di Nova via trail 23B (1 hour from hut, exposed ridge walking). Only accessible in good weather — the ridge is dangerous in storms or poor visibility. Map and compass required.",
+    "opening_season": {
+      "start_date": "2026-01-01",
+      "end_date": "2026-12-31"
+    },
+    "prices": {
+      "overnight": 0,
+      "breakfast": 0,
+      "dinner": 0,
+      "half_board": 0
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+    ],
+    "status": "published",
+    "special_closures": [],
+    "nearby_trails": [
+      "cascada_loop"
+    ],
+    "josephine_note": "This shelter was built after a fatal accident in 1969. Read the plaque inside when you arrive. The views on a clear day are extraordinary — Merano below, Ortler to the west, Texel peaks north.",
+    "highlights": [
+      "Historic 1971 emergency shelter with a story",
+      "Ridge views: Merano, Ortler, Texel peaks",
+      "Small and intimate — 4 places only"
+    ],
+    "booking_required": false,
+    "booking_note": "Emergency use only. Free, always open."
+  },
+  {
+    "id": "biv-mer-04",
+    "name": "Bivacco Passeier",
+    "type": "bivacco",
+    "region": "South Tyrol",
+    "altitude": 2450,
+    "coordinates": {
+      "lat": 46.7567,
+      "lng": 11.1312
+    },
+    "contact": {
+      "phone": "",
+      "email": "cai.passeier@cai.it",
+      "website": "",
+      "whatsapp": null
+    },
+    "facilities": {
+      "beds": 10,
+      "showers": false,
+      "meals": false,
+      "wifi": false,
+      "dogs": false,
+      "payment_methods": []
+    },
+    "description": "Larger emergency shelter maintained by CAI Passeier section on the high Passeier ridge route. 10 emergency bunks — one of the larger bivacchi in the Merano area. Used by ridge traversers and alpinists crossing between Passeier Valley and the Ötztal Alps.",
+    "access_info": "Trail 211 from St. Leonhard in Passeier (4 hours, strenuous with significant elevation gain). Trail 212 from Pfelders (3 hours). Exposed high ridge — only attempt in stable weather.",
+    "opening_season": {
+      "start_date": "2026-01-01",
+      "end_date": "2026-12-31"
+    },
+    "prices": {
+      "overnight": 0,
+      "breakfast": 0,
+      "dinner": 0,
+      "half_board": 0
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800"
+    ],
+    "status": "published",
+    "special_closures": [],
+    "nearby_trails": [],
+    "josephine_note": "Well-maintained and larger than most bivacchi — 10 bunks gives you a reasonable chance of space. Water from the snowfield below (melt first). The logbook has entries from Ötztal crossings going back to the 1980s.",
+    "highlights": [
+      "Largest bivacco in the Merano area — 10 bunks",
+      "Crossroads of Passeier–Ötztal traverse routes",
+      "Well-maintained by CAI Passeier"
+    ],
+    "booking_required": false,
+    "booking_note": "Free, always open. First-come. Bring all supplies — no facilities."
+  },
+  {
+    "id": "biv-mer-05",
+    "name": "Bivacco Tiroler Kreuz",
+    "type": "bivacco",
+    "region": "South Tyrol",
+    "altitude": 2010,
+    "coordinates": {
+      "lat": 46.6845,
+      "lng": 11.1567
+    },
+    "contact": {
+      "phone": "",
+      "email": "",
+      "website": "",
+      "whatsapp": null
+    },
+    "facilities": {
+      "beds": 6,
+      "showers": false,
+      "meals": false,
+      "wifi": false,
+      "dogs": true,
+      "payment_methods": []
+    },
+    "description": "Small emergency shelter at the Tiroler Kreuz (Tyrolean Cross) saddle above Tirolo village, one of the most visited viewpoints near Merano. The bivouac is rarely needed by day hikers but serves as emergency refuge for those caught out on the high routes above Hochmuth.",
+    "access_info": "Trail 27 from Tirolo village continues past Rifugio Hochmuth to the saddle (2 hours total from village). Trail 28 from Merano Obermais (2.5 hours). Well-marked, moderate difficulty.",
+    "opening_season": {
+      "start_date": "2026-01-01",
+      "end_date": "2026-12-31"
+    },
+    "prices": {
+      "overnight": 0,
+      "breakfast": 0,
+      "dinner": 0,
+      "half_board": 0
+    },
+    "photos": [
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"
+    ],
+    "status": "published",
+    "special_closures": [],
+    "nearby_trails": [
+      "hochmuth_tirolo"
+    ],
+    "josephine_note": "If you're descending from the higher routes and the weather closes in, this shelter is your lifeline. On a clear day the saddle itself is a stunning lunch spot — the cross marks the spot where Tyrolean hunters rested for centuries.",
+    "highlights": [
+      "Historic Tyrolean Cross saddle viewpoint",
+      "Emergency shelter above the Hochmuth Trail",
+      "Year-round access — useful in shoulder season"
+    ],
+    "booking_required": false,
+    "booking_note": "Always open, free. Emergency use preferred but all welcome if caught out."
   }
 ]
