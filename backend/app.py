@@ -181,7 +181,7 @@ def require_admin_auth(f):
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TRAILS_PATH   = os.path.join(BASE_DIR, 'data', 'trails.json')
-RIFUGIOS_PATH = os.path.join(BASE_DIR, 'data', 'rifugios.json')
+RIFUGIOS_PATH = os.path.join(BASE_DIR, 'backend', 'data', 'rifugios.json')
 
 # ── Fix #2: in-process TTL cache for JSON file reads ─────────────────────
 _FILE_CACHE: dict = {}          # path → (data, loaded_at)
@@ -1390,7 +1390,7 @@ def load_rifugios():
             return [row_to_rifugio(r) for r in rows]
         except Exception as e:
             print(f"[db] load_rifugios fallback to JSON: {e}")
-    rifugios_path = os.path.join(BASE_DIR, 'data', 'rifugios.json')
+    rifugios_path = os.path.join(BASE_DIR, 'backend', 'data', 'rifugios.json')
     try:
         return _cached_json(rifugios_path)
     except FileNotFoundError:
@@ -1430,7 +1430,7 @@ def save_rifugios(rifugios_data):
         for r in items:
             save_rifugio(r)
         return
-    rifugios_path = os.path.join(BASE_DIR, 'data', 'rifugios.json')
+    rifugios_path = os.path.join(BASE_DIR, 'backend', 'data', 'rifugios.json')
     atomic_json_write(rifugios_path, rifugios_data)
     _invalidate_cache(rifugios_path)
 
