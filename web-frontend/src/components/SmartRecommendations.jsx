@@ -61,7 +61,7 @@ function LoadingScreen() {
   return (
     <div className="sr-loading-screen">
       <div className="sr-loading-mark">
-        <img src="/josephine-mark.svg" alt="" className="sr-loading-mark-img" onError={e => e.currentTarget.style.opacity = '0'} />
+        <img src="/logo.png" alt="" className="sr-loading-mark-img" onError={e => e.currentTarget.style.opacity = '0'} />
         <div className="sr-loading-pulse" />
       </div>
       <p className="sr-loading-phrase">{LOADING_PHRASES[phraseIdx]}</p>
@@ -195,7 +195,7 @@ function SmartRecommendations({ viewTrail, onBack }) {
                   <div className="sr-hero-card__overlay" />
 
                   <span className="sr-hero-card__pick-badge">
-                    <img src="/josephine-mark.svg" alt="" className="sr-pick-badge-mark" onError={e => e.currentTarget.style.display = 'none'} />
+                    <img src="/logo.png" alt="" className="sr-pick-badge-mark" onError={e => e.currentTarget.style.display = 'none'} />
                     Josephine's Pick
                   </span>
 
@@ -230,7 +230,7 @@ function SmartRecommendations({ viewTrail, onBack }) {
                   {/* Josephine's reasoning */}
                   {hero.josephine_note && (
                     <div className="sr-josephine-reason">
-                      <img src="/josephine-mark.svg" alt="" className="sr-reason-mark" onError={e => e.currentTarget.style.display = 'none'} />
+                      <img src="/logo.png" alt="" className="sr-reason-mark" onError={e => e.currentTarget.style.display = 'none'} />
                       <p className="sr-reason-text">{hero.josephine_note}</p>
                     </div>
                   )}
@@ -292,7 +292,7 @@ function SmartRecommendations({ viewTrail, onBack }) {
       <div className="sr-header">
         <div className="sr-header-inner">
           <div className="sr-josephine-mark">
-            <img src="/josephine-mark.svg" alt="" className="sr-mark-img" />
+            <img src="/logo.png" alt="" className="sr-mark-img" />
           </div>
           <div>
             <h1 className="sr-title">Plan my day</h1>

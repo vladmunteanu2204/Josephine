@@ -1,8 +1,9 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, lazy, Suspense, useCallback } from 'react';
 import './App.css';
 import { ENABLE_HIKE_TRACKING, ENABLE_GAMIFICATION } from './featureFlags';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
+import { SeasonProvider } from './contexts/SeasonContext';
 // Always-visible shell (eager)
 import Header from './components/Header';
 import Home from './components/Home';
@@ -69,7 +70,10 @@ function App() {
   const [selectedRifugio, setSelectedRifugio] = useState(null);
   const [selectedMultiDayTrail, setSelectedMultiDayTrail] = useState(null);
   const [catalogInitialTags, setCatalogInitialTags] = useState([]);
+  const [rifugiosInitialType, setRifugiosInitialType] = useState('');
+  const [rifugiosInitialStatus, setRifugiosInitialStatus] = useState('');
   const [showSplash, setShowSplash] = useState(true);
+  const handleSplashComplete = useCallback(() => setShowSplash(false), []);
   const [isGPSActive, setIsGPSActive] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
@@ -156,9 +160,18 @@ function App() {
 
   return (
     <div className="app">
+      <SeasonProvider>
       <ToastProvider>
         <AuthProvider>
-          {(!isGPSActive || !ENABLE_HIKE_TRACKING) && <Header currentView={currentView} setCurrentView={setCurrentView} showLoginModal={showLoginModal} setShowLoginModal={setShowLoginModal} />}
+          {(!isGPSActive || !ENABLE_HIKE_TRACKING) && (
+          <Header
+            currentView={currentView}
+            setCurrentView={setCurrentView}
+            showLoginModal={showLoginModal}
+            setShowLoginModal={setShowLoginModal}
+            navigateToRifugios={(type, status) => { setRifugiosInitialType(type || ''); setRifugiosInitialStatus(status || ''); setCurrentView('rifugios'); }}
+          />
+        )}
         
         <main className="main-content">
           <Suspense fallback={<ViewLoader />}>
@@ -166,6 +179,7 @@ function App() {
             <Home
               setCurrentView={setCurrentView}
               navigateToCatalog={(tags) => { setCatalogInitialTags(tags || []); setCurrentView('catalog'); }}
+              navigateToRifugios={(type, status) => { setRifugiosInitialType(type || ''); setRifugiosInitialStatus(status || ''); setCurrentView('rifugios'); }}
               viewTrail={viewTrail}
             />
           )}
@@ -235,7 +249,13 @@ function App() {
           )}
 
           {currentView === 'rifugios' && (
-            <Rifugios onNavigate={navigate} />
+            <Rifugios
+              onNavigate={navigate}
+              initialType={rifugiosInitialType}
+              onTypeConsumed={() => setRifugiosInitialType('')}
+              initialStatus={rifugiosInitialStatus}
+              onStatusConsumed={() => setRifugiosInitialStatus('')}
+            />
           )}
 
           {currentView === 'rifugio-detail' && selectedRifugio && (
@@ -269,12 +289,14 @@ function App() {
 
 
         {showSplash && (
-          <SplashScreen onComplete={() => setShowSplash(false)} />
+          <SplashScreen onComplete={handleSplashComplete} />
         )}
         </AuthProvider>
       </ToastProvider>
+      </SeasonProvider>
     </div>
   );
+
 }
 
 export default App;

@@ -110,7 +110,7 @@ function Header({ currentView, setCurrentView, showLoginModal, setShowLoginModal
             aria-label="Josephine — home"
           >
             <img
-              src="/josephine-mark.svg"
+              src="/logo.png"
               alt="Josephine mark"
               className="jph-header__mark-img"
               aria-hidden="true"

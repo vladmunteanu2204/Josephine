@@ -2,24 +2,24 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { trailImg, trailImgAlt } from '../utils/trailImage';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import { useSeason } from '../contexts/SeasonContext';
+import { seasonAsset } from '../hooks/useSeason';
 import './Home.css';
 
 const API_URL = '/api';
 
-const HERO_IMAGES = [
-  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600',
-  'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600',
-  'https://images.unsplash.com/photo-1515091943-9d5c0ad475af?w=1600',
-];
-
-function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
+function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail }) {
   const { t } = useTranslation();
+  const { config } = useSeason();
+
   const [featuredTrails, setFeaturedTrails] = useState([]);
   const [activeTrail, setActiveTrail] = useState(0);
   const [multiDayTrail, setMultiDayTrail] = useState(null);
   const [dogFriendlyCount, setDogFriendlyCount] = useState(null);
+  const [rifugioCounts, setRifugioCounts] = useState({ rifugio: null, malga: null, bivacco: null });
 
-  const JOSEPHINE_MESSAGES = [
+  // Seasonal messages override the static list; fall back to generic if config absent
+  const JOSEPHINE_MESSAGES = config.messages ?? [
     t('home.josephineMsg1', "The Dolomites are calling — want me to find a trail that fits your day perfectly?"),
     t('home.josephineMsg2', "Golden hour in the mountains is something else. Shall I find you a sunset hike?"),
     t('home.josephineMsg3', "Some of the best trails are crowd-free if you know when to go. Let me help."),
@@ -33,8 +33,8 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
     { from: 'josephine', text: t('convo.josephine2') },
   ];
 
-  const [josephineMsg] = useState(() => Math.floor(Math.random() * 5));
-  const [heroBg] = useState(() => HERO_IMAGES[Math.floor(Math.random() * HERO_IMAGES.length)]);
+  const heroBg = seasonAsset(config, 'heroImage');
+  const [josephineMsg] = useState(() => Math.floor(Math.random() * JOSEPHINE_MESSAGES.length));
   const [convoVisible, setConvoVisible] = useState(false);
 
   const scrollYRef = useRef(0);
@@ -94,9 +94,10 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
   useEffect(() => {
     const load = async () => {
       try {
-        const [trailsRes, multiDayRes] = await Promise.all([
+        const [trailsRes, multiDayRes, rifugiosRes] = await Promise.all([
           axios.get(`${API_URL}/trails`),
           axios.get(`${API_URL}/multi-day-trails`).catch(() => null),
+          axios.get(`${API_URL}/rifugios`).catch(() => null),
         ]);
         if (trailsRes.data.trails?.length > 0) {
           const top = trailsRes.data.trails
@@ -105,6 +106,14 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
           setFeaturedTrails(top);
           startTrailTimer(top);
           setDogFriendlyCount(trailsRes.data.trails.filter(t => t.dog_friendly).length);
+        }
+        if (rifugiosRes?.data?.rifugios) {
+          const rifs = rifugiosRes.data.rifugios;
+          setRifugioCounts({
+            rifugio: rifs.filter(r => r.type === 'rifugio').length,
+            malga:   rifs.filter(r => r.type === 'malga').length,
+            bivacco: rifs.filter(r => r.type === 'bivacco').length,
+          });
         }
         if (multiDayRes?.data) {
           const arr = Array.isArray(multiDayRes.data)
@@ -140,7 +149,7 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
         <div
           className="hp-hero__bg"
           ref={el => heroLayersRef.current.bg = el}
-          style={{ backgroundImage: `url('${heroBg}')` }}
+          style={{ backgroundImage: `url('${heroBg}')`, backgroundPosition: config.heroPosition ?? '72% 50%' }}
         />
         <div className="hp-hero__scrim" />
 
@@ -162,47 +171,6 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
             </button>
           </div>
 
-          {/* Right: Josephine card */}
-          <div className="hp-hero__companion">
-            <div className="hp-card">
-              <div className="hp-card__portrait">
-                <img
-                  src="/josephine-pose-neutral.png"
-                  alt="Josephine"
-                  className="hp-card__portrait-img"
-                  onError={e => {
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'flex';
-                  }}
-                />
-                <div className="hp-card__portrait-fallback" style={{ display: 'none' }}>
-                  <img src="/josephine-mark.svg" alt="" style={{ width: 56, opacity: 0.6 }} />
-                </div>
-              </div>
-              <div className="hp-card__body">
-                <div className="hp-card__name-row">
-                  <span className="hp-card__name">Josephine</span>
-                  <span className="hp-card__wave">
-                    {[3, 5, 8, 5, 9, 4].map((h, i) => (
-                      <span
-                        key={i}
-                        className="hp-card__bar"
-                        style={{ height: `${h * 1.8}px`, animationDelay: `${i * 0.1}s` }}
-                      />
-                    ))}
-                  </span>
-                </div>
-                <p className="hp-card__greeting">{getGreeting()}</p>
-                <p className="hp-card__msg">{JOSEPHINE_MESSAGES[josephineMsg]}</p>
-                <button
-                  className="hp-card__btn"
-                  onClick={() => setCurrentView('josephine')}
-                >
-                  {t('hero.josephineCta')}
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
 
         <div
@@ -306,10 +274,10 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
               >
                 {msg.from === 'josephine' && (
                   <img
-                    src="/josephine-mark.svg"
+                    src="/josephine-portrait.png"
                     alt=""
                     className="hp-convo__avatar"
-                    onError={e => e.target.style.display = 'none'}
+                    onError={e => e.currentTarget.style.display = 'none'}
                   />
                 )}
                 <p className="hp-convo__text">{msg.text}</p>
@@ -327,7 +295,111 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
       </section>
 
       {/* ══════════════════════════════════════════
-          4. TWO PATHS — full viewport split
+          3b. MEET JOSEPHINE — character + pillars
+      ══════════════════════════════════════════ */}
+      <section className="hp-meet">
+        <div className="hp-meet__inner">
+          <div className="hp-meet__head">
+            <p className="hp-meet__eyebrow">{t('meet.eyebrow', 'Your alpine companion')}</p>
+            <h2 className="hp-meet__title">{t('meet.title', 'Meet Josephine')}</h2>
+            <p className="hp-meet__lead">
+              {t('meet.lead', "Part local guide, part friend — Josephine knows these mountains by heart and plans your day around how you feel, the weather, and what's open.")}
+            </p>
+          </div>
+
+          {/* Single portrait */}
+          <div className="hp-meet__portrait-wrap">
+            <img
+              src={seasonAsset(config, 'portrait')}
+              alt="Josephine"
+              className="hp-meet__portrait-img"
+              onError={e => { e.currentTarget.src = '/josephine-portrait.png'; }}
+            />
+          </div>
+
+          {/* Pillars */}
+          <div className="hp-meet__pillars">
+            {[
+              { icon: '🏔', title: t('meet.pillar1Title', 'Local knowledge'),     desc: t('meet.pillar1Desc', 'Every trail, malga and shortcut — learned on foot, not from a brochure.') },
+              { icon: '🌤', title: t('meet.pillar2Title', 'Live conditions'),       desc: t('meet.pillar2Desc', 'She reads today\'s weather and visibility before she suggests a thing.') },
+              { icon: '✦',  title: t('meet.pillar3Title', 'Smart recommendations'), desc: t('meet.pillar3Desc', 'Tell her your mood and time — she curates three options that fit.') },
+              { icon: '♥',  title: t('meet.pillar4Title', 'Always by your side'),   desc: t('meet.pillar4Desc', 'From first step to summit and back, she\'s with you the whole way.') },
+            ].map((p, i) => (
+              <div className="hp-meet__pillar" key={i}>
+                <span className="hp-meet__pillar-icon">{p.icon}</span>
+                <h3 className="hp-meet__pillar-title">{p.title}</h3>
+                <p className="hp-meet__pillar-desc">{p.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <button className="hp-meet__cta" onClick={() => setCurrentView('josephine')}>
+            {t('meet.cta', 'Plan your day with Josephine →')}
+          </button>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          4. MOUNTAIN HUTS — rifugios / malghe / bivacchi
+      ══════════════════════════════════════════ */}
+      <section className="hp-huts">
+        <div className="hp-huts__inner">
+
+          {/* Josephine voice intro */}
+          <div className="hp-huts__intro">
+            <img src="/logo.png" alt="" className="hp-huts__j-mark" onError={e => e.currentTarget.style.display='none'} />
+            <p className="hp-huts__voice">
+              "Whether you need a warm meal at a malga or a bed for the night at a rifugio, the mountains have a place waiting for you."
+            </p>
+          </div>
+
+          {/* Three type cards */}
+          <div className="hp-huts__cards">
+            <button
+              className="hp-huts__card hp-huts__card--malga"
+              onClick={() => navigateToRifugios?.('malga', 'open')}
+            >
+              <span className="hp-huts__card-type">🧀 Malga</span>
+              <p className="hp-huts__card-desc">Alpine dairy farms. Fresh cheese, cold drinks, no reservation needed.</p>
+              {rifugioCounts.malga !== null && (
+                <span className="hp-huts__card-count">{rifugioCounts.malga} places</span>
+              )}
+              <span className="hp-huts__card-arrow">→</span>
+            </button>
+
+            <button
+              className="hp-huts__card hp-huts__card--rifugio"
+              onClick={() => navigateToRifugios?.('rifugio', 'open')}
+            >
+              <span className="hp-huts__card-type">🏔 Rifugio</span>
+              <p className="hp-huts__card-desc">Mountain huts with beds. Book ahead, hike between them over multiple days.</p>
+              {rifugioCounts.rifugio !== null && (
+                <span className="hp-huts__card-count">{rifugioCounts.rifugio} places</span>
+              )}
+              <span className="hp-huts__card-arrow">→</span>
+            </button>
+
+            <button
+              className="hp-huts__card hp-huts__card--bivacco"
+              onClick={() => navigateToRifugios?.('bivacco', 'open')}
+            >
+              <span className="hp-huts__card-type">⛺ Bivacco</span>
+              <p className="hp-huts__card-desc">Unmanned emergency shelters. Always open, always free.</p>
+              {rifugioCounts.bivacco !== null && (
+                <span className="hp-huts__card-count">{rifugioCounts.bivacco} places</span>
+              )}
+              <span className="hp-huts__card-arrow">→</span>
+            </button>
+          </div>
+
+          <button className="hp-huts__cta" onClick={() => navigateToRifugios?.('')}>
+            Explore all mountain huts →
+          </button>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          5. TWO PATHS — full viewport split
       ══════════════════════════════════════════ */}
       <section className="hp-paths">
 
@@ -356,20 +428,44 @@ function Home({ setCurrentView, navigateToCatalog, viewTrail }) {
         <div
           className="hp-paths__card hp-paths__card--narya"
           onClick={() => navigateToCatalog ? navigateToCatalog(['dog-friendly']) : setCurrentView('catalog')}
-          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=1200')` }}
+          style={{ backgroundImage: `url('/josephine-with-narya.png')` }}
         >
-          <div className="hp-paths__scrim" />
+          <div className="hp-paths__scrim hp-paths__scrim--narya" />
           <div className="hp-paths__body">
-            <p className="hp-paths__eyebrow hp-paths__eyebrow--narya">{t('paths.dayTrailsEyebrow')}</p>
+            {/* Narya character badge */}
+            <div className="hp-narya-badge">
+              <img
+                src="/narya.png"
+                alt="Narya"
+                className="hp-narya-badge__img"
+                onError={e => e.currentTarget.style.display = 'none'}
+              />
+              <div>
+                <p className="hp-narya-badge__name">Narya</p>
+                <p className="hp-narya-badge__title">Your Canine Companion</p>
+              </div>
+            </div>
+
             <h3 className="hp-paths__title">
-              {t('paths.dayTrailsTitle').split('\n').map((line, i) => (
-                <span key={i}>{line}{i === 0 && <br />}</span>
-              ))}
+              Paw-approved<br />adventures
             </h3>
+
+            <ul className="hp-narya-list">
+              <li>Dog-friendly trails</li>
+              <li>Water points on route</li>
+              <li>Shade &amp; safety tips</li>
+              <li>Happy tail guarantee</li>
+            </ul>
+
             {dogFriendlyCount !== null && (
-              <p className="hp-paths__sub">{t('home.dogFriendlyCount', { count: dogFriendlyCount, defaultValue: `${dogFriendlyCount} dog-friendly trails` })}</p>
+              <p className="hp-paths__sub">{dogFriendlyCount} dog-friendly trails</p>
             )}
-            <span className="hp-paths__link hp-paths__link--narya">{t('paths.dayTrailsCta')}</span>
+
+            <blockquote className="hp-narya-quote">
+              "New trail, new scents, same mountains.<br />Let's make it unforgettable."
+            </blockquote>
+
+            <span className="hp-paths__link hp-paths__link--narya">Explore dog trails →</span>
           </div>
         </div>
 

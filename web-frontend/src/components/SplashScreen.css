@@ -12,10 +12,9 @@
   justify-content: space-between;
   overflow: hidden;
   /* Cinematic alpine photo — female hiker at golden hour */
-  background:
-    linear-gradient(180deg, rgba(5,10,5,0.5) 0%, rgba(5,10,5,0.2) 40%, rgba(5,10,5,0.75) 100%),
-    url('https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=900&auto=format&fit=crop&q=80')
-    center 40% / cover no-repeat;
+  background-size: cover;
+  background-position: center 40%;
+  background-repeat: no-repeat;
   opacity: 1;
   transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1);
 }

@@ -238,6 +238,29 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin }
   const note = fullTrail.josephineNote;
   const noteText = note && typeof note === 'object' ? (note[lang] || note.en || '').trim() : '';
 
+  // "Good to know" — built defensively from whatever fields the trail carries.
+  const goodToKnowRows = (() => {
+    const rows = [];
+    const s = fullTrail.best_season;
+    if (Array.isArray(s) && s.length) {
+      rows.push([t('trail.gtkBestTime', 'Best time'), s.length > 1 ? `${s[0]}–${s[s.length - 1]}` : s[0]]);
+    } else if (typeof s === 'string' && s) {
+      rows.push([t('trail.gtkBestTime', 'Best time'), s]);
+    }
+    if (fullTrail.trail_type) rows.push([t('trail.gtkTrailType', 'Trail type'), String(fullTrail.trail_type).replace(/_/g, ' ')]);
+    const parking = fullTrail.trailhead_info?.parking || fullTrail.transport?.car;
+    if (parking) rows.push([t('trail.gtkParking', 'Parking'), parking]);
+    const fac = Array.isArray(fullTrail.facilities) ? fullTrail.facilities : [];
+    if (fac.length) rows.push([t('trail.gtkFacilities', 'Facilities'), fac.slice(0, 3).join(', ')]);
+    if (fullTrail.crowding?.level) {
+      const tip = fullTrail.crowding.quiet_tip ? ` · ${fullTrail.crowding.quiet_tip}` : '';
+      rows.push([t('trail.gtkCrowds', 'Crowds'), `${fullTrail.crowding.level}${tip}`]);
+    }
+    if (fullTrail.dog_friendly) rows.push([t('trail.gtkDog', 'Dogs'), '✓']);
+    if (fullTrail.family_friendly) rows.push([t('trail.gtkFamily', 'Family'), '✓']);
+    return rows.slice(0, 6);
+  })();
+
   return (
     <div className="td-page">
 
@@ -317,14 +340,29 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin }
           <p className="td-overview">{fullTrail.description}</p>
         </section>
 
-        {/* Josephine note */}
+        {/* Why Josephine picked this */}
         {noteText && (
           <div className="td-jph-note">
             <div className="td-jph-note__header">
-              <img src="/josephine-mark.svg" alt="" className="td-jph-note__mark" />
-              <span className="td-jph-note__label">{t('trail.josephineNote')}</span>
+              <img src="/logo.png" alt="" className="td-jph-note__mark" />
+              <span className="td-jph-note__label">{t('trail.whyPicked', 'Why Josephine picked this')}</span>
             </div>
             <p className="td-jph-note__text">{noteText}</p>
+          </div>
+        )}
+
+        {/* Good to know */}
+        {goodToKnowRows.length > 0 && (
+          <div className="td-gtk">
+            <p className="td-gtk__label">{t('trail.goodToKnowTitle', 'Good to know')}</p>
+            <div className="td-gtk__grid">
+              {goodToKnowRows.map(([k, v]) => (
+                <div className="td-gtk__cell" key={k}>
+                  <span className="td-gtk__key">{k}</span>
+                  <span className="td-gtk__val">{v}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

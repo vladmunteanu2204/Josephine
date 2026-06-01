@@ -8,11 +8,21 @@
   --text-muted: #5a5c50;
   --accent-primary: #c9a84c;
   --accent-gold: #e8cc80;
+  --accent-warm: #d8a25a;        /* sunset amber — warm editorial accent */
+  --accent-warm-soft: #e6b878;   /* lighter warm highlight */
   --accent-forest: #1a2a1c;
   --accent-lake: #3a6880;
   --diff-easy: #4caf50;
   --diff-medium: #e08c3a;
   --diff-hard: #c0392b;
+
+  /* Warm photo overlays — layered over hero/section imagery for legibility */
+  --bg-warm-veil: linear-gradient(180deg, rgba(8,14,8,0.25) 0%, rgba(8,14,8,0.72) 70%, var(--bg-primary) 100%);
+  --bg-warm-veil-soft: linear-gradient(180deg, rgba(8,14,8,0.10) 0%, rgba(8,14,8,0.55) 100%);
+
+  /* Season-adaptive overlays — defaults are summer; SeasonProvider overrides at runtime */
+  --season-overlay:  rgba(5,12,5,0.62);
+  --season-vignette: rgba(5,12,5,0.80);
 
   /* Typography */
   --font-display: 'Cormorant Garamond', 'Garamond', 'Georgia', serif;

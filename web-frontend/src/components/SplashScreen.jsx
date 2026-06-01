@@ -1,22 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSeason } from '../contexts/SeasonContext';
+import { seasonAsset } from '../hooks/useSeason';
 import './SplashScreen.css';
 
 function SplashScreen({ onComplete }) {
   const { t } = useTranslation();
+  const { config } = useSeason();
+  const splashImage = seasonAsset(config, 'splashImage');
   const [phase, setPhase] = useState('enter');
 
   useEffect(() => {
     const minDisplayTime = 2400;
     const startTime = Date.now();
+    let t1, t2;
 
     const checkIfReady = () => {
       const elapsed = Date.now() - startTime;
       const remainingTime = Math.max(0, minDisplayTime - elapsed);
-
-      setTimeout(() => {
+      t1 = setTimeout(() => {
         setPhase('exit');
-        setTimeout(() => {
+        t2 = setTimeout(() => {
           if (onComplete) onComplete();
         }, 900);
       }, remainingTime);
@@ -26,12 +30,24 @@ function SplashScreen({ onComplete }) {
       checkIfReady();
     } else {
       window.addEventListener('load', checkIfReady);
-      return () => window.removeEventListener('load', checkIfReady);
+      return () => {
+        window.removeEventListener('load', checkIfReady);
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
     }
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
   }, [onComplete]);
 
   return (
-    <div className={`jph-splash ${phase === 'exit' ? 'jph-splash--exit' : ''}`}>
+    <div
+      className={`jph-splash ${phase === 'exit' ? 'jph-splash--exit' : ''}`}
+      style={{ backgroundImage: `linear-gradient(180deg, rgba(5,10,5,0.45) 0%, rgba(5,10,5,0.15) 40%, var(--season-vignette) 100%), url('${splashImage}')` }}
+    >
 
       {/* ── Cinematic SVG mountain background ── */}
       <svg
@@ -164,7 +180,7 @@ function SplashScreen({ onComplete }) {
       {/* ── Logo mark (top center) ── */}
       <div className="jph-splash__mark">
         <img
-          src="/josephine-mark.svg"
+          src="/logo.png"
           alt="Josephine"
           className="jph-splash__mark-img"
           draggable="false"
@@ -174,7 +190,7 @@ function SplashScreen({ onComplete }) {
       {/* ── Wordmark + tagline ── */}
       <div className="jph-splash__brand">
         <h1 className="jph-splash__wordmark">Josephine</h1>
-        <p className="jph-splash__tagline">YOUR ALPINE COMPANION</p>
+        <p className="jph-splash__tagline">{config.splashTagline?.toUpperCase() ?? 'YOUR ALPINE COMPANION'}</p>
       </div>
 
       {/* ── Bottom: origin + progress + loading text ── */}
@@ -183,7 +199,7 @@ function SplashScreen({ onComplete }) {
         <div className="jph-splash__progress-track" role="progressbar" aria-label="Loading">
           <div className="jph-splash__progress-fill"/>
         </div>
-        <p className="jph-splash__loading-text">Preparing your next adventure…</p>
+        <p className="jph-splash__loading-text">{config.splashLoadingText ?? 'Preparing your next adventure…'}</p>
       </div>
 
     </div>

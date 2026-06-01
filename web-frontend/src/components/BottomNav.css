@@ -140,6 +140,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.25s ease;
+  overflow: hidden;
 }
 
 .jph-bottom-nav__josephine:hover .jph-bottom-nav__j-ring {
@@ -150,7 +151,8 @@
 }
 
 .jph-bottom-nav__j-mark {
-  width: 34px;
-  height: 34px;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
