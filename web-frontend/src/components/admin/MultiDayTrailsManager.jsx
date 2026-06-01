@@ -3,9 +3,7 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import './MultiDayTrailsManager.css';
 
-const API_URL = import.meta.env.VITE_API_URL || (typeof window !== 'undefined' && window.location.origin.includes('replit') 
-  ? `https://${window.location.host.split('--')[0].replace(/^webview-/, '')}--8000.${window.location.host.split('.').slice(1).join('.')}` 
-  : 'http://localhost:8000');
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 function MultiDayTrailsManager({ adminPassword }) {
   const { t } = useTranslation();
@@ -60,6 +58,8 @@ function MultiDayTrailsManager({ adminPassword }) {
       stages: [],
       equipment_checklist: [],
       booking_tips: [],
+      booking_strategy: '',
+      emergency_contacts: { mountain_rescue: '', weather: '', local_police: '' },
       status: 'draft'
     };
     setEditingTrail(newTrail);
@@ -204,58 +204,50 @@ function MultiDayTrailsManager({ adminPassword }) {
       )}
 
       {!editingTrail && (
-        <div className="trails-list">
-          <table className="trails-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>{t('admin.trailName')}</th>
-                <th>{t('multiday.days')}</th>
-                <th>{t('multiday.stages')}</th>
-                <th>{t('multiday.difficulty')}</th>
-                <th>{t('multiday.region')}</th>
-                <th>{t('admin.status')}</th>
-                <th>{t('common.actions', 'Actions')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {trails.length === 0 ? (
-                <tr>
-                  <td colSpan="8" style={{ textAlign: 'center', padding: '40px' }}>
-                    {t('admin.noTrailsYet')}
-                  </td>
-                </tr>
-              ) : (
-                trails.map(trail => (
-                  <tr key={trail.id}>
-                    <td>{trail.id}</td>
-                    <td>{trail.name}</td>
-                    <td>{trail.duration_days}D/{trail.duration_nights}N</td>
-                    <td>{trail.stages?.length || 0}</td>
-                    <td>
-                      <span className={`difficulty-badge ${trail.difficulty}`}>
-                        {t(`difficulty.${trail.difficulty}`, trail.difficulty)}
-                      </span>
-                    </td>
-                    <td>{trail.region}</td>
-                    <td>
-                      <span className={`status-badge ${trail.status}`}>
-                        {t(`admin.${trail.status}`, trail.status)}
-                      </span>
-                    </td>
-                    <td className="actions">
-                      <button onClick={() => { setEditingTrail(trail); setIsCreating(false); }}>
-                        ✏️ {t('admin.edit')}
-                      </button>
-                      <button onClick={() => handleDelete(trail.id)} className="delete-btn">
-                        🗑️ {t('admin.delete')}
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '16px', marginTop: '16px' }}>
+          {trails.length === 0 ? (
+            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '60px 0', opacity: 0.5 }}>
+              {t('admin.noTrailsYet')}
+            </div>
+          ) : (
+            trails.map(trail => (
+              <div key={trail.id} style={{
+                background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: '12px', overflow: 'hidden',
+              }}>
+                {trail.hero_image && (
+                  <img src={trail.hero_image} alt={trail.name} style={{ width: '100%', height: '140px', objectFit: 'cover' }} />
+                )}
+                <div style={{ padding: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                    <h4 style={{ margin: 0, fontSize: '15px', color: '#f0ece6' }}>{trail.name}</h4>
+                    <span style={{
+                      fontSize: '10px', fontWeight: 700, padding: '2px 8px', borderRadius: '100px',
+                      background: trail.status === 'published' ? 'rgba(74,222,128,0.12)' : 'rgba(251,191,36,0.12)',
+                      color: trail.status === 'published' ? '#4ade80' : '#fbbf24',
+                      border: `1px solid ${trail.status === 'published' ? 'rgba(74,222,128,0.3)' : 'rgba(251,191,36,0.3)'}`,
+                    }}>{trail.status}</span>
+                  </div>
+                  <p style={{ margin: '0 0 10px', fontSize: '12px', color: 'rgba(240,236,230,0.45)' }}>
+                    {trail.region} · {trail.duration_days} days · {trail.stages?.length || 0} stages · {trail.difficulty}
+                  </p>
+                  <p style={{ margin: '0 0 12px', fontSize: '12px', color: 'rgba(240,236,230,0.35)' }}>
+                    {trail.total_distance_km} km · {trail.total_elevation_gain_m?.toLocaleString()} m ↑
+                  </p>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button onClick={() => { setEditingTrail({ ...trail, emergency_contacts: trail.emergency_contacts || { mountain_rescue: '', weather: '', local_police: '' } }); setIsCreating(false); }} style={{
+                      flex: 1, padding: '8px', background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.3)',
+                      borderRadius: '8px', color: '#c9a84c', fontSize: '12px', cursor: 'pointer',
+                    }}>✏️ Edit</button>
+                    <button onClick={() => handleDelete(trail.id)} style={{
+                      padding: '8px 12px', background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.2)',
+                      borderRadius: '8px', color: '#f87171', fontSize: '12px', cursor: 'pointer',
+                    }}>🗑️</button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       )}
 
@@ -271,6 +263,24 @@ function MultiDayTrailsManager({ adminPassword }) {
                 {t('admin.cancel')}
               </button>
             </div>
+          </div>
+
+          {/* Live summary header */}
+          <div style={{
+            display: 'flex', gap: '24px', padding: '12px 16px', background: 'rgba(201,168,76,0.06)',
+            border: '1px solid rgba(201,168,76,0.15)', borderRadius: '10px', marginBottom: '16px', flexWrap: 'wrap',
+          }}>
+            {[
+              { label: 'Distance', value: `${editingTrail.stages?.reduce((s, x) => s + (parseFloat(x.distance_km) || 0), 0).toFixed(1)} km` },
+              { label: 'Elev gain', value: `${editingTrail.stages?.reduce((s, x) => s + (parseInt(x.elevation_gain_m) || 0), 0)} m` },
+              { label: 'Elev loss', value: `${editingTrail.stages?.reduce((s, x) => s + (parseInt(x.elevation_loss_m) || 0), 0)} m` },
+              { label: 'Stages', value: editingTrail.stages?.length || 0 },
+            ].map(({ label, value }) => (
+              <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                <span style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(201,168,76,0.6)' }}>{label}</span>
+                <span style={{ fontSize: '16px', fontWeight: 700, color: '#c9a84c' }}>{value}</span>
+              </div>
+            ))}
           </div>
 
           <div className="editor-sections">
@@ -410,6 +420,70 @@ function MultiDayTrailsManager({ adminPassword }) {
                   />
                 </div>
               </div>
+              <div className="form-group">
+                <label>Gallery photos (one URL per line)</label>
+                <textarea
+                  rows={4}
+                  value={(editingTrail.photos || []).join('\n')}
+                  onChange={e => updateField('photos', e.target.value.split('\n').map(s => s.trim()).filter(Boolean))}
+                  placeholder="https://...&#10;https://..."
+                />
+                <small style={{ opacity: 0.5, fontSize: '11px' }}>These appear in the photo gallery on the trek detail page.</small>
+              </div>
+            </div>
+
+            {/* Season & Planning */}
+            <div className="editor-section">
+              <h4>📅 Season & Planning</h4>
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Season opens (MM-DD)</label>
+                  <input type="text" value={editingTrail.best_season_start || ''} onChange={e => updateField('best_season_start', e.target.value)} placeholder="06-15" />
+                </div>
+                <div className="form-group">
+                  <label>Season closes (MM-DD)</label>
+                  <input type="text" value={editingTrail.best_season_end || ''} onChange={e => updateField('best_season_end', e.target.value)} placeholder="09-30" />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Booking strategy</label>
+                <textarea rows={2} value={editingTrail.booking_strategy || ''} onChange={e => updateField('booking_strategy', e.target.value)} placeholder="Book all rifugios 4–6 weeks ahead in July–August…" />
+              </div>
+              <div className="form-group">
+                <label>Booking tips (one per line)</label>
+                <textarea rows={4} value={(editingTrail.booking_tips || []).join('\n')} onChange={e => updateField('booking_tips', e.target.value.split('\n').map(s => s.trim()).filter(Boolean))} placeholder="Book 2–3 weeks in advance&#10;Bring cash — not all rifugios accept cards" />
+              </div>
+              <div className="form-group">
+                <label>Equipment checklist (one per line)</label>
+                <textarea rows={5} value={(editingTrail.equipment_checklist || []).join('\n')} onChange={e => updateField('equipment_checklist', e.target.value.split('\n').map(s => s.trim()).filter(Boolean))} placeholder="40-50L backpack&#10;Sleeping bag liner&#10;Trekking poles" />
+              </div>
+              <div className="form-group">
+                <label>Highlights (one per line)</label>
+                <textarea rows={3} value={(editingTrail.highlights || []).join('\n')} onChange={e => updateField('highlights', e.target.value.split('\n').map(s => s.trim()).filter(Boolean))} placeholder="Traverse the legendary Dolomites peaks&#10;Stay in authentic rifugios" />
+              </div>
+              <div className="form-group">
+                <label>Tags (one per line)</label>
+                <textarea rows={2} value={(editingTrail.tags || []).join('\n')} onChange={e => updateField('tags', e.target.value.split('\n').map(s => s.trim()).filter(Boolean))} placeholder="multi-day&#10;hut-to-hut&#10;dolomites" />
+              </div>
+            </div>
+
+            {/* Emergency contacts */}
+            <div className="editor-section">
+              <h4>🆘 Emergency Contacts</h4>
+              <div className="form-grid">
+                <div className="form-group full-width">
+                  <label>Mountain rescue</label>
+                  <input value={(editingTrail.emergency_contacts || {}).mountain_rescue || ''} onChange={e => updateField('emergency_contacts', { ...(editingTrail.emergency_contacts || {}), mountain_rescue: e.target.value })} placeholder="118 (Italy) or +39 0471 797171" />
+                </div>
+                <div className="form-group">
+                  <label>Weather service</label>
+                  <input value={(editingTrail.emergency_contacts || {}).weather || ''} onChange={e => updateField('emergency_contacts', { ...(editingTrail.emergency_contacts || {}), weather: e.target.value })} placeholder="www.provincia.bz.it/meteo" />
+                </div>
+                <div className="form-group">
+                  <label>Local police</label>
+                  <input value={(editingTrail.emergency_contacts || {}).local_police || ''} onChange={e => updateField('emergency_contacts', { ...(editingTrail.emergency_contacts || {}), local_police: e.target.value })} placeholder="113" />
+                </div>
+              </div>
             </div>
 
             {/* Stages Section */}
@@ -507,6 +581,55 @@ function MultiDayTrailsManager({ adminPassword }) {
                     />
                   </div>
 
+                  {/* Stage highlights */}
+                  <div className="form-group">
+                    <label>✨ Stage highlights (one per line)</label>
+                    <textarea
+                      rows={3}
+                      value={(stage.highlights || []).join('\n')}
+                      onChange={e => updateStage(index, 'highlights', e.target.value.split('\n').map(s => s.trim()).filter(Boolean))}
+                      placeholder="Stunning views of Lago di Braies&#10;Alpine meadows filled with wildflowers"
+                    />
+                  </div>
+
+                  {/* Sleep / overnight booking */}
+                  <div className="form-group">
+                    <label>🛏 Overnight rifugio name</label>
+                    <input
+                      type="text"
+                      value={stage.sleep?.rifugio_name || stage.overnight_rifugio_name || ''}
+                      onChange={e => updateStage(index, 'sleep', { ...(stage.sleep || {}), rifugio_name: e.target.value })}
+                      placeholder="Rifugio Sennes"
+                    />
+                  </div>
+                  <div className="form-group" style={{ display: 'flex', gap: '24px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 400 }}>
+                      <input
+                        type="checkbox"
+                        checked={stage.sleep?.must_book ?? true}
+                        onChange={e => updateStage(index, 'sleep', { ...(stage.sleep || {}), must_book: e.target.checked })}
+                      />
+                      Must book in advance
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: 400 }}>
+                      <input
+                        type="checkbox"
+                        checked={stage.sleep?.half_board_recommended ?? false}
+                        onChange={e => updateStage(index, 'sleep', { ...(stage.sleep || {}), half_board_recommended: e.target.checked })}
+                      />
+                      Half-board recommended
+                    </label>
+                  </div>
+                  <div className="form-group">
+                    <label>Booking note</label>
+                    <input
+                      type="text"
+                      value={stage.sleep?.booking_note || ''}
+                      onChange={e => updateStage(index, 'sleep', { ...(stage.sleep || {}), booking_note: e.target.value })}
+                      placeholder="Book 3–4 weeks ahead in high season. Phone preferred."
+                    />
+                  </div>
+
                   {/* Weather Risk */}
                   <div className="form-group">
                     <label>⛈ Weather Risk Note</label>
@@ -567,30 +690,6 @@ function MultiDayTrailsManager({ adminPassword }) {
               )}
             </div>
 
-            {/* Summary Section */}
-            <div className="editor-section stats-section">
-              <h4>📊 {t('admin.trailSummary')}</h4>
-              <div className="stats-grid">
-                <div className="stat-card">
-                  <div className="stat-label">{t('admin.totalDistance')}</div>
-                  <div className="stat-value">
-                    {editingTrail.stages?.reduce((sum, s) => sum + (parseFloat(s.distance_km) || 0), 0).toFixed(1)} km
-                  </div>
-                </div>
-                <div className="stat-card">
-                  <div className="stat-label">{t('admin.totalElevationGain')}</div>
-                  <div className="stat-value">
-                    {editingTrail.stages?.reduce((sum, s) => sum + (parseInt(s.elevation_gain_m) || 0), 0)} m
-                  </div>
-                </div>
-                <div className="stat-card">
-                  <div className="stat-label">{t('admin.totalElevationLoss')}</div>
-                  <div className="stat-value">
-                    {editingTrail.stages?.reduce((sum, s) => sum + (parseInt(s.elevation_loss_m) || 0), 0)} m
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       )}

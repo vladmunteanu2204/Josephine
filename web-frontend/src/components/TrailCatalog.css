@@ -4,8 +4,8 @@
 
 .catalog-header-section {
   background: linear-gradient(180deg, #0a1a0c 0%, #121e14 50%, #0e1810 100%);
-  padding: 80px 0 60px;
-  margin-bottom: 40px;
+  padding: 40px 0 32px;
+  margin-bottom: 32px;
 }
 
 .catalog-title {
@@ -540,7 +540,7 @@
   }
 
   .filters-sidebar {
-    order: 2;
+    order: -1;
   }
 
   .filters-sticky {

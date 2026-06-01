@@ -5,7 +5,7 @@
 .td-page {
   min-height: 100vh;
   background: var(--bg-primary, #080e08);
-  padding-bottom: 100px;
+  padding-bottom: 40px;
 }
 
 /* ── Loading / Error states ── */
@@ -38,6 +38,7 @@
   position: relative;
   height: min(520px, 65svh);
   overflow: hidden;
+  margin-top: -80px;
 }
 
 .td-hero__img {
@@ -262,10 +263,12 @@
 }
 
 .td-jph-note__mark {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  opacity: 0.85;
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 50%;
+  opacity: 1;
+  border: 1px solid rgba(201, 168, 76, 0.4);
 }
 
 .td-jph-note__label {
@@ -505,10 +508,40 @@
 
 .td-elev__arrow--down { color: rgba(201,168,76,0.6); }
 
+.td-elev__chart {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.td-elev__yaxis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 9px;
+  color: rgba(240,236,230,0.3);
+  letter-spacing: 0.04em;
+  padding: 2px 0;
+  min-width: 32px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.td-elev__loading {
+  flex: 1;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: rgba(240,236,230,0.3);
+  letter-spacing: 0.06em;
+}
+
 .td-elev__svg {
   display: block;
-  width: 100%;
-  height: 72px;
+  flex: 1;
+  height: 90px;
   border-radius: 4px;
 }
 

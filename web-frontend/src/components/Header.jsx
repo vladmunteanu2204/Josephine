@@ -88,8 +88,7 @@ function Header({ currentView, setCurrentView, showLoginModal, setShowLoginModal
 
   // Desktop nav items mapping to app views
   const desktopNavItems = [
-    { key: 'home',        label: t('nav.home',    'Home') },
-    { key: 'catalog',     label: t('nav.explore', 'Explore') },
+    { key: 'catalog',     label: 'Trails' },
     { key: 'planner',     label: t('nav.myPlan',  'My Plan') },
     { key: 'savedTrails', label: t('nav.saved',   'Saved') },
   ];
@@ -123,16 +122,13 @@ function Header({ currentView, setCurrentView, showLoginModal, setShowLoginModal
 
           {/* ── Desktop centre nav ── */}
           <nav className="jph-header__desktop-nav" aria-label="Main navigation">
-            {/* Home & Explore */}
-            {desktopNavItems.slice(0, 2).map(item => (
-              <button
-                key={item.key}
-                className={`jph-header__nav-item ${currentView === item.key ? 'active' : ''}`}
-                onClick={() => handleNavClick(item.key)}
-              >
-                {item.label}
-              </button>
-            ))}
+            {/* Trails */}
+            <button
+              className={`jph-header__nav-item ${currentView === 'catalog' ? 'active' : ''}`}
+              onClick={() => handleNavClick('catalog')}
+            >
+              Trails
+            </button>
 
             {/* Mountain Huts */}
             <button
@@ -142,8 +138,16 @@ function Header({ currentView, setCurrentView, showLoginModal, setShowLoginModal
               Mountain Huts
             </button>
 
+            {/* Alta Via */}
+            <button
+              className={`jph-header__nav-item ${currentView === 'multiday-trails' || currentView === 'multiday-detail' ? 'active' : ''}`}
+              onClick={() => setCurrentView('multiday-trails')}
+            >
+              Alta Via
+            </button>
+
             {/* My Plan & Saved */}
-            {desktopNavItems.slice(2).map(item => (
+            {desktopNavItems.slice(1).map(item => (
               <button
                 key={item.key}
                 className={`jph-header__nav-item ${currentView === item.key ? 'active' : ''}`}

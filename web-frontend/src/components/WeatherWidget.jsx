@@ -7,7 +7,7 @@ function WeatherWidget({ lat, lon, difficulty = 'moderate' }) {
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showForecast, setShowForecast] = useState(false);
+  const [showForecast, setShowForecast] = useState(true);
 
   useEffect(() => {
     if (lat && lon) {
@@ -94,7 +94,7 @@ function WeatherWidget({ lat, lon, difficulty = 'moderate' }) {
     <div className="weather-widget">
       <div className="weather-header">
         <h3>{t('weather.currentConditions', 'Current Conditions')}</h3>
-        {current.mock && <span className="mock-badge">{t('weather.mockData', 'Demo Data')}</span>}
+        {import.meta.env.DEV && current.mock && <span className="mock-badge">{t('weather.mockData', 'Demo Data')}</span>}
       </div>
 
       <div className="weather-main">

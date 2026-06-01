@@ -14,6 +14,7 @@ const BLANK_FORM = {
   opening_season: { start_date: '', end_date: '' },
   prices: { overnight: 0, breakfast: 0, dinner: 0, half_board: 0 },
   photos: [], status: 'seasonal', special_closures: [],
+  josephine_note: '', highlights: [],
 };
 
 export default function RifugiosManager({ adminPassword }) {
@@ -74,6 +75,8 @@ export default function RifugiosManager({ adminPassword }) {
       facilities: { ...BLANK_FORM.facilities, ...(rif.facilities || {}) },
       opening_season: { ...BLANK_FORM.opening_season, ...(rif.opening_season || {}) },
       prices: { ...BLANK_FORM.prices, ...(rif.prices || {}) },
+      josephine_note: rif.josephine_note || '',
+      highlights: rif.highlights || [],
     });
     setPhotosInput((rif.photos || []).join('\n'));
     setEditing(rif.id);
@@ -359,6 +362,33 @@ export default function RifugiosManager({ adminPassword }) {
                     </div>
                   ))}
                 </div>
+              </fieldset>
+
+              {/* Josephine's Tip */}
+              <fieldset className="rif-fieldset" style={{ borderColor: 'rgba(201,168,76,0.3)' }}>
+                <legend style={{ color: '#c9a84c' }}>💬 Josephine's Insider Tip</legend>
+                <p style={{ fontSize: '12px', opacity: 0.6, margin: '0 0 10px' }}>
+                  A personal tip shown on the detail page and delivered by Josephine in chat. Keep it short, specific, and useful — e.g. "Ask for the Schlutzkrapfen on Sundays" or "The sunrise from the east terrace is worth the early start."
+                </p>
+                <textarea
+                  rows={3}
+                  value={form.josephine_note}
+                  onChange={e => set('josephine_note', e.target.value)}
+                  placeholder="e.g. Ask Hannes for the off-menu Kaiserschmarrn — he only makes it for guests who ask."
+                  style={{ width: '100%', resize: 'vertical' }}
+                />
+              </fieldset>
+
+              {/* Highlights */}
+              <fieldset className="rif-fieldset">
+                <legend>Highlights (one per line)</legend>
+                <textarea
+                  rows={3}
+                  value={(form.highlights || []).join('\n')}
+                  onChange={e => set('highlights', e.target.value.split('\n').map(s => s.trim()).filter(Boolean))}
+                  placeholder="Panoramic terrace&#10;Traditional Tyrolean kitchen&#10;Dog-friendly"
+                  style={{ width: '100%', resize: 'vertical' }}
+                />
               </fieldset>
 
               {/* Photos */}

@@ -58,8 +58,6 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
     { id: 1, from: 'josephine', type: 'text', text: t('greeting'), chips: null },
     { id: 2, from: 'josephine', type: 'text', text: t('weatherPrompt'),
       chips: [t('chipPlanMyDay'), t('chipSurpriseMe'), t('chipShowMap')] },
-    { id: 3, from: 'josephine', type: 'voice', text: null, duration: '0:08',
-      bars: [3,5,8,6,9,5,7,4,6,8,5,3,7,5,9], chips: null },
   ];
 
   const [messages, setMessages]       = useState(() => INITIAL_MESSAGES);
@@ -75,10 +73,13 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
   });
   const [refining, setRefining]       = useState(false);
   const [chatHistory, setChatHistory] = useState([]);
+  const [showMenu, setShowMenu]       = useState(false);
+  const [copyFeedback, setCopyFeedback] = useState(false);
 
   const bottomRef = useRef(null);
   const greetingShownRef = useRef(false);
   const inputRef  = useRef(null);
+  const menuRef   = useRef(null);
   const prevLangRef = useRef(lang);
 
   /* Reset conversation when language changes ───────────────────────── */
@@ -89,8 +90,6 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       { id: 1, from: 'josephine', type: 'text', text: t('greeting'), chips: null },
       { id: 2, from: 'josephine', type: 'text', text: t('weatherPrompt'),
         chips: [t('chipPlanMyDay'), t('chipSurpriseMe'), t('chipShowMap')] },
-      { id: 3, from: 'josephine', type: 'voice', text: null, duration: '0:08',
-        bars: [3,5,8,6,9,5,7,4,6,8,5,3,7,5,9], chips: null },
     ]);
     setPlanningStep(0);
     setPlanningData({});
@@ -120,6 +119,32 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, typing]);
+
+  useEffect(() => {
+    if (!showMenu) return;
+    const close = (e) => { if (!menuRef.current?.contains(e.target)) setShowMenu(false); };
+    document.addEventListener('mousedown', close);
+    return () => document.removeEventListener('mousedown', close);
+  }, [showMenu]);
+
+  const shareConversation = () => {
+    const lines = ['🏔 My plan with Josephine\n'];
+    messages.forEach(m => {
+      if (m.from === 'user' && m.type === 'text') {
+        lines.push(`You: ${m.text}`);
+      } else if (m.from === 'josephine' && m.type === 'text' && m.text) {
+        lines.push(`Josephine: ${m.text}`);
+      } else if (m.type === 'trail' && m.trail) {
+        lines.push(`📍 Trail: ${m.trail.name} — ${m.trail.distance_km}km, ${m.trail.duration_hours}h, ${m.trail.difficulty}`);
+      }
+    });
+    lines.push('\nPlanned with Josephine — your alpine companion in South Tyrol.');
+    navigator.clipboard.writeText(lines.join('\n')).then(() => {
+      setCopyFeedback(true);
+      setShowMenu(false);
+      setTimeout(() => setCopyFeedback(false), 2000);
+    }).catch(() => {});
+  };
 
   /* ── Helpers ─────────────────────────────────────────────────────────── */
   const appendJosephineMessage = (partial) => {
@@ -470,7 +495,27 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
             <p className="jc-header__status"><span className="jc-header__online-dot" />{statusText}</p>
           </div>
         </div>
-        <button className="jc-menu-btn" aria-label="More options"><span /><span /><span /></button>
+        <div className="jc-menu-wrap" ref={menuRef}>
+          <button
+            className="jc-menu-btn"
+            aria-label="More options"
+            onClick={() => setShowMenu(v => !v)}
+          >
+            <span /><span /><span />
+          </button>
+          {showMenu && (
+            <div className="jc-menu-dropdown">
+              <button className="jc-menu-item" onClick={shareConversation}>
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+                  <path d="M11 9.5a2.5 2.5 0 1 1 0 2.5M4 7.5l7-3.5M4 7.5l7 3.5M4 7.5a2.5 2.5 0 1 1-2.5-2.5A2.5 2.5 0 0 1 4 7.5Z"
+                    stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Share conversation
+              </button>
+            </div>
+          )}
+        </div>
+        {copyFeedback && <div className="jc-copy-toast">Copied to clipboard ✓</div>}
       </div>
 
       {/* Portrait — warm photographic Josephine (falls back to the brand mark) */}

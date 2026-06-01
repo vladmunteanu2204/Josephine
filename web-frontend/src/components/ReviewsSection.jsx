@@ -6,7 +6,7 @@ import './ReviewsSection.css';
 
 const API_URL = '/api';
 
-function ReviewsSection({ trailId }) {
+function ReviewsSection({ trailId, rifugioId }) {
   const { t } = useTranslation();
   const toast = useToast();
   const [reviews, setReviews] = useState([]);
@@ -20,14 +20,19 @@ function ReviewsSection({ trailId }) {
   });
   const [submitting, setSubmitting] = useState(false);
 
+  const entityId = rifugioId || trailId;
+  const reviewsUrl = rifugioId
+    ? `${API_URL}/rifugios/${rifugioId}/reviews`
+    : `${API_URL}/trails/${trailId}/reviews`;
+
   useEffect(() => {
     loadReviews();
-  }, [trailId]);
+  }, [entityId]);
 
   const loadReviews = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_URL}/trails/${trailId}/reviews`);
+      const response = await axios.get(reviewsUrl);
       setReviews(response.data.reviews || []);
       setStatistics(response.data.statistics || { average_rating: 0, total_reviews: 0 });
     } catch (error) {
@@ -46,7 +51,7 @@ function ReviewsSection({ trailId }) {
 
     try {
       setSubmitting(true);
-      const response = await axios.post(`${API_URL}/trails/${trailId}/reviews`, formData);
+      const response = await axios.post(reviewsUrl, formData);
       
       setReviews([response.data.review, ...reviews]);
       
@@ -193,6 +198,9 @@ function ReviewsSection({ trailId }) {
           <div className="no-reviews">
             <div className="no-reviews-icon">💬</div>
             <p>{t('trail.noReviewsYet')}</p>
+            <button className="btn-write-review" onClick={() => setShowForm(true)}>
+              ✍️ {t('trail.writeReview')}
+            </button>
           </div>
         )}
       </div>

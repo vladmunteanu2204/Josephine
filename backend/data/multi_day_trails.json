@@ -7,9 +7,9 @@
       "type": "point-to-point",
       "duration_days": 5,
       "duration_nights": 4,
-      "total_distance_km": 78,
-      "total_elevation_gain_m": 6200,
-      "total_elevation_loss_m": 6400,
+      "total_distance_km": 68,
+      "total_elevation_gain_m": 3520,
+      "total_elevation_loss_m": 3950,
       "difficulty": "moderate",
       "best_season_start": "06-15",
       "best_season_end": "09-30",
@@ -43,7 +43,7 @@
         {
           "stage_number": 1,
           "name": "Lago di Braies to Rifugio Sennes",
-          "description": "Begin your Dolomites adventure from the iconic Lago di Braies, climbing through alpine meadows to reach Rifugio Sennes with panoramic views.",
+          "description": "Begin your Dolomites adventure from the iconic Lago di Braies, climbing through alpine meadows and past the charming Malga Fodara Vedla to reach Rifugio Sennes with sweeping panoramic views over the Fanes plateau.",
           "distance_km": 12.5,
           "elevation_gain_m": 850,
           "elevation_loss_m": 200,
@@ -83,7 +83,7 @@
               "elevation_m": 1496
             },
             {
-              "name": "Fodara Vedla",
+              "name": "Malga Fodara Vedla",
               "type": "checkpoint",
               "lat": 46.6652,
               "lon": 12.0543,
@@ -108,48 +108,48 @@
           "trail_markers": [],
           "stops": [
             {
-              "name": "Malga en route",
+              "name": "Malga Fodara Vedla",
               "type": "food_drink",
               "km_from_start": 5.0,
-              "what": "Cold drinks, local cheese, energy snacks",
-              "open_months": "June–September",
+              "what": "Cold drinks, local cheese, Speck Alto Adige, homemade bread",
+              "open_months": "June–October",
               "coordinates": null
             }
           ],
           "sleep": {
             "rifugio_name": "Rifugio Sennes",
             "must_book": true,
-            "booking_note": "Book 3–4 weeks ahead in high season. Phone preferred.",
+            "booking_note": "Book 3–4 weeks ahead in high season. Call +39 0474 501057 — phone preferred over email.",
             "half_board_recommended": true
           },
           "exit_routes": [
             {
               "id": "exit-alta-via-1-s1-a",
-              "name": "Descent to nearest valley",
+              "name": "Descent to Pederü and San Vigilio di Marebbe",
               "urgency": "emergency_or_planned",
-              "description": "Retrace to the last waypoint and follow signs to the nearest valley settlement. Follow any red-white-red trail markers downhill. If lost, call mountain rescue: 118.",
-              "duration_minutes": 90,
-              "difficulty": "medium",
-              "transport": "SAD bus from nearest valley town — check sad.it for timetables.",
-              "nearest_town": "Nearest valley settlement",
+              "description": "From Malga Fodara Vedla, follow the signed jeep track west down to Pederü (1,548m). From Pederü, a private road leads to San Vigilio di Marebbe (Enneberg). Do not attempt the descent in heavy rain or fog — the path becomes slippery.",
+              "duration_minutes": 75,
+              "difficulty": "easy",
+              "transport": "SAD bus line 442 from San Vigilio di Marebbe to Bruneck/Brunico (hourly in summer). Taxi available: +39 0474 501014.",
+              "nearest_town": "San Vigilio di Marebbe (Enneberg)",
               "rejoining_options": [
                 {
-                  "description": "Return to yesterday's endpoint and continue",
-                  "how": "Take local transport back to the rifugio you stayed at last night, rest, and continue the next stage fresh the following day."
+                  "description": "Return to Rifugio Sennes the next day",
+                  "how": "Take the Pederü jeep road back up to Malga Fodara Vedla and continue on trail 7 to Rifugio Sennes. Allow 3.5 hours."
                 },
                 {
-                  "description": "Skip ahead to next rifugio",
-                  "how": "Check with mountain rescue or local taxi whether a road approach to the next night's rifugio is possible from the valley."
+                  "description": "Skip to Rifugio Fanes and join Stage 2",
+                  "how": "From Pederü, take the trail to Rifugio Fanes directly via Val di Fanes (trail 11, approx 3.5 hours). This merges you into Stage 2."
                 }
               ]
             }
           ],
-          "weather_risk": "Check the morning forecast. Leave early — afternoon storms are common in the Dolomites from June to August. Turn back if you see anvil-shaped clouds building."
+          "weather_risk": "Mostly forested and below the treeline — lower risk than later stages. Check the morning forecast. Afternoon storms are common from June to August; aim to reach Rifugio Sennes before 14:00."
         },
         {
           "stage_number": 2,
           "name": "Rifugio Sennes to Rifugio Fanes",
-          "description": "Traverse the scenic Sennes plateau before descending to the emerald Lago di Fanes and the cozy Rifugio Fanes.",
+          "description": "Traverse the open Sennes plateau with sweeping Dolomite views, cross the high Passo Sennes, and descend to the emerald Lago di Fanes before arriving at the beautifully situated Rifugio Fanes.",
           "distance_km": 14.2,
           "elevation_gain_m": 650,
           "elevation_loss_m": 850,
@@ -196,9 +196,9 @@
             }
           ],
           "highlights": [
-            "Crossing the high Passo Sennes",
+            "Crossing the high Passo Sennes at 2,424m",
             "Stunning emerald Lago di Fanes",
-            "Wildlife spotting opportunities"
+            "Wildlife spotting — ibex and golden eagles"
           ],
           "photos": [
             "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=600"
@@ -206,10 +206,10 @@
           "trail_markers": [],
           "stops": [
             {
-              "name": "Malga en route",
+              "name": "Lago di Fanes — Malga Fanes Piccola",
               "type": "food_drink",
-              "km_from_start": 5.7,
-              "what": "Cold drinks, local cheese, energy snacks",
+              "km_from_start": 9.5,
+              "what": "Hot drinks, cold drinks, cheese plate, seasonal soups",
               "open_months": "June–September",
               "coordinates": null
             }
@@ -217,37 +217,37 @@
           "sleep": {
             "rifugio_name": "Rifugio Fanes",
             "must_book": true,
-            "booking_note": "Book 3–4 weeks ahead in high season. Phone preferred.",
+            "booking_note": "Book 3–4 weeks ahead. Call +39 0474 501097. Rifugio fills quickly in July–August — evening meals are served at set times, confirm on arrival.",
             "half_board_recommended": true
           },
           "exit_routes": [
             {
               "id": "exit-alta-via-1-s2-a",
-              "name": "Descent to nearest valley",
+              "name": "Descent to Armentarola via Val Medesc",
               "urgency": "emergency_or_planned",
-              "description": "Retrace to the last waypoint and follow signs to the nearest valley settlement. Follow any red-white-red trail markers downhill. If lost, call mountain rescue: 118.",
+              "description": "From near Lago di Fanes, follow trail 10 southwest through Val Medesc, descending to Armentarola (1,643m) at the head of Val Badia. Well-marked; allow 1.5 hours. In poor weather, this is the safest and quickest exit on this stage.",
               "duration_minutes": 90,
-              "difficulty": "medium",
-              "transport": "SAD bus from nearest valley town — check sad.it for timetables.",
-              "nearest_town": "Nearest valley settlement",
+              "difficulty": "easy",
+              "transport": "SAD bus line 040 from Armentarola to Bruneck/Brunico and La Villa. Also taxis from San Cassiano (+39 0471 849503).",
+              "nearest_town": "Armentarola / San Cassiano",
               "rejoining_options": [
                 {
-                  "description": "Return to yesterday's endpoint and continue",
-                  "how": "Take local transport back to the rifugio you stayed at last night, rest, and continue the next stage fresh the following day."
+                  "description": "Return to Rifugio Fanes and continue",
+                  "how": "From Armentarola, take trail 10 back up Val Medesc to Rifugio Fanes (1.5 hours). Rest and continue Stage 3 the next morning."
                 },
                 {
-                  "description": "Skip ahead to next rifugio",
-                  "how": "Check with mountain rescue or local taxi whether a road approach to the next night's rifugio is possible from the valley."
+                  "description": "Skip Stage 3 and join at Rifugio Lavarella",
+                  "how": "From Armentarola, follow trail 11 up through Val di Fanes to Rifugio Lavarella (approx 3 hours). This rejoins the route at the start of Stage 4."
                 }
               ]
             }
           ],
-          "weather_risk": "Check the morning forecast. Leave early — afternoon storms are common in the Dolomites from June to August. Turn back if you see anvil-shaped clouds building."
+          "weather_risk": "Passo Sennes (2,424m) is fully exposed — lightning risk in afternoon storms. Leave Rifugio Sennes by 07:30 to cross the pass before midday. If clouds build rapidly, turn back and take the Val Medesc exit to Armentarola."
         },
         {
           "stage_number": 3,
           "name": "Rifugio Fanes to Rifugio Lavarella",
-          "description": "An easier day through the beautiful Fanes valley, following streams and alpine pastures to Rifugio Lavarella.",
+          "description": "An easier day through the beautiful Val di Fanes, following streams and alpine pastures rich with wildflowers and marmots. A perfect rest-day stage to let your legs recover before the challenging Stage 4.",
           "distance_km": 11.8,
           "elevation_gain_m": 520,
           "elevation_loss_m": 480,
@@ -288,9 +288,9 @@
             }
           ],
           "highlights": [
-            "Gentle valley walking",
-            "Marmot spotting",
-            "Peaceful alpine streams"
+            "Gentle valley walking through the Fanes plateau",
+            "Marmot colonies along the trail",
+            "Peaceful alpine streams and wildflowers"
           ],
           "photos": [
             "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600"
@@ -298,10 +298,10 @@
           "trail_markers": [],
           "stops": [
             {
-              "name": "Malga en route",
+              "name": "Ütia de Börz (Alpe di Fanes malga)",
               "type": "food_drink",
               "km_from_start": 4.7,
-              "what": "Cold drinks, local cheese, energy snacks",
+              "what": "Cold drinks, local cheeses, Schlutzkrapfen (South Tyrolean dumplings), yogurt",
               "open_months": "June–September",
               "coordinates": null
             }
@@ -309,37 +309,37 @@
           "sleep": {
             "rifugio_name": "Rifugio Lavarella",
             "must_book": true,
-            "booking_note": "Book 3–4 weeks ahead in high season. Phone preferred.",
+            "booking_note": "Book 3–4 weeks ahead. Call +39 0474 501159. Known for excellent South Tyrolean cooking — confirm dinner time on arrival.",
             "half_board_recommended": true
           },
           "exit_routes": [
             {
               "id": "exit-alta-via-1-s3-a",
-              "name": "Descent to nearest valley",
+              "name": "Descent to Armentarola",
               "urgency": "emergency_or_planned",
-              "description": "Retrace to the last waypoint and follow signs to the nearest valley settlement. Follow any red-white-red trail markers downhill. If lost, call mountain rescue: 118.",
-              "duration_minutes": 90,
-              "difficulty": "medium",
-              "transport": "SAD bus from nearest valley town — check sad.it for timetables.",
-              "nearest_town": "Nearest valley settlement",
+              "description": "From anywhere along Val di Fanes, follow the main valley floor trail north back to the Armentarola road junction, then descend to Armentarola (1,643m). The trail runs along the valley bottom — straightforward navigation even in mist.",
+              "duration_minutes": 80,
+              "difficulty": "easy",
+              "transport": "SAD bus line 040 from Armentarola to Bruneck/Brunico and La Villa. Taxi from San Cassiano (+39 0471 849503).",
+              "nearest_town": "Armentarola / San Cassiano",
               "rejoining_options": [
                 {
-                  "description": "Return to yesterday's endpoint and continue",
-                  "how": "Take local transport back to the rifugio you stayed at last night, rest, and continue the next stage fresh the following day."
+                  "description": "Return to Rifugio Lavarella and continue",
+                  "how": "From Armentarola, re-enter Val di Fanes on foot (approx 2 hours) or ask at the tourist office in San Cassiano about a private shuttle as far as the road allows."
                 },
                 {
-                  "description": "Skip ahead to next rifugio",
-                  "how": "Check with mountain rescue or local taxi whether a road approach to the next night's rifugio is possible from the valley."
+                  "description": "Skip to Rifugio Scotoni and join Stage 4",
+                  "how": "From San Cassiano, take a taxi up the Armentarola road to Rifugio Scotoni (1,985m) — the road is accessible to private vehicles. Rejoins route at the start of Stage 5."
                 }
               ]
             }
           ],
-          "weather_risk": "Check the morning forecast. Leave early — afternoon storms are common in the Dolomites from June to August. Turn back if you see anvil-shaped clouds building."
+          "weather_risk": "Low risk — this stage stays mostly in the sheltered valley below 2,100m. However, lightning can still reach valley floors. If storms forecast, complete the stage early and shelter at Ütia de Börz until the cell passes."
         },
         {
           "stage_number": 4,
           "name": "Rifugio Lavarella to Rifugio Scotoni",
-          "description": "Climb to the dramatic Forcella Lavarella pass with breathtaking views, then descend to Rifugio Scotoni beneath the towering Tofane peaks.",
+          "description": "The most demanding stage of the trek — a sustained climb to the dramatic Forcella Lavarella pass at 2,462m with breathtaking 360° views, followed by a long descent through the remote Vallon Bianco to Rifugio Scotoni beneath the towering Tofane massif.",
           "distance_km": 16.5,
           "elevation_gain_m": 1180,
           "elevation_loss_m": 1320,
@@ -386,9 +386,9 @@
             }
           ],
           "highlights": [
-            "Dramatic high mountain pass",
-            "360° panoramic views",
-            "Views of the Tofane massif"
+            "Forcella Lavarella — dramatic high mountain pass at 2,462m",
+            "360° panoramic views of the Dolomiti Ampezzane",
+            "Views of the Tofane massif and Lagazuoi"
           ],
           "photos": [
             "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600"
@@ -396,10 +396,18 @@
           "trail_markers": [],
           "stops": [
             {
-              "name": "Malga en route",
+              "name": "Rest point below Forcella Lavarella — no services",
               "type": "food_drink",
-              "km_from_start": 6.6,
-              "what": "Cold drinks, local cheese, energy snacks",
+              "km_from_start": 5.5,
+              "what": "No facilities — bring lunch from Rifugio Lavarella. Water from stream at the base of the forcella approach (treat if uncertain).",
+              "open_months": "June–September",
+              "coordinates": null
+            },
+            {
+              "name": "Rifugio Scotoni bar — arrives at destination",
+              "type": "food_drink",
+              "km_from_start": 16.5,
+              "what": "Hot meals, cold drinks, local specialties — reward yourself at the rifugio bar after this demanding stage.",
               "open_months": "June–September",
               "coordinates": null
             }
@@ -407,37 +415,37 @@
           "sleep": {
             "rifugio_name": "Rifugio Scotoni",
             "must_book": true,
-            "booking_note": "Book 3–4 weeks ahead in high season. Phone preferred.",
+            "booking_note": "Book 4–6 weeks ahead in July–August. Call +39 0436 2939. Rifugio Scotoni is one of the most popular stops on the route — don't leave this to chance.",
             "half_board_recommended": true
           },
           "exit_routes": [
             {
               "id": "exit-alta-via-1-s4-a",
-              "name": "Descent to nearest valley",
+              "name": "Retreat to Armentarola via Vallon Bianco descent",
               "urgency": "emergency_or_planned",
-              "description": "Retrace to the last waypoint and follow signs to the nearest valley settlement. Follow any red-white-red trail markers downhill. If lost, call mountain rescue: 118.",
-              "duration_minutes": 90,
+              "description": "If conditions deteriorate on or before Forcella Lavarella, do NOT proceed over the pass. Retrace to Rifugio Lavarella (1 hour). From Lavarella, follow the Val di Fanes exit to Armentarola (see Stage 3 exit). If you have already crossed the forcella and entered Vallon Bianco, continue descending — the valley eventually leads to the Armentarola road.",
+              "duration_minutes": 120,
               "difficulty": "medium",
-              "transport": "SAD bus from nearest valley town — check sad.it for timetables.",
-              "nearest_town": "Nearest valley settlement",
+              "transport": "SAD bus line 040 from Armentarola to Bruneck/Brunico. Taxi from San Cassiano (+39 0471 849503). From Rifugio Scotoni, the Col Gallina road allows taxi access.",
+              "nearest_town": "Armentarola / San Cassiano",
               "rejoining_options": [
                 {
-                  "description": "Return to yesterday's endpoint and continue",
-                  "how": "Take local transport back to the rifugio you stayed at last night, rest, and continue the next stage fresh the following day."
+                  "description": "Rest in Armentarola and attempt Stage 4 the next day",
+                  "how": "Favourable weather windows sometimes open after a storm day. Take the Armentarola road to Rifugio Lavarella early the following morning and attempt the pass before noon."
                 },
                 {
-                  "description": "Skip ahead to next rifugio",
-                  "how": "Check with mountain rescue or local taxi whether a road approach to the next night's rifugio is possible from the valley."
+                  "description": "Skip to Rifugio Scotoni and join Stage 5",
+                  "how": "From San Cassiano, take a taxi along the Col Gallina pass road directly to Rifugio Scotoni (road-accessible). This skips Stage 4 and joins Stage 5 at its start."
                 }
               ]
             }
           ],
-          "weather_risk": "Check the morning forecast. Leave early — afternoon storms are common in the Dolomites from June to August. Turn back if you see anvil-shaped clouds building."
+          "weather_risk": "HIGH RISK — Forcella Lavarella (2,462m) is fully exposed and the highest point of this itinerary. Strong winds can make the pass dangerous. Check the evening forecast at Rifugio Lavarella. Leave no later than 07:00 and aim to cross the forcella by 10:00. Turn back immediately if you see anvil-shaped clouds or hear distant thunder."
         },
         {
           "stage_number": 5,
           "name": "Rifugio Scotoni to Cortina d'Ampezzo",
-          "description": "Final descent through forests and meadows, arriving in the famous resort town of Cortina d'Ampezzo - celebrate your Alta Via 1 completion!",
+          "description": "A rewarding final day descending beneath the iconic Tofane massif, through forests and open hillsides with views that make you glad you made it this far. Arrive in the elegant resort town of Cortina d'Ampezzo and celebrate your Alta Via 1 completion.",
           "distance_km": 13.0,
           "elevation_gain_m": 320,
           "elevation_loss_m": 1100,
@@ -460,7 +468,7 @@
           "overnight_rifugio_details": null,
           "waypoints": [
             {
-              "name": "Ra Valles",
+              "name": "Ra Valles — gondola station",
               "type": "viewpoint",
               "lat": 46.5392,
               "lon": 12.0542,
@@ -475,9 +483,9 @@
             }
           ],
           "highlights": [
-            "Forest trails with mountain views",
-            "Arriving in historic Cortina",
-            "Celebration and well-deserved rest"
+            "Views of the Tofane massif throughout the descent",
+            "Ra Valles — classic Dolomites viewpoint",
+            "Arriving in historic Cortina d'Ampezzo"
           ],
           "photos": [
             "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=600"
@@ -485,69 +493,67 @@
           "trail_markers": [],
           "stops": [
             {
-              "name": "Malga en route",
+              "name": "Ra Valles — gondola station bar",
               "type": "food_drink",
               "km_from_start": 5.2,
-              "what": "Cold drinks, local cheese, energy snacks",
+              "what": "Hot meals, cold drinks, espresso, fresh pastries. Last mountain stop before Cortina.",
               "open_months": "June–September",
               "coordinates": null
             }
           ],
           "sleep": {
             "rifugio_name": null,
-            "must_book": true,
-            "booking_note": "Book 3–4 weeks ahead in high season. Phone preferred.",
-            "half_board_recommended": true
+            "must_book": false,
+            "booking_note": "Sleep in Cortina d'Ampezzo — hotels and B&Bs available at all price points. Book ahead in July–August when Cortina is busy.",
+            "half_board_recommended": false
           },
           "exit_routes": [
             {
               "id": "exit-alta-via-1-s5-a",
-              "name": "Descent to nearest valley",
-              "urgency": "emergency_or_planned",
-              "description": "Retrace to the last waypoint and follow signs to the nearest valley settlement. Follow any red-white-red trail markers downhill. If lost, call mountain rescue: 118.",
-              "duration_minutes": 90,
-              "difficulty": "medium",
-              "transport": "SAD bus from nearest valley town — check sad.it for timetables.",
-              "nearest_town": "Nearest valley settlement",
+              "name": "Ra Valles gondola shortcut to Cortina",
+              "urgency": "planned",
+              "description": "At Ra Valles gondola station (km 5.2), take the Freccia nel Cielo gondola directly down to Cortina d'Ampezzo if weather deteriorates or legs are tired. The gondola operates June–September. This is not an emergency exit — it simply shortens the final descent by about 1.5 hours.",
+              "duration_minutes": 15,
+              "difficulty": "easy",
+              "transport": "Freccia nel Cielo gondola (Ra Valles to Cortina — Rumerlo station). Approx €15 one-way. From Cortina, bus connections to Belluno, Venice, and Venice Airport.",
+              "nearest_town": "Cortina d'Ampezzo",
               "rejoining_options": [
                 {
-                  "description": "Return to yesterday's endpoint and continue",
-                  "how": "Take local transport back to the rifugio you stayed at last night, rest, and continue the next stage fresh the following day."
-                },
-                {
-                  "description": "Skip ahead to next rifugio",
-                  "how": "Check with mountain rescue or local taxi whether a road approach to the next night's rifugio is possible from the valley."
+                  "description": "You have arrived — this is the final stage",
+                  "how": "Cortina d'Ampezzo is the endpoint of this itinerary. Celebrate with an Aperol Spritz on the main Corso Italia. Well done."
                 }
               ]
             }
           ],
-          "weather_risk": "Check the morning forecast. Leave early — afternoon storms are common in the Dolomites from June to August. Turn back if you see anvil-shaped clouds building."
+          "weather_risk": "Lower risk — descending throughout. If morning storms forecast, delay start by 1–2 hours or take the Ra Valles gondola to avoid the exposed upper section. No significant exposed sections on this stage."
         }
       ],
       "equipment_checklist": [
-        "40-50L backpack",
-        "Sleeping bag liner",
-        "Hiking boots (broken in)",
+        "40–50L backpack",
+        "Sleeping bag liner (most rifugios provide blankets but not sheets)",
+        "Hiking boots with ankle support (break in before the trek)",
         "Trekking poles",
-        "Rain jacket and pants",
-        "Warm layers (fleece, down jacket)",
-        "Extra socks and underwear",
-        "Headlamp with extra batteries",
-        "Power bank and charging cables",
-        "Toiletries and medications",
-        "Cash for rifugios (€200-300)",
-        "Rifugio booking confirmations",
+        "Waterproof jacket and trousers",
+        "Warm mid-layer (fleece or down jacket — temperatures above 2,000m drop fast)",
+        "Extra merino wool socks (at least 3 pairs)",
+        "Headlamp with spare batteries",
+        "Power bank and charging cable",
         "First aid kit",
-        "Sunscreen and sunglasses",
-        "Water bottles (2L capacity)",
-        "Snacks and energy bars"
+        "Emergency whistle",
+        "Sunscreen SPF 50+ and sunglasses (UV intensity is high at altitude)",
+        "Cash — €200–300 (not all rifugios accept cards)",
+        "Rifugio booking confirmations (printed or screenshot)",
+        "Topographic map (Tabacco 1:25000 sheets 03 and 03A)",
+        "Water bottles with 2L total capacity",
+        "High-energy snacks and lunch for Stage 4 (no services on the pass)"
       ],
       "booking_tips": [
-        "Book all rifugios at least 2-3 weeks in advance, especially in July-August",
-        "Confirm bookings a few days before starting",
-        "Bring cash - not all rifugios accept cards",
-        "Half-board (dinner + breakfast) is recommended at rifugios",
-        "Check weather forecast before starting each stage"
+        "Book all rifugios 4–6 weeks in advance in July–August — they fill completely",
+        "Call rather than email — rifugios in this area often have unreliable internet",
+        "Confirm bookings 48 hours before you set out each day",
+        "Half-board (dinner + breakfast) is expected and strongly recommended",
+        "Bring cash — Rifugio Sennes, Fanes, and Lavarella do not accept credit cards",
+        "Stage 4 has no services on the pass — prepare lunch the evening before at Rifugio Lavarella"
       ],
       "josephineNote": {
         "en": "This is one of the great Dolomite classics. Do it in late September when the crowds are gone and the larch trees are golden — the light filtering through the larches near Rifugio Fanes is something you will carry with you for years.",
@@ -556,25 +562,13 @@
       },
       "status": "published",
       "created_at": "2025-01-15T10:00:00Z",
-      "updated_at": "2025-01-15T10:00:00Z",
-      "booking_strategy": "Book all rifugios 4–6 weeks ahead in July–August. Most accept phone or email; some have online booking. Cancel at least 48h ahead to free your spot.",
-      "gear_checklist": [
-        "Trekking poles",
-        "Waterproof jacket and trousers",
-        "Headlamp with spare batteries",
-        "First aid kit",
-        "Emergency whistle",
-        "Sunscreen SPF 50+",
-        "2L water capacity",
-        "Warm mid-layer (temperatures drop fast above 2,000m)",
-        "Hiking boots (ankle support)"
-      ],
+      "updated_at": "2026-06-01T10:00:00Z",
+      "booking_strategy": "Book all rifugios 4–6 weeks ahead in July–August. Most accept phone bookings; some have online booking via their websites. Cancel at least 48h ahead to free your bed for the next hiker.",
       "emergency_contacts": {
-        "mountain_rescue": "118 (Italy) or +39 0471 797171 (CNSAS Dolomiti)",
-        "weather": "www.provincia.bz.it/meteo",
+        "mountain_rescue": "118 (Italy) or +39 0471 797171 (CNSAS — Alpine Rescue Dolomiti)",
+        "weather": "www.provincia.bz.it/meteo (South Tyrol) or www.arpa.veneto.it/previsioni (Veneto)",
         "local_police": "113"
-      },
-      "josephine_adventure_note": "This is one of my favourite multi-day routes. Don't rush the first morning — the light on the Dolomites at 7am is something you'll remember for life."
+      }
     }
   ]
 }

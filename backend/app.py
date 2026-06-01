@@ -3,6 +3,7 @@ from flask_cors import CORS
 from flask_talisman import Talisman
 import os
 import json
+import math
 import random
 import io
 import fcntl
@@ -1497,6 +1498,134 @@ def get_rifugio_status(rifugio):
     except:
         return rifugio.get('status', 'closed')
 
+
+# ── Geographic utilities ──────────────────────────────────────────────────────
+
+def haversine(lat1, lon1, lat2, lon2):
+    """Return great-circle distance in km between two lat/lng points."""
+    R = 6371.0
+    φ1, φ2 = math.radians(lat1), math.radians(lat2)
+    dφ = math.radians(lat2 - lat1)
+    dλ = math.radians(lon2 - lon1)
+    a = math.sin(dφ / 2) ** 2 + math.cos(φ1) * math.cos(φ2) * math.sin(dλ / 2) ** 2
+    return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+
+# Ordered from most-specific to most-general — first match wins.
+_SUB_REGIONS = [
+    {'name': 'Val Gardena',           'lat': (46.50, 46.68), 'lng': (11.68, 11.94)},
+    {'name': 'Alta Badia',            'lat': (46.54, 46.70), 'lng': (11.84, 12.12)},
+    {'name': 'Val Pusteria',          'lat': (46.72, 46.95), 'lng': (11.80, 12.60)},
+    {'name': "Val d'Isarco",          'lat': (46.62, 46.80), 'lng': (11.44, 11.72)},
+    {'name': 'Merano & Surroundings', 'lat': (46.60, 46.84), 'lng': (10.88, 11.28)},
+    {'name': 'Bolzano',               'lat': (46.42, 46.62), 'lng': (11.20, 11.52)},
+    {'name': 'Vinschgau',             'lat': (46.54, 46.90), 'lng': (10.28, 11.00)},
+    {'name': 'Dolomites',             'lat': (46.38, 46.66), 'lng': (11.60, 12.35)},
+    {'name': 'Trentino',              'lat': (45.78, 46.50), 'lng': (10.46, 12.10)},
+]
+
+
+def get_region_from_coords(lat, lng):
+    """Return the most specific sub-region name for a given lat/lng.
+    Falls back to nearest trail's region if no bounding box matches."""
+    for r in _SUB_REGIONS:
+        if r['lat'][0] <= lat <= r['lat'][1] and r['lng'][0] <= lng <= r['lng'][1]:
+            return r['name']
+    # Secondary: find the nearest trail and inherit its region
+    try:
+        trails = load_trails()
+        best_dist, best_region = float('inf'), 'South Tyrol'
+        for t in trails:
+            coords = t.get('coordinates', [])
+            region = t.get('region', '')
+            if not coords or not region:
+                continue
+            for c in coords[::max(1, len(coords) // 20)]:  # sample 20 points max
+                d = haversine(lat, lng, c[1], c[0])
+                if d < best_dist:
+                    best_dist, best_region = d, region
+        return best_region if best_dist < 30 else 'South Tyrol'
+    except Exception:
+        return 'South Tyrol'
+
+
+@app.route('/api/rifugios/<rifugio_id>/nearby-trails', methods=['GET'])
+def get_rifugio_nearby_trails(rifugio_id):
+    """Return up to 6 trails whose path passes within 8 km of this rifugio."""
+    try:
+        rifugios = load_rifugios()
+        rifugio = next((r for r in rifugios if r['id'] == rifugio_id), None)
+        if not rifugio:
+            return jsonify({'error': 'Rifugio not found'}), 404
+
+        coords = rifugio.get('coordinates', {})
+        rif_lat = coords.get('lat') if isinstance(coords, dict) else None
+        rif_lng = coords.get('lng') if isinstance(coords, dict) else None
+        if rif_lat is None or rif_lng is None:
+            return jsonify({'trails': []})
+
+        RADIUS_KM = 8
+        MAX_RESULTS = 6
+        candidates = []
+
+        for trail in load_trails():
+            trail_coords = trail.get('coordinates', [])
+            if not trail_coords:
+                continue
+            # Sample up to 50 points for performance on long trails
+            step = max(1, len(trail_coords) // 50)
+            min_dist = min(
+                haversine(rif_lat, rif_lng, c[1], c[0])
+                for c in trail_coords[::step]
+            )
+            if min_dist <= RADIUS_KM:
+                candidates.append((min_dist, trail))
+
+        candidates.sort(key=lambda x: x[0])
+        slim_fields = ('id', 'name', 'region', 'difficulty', 'distance_km', 'duration_hours', 'coordinates')
+        result = [
+            {k: t.get(k) for k in slim_fields}
+            for _, t in candidates[:MAX_RESULTS]
+        ]
+        return jsonify({'trails': result})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/rifugios/<rifugio_id>/reviews', methods=['GET'])
+def get_rifugio_reviews(rifugio_id):
+    """Get visitor reviews for a rifugio."""
+    try:
+        reviews_data = load_reviews()
+        entity_reviews = reviews_data['reviews'].get(rifugio_id, [])
+        entity_stats = reviews_data['statistics'].get(rifugio_id, {
+            'average_rating': 0, 'total_reviews': 0
+        })
+        return jsonify({'reviews': entity_reviews, 'statistics': entity_stats})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/rifugios/<rifugio_id>/reviews', methods=['POST'])
+def add_rifugio_review(rifugio_id):
+    """Submit a visitor review for a rifugio."""
+    try:
+        data = request.json or {}
+        new_review = {
+            'id': f"rev_{rifugio_id}_{datetime.now().timestamp()}",
+            'rifugio_id': rifugio_id,
+            'user_name': data.get('user_name', 'Anonymous'),
+            'rating': data.get('rating', 5),
+            'comment': data.get('comment', ''),
+            'date': datetime.now().strftime('%Y-%m-%d'),
+            'helpful_count': 0,
+        }
+        return jsonify({'success': True, 'review': new_review,
+                        'message': 'Review submitted successfully'}), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/api/rifugios', methods=['GET'])
 def get_rifugios():
     """Get all rifugios with optional filtering"""
@@ -1573,9 +1702,16 @@ def get_rifugio_detail(rifugio_id):
         if not rifugio:
             return jsonify({'error': 'Rifugio not found'}), 404
         
-        # Add current status
+        # Compute operational status from season dates
         rifugio['current_status'] = get_rifugio_status(rifugio)
-        
+
+        # Auto-detect sub-region when stored region is too broad
+        generic = {'South Tyrol', 'Dolomites', '', None}
+        if rifugio.get('region') in generic:
+            coords = rifugio.get('coordinates', {})
+            if isinstance(coords, dict) and coords.get('lat'):
+                rifugio['region'] = get_region_from_coords(coords['lat'], coords['lng'])
+
         return jsonify(rifugio)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -2413,7 +2549,7 @@ _db_lock = threading.Lock()
 CACHE_TTL              = 86_400   # 24 h
 MAX_LLM_CALLS_PER_HOUR = 5        # per IP
 
-_system_prompt_cache = {'prompt': None, 'built_at': 0}
+_system_prompt_cache = {'prompt': None, 'built_at': 0}  # bust by setting built_at=0
 
 def _cache_get(question: str):
     key = hashlib.sha256(question.lower().strip().encode()).hexdigest()
@@ -2525,6 +2661,17 @@ HOW TO ANSWER SPECIFIC QUESTION TYPES
 • Highlights / what to see → use highlights array.
 • Emergency exit / recovery routing → use exit_routes from the relevant adventure stage; present rejoining_options as numbered choices.
 
+INSIDER TIPS (your personal field notes)
+Every trail has a `josephineNote.en` field and every rifugio/malga has a `josephine_note` field.
+These are YOUR personal observations — things you noticed on your own visits: the best dish, a hidden detail, a practical trick, the right moment to be there.
+Rules for using them:
+• When you recommend, describe, or answer a question about a specific trail or rifugio, ALWAYS include its insider tip somewhere in your reply.
+• Never quote it verbatim or say "the note says" — weave it into your own voice naturally.
+  Bad:  "The josephine_note says: ask for the Schlutzkrapfen."
+  Good: "Ask specifically for the Schlutzkrapfen — the cook has been making them from scratch every morning for years."
+• If the tip is about food, timing, a view, or a person — mention it in one sentence at the end of your answer.
+• If a trail passes a rifugio that has a tip, include that tip when relevant (e.g. "there's a malga halfway — the butter they make there is extraordinary").
+
 TRAILS DATABASE
 {json.dumps(trails_clean, ensure_ascii=False, indent=2)}
 
@@ -2537,6 +2684,22 @@ HUT-TO-HUT ADVENTURES DATABASE
     _system_prompt_cache['prompt'] = prompt
     _system_prompt_cache['built_at'] = time.time()
     return prompt
+
+
+def _get_entity_tip(entity_type: str | None, entity: dict | None) -> str:
+    """Return the personal insider tip for a trail or rifugio, or '' if none."""
+    if not entity:
+        return ''
+    if entity_type == 'rifugio':
+        tip = entity.get('josephine_note', '')
+    else:
+        # Trails store the note as josephineNote.en or josephineNote (string)
+        raw = entity.get('josephineNote') or entity.get('josephine_note') or ''
+        if isinstance(raw, dict):
+            tip = raw.get('en') or raw.get('it') or raw.get('de') or ''
+        else:
+            tip = str(raw)
+    return tip.strip()
 
 
 def _fuzzy_match_entity(question: str):
@@ -2849,6 +3012,11 @@ def josephine_chat():
     # ── Layer 2: structured lookup (free) ──────────────────────────────
     structured = structured_answer(message)
     if structured:
+        # Append insider tip when the question was about a specific place
+        entity_type, entity = _fuzzy_match_entity(message)
+        tip = _get_entity_tip(entity_type, entity)
+        if tip:
+            structured = structured + f" — and one thing I always mention: {tip}"
         return jsonify({'reply': structured, 'mode': 'structured'})
 
     # ── Layer 3: Claude Haiku (paid, with cache + rate limit) ──────────

@@ -1,90 +1,142 @@
 .app-footer {
-  background: linear-gradient(180deg, #0f1410 0%, #0a0a0a 100%);
+  background: linear-gradient(180deg, #0f1410 0%, #080e08 100%);
   border-top: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 2rem 1rem 1rem;
-  margin-top: 4rem;
+  padding: 0 1rem 0;
+  margin-top: 0;
 }
 
-.footer-container {
-  max-width: 1200px;
-  margin: 0 auto;
+/* ── Final CTA block ── */
+.footer-cta {
+  text-align: center;
+  padding: 72px 24px 64px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
-.footer-content {
+.footer-cta__title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 400;
+  font-style: italic;
+  color: #f0ece6;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.footer-cta__sub {
+  font-size: 15px;
+  color: rgba(240, 236, 230, 0.55);
+  margin: 0;
+  max-width: 400px;
+  line-height: 1.6;
+}
+
+.footer-cta__btn {
+  background: #c9a84c;
+  color: #1a1a0e;
+  border: none;
+  border-radius: 100px;
+  padding: 16px 36px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 24px rgba(201, 168, 76, 0.35);
+}
+
+.footer-cta__btn:hover {
+  background: #d4b85c;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(201, 168, 76, 0.5);
+}
+
+/* ── Brand + nav row ── */
+.footer-mid {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 2rem;
-  padding-bottom: 1.5rem;
+  padding: 48px 0 40px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  gap: 2rem;
+  flex-wrap: wrap;
 }
 
-.footer-brand {
+.footer-wordmark {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0.5rem;
+  gap: 6px;
 }
 
-.footer-logo {
-  font-size: 2rem;
+.footer-wordmark__name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 28px;
+  font-weight: 500;
+  color: #f0ece6;
+  letter-spacing: 0.01em;
+  line-height: 1;
 }
 
-.footer-tagline {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.95rem;
-  margin: 0;
+.footer-wordmark__sub {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(201, 168, 76, 0.7);
 }
 
-.footer-links {
+.footer-nav {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 32px;
+  flex-wrap: wrap;
 }
 
-.footer-link {
+.footer-nav__link {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.95rem;
+  color: rgba(240, 236, 230, 0.45);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
   cursor: pointer;
-  transition: color 0.3s ease;
   padding: 0;
+  transition: color 0.2s ease;
+  font-family: inherit;
 }
 
-.footer-link:hover {
-  color: #d4a574;
+.footer-nav__link:hover {
+  color: rgba(240, 236, 230, 0.85);
 }
 
-.footer-separator {
-  color: rgba(255, 255, 255, 0.3);
-}
-
+/* ── Bottom bar ── */
 .footer-bottom {
-  padding-top: 1.5rem;
+  padding: 24px 0;
   text-align: center;
 }
 
 .footer-copyright {
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 0.875rem;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.22);
   margin: 0;
 }
 
+/* ── Responsive ── */
 @media (max-width: 768px) {
-  .footer-content {
+  .footer-mid {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    padding: 40px 0 32px;
   }
 
-  .footer-brand {
-    align-items: center;
-  }
-
-  .footer-links {
-    flex-wrap: wrap;
+  .footer-nav {
     justify-content: center;
+    gap: 20px;
   }
 }

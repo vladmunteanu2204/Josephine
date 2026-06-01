@@ -319,8 +319,12 @@
 
 .no-reviews {
   text-align: center;
-  padding: 64px 32px;
+  padding: 32px 32px;
   color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 
 .no-reviews-icon {

@@ -110,6 +110,7 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout, nav
     { key: 'recommendations', label: t('nav.smartRecommendations') },
     { key: 'catalog',         label: t('nav.trailCatalog') },
     { key: 'rifugios',        label: 'Mountain Huts' },
+    { key: 'multiday-trails', label: 'Multi-Day Treks' },
     { key: 'planner',         label: t('nav.hikePlanner') }
   ];
 

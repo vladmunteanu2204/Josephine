@@ -8,34 +8,36 @@ function Footer({ setCurrentView }) {
   return (
     <footer className="app-footer">
       <div className="footer-container">
-        <div className="footer-content">
-          <div className="footer-brand">
-            <span className="footer-logo">🏔️</span>
-            <p className="footer-tagline">{t('footer.madeIn')}</p>
-          </div>
 
-          <div className="footer-links">
-            <button 
-              className="footer-link"
-              onClick={() => setCurrentView('terms')}
-            >
-              {t('footer.terms')}
-            </button>
-            <span className="footer-separator">•</span>
-            <button 
-              className="footer-link"
-              onClick={() => setCurrentView('privacy')}
-            >
-              {t('footer.privacy')}
-            </button>
-          </div>
+        {/* Final CTA */}
+        <div className="footer-cta">
+          <h2 className="footer-cta__title">Ready for your next mountain day?</h2>
+          <p className="footer-cta__sub">Josephine knows every trail, rifugio and hidden path in the Dolomites.</p>
+          <button className="footer-cta__btn" onClick={() => setCurrentView('josephine')}>
+            Plan my day with Josephine →
+          </button>
         </div>
 
+        {/* Brand + nav */}
+        <div className="footer-mid">
+          <div className="footer-wordmark">
+            <span className="footer-wordmark__name">Josephine</span>
+            <span className="footer-wordmark__sub">Crafted in South Tyrol, Italy</span>
+          </div>
+
+          <nav className="footer-nav">
+            <button className="footer-nav__link" onClick={() => setCurrentView('home')}>Home</button>
+<button className="footer-nav__link" onClick={() => setCurrentView('josephine')}>Josephine</button>
+            <button className="footer-nav__link" onClick={() => setCurrentView('terms')}>{t('footer.terms')}</button>
+            <button className="footer-nav__link" onClick={() => setCurrentView('privacy')}>{t('footer.privacy')}</button>
+          </nav>
+        </div>
+
+        {/* Bottom bar */}
         <div className="footer-bottom">
-          <p className="footer-copyright">
-            © {new Date().getFullYear()} Josephine. All rights reserved.
-          </p>
+          <p className="footer-copyright">© {new Date().getFullYear()} Josephine. All rights reserved.</p>
         </div>
+
       </div>
     </footer>
   );

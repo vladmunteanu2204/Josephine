@@ -1,19 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import axios from 'axios';
 import { trailImg } from '../utils/trailImage';
+import WeatherWidget from './WeatherWidget';
+import ReviewsSection from './ReviewsSection';
 import './RifugioDetail.css';
 
-const API_URL = import.meta.env.PROD 
-  ? '/api' 
+const API_URL = import.meta.env.PROD
+  ? '/api'
   : `${window.location.protocol}//${window.location.hostname}:8000/api`;
+
+function formatDate(iso) {
+  if (!iso) return '';
+  const [y, m, d] = iso.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${d} ${months[parseInt(m, 10) - 1]} ${y}`;
+}
 
 function RifugioDetail({ rifugioId, onNavigate }) {
   const { t } = useTranslation();
   const { currentUser } = useAuth();
+  const toast = useToast();
   const [rifugio, setRifugio] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isSaved, setIsSaved] = useState(false);
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [bookingForm, setBookingForm] = useState({
     name: '',
@@ -46,19 +58,22 @@ function RifugioDetail({ rifugioId, onNavigate }) {
     }
   }, [currentUser]);
 
+  useEffect(() => {
+    if (rifugioId) {
+      const saved = JSON.parse(localStorage.getItem('savedRifugios') || '[]');
+      setIsSaved(saved.includes(rifugioId));
+    }
+  }, [rifugioId]);
+
   const loadRifugio = async () => {
     try {
       setLoading(true);
       const response = await axios.get(`${API_URL}/rifugios/${rifugioId}`);
-      const rif = response.data;
-      setRifugio(rif);
-      // Load nearby trails if IDs are provided
-      if (rif.nearby_trails?.length > 0) {
-        axios.get(`${API_URL}/trails`).then(r => {
-          const ids = new Set(rif.nearby_trails);
-          setNearbyTrails((r.data.trails || []).filter(t => ids.has(t.id)));
-        }).catch(() => {});
-      }
+      setRifugio(response.data);
+      // Load nearby trails from dedicated endpoint (haversine-based, no manual IDs)
+      axios.get(`${API_URL}/rifugios/${rifugioId}/nearby-trails`)
+        .then(r => setNearbyTrails(r.data.trails || []))
+        .catch(() => {});
     } catch (error) {
       console.error('Error loading rifugio:', error);
     } finally {
@@ -66,14 +81,26 @@ function RifugioDetail({ rifugioId, onNavigate }) {
     }
   };
 
+  const handleSaveToggle = () => {
+    const saved = JSON.parse(localStorage.getItem('savedRifugios') || '[]');
+    let next;
+    if (isSaved) {
+      next = saved.filter(id => id !== rifugioId);
+      toast.info('Hut removed from saved');
+    } else {
+      next = [...saved, rifugioId];
+      toast.success('Hut saved!');
+    }
+    localStorage.setItem('savedRifugios', JSON.stringify(next));
+    setIsSaved(!isSaved);
+  };
+
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
-    
     if (!bookingForm.check_in || !bookingForm.check_out) {
       alert(t('rifugio.bookingDateRequired'));
       return;
     }
-
     try {
       setSubmitting(true);
       await axios.post(`${API_URL}/booking-inquiries`, {
@@ -81,13 +108,9 @@ function RifugioDetail({ rifugioId, onNavigate }) {
         rifugio_name: rifugio.name,
         ...bookingForm
       });
-      
       setSubmitSuccess(true);
       setShowBookingForm(false);
-      
-      setTimeout(() => {
-        setSubmitSuccess(false);
-      }, 5000);
+      setTimeout(() => setSubmitSuccess(false), 5000);
     } catch (error) {
       console.error('Error submitting booking inquiry:', error);
       alert(t('rifugio.bookingError'));
@@ -99,222 +122,247 @@ function RifugioDetail({ rifugioId, onNavigate }) {
   const getStatusBadge = (status) => {
     switch (status) {
       case 'open':
-        return { icon: '🟢', text: t('rifugio.statusOpen'), class: 'status-open' };
-      case 'closed':
-        return { icon: '🔴', text: t('rifugio.statusClosed'), class: 'status-closed' };
+        return { dot: 'status-dot--open', text: t('rifugio.statusOpen') || 'Open' };
       case 'opening_soon':
-        return { icon: '🟡', text: t('rifugio.statusOpeningSoon'), class: 'status-opening-soon' };
+        return { dot: 'status-dot--soon', text: t('rifugio.statusOpeningSoon') || 'Opening soon' };
+      case 'closed':
+        return { dot: 'status-dot--closed', text: t('rifugio.statusClosed') || 'Closed for season' };
       default:
-        return { icon: '⚪', text: t('rifugio.statusSeasonal'), class: 'status-seasonal' };
+        return { dot: 'status-dot--closed', text: t('rifugio.statusSeasonal') || 'Seasonal' };
     }
   };
 
   const getTypeLabel = (type) => {
-    const labels = {
-      rifugio: t('rifugio.typeRifugio'),
-      malga: t('rifugio.typeMalga'),
-      bivacco: t('rifugio.typeBivacco')
-    };
+    const labels = { rifugio: 'Rifugio', malga: 'Malga', bivacco: 'Bivacco' };
     return labels[type] || type;
   };
 
   if (loading) {
-    return <div className="rifugio-detail-loading">{t('common.loading')}</div>;
+    return <div className="rd-loading">{t('common.loading')}</div>;
   }
-
   if (!rifugio) {
-    return <div className="rifugio-detail-error">{t('rifugio.notFound')}</div>;
+    return <div className="rd-error">{t('rifugio.notFound')}</div>;
   }
 
-  const status = getStatusBadge(rifugio.status);
+  const status = getStatusBadge(rifugio.current_status);
+  const coords = rifugio.coordinates;
+  const lat = coords?.lat;
+  const lon = coords?.lng;
 
   return (
-    <div className="rifugio-detail-page">
-      {/* Hero Section */}
-      <div className="rifugio-hero">
+    <div className="rd-page">
+
+      {/* ── Hero ── */}
+      <div className="rd-hero">
         <img
           src={rifugio.photos?.[0] || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200'}
           alt={rifugio.name}
-          className="hero-image"
+          className="rd-hero__img"
         />
-        <div className="hero-overlay"></div>
-        <button className="back-button-hero" onClick={() => onNavigate('rifugios')}>
-          ← {t('common.back')}
-        </button>
-        <div className="hero-content">
-          <h1 className="rifugio-title">{rifugio.name}</h1>
-          <div className={`status-badge-large ${status.class}`}>
-            {status.icon} {status.text}
+        <div className="rd-hero__overlay" />
+
+        {/* Controls row */}
+        <div className="rd-hero__controls">
+          <button className="rd-back-btn" onClick={() => onNavigate('rifugios')} aria-label="Back">
+            ←
+          </button>
+          <button
+            className={`rd-save-btn${isSaved ? ' rd-save-btn--saved' : ''}`}
+            onClick={handleSaveToggle}
+            aria-label={isSaved ? 'Unsave' : 'Save'}
+          >
+            {isSaved ? '♥' : '♡'}
+          </button>
+        </div>
+
+        {/* Title */}
+        <div className="rd-hero__content">
+          <h1 className="rd-hero__title">{rifugio.name}</h1>
+          <div className="rd-hero__status">
+            <span className={`rd-status-dot ${status.dot}`} />
+            <span>{status.text}</span>
           </div>
         </div>
       </div>
 
-      {/* Quick Stats Bar */}
-      <div className="quick-stats-bar">
-        <div className="stat-item">
-          <div className="stat-icon">⛰️</div>
-          <div className="stat-info">
-            <div className="stat-value">{rifugio.altitude}m</div>
-            <div className="stat-label">{t('rifugio.altitude')}</div>
-          </div>
+      {/* ── Stat strip ── */}
+      <div className="rd-stats">
+        <div className="rd-stat">
+          <span className="rd-stat__icon">⛰</span>
+          <span className="rd-stat__value">{rifugio.altitude}m</span>
+          <span className="rd-stat__label">altitude</span>
         </div>
-        <div className="stat-item">
-          <div className="stat-icon">📍</div>
-          <div className="stat-info">
-            <div className="stat-value">{rifugio.region}</div>
-            <div className="stat-label">{t('rifugio.region')}</div>
-          </div>
+        <div className="rd-stat rd-stat--divider" />
+        <div className="rd-stat">
+          <span className="rd-stat__icon">📍</span>
+          <span className="rd-stat__value rd-stat__value--region">{rifugio.region}</span>
+          <span className="rd-stat__label">region</span>
         </div>
-        <div className="stat-item">
-          <div className="stat-icon">🏔️</div>
-          <div className="stat-info">
-            <div className="stat-value">{getTypeLabel(rifugio.type)}</div>
-            <div className="stat-label">{t('rifugio.type')}</div>
-          </div>
+        <div className="rd-stat rd-stat--divider" />
+        <div className="rd-stat">
+          <span className="rd-stat__icon">🏔</span>
+          <span className="rd-stat__value">{getTypeLabel(rifugio.type)}</span>
+          <span className="rd-stat__label">type</span>
         </div>
         {rifugio.facilities?.beds > 0 && (
-          <div className="stat-item">
-            <div className="stat-icon">🛏️</div>
-            <div className="stat-info">
-              <div className="stat-value">{rifugio.facilities.beds}</div>
-              <div className="stat-label">{t('rifugio.beds')}</div>
+          <>
+            <div className="rd-stat rd-stat--divider" />
+            <div className="rd-stat">
+              <span className="rd-stat__icon">🛏</span>
+              <span className="rd-stat__value">{rifugio.facilities.beds}</span>
+              <span className="rd-stat__label">beds</span>
             </div>
-          </div>
+          </>
         )}
       </div>
 
-      <div className="rifugio-content-container">
-        {/* Main Content */}
-        <div className="rifugio-main-content">
-          {/* Success Message */}
+      {/* ── Main content + sidebar ── */}
+      <div className="rd-body">
+        <div className="rd-main">
+
           {submitSuccess && (
-            <div className="booking-success-alert">
-              ✅ {t('rifugio.bookingSuccess')}
+            <div className="rd-success-alert">✅ {t('rifugio.bookingSuccess')}</div>
+          )}
+
+          {/* About */}
+          <section className="rd-section">
+            <h2 className="rd-section__title">{t('rifugio.about')}</h2>
+            <p className="rd-prose">{rifugio.description}</p>
+          </section>
+
+          {/* Highlights */}
+          {rifugio.highlights?.length > 0 && (
+            <section className="rd-section">
+              <h2 className="rd-section__title">Highlights</h2>
+              <ul className="rd-highlights">
+                {rifugio.highlights.map((h, i) => (
+                  <li key={i} className="rd-highlight-item">
+                    <span className="rd-highlight-dot">✦</span>
+                    {h}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {/* Josephine's Note */}
+          {rifugio.josephine_note && (
+            <div className="rd-josephine-note">
+              <img src="/josephine-portrait.png" alt="Josephine" className="rd-josephine-note__portrait" />
+              <div className="rd-josephine-note__body">
+                <p className="rd-josephine-note__label">Josephine's tip</p>
+                <p className="rd-josephine-note__text">"{rifugio.josephine_note}"</p>
+              </div>
             </div>
           )}
 
-          {/* About Section */}
-          <section className="content-section">
-            <h2 className="section-title">{t('rifugio.about')}</h2>
-            <p className="rifugio-description">{rifugio.description}</p>
-          </section>
-
-          {/* Access Information */}
+          {/* Access */}
           {rifugio.access_info && (
-            <section className="content-section">
-              <h2 className="section-title">{t('rifugio.accessInfo')}</h2>
-              <p className="rifugio-description">{rifugio.access_info}</p>
+            <section className="rd-section">
+              <h2 className="rd-section__title">{t('rifugio.accessInfo')}</h2>
+              <p className="rd-prose">{rifugio.access_info}</p>
+            </section>
+          )}
+
+          {/* Weather */}
+          {lat && lon && (
+            <section className="rd-section">
+              <h2 className="rd-section__title">Weather at {rifugio.altitude}m</h2>
+              <WeatherWidget lat={lat} lon={lon} />
             </section>
           )}
 
           {/* Facilities */}
-          <section className="content-section">
-            <h2 className="section-title">{t('rifugio.facilities')}</h2>
-            <div className="facilities-grid">
+          <section className="rd-section">
+            <h2 className="rd-section__title">{t('rifugio.facilities')}</h2>
+            <div className="rd-facilities">
               {rifugio.facilities?.beds > 0 && (
-                <div className="facility-item">
-                  <span className="facility-icon">🛏️</span>
-                  <span>{rifugio.facilities.beds} {t('rifugio.beds')}</span>
-                </div>
+                <div className="rd-facility">🛏 {rifugio.facilities.beds} {t('rifugio.beds')}</div>
               )}
               {rifugio.facilities?.meals && (
-                <div className="facility-item">
-                  <span className="facility-icon">🍽️</span>
-                  <span>{t('rifugio.meals')}</span>
-                </div>
+                <div className="rd-facility">🍽 {t('rifugio.meals')}</div>
               )}
               {rifugio.facilities?.showers && (
-                <div className="facility-item">
-                  <span className="facility-icon">🚿</span>
-                  <span>{t('rifugio.showers')}</span>
-                </div>
+                <div className="rd-facility">🚿 {t('rifugio.showers')}</div>
               )}
               {rifugio.facilities?.wifi && (
-                <div className="facility-item">
-                  <span className="facility-icon">📶</span>
-                  <span>{t('rifugio.wifi')}</span>
-                </div>
+                <div className="rd-facility">📶 {t('rifugio.wifi')}</div>
               )}
               {rifugio.facilities?.dogs && (
-                <div className="facility-item">
-                  <span className="facility-icon">🐕</span>
-                  <span>{t('rifugio.dogs')}</span>
-                </div>
+                <div className="rd-facility">🐕 {t('rifugio.dogs')}</div>
               )}
-              {rifugio.facilities?.payment_methods && rifugio.facilities.payment_methods.length > 0 && (
-                <div className="facility-item">
-                  <span className="facility-icon">💳</span>
-                  <span>{rifugio.facilities.payment_methods.join(', ')}</span>
-                </div>
+              {rifugio.facilities?.payment_methods?.length > 0 && (
+                <div className="rd-facility">💳 {rifugio.facilities.payment_methods.join(', ')}</div>
               )}
             </div>
           </section>
 
-          {/* Photo Gallery */}
-          {rifugio.photos && rifugio.photos.length > 1 && (
-            <section className="content-section">
-              <h2 className="section-title">{t('rifugio.gallery')}</h2>
-              <div className="photo-gallery-grid">
-                {rifugio.photos.slice(1).map((photo, index) => (
-                  <img
-                    key={index}
-                    src={photo}
-                    alt={`${rifugio.name} ${index + 1}`}
-                    className="gallery-photo"
-                    loading="lazy"
-                  />
+          {/* Gallery */}
+          {rifugio.photos?.length > 1 && (
+            <section className="rd-section">
+              <h2 className="rd-section__title">{t('rifugio.gallery')}</h2>
+              <div className="rd-gallery">
+                {rifugio.photos.slice(1).map((photo, i) => (
+                  <img key={i} src={photo} alt={`${rifugio.name} ${i + 1}`} className="rd-gallery__img" loading="lazy" />
                 ))}
               </div>
             </section>
           )}
+
+          {/* Reviews */}
+          <section className="rd-section">
+            <ReviewsSection rifugioId={rifugioId} />
+          </section>
         </div>
 
-        {/* Sidebar */}
-        <aside className="rifugio-sidebar">
-          {/* Opening Season */}
-          {rifugio.opening_season && rifugio.opening_season.start_date && (
-            <div className="sidebar-card">
-              <h3 className="sidebar-title">{t('rifugio.openingSeason')}</h3>
-              <div className="season-dates">
-                <div className="season-date-item">
-                  <span className="date-label">{t('rifugio.opens')}</span>
-                  <span className="date-value">{rifugio.opening_season.start_date}</span>
-                </div>
-                <div className="season-date-item">
-                  <span className="date-label">{t('rifugio.closes')}</span>
-                  <span className="date-value">{rifugio.opening_season.end_date}</span>
-                </div>
+        {/* ── Sidebar ── */}
+        <aside className="rd-sidebar">
+
+          {/* Opening season */}
+          {rifugio.opening_season?.start_date && (
+            <div className="rd-sidebar-card">
+              <h3 className="rd-sidebar-card__title">{t('rifugio.openingSeason')}</h3>
+              <div className="rd-season-dates">
+                <span className="rd-season-label">{t('rifugio.opens')}</span>
+                <span className="rd-season-value">{formatDate(rifugio.opening_season.start_date)}</span>
               </div>
+              <div className="rd-season-dates">
+                <span className="rd-season-label">{t('rifugio.closes')}</span>
+                <span className="rd-season-value">{formatDate(rifugio.opening_season.end_date)}</span>
+              </div>
+              {rifugio.booking_note && (
+                <p className="rd-booking-note">{rifugio.booking_note}</p>
+              )}
             </div>
           )}
 
           {/* Pricing */}
-          {rifugio.prices && Object.keys(rifugio.prices).some(k => rifugio.prices[k] > 0) && (
-            <div className="sidebar-card">
-              <h3 className="sidebar-title">{t('rifugio.pricing')}</h3>
-              <div className="pricing-list">
+          {rifugio.prices && Object.values(rifugio.prices).some(v => v > 0) && (
+            <div className="rd-sidebar-card">
+              <h3 className="rd-sidebar-card__title">{t('rifugio.pricing')}</h3>
+              <div className="rd-prices">
                 {rifugio.prices.overnight > 0 && (
-                  <div className="price-item">
+                  <div className="rd-price-row">
                     <span>{t('rifugio.overnight')}</span>
-                    <span className="price">€{rifugio.prices.overnight}</span>
+                    <span className="rd-price">€{rifugio.prices.overnight}</span>
                   </div>
                 )}
                 {rifugio.prices.breakfast > 0 && (
-                  <div className="price-item">
+                  <div className="rd-price-row">
                     <span>{t('rifugio.breakfast')}</span>
-                    <span className="price">€{rifugio.prices.breakfast}</span>
+                    <span className="rd-price">€{rifugio.prices.breakfast}</span>
                   </div>
                 )}
                 {rifugio.prices.dinner > 0 && (
-                  <div className="price-item">
+                  <div className="rd-price-row">
                     <span>{t('rifugio.dinner')}</span>
-                    <span className="price">€{rifugio.prices.dinner}</span>
+                    <span className="rd-price">€{rifugio.prices.dinner}</span>
                   </div>
                 )}
                 {rifugio.prices.half_board > 0 && (
-                  <div className="price-item">
+                  <div className="rd-price-row">
                     <span>{t('rifugio.halfBoard')}</span>
-                    <span className="price">€{rifugio.prices.half_board}</span>
+                    <span className="rd-price">€{rifugio.prices.half_board}</span>
                   </div>
                 )}
               </div>
@@ -323,200 +371,141 @@ function RifugioDetail({ rifugioId, onNavigate }) {
 
           {/* Contact */}
           {rifugio.contact && (
-            <div className="sidebar-card">
-              <h3 className="sidebar-title">{t('rifugio.contact')}</h3>
-              <div className="contact-list">
+            <div className="rd-sidebar-card">
+              <h3 className="rd-sidebar-card__title">{t('rifugio.contact')}</h3>
+              <div className="rd-contacts">
                 {rifugio.contact.phone && (
-                  <a href={`tel:${rifugio.contact.phone}`} className="contact-item">
+                  <a href={`tel:${rifugio.contact.phone}`} className="rd-contact">
                     📞 {rifugio.contact.phone}
                   </a>
                 )}
                 {rifugio.contact.email && (
-                  <a href={`mailto:${rifugio.contact.email}`} className="contact-item">
+                  <a href={`mailto:${rifugio.contact.email}`} className="rd-contact">
                     ✉️ {rifugio.contact.email}
                   </a>
                 )}
                 {rifugio.contact.website && (
-                  <a href={rifugio.contact.website} target="_blank" rel="noopener noreferrer" className="contact-item">
+                  <a href={rifugio.contact.website} target="_blank" rel="noopener noreferrer" className="rd-contact">
                     🌐 {t('rifugio.website')}
                   </a>
                 )}
                 {rifugio.contact.whatsapp && (
-                  <a href={`https://wa.me/${rifugio.contact.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="contact-item">
+                  <a
+                    href={`https://wa.me/${rifugio.contact.whatsapp.replace(/[^0-9]/g, '')}`}
+                    target="_blank" rel="noopener noreferrer"
+                    className="rd-contact"
+                  >
                     💬 WhatsApp
                   </a>
                 )}
               </div>
             </div>
           )}
-
-          {/* Booking Button */}
-          {rifugio.facilities?.beds > 0 && (
-            <button
-              className="booking-cta-btn"
-              onClick={() => setShowBookingForm(!showBookingForm)}
-            >
-              📅 {t('rifugio.bookingInquiry')}
-            </button>
-          )}
         </aside>
       </div>
 
-      {/* Booking Inquiry Form Modal */}
+      {/* ── Nearby Trails ── */}
+      {nearbyTrails.length > 0 && (
+        <div className="rd-nearby">
+          <h3 className="rd-nearby__title">Trails from this hut</h3>
+          <div className="rd-nearby__scroll">
+            {nearbyTrails.map(trail => (
+              <button
+                key={trail.id}
+                className="rd-trail-card"
+                onClick={() => onNavigate('detail', trail.id)}
+              >
+                <div className="rd-trail-card__img-wrap">
+                  <img src={trailImg(trail, 'thumb')} alt={trail.name} className="rd-trail-card__img" />
+                </div>
+                <div className="rd-trail-card__body">
+                  <p className="rd-trail-card__region">{trail.region}</p>
+                  <p className="rd-trail-card__name">{trail.name}</p>
+                  <p className="rd-trail-card__meta">
+                    {trail.distance_km} km · {trail.duration_hours}h · {trail.difficulty}
+                  </p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Booking modal ── */}
       {showBookingForm && (
-        <div className="booking-modal-overlay" onClick={() => setShowBookingForm(false)}>
-          <div className="booking-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="booking-modal-header">
+        <div className="rd-modal-overlay" onClick={() => setShowBookingForm(false)}>
+          <div className="rd-modal" onClick={e => e.stopPropagation()}>
+            <div className="rd-modal__header">
               <h2>{t('rifugio.bookingInquiry')}</h2>
-              <button className="modal-close-btn" onClick={() => setShowBookingForm(false)}>×</button>
+              <button className="rd-modal__close" onClick={() => setShowBookingForm(false)}>×</button>
             </div>
-
-            <form onSubmit={handleBookingSubmit} className="booking-form">
-              <div className="form-row">
-                <div className="form-group">
+            <form onSubmit={handleBookingSubmit} className="rd-booking-form">
+              <div className="rd-form-row">
+                <div className="rd-form-group">
                   <label>{t('rifugio.name')} *</label>
-                  <input
-                    type="text"
-                    required
-                    value={bookingForm.name}
-                    onChange={(e) => setBookingForm({...bookingForm, name: e.target.value})}
-                  />
+                  <input type="text" required value={bookingForm.name}
+                    onChange={e => setBookingForm({...bookingForm, name: e.target.value})} />
                 </div>
-                <div className="form-group">
+                <div className="rd-form-group">
                   <label>{t('rifugio.email')} *</label>
-                  <input
-                    type="email"
-                    required
-                    value={bookingForm.email}
-                    onChange={(e) => setBookingForm({...bookingForm, email: e.target.value})}
-                  />
+                  <input type="email" required value={bookingForm.email}
+                    onChange={e => setBookingForm({...bookingForm, email: e.target.value})} />
                 </div>
               </div>
-
-              <div className="form-group">
+              <div className="rd-form-group">
                 <label>{t('rifugio.phone')}</label>
-                <input
-                  type="tel"
-                  value={bookingForm.phone}
-                  onChange={(e) => setBookingForm({...bookingForm, phone: e.target.value})}
-                />
+                <input type="tel" value={bookingForm.phone}
+                  onChange={e => setBookingForm({...bookingForm, phone: e.target.value})} />
               </div>
-
-              <div className="form-row">
-                <div className="form-group">
+              <div className="rd-form-row">
+                <div className="rd-form-group">
                   <label>{t('rifugio.checkIn')} *</label>
-                  <input
-                    type="date"
-                    required
-                    value={bookingForm.check_in}
-                    onChange={(e) => setBookingForm({...bookingForm, check_in: e.target.value})}
-                  />
+                  <input type="date" required value={bookingForm.check_in}
+                    onChange={e => setBookingForm({...bookingForm, check_in: e.target.value})} />
                 </div>
-                <div className="form-group">
+                <div className="rd-form-group">
                   <label>{t('rifugio.checkOut')} *</label>
-                  <input
-                    type="date"
-                    required
-                    value={bookingForm.check_out}
-                    onChange={(e) => setBookingForm({...bookingForm, check_out: e.target.value})}
-                  />
+                  <input type="date" required value={bookingForm.check_out}
+                    onChange={e => setBookingForm({...bookingForm, check_out: e.target.value})} />
                 </div>
               </div>
-
-              <div className="form-row">
-                <div className="form-group">
+              <div className="rd-form-row">
+                <div className="rd-form-group">
                   <label>{t('rifugio.adults')} *</label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="20"
-                    required
-                    value={bookingForm.adults}
-                    onChange={(e) => setBookingForm({...bookingForm, adults: parseInt(e.target.value)})}
-                  />
+                  <input type="number" min="1" max="20" required value={bookingForm.adults}
+                    onChange={e => setBookingForm({...bookingForm, adults: parseInt(e.target.value)})} />
                 </div>
-                <div className="form-group">
+                <div className="rd-form-group">
                   <label>{t('rifugio.children')}</label>
-                  <input
-                    type="number"
-                    min="0"
-                    max="10"
-                    value={bookingForm.children}
-                    onChange={(e) => setBookingForm({...bookingForm, children: parseInt(e.target.value)})}
-                  />
+                  <input type="number" min="0" max="10" value={bookingForm.children}
+                    onChange={e => setBookingForm({...bookingForm, children: parseInt(e.target.value)})} />
                 </div>
               </div>
-
-              <div className="form-group">
+              <div className="rd-form-group">
                 <label>{t('rifugio.mealPreference')}</label>
-                <select
-                  value={bookingForm.meal_preference}
-                  onChange={(e) => setBookingForm({...bookingForm, meal_preference: e.target.value})}
-                >
+                <select value={bookingForm.meal_preference}
+                  onChange={e => setBookingForm({...bookingForm, meal_preference: e.target.value})}>
                   <option value="half_board">{t('rifugio.halfBoard')}</option>
                   <option value="breakfast">{t('rifugio.breakfast')}</option>
                   <option value="dinner">{t('rifugio.dinner')}</option>
                   <option value="none">{t('rifugio.noMeals')}</option>
                 </select>
               </div>
-
-              <div className="form-group">
+              <div className="rd-form-group">
                 <label>{t('rifugio.specialRequests')}</label>
-                <textarea
-                  rows="3"
-                  value={bookingForm.special_requests}
-                  onChange={(e) => setBookingForm({...bookingForm, special_requests: e.target.value})}
-                  placeholder={t('rifugio.specialRequestsPlaceholder')}
-                />
+                <textarea rows="3" value={bookingForm.special_requests}
+                  onChange={e => setBookingForm({...bookingForm, special_requests: e.target.value})}
+                  placeholder={t('rifugio.specialRequestsPlaceholder')} />
               </div>
-
-              <div className="form-checkbox">
-                <input
-                  type="checkbox"
-                  id="dogs"
-                  checked={bookingForm.dogs}
-                  onChange={(e) => setBookingForm({...bookingForm, dogs: e.target.checked})}
-                />
+              <div className="rd-form-checkbox">
+                <input type="checkbox" id="dogs" checked={bookingForm.dogs}
+                  onChange={e => setBookingForm({...bookingForm, dogs: e.target.checked})} />
                 <label htmlFor="dogs">{t('rifugio.bringingDogs')}</label>
               </div>
-
-              <button type="submit" className="booking-submit-btn" disabled={submitting}>
+              <button type="submit" className="rd-submit-btn" disabled={submitting}>
                 {submitting ? t('common.loading') : t('rifugio.submitInquiry')}
               </button>
             </form>
-          </div>
-        </div>
-      )}
-
-      {/* ── Nearby Trails ── */}
-      {nearbyTrails.length > 0 && (
-        <div className="rif-nearby-trails">
-          <div className="container">
-            <h3 className="rif-nearby-trails__title">Trails from this hut</h3>
-            <div className="rif-nearby-trails__scroll">
-              {nearbyTrails.map(trail => (
-                <button
-                  key={trail.id}
-                  className="rif-trail-card"
-                  onClick={() => onNavigate('detail', trail.id)}
-                >
-                  <div className="rif-trail-card__img-wrap">
-                    <img
-                      src={trailImg(trail, 'thumb')}
-                      alt={trail.name}
-                      className="rif-trail-card__img"
-                    />
-                  </div>
-                  <div className="rif-trail-card__body">
-                    <p className="rif-trail-card__region">{trail.region}</p>
-                    <p className="rif-trail-card__name">{trail.name}</p>
-                    <p className="rif-trail-card__meta">
-                      {trail.distance_km} km · {trail.duration_hours}h · {trail.difficulty}
-                    </p>
-                  </div>
-                </button>
-              ))}
-            </div>
           </div>
         </div>
       )}

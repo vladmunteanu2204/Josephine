@@ -21,60 +21,97 @@ const DIFFICULTY_CONFIG = {
 
 /* ── Elevation Profile ─────────────────────────────────────── */
 function ElevationProfile({ trail }) {
-  const W = 500, H = 72;
-  const coords  = trail.coordinates || [];
-  const has3D   = coords.length >= 2 && coords[0]?.length === 3;
-  const gain    = trail.elevation_gain_m || 0;
-  const loss    = trail.elevation_loss_m || 0;
-  const type    = trail.trail_type || 'out_and_back';
+  const W = 500, H = 90;
+  const coords = trail.coordinates || [];
+  const gain   = trail.elevation_gain_m || 0;
+  const loss   = trail.elevation_loss_m || 0;
+  const type   = trail.trail_type || 'out_and_back';
+
+  const [elevations, setElevations] = useState(null);
+  const [elevLoading, setElevLoading] = useState(false);
+
+  useEffect(() => {
+    if (coords.length < 2) return;
+    const N = Math.min(coords.length, 100);
+    const step = (coords.length - 1) / (N - 1);
+    const sampled = Array.from({ length: N }, (_, i) => coords[Math.round(i * step)]);
+    const lats = sampled.map(c => c[1]).join(',');
+    const lngs = sampled.map(c => c[0]).join(',');
+    setElevLoading(true);
+    fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lats}&longitude=${lngs}`)
+      .then(r => r.json())
+      .then(d => { if (Array.isArray(d.elevation)) setElevations(d.elevation); })
+      .catch(() => {})
+      .finally(() => setElevLoading(false));
+  }, [trail.id]);
 
   let pts;
-  if (has3D) {
-    const elevs  = coords.map(c => c[2]);
-    const minE   = Math.min(...elevs);
-    const rangeE = Math.max(Math.max(...elevs) - minE, 1);
-    pts = elevs.map((e, i) => [
-      (i / (elevs.length - 1)) * W,
-      H - ((e - minE) / rangeE) * H * 0.9 - H * 0.05,
+  if (elevations?.length >= 2) {
+    const minE   = Math.min(...elevations);
+    const maxE   = Math.max(...elevations);
+    const rangeE = Math.max(maxE - minE, 1);
+    pts = elevations.map((e, i) => [
+      (i / (elevations.length - 1)) * W,
+      H - ((e - minE) / rangeE) * H * 0.82 - H * 0.06,
     ]);
-  } else {
-    const peak = H * 0.88;
+  } else if (!elevLoading) {
+    // Synthetic fallback when no real data
+    const peak = H * 0.84;
     if (type === 'loop') {
       pts = [[0,H],[W*0.15,H-peak*0.4],[W*0.5,H-peak],[W*0.85,H-peak*0.35],[W,H]];
     } else if (type === 'point_to_point') {
-      const end = H - Math.max(0, (gain - loss) / (gain + 1)) * H * 0.6;
+      const end = H - Math.max(0, (gain - loss) / Math.max(gain, 1)) * H * 0.6;
       pts = [[0,H],[W*0.4,H-peak],[W*0.65,H-peak*0.8],[W,end]];
     } else {
       pts = [[0,H],[W*0.45,H-peak],[W*0.55,H-peak],[W,H]];
     }
   }
 
-  const curve = pts.map((p, i) => {
-    if (i === 0) return `M${p[0]},${p[1]}`;
-    const prev = pts[i-1];
-    const cx   = (prev[0] + p[0]) / 2;
-    return `C${cx},${prev[1]} ${cx},${p[1]} ${p[0]},${p[1]}`;
-  }).join(' ');
+  const minElev = elevations ? Math.round(Math.min(...elevations)) : null;
+  const maxElev = elevations ? Math.round(Math.max(...elevations)) : null;
 
-  const fill = `${curve} L${W},${H} L0,${H} Z`;
+  const curvePath = pts?.reduce((acc, p, i) => {
+    if (i === 0) return `M${p[0]},${p[1]}`;
+    const prev = pts[i - 1];
+    const cx = (prev[0] + p[0]) / 2;
+    return `${acc} C${cx},${prev[1]} ${cx},${p[1]} ${p[0]},${p[1]}`;
+  }, '') ?? '';
+  const fillPath = pts ? `${curvePath} L${W},${H} L0,${H} Z` : '';
 
   return (
     <div className="td-elev">
       <div className="td-elev__stats">
         <span className="td-elev__stat"><span className="td-elev__arrow">↑</span>{gain}m gain</span>
         {loss > 0 && <span className="td-elev__stat"><span className="td-elev__arrow td-elev__arrow--down">↓</span>{loss}m loss</span>}
+        {minElev !== null && (
+          <span className="td-elev__stat td-elev__stat--muted">{minElev}–{maxElev}m a.s.l.</span>
+        )}
         <span className="td-elev__stat td-elev__stat--muted">{trail.distance_km} km total</span>
       </div>
-      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="td-elev__svg" aria-hidden="true">
-        <defs>
-          <linearGradient id="elevGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stopColor="#c9a84c" stopOpacity="0.35"/>
-            <stop offset="100%" stopColor="#c9a84c" stopOpacity="0.04"/>
-          </linearGradient>
-        </defs>
-        <path d={fill}  fill="url(#elevGrad)" />
-        <path d={curve} fill="none" stroke="#c9a84c" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
+
+      <div className="td-elev__chart">
+        {maxElev !== null && (
+          <div className="td-elev__yaxis">
+            <span>{maxElev}m</span>
+            <span>{minElev}m</span>
+          </div>
+        )}
+        {elevLoading ? (
+          <div className="td-elev__loading">Loading terrain…</div>
+        ) : pts ? (
+          <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="td-elev__svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="elevGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stopColor="#c9a84c" stopOpacity="0.4"/>
+                <stop offset="100%" stopColor="#c9a84c" stopOpacity="0.03"/>
+              </linearGradient>
+            </defs>
+            <path d={fillPath}  fill="url(#elevGrad)" />
+            <path d={curvePath} fill="none" stroke="#c9a84c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        ) : null}
+      </div>
+
       <div className="td-elev__xaxis">
         <span>0 km</span>
         <span>{(trail.distance_km / 2).toFixed(1)} km</span>
@@ -281,7 +318,13 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin }
               <path d="M12 4L6 10L12 16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-          {/* heart removed — save is in the bottom CTA bar */}
+          <button
+            className={`td-save-btn ${isSaved ? 'td-save-btn--saved' : ''}`}
+            onClick={handleSaveToggle}
+            aria-label={isSaved ? 'Unsave trail' : 'Save trail'}
+          >
+            {isSaved ? '♥' : '♡'}
+          </button>
         </div>
 
         {/* Hero text */}
@@ -344,7 +387,7 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin }
         {noteText && (
           <div className="td-jph-note">
             <div className="td-jph-note__header">
-              <img src="/logo.png" alt="" className="td-jph-note__mark" />
+              <img src="/josephine-portrait.png" alt="Josephine" className="td-jph-note__mark" />
               <span className="td-jph-note__label">{t('trail.whyPicked', 'Why Josephine picked this')}</span>
             </div>
             <p className="td-jph-note__text">{noteText}</p>
@@ -436,37 +479,18 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin }
 
         <ReviewsSection trailId={fullTrail.id} />
 
-        {/* Spacer for pinned CTA */}
-        <div style={{ height: 80 }} />
       </div>
 
-      {/* ── Pinned CTA ── */}
-      <div className="td-cta-bar">
-        {ENABLE_HIKE_TRACKING ? (
+      {ENABLE_HIKE_TRACKING && (
+        <div className="td-cta-bar">
           <button
             className="td-cta-btn"
             onClick={() => { setIsHikeActive(true); if (setIsGPSActive) setIsGPSActive(true); }}
           >
             {t('trail.startHike')}
           </button>
-        ) : (
-          <button
-            className={`td-cta-btn ${isSaved ? 'td-cta-btn--saved' : ''}`}
-            onClick={() => {
-              handleSaveToggle();
-              // Open Apple/Google Maps to trailhead if access_info has coordinates
-              const coords = fullTrail.coordinates?.[0];
-              if (coords && coords.length >= 2) {
-                const [lng, lat] = coords;
-                const url = `https://maps.apple.com/?daddr=${lat},${lng}&dirflg=d`;
-                window.open(url, '_blank', 'noopener');
-              }
-            }}
-          >
-            {isSaved ? '♥ Saved — View on map ↗' : 'Start this route →'}
-          </button>
-        )}
-      </div>
+        </div>
+      )}
 
       <AuthPromptModal
         isOpen={showAuthPrompt}

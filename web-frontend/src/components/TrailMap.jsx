@@ -18,7 +18,7 @@ function TrailMap({ trail }) {
       lake: '💧',
       viewpoint: '👁️',
       cabin: '🏠',
-      cultural: '🏛️',
+      cultural: '⛪',
       peak: '⛰️',
       waterfall: '🌊',
       forest: '🌲'
