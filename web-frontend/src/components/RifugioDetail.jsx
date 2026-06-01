@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
+import { trailImg } from '../utils/trailImage';
 import './RifugioDetail.css';
 
 const API_URL = import.meta.env.PROD 
@@ -29,6 +30,7 @@ function RifugioDetail({ rifugioId, onNavigate }) {
   });
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [nearbyTrails, setNearbyTrails] = useState([]);
 
   useEffect(() => {
     loadRifugio();
@@ -48,7 +50,15 @@ function RifugioDetail({ rifugioId, onNavigate }) {
     try {
       setLoading(true);
       const response = await axios.get(`${API_URL}/rifugios/${rifugioId}`);
-      setRifugio(response.data);
+      const rif = response.data;
+      setRifugio(rif);
+      // Load nearby trails if IDs are provided
+      if (rif.nearby_trails?.length > 0) {
+        axios.get(`${API_URL}/trails`).then(r => {
+          const ids = new Set(rif.nearby_trails);
+          setNearbyTrails((r.data.trails || []).filter(t => ids.has(t.id)));
+        }).catch(() => {});
+      }
     } catch (error) {
       console.error('Error loading rifugio:', error);
     } finally {
@@ -474,6 +484,39 @@ function RifugioDetail({ rifugioId, onNavigate }) {
                 {submitting ? t('common.loading') : t('rifugio.submitInquiry')}
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── Nearby Trails ── */}
+      {nearbyTrails.length > 0 && (
+        <div className="rif-nearby-trails">
+          <div className="container">
+            <h3 className="rif-nearby-trails__title">Trails from this hut</h3>
+            <div className="rif-nearby-trails__scroll">
+              {nearbyTrails.map(trail => (
+                <button
+                  key={trail.id}
+                  className="rif-trail-card"
+                  onClick={() => onNavigate('detail', trail.id)}
+                >
+                  <div className="rif-trail-card__img-wrap">
+                    <img
+                      src={trailImg(trail, 'thumb')}
+                      alt={trail.name}
+                      className="rif-trail-card__img"
+                    />
+                  </div>
+                  <div className="rif-trail-card__body">
+                    <p className="rif-trail-card__region">{trail.region}</p>
+                    <p className="rif-trail-card__name">{trail.name}</p>
+                    <p className="rif-trail-card__meta">
+                      {trail.distance_km} km · {trail.duration_hours}h · {trail.difficulty}
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       )}

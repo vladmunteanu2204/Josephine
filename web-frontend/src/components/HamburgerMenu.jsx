@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { ENABLE_GAMIFICATION } from '../featureFlags';
 import './HamburgerMenu.css';
 
-function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
+function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout, navigateToRifugios }) {
   const { t } = useTranslation();
   const { currentUser } = useAuth();
 
@@ -106,11 +106,11 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
   };
 
   const mainMenuItems = [
-    { key: 'home', label: t('nav.home') },
+    { key: 'home',            label: t('nav.home') },
     { key: 'recommendations', label: t('nav.smartRecommendations') },
-    { key: 'catalog', label: t('nav.trailCatalog') },
-    { key: 'rifugios', label: t('nav.rifugios') },
-    { key: 'planner', label: t('nav.hikePlanner') }
+    { key: 'catalog',         label: t('nav.trailCatalog') },
+    { key: 'rifugios',        label: 'Mountain Huts' },
+    { key: 'planner',         label: t('nav.hikePlanner') }
   ];
 
   const userMenuItems = currentUser ? [
@@ -166,7 +166,14 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout }) {
               <button
                 key={item.key}
                 className={`hamburger-item ${currentView === item.key ? 'active' : ''}`}
-                onClick={() => handleItemClick(item.key)}
+                onClick={() => {
+                  if (item.key === 'rifugios') {
+                    navigateToRifugios?.('');
+                    onClose();
+                  } else {
+                    handleItemClick(item.key);
+                  }
+                }}
               >
                 <span className="hamburger-item-icon">{svgIcons[item.key]}</span>
                 <span className="hamburger-item-label">{item.label}</span>

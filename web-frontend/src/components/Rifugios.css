@@ -262,6 +262,26 @@
   font-size: 12px;
   color: rgba(240,236,230,0.45);
   margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.rif-card__meta-alt {
+  font-weight: 600;
+  color: rgba(240,236,230,0.7);
+}
+
+.rif-card__meta-sep {
+  color: rgba(240,236,230,0.2);
+}
+
+.rif-card__meta-season {
+  color: #c9a84c;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.rif-card__meta-region {
+  color: rgba(240,236,230,0.4);
 }
 
 .rif-card__amenities {
@@ -290,4 +310,120 @@
   .rif-filters__inner { gap: 8px; }
   .rif-search { width: 160px; }
   .rif-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Type description banner (C2) ── */
+.rif-type-banner {
+  border-left: 3px solid var(--type-color, #c9a84c);
+  background: rgba(255,255,255,0.03);
+  margin: 0;
+  padding: 16px 0;
+}
+.rif-type-banner .container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.rif-type-banner__headline {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--type-color, #c9a84c);
+  margin: 0;
+}
+.rif-type-banner__body {
+  font-size: 13px;
+  color: rgba(240,236,230,0.6);
+  margin: 0;
+  max-width: 640px;
+  line-height: 1.5;
+}
+
+/* ── Josephine note on card (C3) ── */
+.rif-card__josephine-note {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 13px;
+  color: rgba(201,168,76,0.7);
+  margin: 6px 0 0;
+  line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* ── Map toggle pill (C4) ── */
+.rif-pill--map { margin-left: auto; }
+
+/* ── Map container (C4) ── */
+.rif-map-container {
+  height: 60vh;
+  min-height: 400px;
+  margin-top: 16px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.rif-map-wrap {
+  width: 100%;
+  height: 100%;
+}
+.rif-map-unavailable {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: rgba(255,255,255,0.03);
+  border-radius: 16px;
+  color: rgba(240,236,230,0.4);
+  font-size: 14px;
+}
+
+/* Map pin */
+.rif-map-pin {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.8);
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(0,0,0,0.5);
+  transition: transform 0.15s;
+}
+.rif-map-pin:hover { transform: scale(1.3); }
+
+/* Popup */
+.rif-map-popup .mapboxgl-popup-content {
+  background: #0f1a0f;
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 12px;
+  padding: 0;
+  overflow: hidden;
+  min-width: 180px;
+}
+.rif-map-popup .mapboxgl-popup-close-button {
+  color: rgba(240,236,230,0.5);
+  font-size: 16px;
+  padding: 4px 8px;
+}
+.rif-popup-inner { display: flex; flex-direction: column; }
+.rif-popup-img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+}
+.rif-popup-body { padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+.rif-popup-type { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+.rif-popup-name { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 15px; color: #f0ece6; margin: 0; }
+.rif-popup-meta { font-size: 11px; color: rgba(240,236,230,0.5); margin: 0; }
+.rif-popup-view {
+  margin-top: 6px;
+  background: #c9a84c;
+  color: #1a1a0e;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  align-self: flex-start;
 }

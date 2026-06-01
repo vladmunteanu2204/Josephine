@@ -286,6 +286,50 @@
   margin: 0;
 }
 
+/* ── Good to know grid ── */
+.td-gtk {
+  margin-bottom: 48px;
+}
+
+.td-gtk__label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(240,236,230,0.45);
+  margin: 0 0 14px;
+}
+
+.td-gtk__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.td-gtk__cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+.td-gtk__key {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(201,168,76,0.7);
+}
+
+.td-gtk__val {
+  font-size: 14px;
+  color: rgba(240,236,230,0.82);
+  line-height: 1.45;
+}
+
 /* ── Map ── */
 .td-map-wrap {
   border-radius: 16px;

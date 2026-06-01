@@ -720,6 +720,13 @@ def get_recommendations():
                 'best_season':      trail.get('best_season', []),
                 'josephine_note':   josephine_note,
                 'in_season':        current_month in trail.get('best_season', [current_month]),
+                # Extra context for Josephine's "Good to know" grid (chat + detail).
+                # Safe-defaulted so older/partial trail records don't break the response.
+                'transport':        trail.get('transport', {}),
+                'trailhead_info':   trail.get('trailhead_info', {}),
+                'facilities':       trail.get('facilities', []),
+                'crowding':         trail.get('crowding', {}),
+                'highlights':       trail.get('highlights', []),
             })
 
         payload = {'results': results}

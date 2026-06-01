@@ -29,6 +29,14 @@ DATABASE_URL = os.environ.get('DATABASE_URL', '')
 if DATABASE_URL.startswith('postgres://'):
     DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
 
+# In production, a missing DATABASE_URL is a hard error — JSON files are dev-only.
+_is_production = os.environ.get('FLASK_ENV', 'development') == 'production'
+if _is_production and not DATABASE_URL:
+    raise RuntimeError(
+        "DATABASE_URL must be set in production. "
+        "JSON file storage is only supported in development (FLASK_ENV != 'production')."
+    )
+
 DB_AVAILABLE = bool(DATABASE_URL and _SA_AVAILABLE)
 
 _engine = None
