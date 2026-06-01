@@ -956,6 +956,7 @@
   "josephineChat": {
     "greeting": "Ciao! ✦ Sono Josephine, la tua compagna alpina. Conosco queste montagne a fondo — i sentieri nascosti, i migliori rifugi, i momenti che tolgono il fiato.",
     "weatherPrompt": "Il tempo è perfetto oggi per un'escursione panoramica. Che tipo di avventura stai cercando?",
+    "startOver": "Ricominciamo. Che tipo di avventura stai cercando oggi?",
     "chipPlanMyDay": "Pianifica la mia giornata",
     "chipSurpriseMe": "Sorprendimi",
     "chipShowMap": "Mostrami la mappa",
@@ -1046,6 +1047,17 @@
     "skyCloudy": "Nuvoloso",
     "skyRain": "Possibili rovesci",
     "visExcellent": "Visibilità eccellente",
-    "visGood": "Buona visibilità"
+    "visGood": "Buona visibilità",
+    "menuShare": "Condividi conversazione",
+    "menuSaved": "Vedi escursioni salvate",
+    "menuClear": "Cancella conversazione",
+    "copied": "Copiato ✓",
+    "chipViewSaved": "Vedi le mie escursioni salvate →",
+    "conditionsClear": "Tempo perfetto per camminare oggi!",
+    "conditionsGood": "Buone condizioni oggi",
+    "conditionsRain": "Porta l'impermeabile oggi.",
+    "conditionsStorm": "Temporali nel pomeriggio — parti presto!",
+    "conditionsTip": "Parti entro le 09:00 per evitare i temporali",
+    "listeningLabel": "Ascolto…"
   }
 }

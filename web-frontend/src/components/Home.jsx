@@ -274,10 +274,10 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
               >
                 {msg.from === 'josephine' && (
                   <img
-                    src="/josephine-portrait.png"
+                    src={seasonAsset(config, 'portrait')}
                     alt=""
                     className="hp-convo__avatar"
-                    onError={e => e.currentTarget.style.display = 'none'}
+                    onError={e => { e.currentTarget.src = '/josephine-portrait.png'; }}
                   />
                 )}
                 <p className="hp-convo__text">{msg.text}</p>

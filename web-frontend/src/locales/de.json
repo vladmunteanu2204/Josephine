@@ -956,6 +956,7 @@
   "josephineChat": {
     "greeting": "Ciao! ✦ Ich bin Josephine, deine alpine Begleiterin. Ich kenne diese Berge in- und auswendig — die versteckten Pfade, die besten Rifugios, die Momente, die einem den Atem verschlagen.",
     "weatherPrompt": "Das Wetter ist heute perfekt für eine Panoramawanderung. Was für ein Abenteuer suchst du?",
+    "startOver": "Fangen wir von vorne an. Was für ein Abenteuer suchst du heute?",
     "chipPlanMyDay": "Meinen Tag planen",
     "chipSurpriseMe": "Überrasch mich",
     "chipShowMap": "Karte zeigen",
@@ -1046,6 +1047,17 @@
     "skyCloudy": "Bewölkt",
     "skyRain": "Schauer möglich",
     "visExcellent": "Hervorragende Sicht",
-    "visGood": "Gute Sicht"
+    "visGood": "Gute Sicht",
+    "menuShare": "Gespräch teilen",
+    "menuSaved": "Gespeicherte Touren ansehen",
+    "menuClear": "Gespräch löschen",
+    "copied": "Kopiert ✓",
+    "chipViewSaved": "Meine gespeicherten Touren →",
+    "conditionsClear": "Perfektes Wanderwetter heute!",
+    "conditionsGood": "Gute Bedingungen heute",
+    "conditionsRain": "Regenausrüstung einpacken.",
+    "conditionsStorm": "Gewitter am Nachmittag — früh starten!",
+    "conditionsTip": "Starte bis 09:00 Uhr vor den Gewittern",
+    "listeningLabel": "Ich höre zu…"
   }
 }

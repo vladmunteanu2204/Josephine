@@ -177,16 +177,6 @@ function SplashScreen({ onComplete }) {
       {/* ── Vignette overlay ── */}
       <div className="jph-splash__vignette" aria-hidden="true"/>
 
-      {/* ── Logo mark (top center) ── */}
-      <div className="jph-splash__mark">
-        <img
-          src="/logo.png"
-          alt="Josephine"
-          className="jph-splash__mark-img"
-          draggable="false"
-        />
-      </div>
-
       {/* ── Wordmark + tagline ── */}
       <div className="jph-splash__brand">
         <h1 className="jph-splash__wordmark">Josephine</h1>

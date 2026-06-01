@@ -961,6 +961,7 @@
   "josephineChat": {
     "greeting": "Ciao! ✦ I'm Josephine, your alpine companion. I know these mountains inside out — the hidden paths, the best rifugios, the moments that take your breath away.",
     "weatherPrompt": "The weather is perfect today for a panoramic hike. What kind of adventure are you after?",
+    "startOver": "Let's start fresh. What kind of adventure are you after today?",
     "chipPlanMyDay": "Plan my day",
     "chipSurpriseMe": "Surprise me",
     "chipShowMap": "Show me the map",
@@ -1051,6 +1052,17 @@
     "skyCloudy": "Cloudy",
     "skyRain": "Showers possible",
     "visExcellent": "Excellent visibility",
-    "visGood": "Good visibility"
+    "visGood": "Good visibility",
+    "menuShare": "Share conversation",
+    "menuSaved": "View saved trails",
+    "menuClear": "Clear conversation",
+    "copied": "Copied ✓",
+    "chipViewSaved": "View my saved hikes →",
+    "conditionsClear": "Perfect hiking weather today!",
+    "conditionsGood": "Good conditions today",
+    "conditionsRain": "Pack your waterproofs today.",
+    "conditionsStorm": "Afternoon storms — start early!",
+    "conditionsTip": "Start by 09:00 to beat afternoon storms",
+    "listeningLabel": "Listening…"
   }
 }
