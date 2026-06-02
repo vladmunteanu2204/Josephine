@@ -894,7 +894,8 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
     const NON_PLACES = /^(the |a |an |my |this |that |summer|winter|spring|autumn|fall|morning|afternoon|evening|july|june|august|mind|order)/i;
     const rawArea = loc ? loc[1].trim() : '';
     const startArea = (rawArea && NON_PLACES.test(rawArea)) ? '' : rawArea;
-    let difficulty = 'medium';
+    // null = the user didn't name a difficulty → the engine shouldn't bias.
+    let difficulty = null;
     if (/\b(easy|beginner|gentle|relaxed|stroll|leisurely|family)\b/i.test(text)) difficulty = 'easy';
     if (/\b(hard|difficult|challenging|strenuous|expert|tough|demanding)\b/i.test(text)) difficulty = 'hard';
 
@@ -1058,7 +1059,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       appendUserMessage(trimmed);
       setInput('');
       const d = {
-        duration_hours: 3, difficulty: intent.difficulty, interests: intent.interests,
+        duration_hours: 3, difficulty: intent.difficulty || 'any', interests: intent.interests,
         withDog: intent.interests.includes('dog-friendly'), family_friendly: false, startArea: intent.startArea,
       };
       setPlanningData(d);
@@ -1158,7 +1159,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
     if (chip === t('chipSomethingDifferent')) { appendUserMessage(chip); startPlanningFlow(); return; }
     if ([t('chipSurpriseMe'), 'Surprise me', 'Yes, surprise me'].includes(chip)) {
       appendUserMessage(chip);
-      const d = { duration_hours: 3, difficulty: 'medium', interests: [], withDog: false, family_friendly: false, startArea: '' };
+      const d = { duration_hours: 3, difficulty: 'any', interests: [], withDog: false, family_friendly: false, startArea: '' };
       setPlanningData(d);
       runConditionsThenOptions(d);
       return;

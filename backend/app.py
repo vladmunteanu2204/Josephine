@@ -560,6 +560,9 @@ def get_recommendations():
 
         duration_hours  = data.get('duration_hours', data.get('duration', 3))
         difficulty      = data.get('difficulty', 'medium')
+        # 'any' = the user never chose a difficulty (e.g. a mood/discovery query)
+        # → don't bias the score toward any difficulty level.
+        difficulty_any  = str(difficulty).lower() == 'any'
         interests       = sorted(data.get('interests', []))
         with_dog        = 'dog-friendly' in interests
         family_friendly = data.get('family_friendly', False)
@@ -605,7 +608,9 @@ def get_recommendations():
                 t_duration = 3.0
 
             # ── Difficulty ──────────────────────────────────────────────
-            if t_difficulty.lower() == difficulty.lower():
+            if difficulty_any:
+                pass   # no difficulty preference → leave the score unbiased
+            elif t_difficulty.lower() == difficulty.lower():
                 score += 4
                 reasons.append(t_difficulty)
             elif (difficulty == 'medium' and t_difficulty == 'easy') or \
