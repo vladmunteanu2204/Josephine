@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useSeason } from '../contexts/SeasonContext';
 import { seasonAsset } from '../hooks/useSeason';
+import { ChevronLeft, ChevronRight, ChevronDown, ArrowRight } from 'lucide-react';
 import './Home.css';
 
 const API_URL = '/api';
@@ -199,7 +200,7 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
           onClick={() => document.getElementById('hp-cinema')?.scrollIntoView({ behavior: 'smooth' })}
         >
           <span className="hp-hero__cue-text">{t('hero.scroll')}</span>
-          <span className="hp-hero__cue-arrow">↓</span>
+          <ChevronDown size={18} strokeWidth={2} className="hp-hero__cue-arrow" aria-hidden="true" />
         </div>
       </section>
 
@@ -265,14 +266,14 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
               onClick={() => goToTrail((activeTrail - 1 + featuredTrails.length) % featuredTrails.length)}
               aria-label="Previous trail"
             >
-              ‹
+              <ChevronLeft size={24} strokeWidth={2} />
             </button>
             <button
               className="hp-cinema__nav hp-cinema__nav--next"
               onClick={() => goToTrail((activeTrail + 1) % featuredTrails.length)}
               aria-label="Next trail"
             >
-              ›
+              <ChevronRight size={24} strokeWidth={2} />
             </button>
           </>
         )}
@@ -385,7 +386,7 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
               {rifugioCounts.malga !== null && (
                 <span className="hp-huts__card-count">{rifugioCounts.malga} places</span>
               )}
-              <span className="hp-huts__card-arrow">→</span>
+              <ArrowRight size={16} strokeWidth={2} className="hp-huts__card-arrow" aria-hidden="true" />
             </button>
 
             <button
@@ -397,7 +398,7 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
               {rifugioCounts.rifugio !== null && (
                 <span className="hp-huts__card-count">{rifugioCounts.rifugio} places</span>
               )}
-              <span className="hp-huts__card-arrow">→</span>
+              <ArrowRight size={16} strokeWidth={2} className="hp-huts__card-arrow" aria-hidden="true" />
             </button>
 
             <button
@@ -409,12 +410,12 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
               {rifugioCounts.bivacco !== null && (
                 <span className="hp-huts__card-count">{rifugioCounts.bivacco} places</span>
               )}
-              <span className="hp-huts__card-arrow">→</span>
+              <ArrowRight size={16} strokeWidth={2} className="hp-huts__card-arrow" aria-hidden="true" />
             </button>
           </div>
 
           <button className="hp-huts__cta" onClick={() => navigateToRifugios?.('')}>
-            Explore all mountain huts →
+            Explore all mountain huts <ArrowRight size={16} strokeWidth={2} />
           </button>
         </div>
       </section>
@@ -486,7 +487,7 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
               "New trail, new scents, same mountains.<br />Let's make it unforgettable."
             </blockquote>
 
-            <span className="hp-paths__link hp-paths__link--narya">Explore dog trails →</span>
+            <span className="hp-paths__link hp-paths__link--narya">Explore dog trails <ArrowRight size={15} strokeWidth={2} /></span>
           </div>
         </div>
 

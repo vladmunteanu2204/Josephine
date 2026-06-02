@@ -1117,3 +1117,9 @@
     scroll-snap-align: start;
   }
 }
+
+/* ── Phase 1/5: lucide affordance alignment ───────────────────────────── */
+.hp-cinema__nav { display: flex; align-items: center; justify-content: center; }
+.hp-hero__cue-arrow { display: block; margin: 0 auto; }
+.hp-huts__cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.hp-paths__link { display: inline-flex; align-items: center; gap: 6px; }
