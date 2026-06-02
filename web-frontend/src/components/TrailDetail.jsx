@@ -11,6 +11,7 @@ import ActiveHikeTracker from './ActiveHikeTracker';
 import WeatherWidget from './WeatherWidget';
 import { ENABLE_HIKE_TRACKING } from '../featureFlags';
 import AuthPromptModal from './AuthPromptModal';
+import { ArrowLeft, Heart, TrendingUp, TrendingDown } from 'lucide-react';
 import './TrailDetail.css';
 
 const DIFFICULTY_CONFIG = {
@@ -81,8 +82,8 @@ function ElevationProfile({ trail }) {
   return (
     <div className="td-elev">
       <div className="td-elev__stats">
-        <span className="td-elev__stat"><span className="td-elev__arrow">↑</span>{gain}m gain</span>
-        {loss > 0 && <span className="td-elev__stat"><span className="td-elev__arrow td-elev__arrow--down">↓</span>{loss}m loss</span>}
+        <span className="td-elev__stat"><TrendingUp size={14} strokeWidth={2} className="td-elev__arrow" />{gain}m gain</span>
+        {loss > 0 && <span className="td-elev__stat"><TrendingDown size={14} strokeWidth={2} className="td-elev__arrow td-elev__arrow--down" />{loss}m loss</span>}
         {minElev !== null && (
           <span className="td-elev__stat td-elev__stat--muted">{minElev}–{maxElev}m a.s.l.</span>
         )}
@@ -255,11 +256,11 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin }
 
   // ── Guards ──
   if (loading) return (
-    <div className="td-page"><button className="td-back" onClick={onBack}>← {t('trail.backToTrails')}</button>
+    <div className="td-page"><button className="td-back" onClick={onBack}><ArrowLeft size={16} strokeWidth={2} /> {t('trail.backToTrails')}</button>
       <div className="td-state">{t('common.loading')}</div></div>
   );
   if (!fullTrail?.name) return (
-    <div className="td-page"><button className="td-back" onClick={onBack}>← {t('trail.backToTrails')}</button>
+    <div className="td-page"><button className="td-back" onClick={onBack}><ArrowLeft size={16} strokeWidth={2} /> {t('trail.backToTrails')}</button>
       <div className="td-state td-state--error">{t('common.error')}</div></div>
   );
 
@@ -314,16 +315,15 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin }
         {/* Top controls */}
         <div className="td-hero__controls">
           <button className="td-back-btn" onClick={onBack} aria-label="Back">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M12 4L6 10L12 16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <ArrowLeft size={20} strokeWidth={2} />
           </button>
           <button
             className={`td-save-btn ${isSaved ? 'td-save-btn--saved' : ''}`}
             onClick={handleSaveToggle}
             aria-label={isSaved ? 'Unsave trail' : 'Save trail'}
+            aria-pressed={isSaved}
           >
-            {isSaved ? '♥' : '♡'}
+            <Heart size={20} strokeWidth={2} fill={isSaved ? 'currentColor' : 'none'} />
           </button>
         </div>
 
@@ -361,7 +361,7 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin }
         <div className="td-stat">
           <span className="td-stat__number">
             <span className="td-stat__value">{fullTrail.elevation_gain_m}</span>
-            <span className="td-stat__unit"> m ↑</span>
+            <span className="td-stat__unit"> m</span>
           </span>
           <span className="td-stat__label">{t('trail.elevation', 'Elevation')}</span>
         </div>

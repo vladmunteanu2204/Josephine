@@ -641,3 +641,11 @@
 
   .rd-form-row { grid-template-columns: 1fr; }
 }
+
+/* ── Design rollout: lucide affordance alignment ──────────────────────── */
+.rd-stat__icon { display: inline-flex; align-items: center; justify-content: center; color: var(--accent-primary); }
+.rd-facility { display: inline-flex; align-items: center; gap: 6px; }
+.rd-facility svg { color: var(--text-muted); flex-shrink: 0; }
+.rd-contact { display: inline-flex; align-items: center; gap: 8px; }
+.rd-contact svg { color: var(--text-muted); flex-shrink: 0; }
+.rd-back-btn, .rd-save-btn { display: inline-flex; align-items: center; justify-content: center; }

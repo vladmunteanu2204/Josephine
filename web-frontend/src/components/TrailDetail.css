@@ -613,3 +613,8 @@
   color: #c9a84c;
   margin: 0;
 }
+
+/* ── Design rollout: lucide affordance alignment ──────────────────────── */
+.td-elev__stat { display: inline-flex; align-items: center; gap: 4px; }
+.td-elev__arrow { vertical-align: middle; }
+.td-back { display: inline-flex; align-items: center; gap: 6px; }

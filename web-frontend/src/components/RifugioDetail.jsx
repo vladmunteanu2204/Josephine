@@ -6,6 +6,10 @@ import axios from 'axios';
 import { trailImg } from '../utils/trailImage';
 import WeatherWidget from './WeatherWidget';
 import ReviewsSection from './ReviewsSection';
+import {
+  ArrowLeft, Heart, Mountain, MapPin, BedDouble,
+  UtensilsCrossed, ShowerHead, Wifi, Dog, Phone, Globe, Mail, MessageCircle,
+} from 'lucide-react';
 import './RifugioDetail.css';
 
 const API_URL = import.meta.env.PROD
@@ -164,14 +168,15 @@ function RifugioDetail({ rifugioId, onNavigate, onShowLogin }) {
         {/* Controls row */}
         <div className="rd-hero__controls">
           <button className="rd-back-btn" onClick={() => onNavigate('rifugios')} aria-label="Back">
-            ←
+            <ArrowLeft size={20} strokeWidth={2} />
           </button>
           <button
             className={`rd-save-btn${isSaved ? ' rd-save-btn--saved' : ''}`}
             onClick={handleSaveToggle}
             aria-label={isSaved ? 'Unsave' : 'Save'}
+            aria-pressed={isSaved}
           >
-            {isSaved ? '♥' : '♡'}
+            <Heart size={20} strokeWidth={2} fill={isSaved ? 'currentColor' : 'none'} />
           </button>
         </div>
 
@@ -188,19 +193,19 @@ function RifugioDetail({ rifugioId, onNavigate, onShowLogin }) {
       {/* ── Stat strip ── */}
       <div className="rd-stats">
         <div className="rd-stat">
-          <span className="rd-stat__icon">⛰</span>
+          <span className="rd-stat__icon"><Mountain size={18} strokeWidth={2} /></span>
           <span className="rd-stat__value">{rifugio.altitude}m</span>
           <span className="rd-stat__label">altitude</span>
         </div>
         <div className="rd-stat rd-stat--divider" />
         <div className="rd-stat">
-          <span className="rd-stat__icon">📍</span>
+          <span className="rd-stat__icon"><MapPin size={18} strokeWidth={2} /></span>
           <span className="rd-stat__value rd-stat__value--region">{rifugio.region}</span>
           <span className="rd-stat__label">region</span>
         </div>
         <div className="rd-stat rd-stat--divider" />
         <div className="rd-stat">
-          <span className="rd-stat__icon">🏔</span>
+          <span className="rd-stat__icon"><Mountain size={18} strokeWidth={2} /></span>
           <span className="rd-stat__value">{getTypeLabel(rifugio.type)}</span>
           <span className="rd-stat__label">type</span>
         </div>
@@ -208,7 +213,7 @@ function RifugioDetail({ rifugioId, onNavigate, onShowLogin }) {
           <>
             <div className="rd-stat rd-stat--divider" />
             <div className="rd-stat">
-              <span className="rd-stat__icon">🛏</span>
+              <span className="rd-stat__icon"><BedDouble size={18} strokeWidth={2} /></span>
               <span className="rd-stat__value">{rifugio.facilities.beds}</span>
               <span className="rd-stat__label">beds</span>
             </div>
@@ -277,19 +282,19 @@ function RifugioDetail({ rifugioId, onNavigate, onShowLogin }) {
             <h2 className="rd-section__title">{t('rifugio.facilities')}</h2>
             <div className="rd-facilities">
               {rifugio.facilities?.beds > 0 && (
-                <div className="rd-facility">🛏 {rifugio.facilities.beds} {t('rifugio.beds')}</div>
+                <div className="rd-facility"><BedDouble size={16} strokeWidth={2} /> {rifugio.facilities.beds} {t('rifugio.beds')}</div>
               )}
               {rifugio.facilities?.meals && (
-                <div className="rd-facility">🍽 {t('rifugio.meals')}</div>
+                <div className="rd-facility"><UtensilsCrossed size={16} strokeWidth={2} /> {t('rifugio.meals')}</div>
               )}
               {rifugio.facilities?.showers && (
-                <div className="rd-facility">🚿 {t('rifugio.showers')}</div>
+                <div className="rd-facility"><ShowerHead size={16} strokeWidth={2} /> {t('rifugio.showers')}</div>
               )}
               {rifugio.facilities?.wifi && (
-                <div className="rd-facility">📶 {t('rifugio.wifi')}</div>
+                <div className="rd-facility"><Wifi size={16} strokeWidth={2} /> {t('rifugio.wifi')}</div>
               )}
               {rifugio.facilities?.dogs && (
-                <div className="rd-facility">🐕 {t('rifugio.dogs')}</div>
+                <div className="rd-facility"><Dog size={16} strokeWidth={2} /> {t('rifugio.dogs')}</div>
               )}
               {rifugio.facilities?.payment_methods?.length > 0 && (
                 <div className="rd-facility">💳 {rifugio.facilities.payment_methods.join(', ')}</div>
@@ -376,17 +381,17 @@ function RifugioDetail({ rifugioId, onNavigate, onShowLogin }) {
               <div className="rd-contacts">
                 {rifugio.contact.phone && (
                   <a href={`tel:${rifugio.contact.phone}`} className="rd-contact">
-                    📞 {rifugio.contact.phone}
+                    <Phone size={16} strokeWidth={2} /> {rifugio.contact.phone}
                   </a>
                 )}
                 {rifugio.contact.email && (
                   <a href={`mailto:${rifugio.contact.email}`} className="rd-contact">
-                    ✉️ {rifugio.contact.email}
+                    <Mail size={16} strokeWidth={2} /> {rifugio.contact.email}
                   </a>
                 )}
                 {rifugio.contact.website && (
                   <a href={rifugio.contact.website} target="_blank" rel="noopener noreferrer" className="rd-contact">
-                    🌐 {t('rifugio.website')}
+                    <Globe size={16} strokeWidth={2} /> {t('rifugio.website')}
                   </a>
                 )}
                 {rifugio.contact.whatsapp && (
@@ -395,7 +400,7 @@ function RifugioDetail({ rifugioId, onNavigate, onShowLogin }) {
                     target="_blank" rel="noopener noreferrer"
                     className="rd-contact"
                   >
-                    💬 WhatsApp
+                    <MessageCircle size={16} strokeWidth={2} /> WhatsApp
                   </a>
                 )}
               </div>
