@@ -16,6 +16,7 @@ const BLANK_FORM = {
   prices: { overnight: 0, breakfast: 0, dinner: 0, half_board: 0 },
   photos: [], status: 'seasonal', special_closures: [],
   josephine_note: '', highlights: [],
+  booking_email_verified: false,
 };
 
 export default function RifugiosManager({ adminPassword }) {
@@ -196,7 +197,12 @@ export default function RifugiosManager({ adminPassword }) {
                     title={rif.current_status}
                   />
                 </div>
-                <h4 className="rif-mgr-card__name">{rif.name}</h4>
+                <h4 className="rif-mgr-card__name">
+                  {rif.name}
+                  {rif.booking_email_verified && (
+                    <span className="rif-verify-badge" title="Booking email verified"><Check size={11} strokeWidth={3} /></span>
+                  )}
+                </h4>
                 <p className="rif-mgr-card__meta">{rif.region} · {rif.altitude}m</p>
                 {rif.opening_season?.start_date && (
                   <p className="rif-mgr-card__season">
@@ -345,6 +351,14 @@ export default function RifugiosManager({ adminPassword }) {
                     </div>
                   ))}
                 </div>
+                <label className="rif-verify-toggle" title="Only verified-email huts receive auto-sent booking inquiries">
+                  <input
+                    type="checkbox"
+                    checked={!!form.booking_email_verified}
+                    onChange={e => setForm(f => ({ ...f, booking_email_verified: e.target.checked }))}
+                  />
+                  <Check size={14} strokeWidth={2.5} /> Booking email verified (enables auto-send)
+                </label>
               </fieldset>
 
               {/* Facilities */}

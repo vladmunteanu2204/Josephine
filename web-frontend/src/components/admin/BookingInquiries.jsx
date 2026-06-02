@@ -190,7 +190,16 @@ export default function BookingInquiries({ adminPassword }) {
               {inquiries.map(inq => (
                 <tr key={inq.id} className="bk-row" onClick={() => openDetail(inq)}>
                   <td className="bk-id">{inq.id}</td>
-                  <td className="bk-rifugio">{inq.rifugio_name}</td>
+                  <td className="bk-rifugio">
+                    {inq.rifugio_name}
+                    {inq.delivery_status && (
+                      <span className={`bk-deliv bk-deliv--${inq.delivery_status}`}>
+                        {inq.delivery_status === 'emailed' ? '✉ auto-sent'
+                          : inq.delivery_status === 'failed' ? '⚠ send failed'
+                          : 'manual'}
+                      </span>
+                    )}
+                  </td>
                   <td className="bk-guest">
                     <span>{inq.user_name}</span>
                     <small>{inq.user_email}</small>

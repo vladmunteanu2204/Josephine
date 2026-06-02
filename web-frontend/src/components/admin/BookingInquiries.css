@@ -151,3 +151,9 @@
 /* Design rollout (B): admin icon alignment */
 .bk-refresh, .bk-clear-dates, .bk-error { display: inline-flex; align-items: center; gap: 6px; }
 .bk-btn-delete, .bk-modal-close { display: inline-flex; align-items: center; justify-content: center; }
+
+/* Delivery-status chip */
+.bk-deliv { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: var(--radius-pill, 999px); font-size: 10px; font-weight: 700; letter-spacing: 0.02em; vertical-align: middle; }
+.bk-deliv--emailed { background: color-mix(in srgb, var(--diff-easy, #4ade80) 18%, transparent); color: var(--diff-easy, #4ade80); }
+.bk-deliv--fallback { background: var(--surface-2, rgba(255,255,255,0.06)); color: var(--text-muted, #888); }
+.bk-deliv--failed { background: color-mix(in srgb, var(--diff-hard, #ef4444) 16%, transparent); color: var(--diff-hard, #ef4444); }

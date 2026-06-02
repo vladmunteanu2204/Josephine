@@ -168,3 +168,8 @@
 .rif-mgr-title, .rif-mgr-btn-new, .rif-mgr-card__beds { display: inline-flex; align-items: center; gap: 6px; }
 .rif-btn-edit, .rif-btn-del, .rif-drawer-close { display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
 .rif-mgr-card__actions button { display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+
+/* Booking-email verified controls */
+.rif-verify-toggle { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; cursor: pointer; color: var(--text-secondary); font-size: 13px; }
+.rif-verify-toggle svg { color: var(--diff-easy, #4ade80); }
+.rif-verify-badge { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; margin-left: 6px; border-radius: 50%; background: color-mix(in srgb, var(--diff-easy, #4ade80) 22%, transparent); color: var(--diff-easy, #4ade80); vertical-align: middle; }
