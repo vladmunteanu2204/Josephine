@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Hotel, Plus, Check, Pencil, Trash2, Undo2, X, MessageSquare, BedDouble } from 'lucide-react';
 import './RifugiosManager.css';
 
 const TYPE_LABELS = { rifugio: 'Rifugio', malga: 'Malga', bivacco: 'Bivacco' };
@@ -140,10 +141,10 @@ export default function RifugiosManager({ adminPassword }) {
       {/* Header */}
       <div className="rif-mgr-header">
         <div>
-          <h2 className="rif-mgr-title">🏠 Rifugios Manager</h2>
+          <h2 className="rif-mgr-title"><Hotel size={20} strokeWidth={2} /> Rifugios Manager</h2>
           <p className="rif-mgr-sub">{rifugios.length} locations · manage opening seasons, facilities, prices</p>
         </div>
-        <button className="rif-mgr-btn-new" onClick={openNew}>➕ Add Rifugio</button>
+        <button className="rif-mgr-btn-new" onClick={openNew}><Plus size={16} strokeWidth={2} /> Add Rifugio</button>
       </div>
 
       {/* Filters */}
@@ -203,27 +204,28 @@ export default function RifugiosManager({ adminPassword }) {
                   </p>
                 )}
                 {rif.facilities?.beds > 0 && (
-                  <p className="rif-mgr-card__beds">🛏 {rif.facilities.beds} beds</p>
+                  <p className="rif-mgr-card__beds"><BedDouble size={14} strokeWidth={2} /> {rif.facilities.beds} beds</p>
                 )}
                 <div className="rif-mgr-card__actions">
                   {rif.status === 'draft' ? (
                     <button
                       style={{ flex: 1, padding: '7px 0', background: 'rgba(74,222,128,0.1)', border: '1px solid rgba(74,222,128,0.3)', borderRadius: '8px', color: '#4ade80', fontSize: '12px', cursor: 'pointer' }}
                       onClick={() => publish(rif.id, 'published')}
-                    >✓ Publish</button>
+                    ><Check size={13} strokeWidth={2.5} /> Publish</button>
                   ) : (
-                    <button className="rif-btn-edit" onClick={() => openEdit(rif)}>✏️ Edit</button>
+                    <button className="rif-btn-edit" onClick={() => openEdit(rif)}><Pencil size={13} strokeWidth={2} /> Edit</button>
                   )}
                   {rif.status !== 'draft' && (
                     <button
                       style={{ padding: '7px 10px', background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.25)', borderRadius: '8px', color: '#fbbf24', fontSize: '12px', cursor: 'pointer' }}
                       onClick={() => publish(rif.id, 'draft')}
-                    >↩</button>
+                      aria-label="Unpublish"
+                    ><Undo2 size={13} strokeWidth={2} /></button>
                   )}
                   {rif.status === 'draft' && (
-                    <button className="rif-btn-edit" style={{ marginLeft: '4px' }} onClick={() => openEdit(rif)}>✏️</button>
+                    <button className="rif-btn-edit" style={{ marginLeft: '4px' }} onClick={() => openEdit(rif)} aria-label="Edit"><Pencil size={13} strokeWidth={2} /></button>
                   )}
-                  <button className="rif-btn-del"  onClick={() => del(rif.id)}>🗑️</button>
+                  <button className="rif-btn-del"  onClick={() => del(rif.id)} aria-label="Delete"><Trash2 size={13} strokeWidth={2} /></button>
                 </div>
               </div>
             </div>
@@ -237,7 +239,7 @@ export default function RifugiosManager({ adminPassword }) {
           <div className="rif-drawer" onClick={e => e.stopPropagation()}>
             <div className="rif-drawer-header">
               <h3>{editing === 'new' ? 'New Rifugio' : `Editing: ${form.name}`}</h3>
-              <button className="rif-drawer-close" onClick={() => setEditing(null)}>✕</button>
+              <button className="rif-drawer-close" onClick={() => setEditing(null)} aria-label="Close"><X size={18} strokeWidth={2} /></button>
             </div>
 
             <div className="rif-drawer-body">
@@ -366,7 +368,7 @@ export default function RifugiosManager({ adminPassword }) {
 
               {/* Josephine's Tip */}
               <fieldset className="rif-fieldset" style={{ borderColor: 'rgba(201,168,76,0.3)' }}>
-                <legend style={{ color: '#c9a84c' }}>💬 Josephine's Insider Tip</legend>
+                <legend style={{ color: '#c9a84c', display: 'inline-flex', alignItems: 'center', gap: 6 }}><MessageSquare size={15} strokeWidth={2} /> Josephine's Insider Tip</legend>
                 <p style={{ fontSize: '12px', opacity: 0.6, margin: '0 0 10px' }}>
                   A personal tip shown on the detail page and delivered by Josephine in chat. Keep it short, specific, and useful — e.g. "Ask for the Schlutzkrapfen on Sundays" or "The sunrise from the east terrace is worth the early start."
                 </p>

@@ -196,3 +196,8 @@
 .dash-badge--declined  { background: rgba(239,68,68,0.12);  color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
 
 .dash-empty { font-size: 13px; color: rgba(240,236,230,0.3); margin: 0; padding: 8px 0; }
+
+/* Design rollout (B): admin icon alignment */
+.dash-title, .dash-refresh, .dash-activity-title, .dash-error { display: inline-flex; align-items: center; gap: 6px; }
+.dash-season-pill, .dash-check { display: inline-flex; align-items: center; gap: 4px; }
+.dash-kpi__icon { display: inline-flex; align-items: center; }

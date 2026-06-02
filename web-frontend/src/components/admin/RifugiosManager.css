@@ -163,3 +163,8 @@
 }
 .rif-btn-save:hover:not(:disabled) { background: #d4b85c; }
 .rif-btn-save:disabled { opacity: 0.5; cursor: default; }
+
+/* Design rollout (B): admin icon alignment */
+.rif-mgr-title, .rif-mgr-btn-new, .rif-mgr-card__beds { display: inline-flex; align-items: center; gap: 6px; }
+.rif-btn-edit, .rif-btn-del, .rif-drawer-close { display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+.rif-mgr-card__actions button { display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
