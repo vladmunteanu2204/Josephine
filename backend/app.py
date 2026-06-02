@@ -2995,8 +2995,24 @@ def _resolve_nearby_rifugios(id_list: list) -> list:
     rif_by_id = {r['id']: r for r in all_rifugios}
     today = datetime.now().date()
     result = []
-    for rid in id_list[:3]:
-        r = rif_by_id.get(rid)
+    for entry in id_list[:3]:
+        # nearby_rifugios has two shapes across the dataset:
+        #   1) a string id  ("rif-067")  → look up the full record
+        #   2) an inline dict ({name, elevation_m, ...}) → use as-is
+        # Passing a dict to rif_by_id.get() raised "unhashable type: 'dict'".
+        if isinstance(entry, dict):
+            result.append({
+                'id':               entry.get('id'),
+                'name':             entry.get('name', ''),
+                'type':             entry.get('type', 'rifugio'),
+                'altitude':         entry.get('altitude') or entry.get('elevation_m'),
+                'open_now':         None,
+                'opening_season':   entry.get('opening_season', {}),
+                'booking_required': entry.get('booking_required', False),
+                'josephine_note':   entry.get('josephine_note', ''),
+            })
+            continue
+        r = rif_by_id.get(entry)
         if not r:
             continue
         season = r.get('opening_season', {})
