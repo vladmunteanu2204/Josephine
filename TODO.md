@@ -40,3 +40,35 @@ and the page switches from "coming soon" to a working checkout.
 
 Optional follow-ups (not built yet):
 - [ ] `/api/donate/webhook` to record completed donations / show a supporters count.
+
+## 3. Reviews — persistence + real auth (audit #4, #5) — DEFERRED
+
+Currently reviews are NOT persisted and NOT truly authenticated:
+- `POST /api/trails/<id>/reviews` and `/api/rifugios/<id>/reviews` return a
+  fabricated review object and write nothing to storage; the frontend shows it
+  optimistically, so it disappears on reload. (`backend/app.py`)
+- Auth is a soft check: any non-empty `user_id` is accepted (forgeable). The
+  backend never verifies Firebase identity anywhere (same gap affects saved
+  hikes).
+- `load_reviews()` returns a **list** in DB mode but the GET endpoints expect a
+  dict with `reviews` + `statistics` → will 500 review reads when Postgres is
+  active (audit #5).
+
+To do when revisited:
+- [ ] Persist reviews (JSON store, and a `reviews` table when `DB_AVAILABLE`).
+- [ ] Normalise `load_reviews()` to the `{reviews, statistics}` shape in DB mode
+      (fix #5).
+- [ ] Verify Firebase ID tokens on the backend (Firebase Admin SDK +
+      service-account credential) so reviews and saved hikes are genuinely
+      authenticated — then drop the forgeable `user_id` soft-check.
+
+## 4. Remaining dependency notes (audit #6, #7)
+
+- Frontend: 2 moderate vulns remain (esbuild/vite dev-build chain). They need a
+  breaking Vite major bump (`npm audit fix --force`) and don't ship in the
+  static bundle — deferred to avoid breakage. Root + non-breaking frontend
+  fixes are done (root: 0 vulns; frontend: 7 → 2).
+- Local `.venv` runs Python 3.14, on which `gevent` won't build, so
+  `pip install -r backend/requirements.txt` can't fully sync locally. Installed
+  `flask-talisman` directly so local `import app` works. Production/Replit uses
+  a compatible Python; no prod impact.
