@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import {
+  ArrowLeft, ArrowRight, Mountain, Footprints, BedDouble,
+  CalendarRange, Ruler, TrendingUp, TrendingDown, Clock,
+} from 'lucide-react';
 import './MultiDayTrailDetail.css';
 
 const API_URL = '/api';
@@ -53,7 +57,7 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
     return (
       <div className="mdtd-error">
         <h2 style={{ color: '#f0ece6' }}>Trek not found</h2>
-        <button onClick={() => onNavigate('multiday-trails')}>← Back to treks</button>
+        <button onClick={() => onNavigate('multiday-trails')}><ArrowLeft size={16} strokeWidth={2} /> Back to treks</button>
       </div>
     );
   }
@@ -80,7 +84,7 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
       >
         <div className="mdtd-hero__overlay" />
         <div className="mdtd-hero__controls">
-          <button className="mdtd-back-btn" onClick={() => onNavigate('multiday-trails')}>←</button>
+          <button className="mdtd-back-btn" onClick={() => onNavigate('multiday-trails')} aria-label="Back"><ArrowLeft size={20} strokeWidth={2} /></button>
         </div>
         <div className="mdtd-hero__content">
           <p className="mdtd-hero__eyebrow">Multi-Day Trek · {trail.region}</p>
@@ -91,22 +95,22 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
       {/* Stat strip */}
       <div className="mdtd-stats">
         <div className="mdtd-stat">
-          <span className="mdtd-stat__icon">📅</span>
+          <span className="mdtd-stat__icon"><CalendarRange size={20} strokeWidth={2} /></span>
           <span className="mdtd-stat__value">{trail.duration_days} days · {trail.duration_nights} nights</span>
           <span className="mdtd-stat__label">Duration</span>
         </div>
         <div className="mdtd-stat">
-          <span className="mdtd-stat__icon">📏</span>
+          <span className="mdtd-stat__icon"><Ruler size={20} strokeWidth={2} /></span>
           <span className="mdtd-stat__value">{trail.total_distance_km} km</span>
           <span className="mdtd-stat__label">Total distance</span>
         </div>
         <div className="mdtd-stat">
-          <span className="mdtd-stat__icon">⛰️</span>
-          <span className="mdtd-stat__value">{trail.total_elevation_gain_m?.toLocaleString()} m ↑</span>
+          <span className="mdtd-stat__icon"><Mountain size={20} strokeWidth={2} /></span>
+          <span className="mdtd-stat__value">{trail.total_elevation_gain_m?.toLocaleString()} m</span>
           <span className="mdtd-stat__label">Elevation gain</span>
         </div>
         <div className="mdtd-stat">
-          <span className="mdtd-stat__icon">🥾</span>
+          <span className="mdtd-stat__icon"><Footprints size={20} strokeWidth={2} /></span>
           <span className="mdtd-stat__value">{trail.stages?.length || 0} stages</span>
           <span className="mdtd-stat__label">Stages</span>
         </div>
@@ -197,28 +201,28 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
                 {/* Stats */}
                 <div className="mdtd-stage-stats">
                   <div className="mdtd-stage-stat">
-                    <span className="mdtd-stage-stat__icon">📏</span>
+                    <span className="mdtd-stage-stat__icon"><Ruler size={18} strokeWidth={2} /></span>
                     <div>
                       <div className="mdtd-stage-stat__label">Distance</div>
                       <div className="mdtd-stage-stat__value">{currentStage.distance_km} km</div>
                     </div>
                   </div>
                   <div className="mdtd-stage-stat">
-                    <span className="mdtd-stage-stat__icon">⬆️</span>
+                    <span className="mdtd-stage-stat__icon"><TrendingUp size={18} strokeWidth={2} /></span>
                     <div>
                       <div className="mdtd-stage-stat__label">Elevation gain</div>
                       <div className="mdtd-stage-stat__value">{currentStage.elevation_gain_m} m</div>
                     </div>
                   </div>
                   <div className="mdtd-stage-stat">
-                    <span className="mdtd-stage-stat__icon">⬇️</span>
+                    <span className="mdtd-stage-stat__icon"><TrendingDown size={18} strokeWidth={2} /></span>
                     <div>
                       <div className="mdtd-stage-stat__label">Elevation loss</div>
                       <div className="mdtd-stage-stat__value">{currentStage.elevation_loss_m} m</div>
                     </div>
                   </div>
                   <div className="mdtd-stage-stat">
-                    <span className="mdtd-stage-stat__icon">⏱️</span>
+                    <span className="mdtd-stage-stat__icon"><Clock size={18} strokeWidth={2} /></span>
                     <div>
                       <div className="mdtd-stage-stat__label">Duration</div>
                       <div className="mdtd-stage-stat__value">{currentStage.estimated_duration_hours}h</div>
@@ -234,7 +238,7 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
                       <div className="mdtd-route-point__name">{currentStage.start_point.name}</div>
                       <div className="mdtd-route-point__elev">{currentStage.start_point.elevation_m} m</div>
                     </div>
-                    <span className="mdtd-route-arrow">→</span>
+                    <span className="mdtd-route-arrow"><ArrowRight size={18} strokeWidth={2} /></span>
                     <div className="mdtd-route-point">
                       <div className="mdtd-route-point__label">End</div>
                       <div className="mdtd-route-point__name">{currentStage.end_point?.name}</div>
@@ -251,10 +255,10 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
                     {currentStage.overnight_rifugio_details && (
                       <div className="mdtd-overnight__details">
                         {currentStage.overnight_rifugio_details.altitude && (
-                          <span>⛰️ {currentStage.overnight_rifugio_details.altitude} m</span>
+                          <span><Mountain size={14} strokeWidth={2} /> {currentStage.overnight_rifugio_details.altitude} m</span>
                         )}
                         {currentStage.overnight_rifugio_details.beds > 0 && (
-                          <span>🛏️ {currentStage.overnight_rifugio_details.beds} beds</span>
+                          <span><BedDouble size={14} strokeWidth={2} /> {currentStage.overnight_rifugio_details.beds} beds</span>
                         )}
                         {currentStage.overnight_rifugio_details.contact && (
                           <span>📞 {currentStage.overnight_rifugio_details.contact}</span>
@@ -448,7 +452,7 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
           <h3>Ready to plan this trek?</h3>
           <p>Josephine will help you prepare, book and make the most of every stage.</p>
           <button className="mdtd-cta__btn" onClick={() => onNavigate('josephine')}>
-            Plan this trek with Josephine →
+            Plan this trek with Josephine <ArrowRight size={16} strokeWidth={2} />
           </button>
         </div>
 

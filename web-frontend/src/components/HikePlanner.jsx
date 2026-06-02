@@ -5,6 +5,7 @@ import { useToast } from '../contexts/ToastContext';
 import { useAuth } from '../contexts/AuthContext';
 import EquipmentChecklist from './EquipmentChecklist';
 import SafetyTips from './SafetyTips';
+import { ArrowLeft } from 'lucide-react';
 import './HikePlanner.css';
 
 const API_URL = '/api';
@@ -171,7 +172,7 @@ function HikePlanner({ onNavigate }) {
     <div className="planner-page">
       <div className="planner-container">
         <button onClick={() => onNavigate('home')} className="back-button">
-          ← {t('common.backToHome')}
+          <ArrowLeft size={16} strokeWidth={2} /> {t('common.backToHome')}
         </button>
 
         <div className="planner-header">
@@ -226,7 +227,7 @@ function HikePlanner({ onNavigate }) {
                             {t(`catalog.${trail.difficulty?.toLowerCase()}`)}
                           </span>
                           <span>{trail.distance_km || trail.distance} km</span>
-                          <span>{trail.elevation_gain_m || trail.elevation} m ↑</span>
+                          <span>{trail.elevation_gain_m || trail.elevation} m</span>
                         </div>
                       </div>
                       <button
@@ -270,7 +271,7 @@ function HikePlanner({ onNavigate }) {
                           <h4>{trail.name}</h4>
                           <p className="trail-stats-compact">
                             {trail.distance_km || trail.distance} km • 
-                            {trail.elevation_gain_m || trail.elevation} m ↑
+                            {trail.elevation_gain_m || trail.elevation} m
                           </p>
                         </div>
                         <button

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import { Mountain, CalendarRange, Ruler, TrendingUp, Footprints, MapPin, ArrowRight } from 'lucide-react';
 import './MultiDayTrails.css';
 
 const API_URL = '/api';
@@ -137,7 +138,7 @@ function MultiDayTrails({ onNavigate }) {
 
         {filtered.length === 0 ? (
           <div className="mdt-empty">
-            <div className="mdt-empty__icon">🏔</div>
+            <div className="mdt-empty__icon"><Mountain size={48} strokeWidth={1.25} /></div>
             <h3>No treks match your filters</h3>
             <p>Try adjusting the difficulty, region or type</p>
             <button className="mdt-empty__btn" onClick={clearFilters}>Reset filters</button>
@@ -171,16 +172,16 @@ function MultiDayTrails({ onNavigate }) {
 
                     <div className="mdt-card__stats">
                       <span className="mdt-card__stat">
-                        📅 {trail.duration_days} days · {trail.duration_nights} nights
+                        <CalendarRange size={14} strokeWidth={2} /> {trail.duration_days} days · {trail.duration_nights} nights
                       </span>
                       <span className="mdt-card__stat">
-                        📏 {trail.total_distance_km} km
+                        <Ruler size={14} strokeWidth={2} /> {trail.total_distance_km} km
                       </span>
                       <span className="mdt-card__stat">
-                        ⛰️ {trail.total_elevation_gain_m?.toLocaleString()} m ↑
+                        <TrendingUp size={14} strokeWidth={2} /> {trail.total_elevation_gain_m?.toLocaleString()} m
                       </span>
                       <span className="mdt-card__stat">
-                        🥾 {trail.stages?.length || 0} stages
+                        <Footprints size={14} strokeWidth={2} /> {trail.stages?.length || 0} stages
                       </span>
                     </div>
 
@@ -189,8 +190,8 @@ function MultiDayTrails({ onNavigate }) {
                     </p>
 
                     <div className="mdt-card__footer">
-                      <span className="mdt-card__region">📍 {trail.region}</span>
-                      <span className="mdt-card__cta">Explore trek →</span>
+                      <span className="mdt-card__region"><MapPin size={14} strokeWidth={2} /> {trail.region}</span>
+                      <span className="mdt-card__cta">Explore trek <ArrowRight size={15} strokeWidth={2} /></span>
                     </div>
                   </div>
                 </div>

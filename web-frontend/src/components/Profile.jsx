@@ -5,6 +5,7 @@ import { ENABLE_GAMIFICATION } from '../featureFlags';
 import { updateProfile, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 import { getUserGamificationData, calculateLevel, getXPProgress, getBadgeById, BADGES } from '../utils/gamification';
 import BadgeDisplay from './BadgeDisplay';
+import { ArrowLeft, ArrowRight, Footprints, Mountain, Ruler, Trophy } from 'lucide-react';
 import './Profile.css';
 
 function Profile({ onNavigate }) {
@@ -105,7 +106,7 @@ function Profile({ onNavigate }) {
     <div className="profile-page">
       <div className="profile-container">
         <button onClick={() => onNavigate('home')} className="back-button">
-          ← {t('common.backToHome')}
+          <ArrowLeft size={16} strokeWidth={2} /> {t('common.backToHome')}
         </button>
 
         <div className="profile-header">
@@ -263,7 +264,7 @@ function Profile({ onNavigate }) {
                   onClick={() => onNavigate('leaderboards')} 
                   className="btn-link"
                 >
-                  {t('profile.viewLeaderboards', 'View Leaderboards')} →
+                  {t('profile.viewLeaderboards', 'View Leaderboards')} <ArrowRight size={15} strokeWidth={2} />
                 </button>
               </div>
 
@@ -291,22 +292,22 @@ function Profile({ onNavigate }) {
 
                 <div className="stats-grid">
                   <div className="stat-card">
-                    <div className="stat-icon">🥾</div>
+                    <div className="stat-icon"><Footprints size={22} strokeWidth={2} /></div>
                     <div className="stat-number">{gamificationData.stats.totalHikes}</div>
                     <div className="stat-label">{t('profile.totalHikes', 'Total Hikes')}</div>
                   </div>
                   <div className="stat-card">
-                    <div className="stat-icon">📏</div>
+                    <div className="stat-icon"><Ruler size={22} strokeWidth={2} /></div>
                     <div className="stat-number">{gamificationData.stats.totalDistance.toFixed(1)}km</div>
                     <div className="stat-label">{t('profile.totalDistance', 'Distance')}</div>
                   </div>
                   <div className="stat-card">
-                    <div className="stat-icon">⛰️</div>
+                    <div className="stat-icon"><Mountain size={22} strokeWidth={2} /></div>
                     <div className="stat-number">{Math.round(gamificationData.stats.totalElevation)}m</div>
                     <div className="stat-label">{t('profile.totalElevation', 'Elevation')}</div>
                   </div>
                   <div className="stat-card">
-                    <div className="stat-icon">🏆</div>
+                    <div className="stat-icon"><Trophy size={22} strokeWidth={2} /></div>
                     <div className="stat-number">{gamificationData.badges.length}</div>
                     <div className="stat-label">{t('profile.badgesEarned', 'Badges')}</div>
                   </div>

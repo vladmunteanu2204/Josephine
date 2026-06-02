@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
+import { ArrowLeft } from 'lucide-react';
 import './Settings.css';
 
 function Settings({ onNavigate }) {
@@ -51,7 +52,7 @@ function Settings({ onNavigate }) {
     <div className="settings-page">
       <div className="settings-container">
         <button onClick={() => onNavigate('home')} className="back-button">
-          ← {t('common.backToHome')}
+          <ArrowLeft size={16} strokeWidth={2} /> {t('common.backToHome')}
         </button>
 
         <div className="settings-header">

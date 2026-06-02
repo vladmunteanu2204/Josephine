@@ -368,3 +368,8 @@
   .mdt-hero { height: 380px; }
   .mdt-filter-group { flex-wrap: wrap; }
 }
+
+/* ── Design rollout: lucide affordance alignment ──────────────────────── */
+.mdt-card__stat, .mdt-card__region, .mdt-card__cta { display: inline-flex; align-items: center; gap: 5px; }
+.mdt-card__stat svg, .mdt-card__region svg { color: var(--text-muted); flex-shrink: 0; }
+.mdt-empty__icon { color: var(--text-muted); display: flex; justify-content: center; }

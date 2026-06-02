@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { trailImg, trailImgAlt } from '../utils/trailImage';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import { ArrowLeft, Heart, Mountain, Ruler, Clock, TrendingUp, Star } from 'lucide-react';
 import './SavedTrails.css';
 
 function SavedTrails({ onNavigate }) {
@@ -65,12 +66,12 @@ function SavedTrails({ onNavigate }) {
     <div className="saved-trails-page">
       <div className="saved-trails-container">
         <button onClick={() => onNavigate('home')} className="back-button">
-          ← {t('common.backToHome')}
+          <ArrowLeft size={16} strokeWidth={2} /> {t('common.backToHome')}
         </button>
 
         <div className="saved-trails-header">
           <h1 className="saved-trails-title">
-            <span className="heart-icon">❤️</span>
+            <span className="heart-icon"><Heart size={22} strokeWidth={2} fill="currentColor" /></span>
             {t('savedTrails.title')}
           </h1>
           <p className="saved-trails-subtitle">{t('savedTrails.subtitle')}</p>
@@ -78,7 +79,7 @@ function SavedTrails({ onNavigate }) {
 
         {savedTrails.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-icon">🏔️</div>
+            <div className="empty-icon"><Mountain size={48} strokeWidth={1.25} /></div>
             <h2>{t('savedTrails.emptyTitle')}</h2>
             <p>{t('savedTrails.emptyMessage')}</p>
             <button 
@@ -113,7 +114,7 @@ function SavedTrails({ onNavigate }) {
                       className="unsave-button"
                       aria-label={t('common.unsaveTrail')}
                     >
-                      ❤️
+                      <Heart size={18} strokeWidth={2} fill="currentColor" />
                     </button>
                     <div 
                       className="difficulty-badge"
@@ -131,22 +132,26 @@ function SavedTrails({ onNavigate }) {
 
                     <div className="card-stats">
                       <div className="stat">
-                        <span className="stat-icon">📏</span>
+                        <span className="stat-icon"><Ruler size={15} strokeWidth={2} /></span>
                         <span className="stat-value">{trail.distance_km} km</span>
                       </div>
                       <div className="stat">
-                        <span className="stat-icon">⏱️</span>
+                        <span className="stat-icon"><Clock size={15} strokeWidth={2} /></span>
                         <span className="stat-value">{trail.duration_hours}h</span>
                       </div>
                       <div className="stat">
-                        <span className="stat-icon">⛰️</span>
+                        <span className="stat-icon"><TrendingUp size={15} strokeWidth={2} /></span>
                         <span className="stat-value">{trail.elevation_gain_m}m</span>
                       </div>
                     </div>
 
                     {trail.rating && (
                       <div className="card-rating">
-                        <span className="stars">{'⭐'.repeat(Math.round(trail.rating))}</span>
+                        <span className="stars">
+                          {Array.from({ length: Math.round(trail.rating) }).map((_, i) => (
+                            <Star key={i} size={13} fill="currentColor" strokeWidth={0} />
+                          ))}
+                        </span>
                         <span className="rating-value">{trail.rating.toFixed(1)}</span>
                       </div>
                     )}

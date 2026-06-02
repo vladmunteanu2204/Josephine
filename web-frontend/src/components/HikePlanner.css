@@ -591,3 +591,6 @@
     padding: 1rem;
   }
 }
+
+/* Design rollout: lucide affordance alignment */
+.back-button { display: inline-flex; align-items: center; gap: 6px; }

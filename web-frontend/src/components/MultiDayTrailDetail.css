@@ -755,3 +755,12 @@
   .mdtd-checklist { grid-template-columns: 1fr; }
   .mdtd-stat { padding: 14px 18px; }
 }
+
+/* ── Design rollout: lucide affordance alignment ──────────────────────── */
+.mdtd-stat__icon, .mdtd-stage-stat__icon, .mdtd-route-arrow { display: inline-flex; align-items: center; justify-content: center; }
+.mdtd-stat__icon { color: var(--accent-primary); }
+.mdtd-stage-stat__icon svg { color: var(--text-muted); }
+.mdtd-route-arrow { color: var(--text-muted); }
+.mdtd-overnight__details span { display: inline-flex; align-items: center; gap: 5px; }
+.mdtd-cta__btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.mdtd-back-btn { display: inline-flex; align-items: center; justify-content: center; }
