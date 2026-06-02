@@ -153,7 +153,6 @@ export default function HutToHutPlanner({ initial, onSave, onBack }) {
     setSaving(false);
   }, [trek, name, startDate, restBefore, skipped, bookings, nights]); // eslint-disable-line
 
-  const gear = trek?.equipment_checklist || trek?.gear_checklist || [];
   const tips = trek?.booking_tips || [];
   const ec = trek?.emergency_contacts || {};
   const note = jNote(trek?.josephineNote);
@@ -324,13 +323,6 @@ export default function HutToHutPlanner({ initial, onSave, onBack }) {
         {/* Trek-level info */}
         {note && (
           <div className="hh-note"><Mountain size={16} strokeWidth={2} /><p>{note}</p></div>
-        )}
-
-        {gear.length > 0 && (
-          <details className="hh-foldout" open>
-            <summary>{t('planner.gearChecklist', 'Gear checklist')}</summary>
-            <ul className="hh-gear">{gear.map((g, i) => <li key={i}>{g}</li>)}</ul>
-          </details>
         )}
 
         {tips.length > 0 && (
