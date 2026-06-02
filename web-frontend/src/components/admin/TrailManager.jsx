@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Map, { Source, Layer } from 'react-map-gl';
+import { Plus, Pencil, Trash2, Check, MapPin, Mountain, Map as MapIcon, Home, Ruler, Undo2 } from 'lucide-react';
 import './TrailManager.css';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -368,7 +369,7 @@ function TrailManager({ adminPassword }) {
       <div className="manager-header">
         <h2>Trail Management</h2>
         <button className="btn-create" onClick={handleCreate}>
-          ➕ Create New Trail
+          <Plus size={16} strokeWidth={2} /> Create New Trail
         </button>
       </div>
 
@@ -380,7 +381,7 @@ function TrailManager({ adminPassword }) {
             {/* GPX Upload Section */}
             <div className="gpx-upload-section">
               <div className="gpx-upload-header">
-                <h4>📍 GPX File Upload (Optional)</h4>
+                <h4 className="tm-h-icon"><MapPin size={16} strokeWidth={2} /> GPX File Upload (Optional)</h4>
                 <p style={{ fontSize: '13px', opacity: 0.8, margin: '5px 0' }}>
                   Upload a GPX file to auto-populate distance, elevation, and route coordinates
                 </p>
@@ -602,7 +603,7 @@ function TrailManager({ adminPassword }) {
               </div>
 
               <div className="form-group full-width" style={{ borderTop: '1px solid rgba(212,165,116,0.2)', paddingTop: '16px', marginTop: '4px' }}>
-                <label style={{ color: 'rgba(212,165,116,0.9)', fontWeight: 700 }}>🏔️ Josephine's Note (editorial callout — shown on trail detail page)</label>
+                <label style={{ color: 'rgba(212,165,116,0.9)', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 6 }}><Mountain size={16} strokeWidth={2} /> Josephine's Note (editorial callout — shown on trail detail page)</label>
                 <textarea
                   value={(formData.josephineNote && formData.josephineNote.en) || ''}
                   onChange={(e) => setFormData({ ...formData, josephineNote: { ...(formData.josephineNote || {}), en: e.target.value } })}
@@ -801,7 +802,7 @@ function TrailManager({ adminPassword }) {
             {/* Checkpoints Section */}
             <div className="checkpoints-section">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                <h3 style={{ margin: 0, color: '#4ade80' }}>📍 Trail Checkpoints</h3>
+                <h3 style={{ margin: 0, color: '#4ade80', display: 'inline-flex', alignItems: 'center', gap: 6 }}><MapPin size={16} strokeWidth={2} /> Trail Checkpoints</h3>
                 <button 
                   type="button"
                   className="btn-add-checkpoint"
@@ -826,10 +827,13 @@ function TrailManager({ adminPassword }) {
                     border: 'none',
                     borderRadius: '6px',
                     cursor: 'pointer',
-                    fontSize: '14px'
+                    fontSize: '14px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px'
                   }}
                 >
-                  ➕ Add Checkpoint
+                  <Plus size={15} strokeWidth={2} /> Add Checkpoint
                 </button>
               </div>
 
@@ -845,15 +849,15 @@ function TrailManager({ adminPassword }) {
                     }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                         <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '4px' }}>
-                            {checkpoint.type === 'summit' ? '⛰️' : checkpoint.type === 'refuge' ? '🏠' : '📍'} {checkpoint.name}
+                          <div style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '4px', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                            {checkpoint.type === 'summit' ? <Mountain size={15} strokeWidth={2} /> : checkpoint.type === 'refuge' ? <Home size={15} strokeWidth={2} /> : <MapPin size={15} strokeWidth={2} />} {checkpoint.name}
                           </div>
                           {checkpoint.description && (
                             <div style={{ fontSize: '13px', opacity: 0.8, marginBottom: '6px' }}>{checkpoint.description}</div>
                           )}
-                          <div style={{ fontSize: '12px', opacity: 0.6 }}>
-                            📏 Alert Distance: {checkpoint.alert_distance}m | 
-                            🗺️ Coords: [{checkpoint.coordinates[0].toFixed(4)}, {checkpoint.coordinates[1].toFixed(4)}]
+                          <div style={{ fontSize: '12px', opacity: 0.6, display: 'inline-flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                            <Ruler size={12} strokeWidth={2} /> Alert Distance: {checkpoint.alert_distance}m |
+                            <MapIcon size={12} strokeWidth={2} /> Coords: [{checkpoint.coordinates[0].toFixed(4)}, {checkpoint.coordinates[1].toFixed(4)}]
                           </div>
                         </div>
                         <div style={{ display: 'flex', gap: '8px' }}>
@@ -874,7 +878,7 @@ function TrailManager({ adminPassword }) {
                               fontSize: '12px'
                             }}
                           >
-                            ✏️ Edit
+                            <Pencil size={14} strokeWidth={2} /> Edit
                           </button>
                           <button
                             type="button"
@@ -892,7 +896,7 @@ function TrailManager({ adminPassword }) {
                               fontSize: '12px'
                             }}
                           >
-                            🗑️ Delete
+                            <Trash2 size={14} strokeWidth={2} /> Delete
                           </button>
                         </div>
                       </div>
@@ -1111,24 +1115,24 @@ function TrailManager({ adminPassword }) {
                       <button
                         style={{ padding: '5px 10px', background: 'rgba(74,222,128,0.12)', border: '1px solid rgba(74,222,128,0.3)', borderRadius: '6px', color: '#4ade80', fontSize: '12px', cursor: 'pointer', marginRight: '4px' }}
                         onClick={() => handlePublish(trail.id, 'published')}
-                      >✓ Publish</button>
+                      ><Check size={13} strokeWidth={2.5} /> Publish</button>
                     ) : (
                       <button
                         style={{ padding: '5px 10px', background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.25)', borderRadius: '6px', color: '#fbbf24', fontSize: '12px', cursor: 'pointer', marginRight: '4px' }}
                         onClick={() => handlePublish(trail.id, 'draft')}
-                      >↩ Unpublish</button>
+                      ><Undo2 size={13} strokeWidth={2} /> Unpublish</button>
                     )}
                     <button
                       className="btn-edit"
                       onClick={() => handleEdit(trail)}
                     >
-                      ✏️ Edit
+                      <Pencil size={14} strokeWidth={2} /> Edit
                     </button>
                     <button
                       className="btn-delete"
                       onClick={() => handleDelete(trail.id)}
                     >
-                      🗑️ Delete
+                      <Trash2 size={14} strokeWidth={2} /> Delete
                     </button>
                   </td>
                 </tr>

@@ -98,3 +98,8 @@
   background: rgba(255, 255, 255, 0.1);
   margin: 1.5rem 0;
 }
+
+/* Design rollout (B): admin icon alignment */
+.btn-create, .btn-edit, .btn-delete { display: inline-flex; align-items: center; gap: 6px; }
+.actions-cell button { display: inline-flex; align-items: center; gap: 5px; vertical-align: middle; }
+.tm-h-icon { display: inline-flex; align-items: center; gap: 6px; }

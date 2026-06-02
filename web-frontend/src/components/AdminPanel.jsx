@@ -3,6 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { ENABLE_GAMIFICATION } from '../featureFlags';
 import axios from 'axios';
+import {
+  LayoutDashboard, Route, Mountain, Hotel, ClipboardList, MessageSquare,
+  CalendarRange, Users, BarChart3, Trophy, Gamepad2,
+} from 'lucide-react';
 import Dashboard from './admin/Dashboard';
 import TrailManager from './admin/TrailManager';
 import ReviewsModeration from './admin/ReviewsModeration';
@@ -20,18 +24,18 @@ const ADMIN_EMAIL = 'vladmunteanu2204@gmail.com';
 const ADMIN_TOKEN_KEY = 'jph_admin_token';
 
 const TABS = [
-  { id: 'dashboard',  label: '🎯 Dashboard' },
-  { id: 'trails',     label: '🗺️ Trails' },
-  { id: 'multiday',   label: '🏔️ Multi-Day' },
-  { id: 'rifugios',   label: '🏠 Rifugios' },
-  { id: 'bookings',   label: '📋 Bookings' },
-  { id: 'reviews',    label: '💬 Reviews' },
-  { id: 'plans',      label: '📅 User Plans' },
-  { id: 'users',      label: '👥 Users' },
-  { id: 'analytics',  label: '📊 Analytics' },
+  { id: 'dashboard',  label: 'Dashboard',     Icon: LayoutDashboard },
+  { id: 'trails',     label: 'Trails',        Icon: Route },
+  { id: 'multiday',   label: 'Multi-Day',     Icon: Mountain },
+  { id: 'rifugios',   label: 'Rifugios',      Icon: Hotel },
+  { id: 'bookings',   label: 'Bookings',      Icon: ClipboardList },
+  { id: 'reviews',    label: 'Reviews',       Icon: MessageSquare },
+  { id: 'plans',      label: 'User Plans',    Icon: CalendarRange },
+  { id: 'users',      label: 'Users',         Icon: Users },
+  { id: 'analytics',  label: 'Analytics',     Icon: BarChart3 },
   ...(ENABLE_GAMIFICATION ? [
-    { id: 'challenges',  label: '🏆 Challenges' },
-    { id: 'gamification',label: '🎮 Gamification' },
+    { id: 'challenges',  label: 'Challenges',   Icon: Trophy },
+    { id: 'gamification',label: 'Gamification', Icon: Gamepad2 },
   ] : []),
 ];
 
@@ -179,7 +183,8 @@ function AdminPanel({ onNavigate }) {
               className={`admin-tab ${activeTab === tab.id ? 'active' : ''}`}
               onClick={() => setActiveTab(tab.id)}
             >
-              {tab.label}
+              <tab.Icon size={16} strokeWidth={2} aria-hidden="true" />
+              <span>{tab.label}</span>
             </button>
           ))}
         </div>
