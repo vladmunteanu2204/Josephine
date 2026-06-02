@@ -1,12 +1,12 @@
 """
-media.py — Image upload, resizing, and Cloudflare R2 delivery for Alpenvia.
+media.py — Image upload, resizing, and Cloudflare R2 delivery.
 
 Environment variables required for R2:
     R2_ACCOUNT_ID        — Cloudflare account ID
     R2_ACCESS_KEY_ID     — R2 API token (Access Key ID)
     R2_SECRET_ACCESS_KEY — R2 API token (Secret Access Key)
-    R2_BUCKET            — R2 bucket name (e.g. "alpenvia-media")
-    R2_PUBLIC_URL        — Public CDN base URL (e.g. "https://media.alpenvia.com")
+    R2_BUCKET            — R2 bucket name (e.g. "trail-media")
+    R2_PUBLIC_URL        — Public CDN base URL (e.g. "https://media.yourdomain.com")
                            Enable "Public access" on the bucket in Cloudflare, or
                            put Cloudflare in front with a custom domain.
 
@@ -27,9 +27,9 @@ Stored as:
 
 Returned structure (stored in trail.images[]):
     {
-        "thumb": "https://media.alpenvia.com/trails/abc/thumb_xyz.webp",
-        "card":  "https://media.alpenvia.com/trails/abc/card_xyz.webp",
-        "hero":  "https://media.alpenvia.com/trails/abc/hero_xyz.webp",
+        "thumb": "https://media.yourdomain.com/trails/abc/thumb_xyz.webp",
+        "card":  "https://media.yourdomain.com/trails/abc/card_xyz.webp",
+        "hero":  "https://media.yourdomain.com/trails/abc/hero_xyz.webp",
         "alt":   "Trail name — Region",
         "uploaded_at": "2025-06-01T12:00:00Z"
     }

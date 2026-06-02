@@ -6,12 +6,12 @@ function EquipmentChecklist({ difficulty, duration, tripDays }) {
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   const [checkedItems, setCheckedItems] = useState(() => {
-    const saved = localStorage.getItem('alpenvia_equipment_checklist');
+    const saved = localStorage.getItem('josephine_equipment_checklist');
     return saved ? JSON.parse(saved) : {};
   });
 
   useEffect(() => {
-    localStorage.setItem('alpenvia_equipment_checklist', JSON.stringify(checkedItems));
+    localStorage.setItem('josephine_equipment_checklist', JSON.stringify(checkedItems));
   }, [checkedItems]);
 
   const toggleItem = (itemKey) => {

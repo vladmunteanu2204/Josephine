@@ -41,7 +41,7 @@ function HikePlanner({ onNavigate }) {
   };
 
   const loadSavedItineraries = () => {
-    const saved = localStorage.getItem('alpenvia_hike_plans');
+    const saved = localStorage.getItem('josephine_hike_plans');
     if (saved) {
       setSavedItineraries(JSON.parse(saved));
     }
@@ -101,7 +101,7 @@ function HikePlanner({ onNavigate }) {
 
     // Save to localStorage for offline support
     const updated = [...savedItineraries, newItinerary];
-    localStorage.setItem('alpenvia_hike_plans', JSON.stringify(updated));
+    localStorage.setItem('josephine_hike_plans', JSON.stringify(updated));
     setSavedItineraries(updated);
 
     // Save to backend if user is logged in
@@ -132,7 +132,7 @@ function HikePlanner({ onNavigate }) {
 
   const deleteItinerary = (id) => {
     const updated = savedItineraries.filter(i => i.id !== id);
-    localStorage.setItem('alpenvia_hike_plans', JSON.stringify(updated));
+    localStorage.setItem('josephine_hike_plans', JSON.stringify(updated));
     setSavedItineraries(updated);
   };
 

@@ -1,4 +1,4 @@
-# Weather Service for Alpenvia
+# Weather Service — South Tyrol / Dolomites
 # Uses Open-Meteo API — free, no API key required
 
 import requests

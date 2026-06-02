@@ -1,5 +1,5 @@
 """
-db.py — PostgreSQL connection pool and table DDL for Alpenvia.
+db.py — PostgreSQL connection pool and table DDL.
 
 If DATABASE_URL is set, all load_*/save_* functions in app.py use this module.
 If not set, app.py falls back to JSON files (backwards-compatible).

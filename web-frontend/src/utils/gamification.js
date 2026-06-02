@@ -190,7 +190,7 @@ export const LEVELS = [
 
 // Get user's gamification data from localStorage
 export function getUserGamificationData() {
-  const data = localStorage.getItem('alpenvia_gamification');
+  const data = localStorage.getItem('josephine_gamification');
   if (data) {
     return JSON.parse(data);
   }
@@ -213,7 +213,7 @@ export function getUserGamificationData() {
 
 // Save gamification data
 export function saveGamificationData(data) {
-  localStorage.setItem('alpenvia_gamification', JSON.stringify(data));
+  localStorage.setItem('josephine_gamification', JSON.stringify(data));
 }
 
 // Calculate level from XP
@@ -380,7 +380,7 @@ export function getLeaderboardData() {
   // In a real app, this would fetch from backend
   // For now, we'll use mock data + current user
   const userData = getUserGamificationData();
-  const currentUser = JSON.parse(localStorage.getItem('alpenvia_user') || '{}');
+  const currentUser = JSON.parse(localStorage.getItem('josephine_user') || '{}');
   
   const leaderboard = [
     {

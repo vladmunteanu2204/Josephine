@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Alpenvia — One-time data seed script
+One-time data seed script — South Tyrol trails & rifugios
 =====================================
 Run ONCE to generate realistic South Tyrol trail and rifugio data using Claude API.
 All generated records get status="draft" — you must review and publish via Admin Panel.
@@ -249,7 +249,7 @@ def link_nearby(trails, rifugios, radius_km=10.0):
 
 def main():
     print("=" * 60)
-    print("Alpenvia Seed Script")
+    print("Trail & Rifugio Seed Script")
     print(f"Trails: {TRAIL_BATCHES} batch(es) × {TRAIL_BATCH_SIZE} = ~{TRAIL_BATCHES * TRAIL_BATCH_SIZE} new trails")
     print(f"Rifugios: {RIFUGIO_BATCHES} batch(es) × {RIFUGIO_BATCH_SIZE} = ~{RIFUGIO_BATCHES * RIFUGIO_BATCH_SIZE} new rifugios")
     print("All records will be set to status='draft' — publish via Admin Panel.")

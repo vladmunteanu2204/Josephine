@@ -74,6 +74,193 @@ function loadChatState() {
   catch { return null; }
 }
 
+// ─── Trail Detail Card ────────────────────────────────────────────────────────
+const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MONTH_NAMES  = ['January','February','March','April','May','June',
+                      'July','August','September','October','November','December'];
+
+function ElevationSparkline({ gain, loss }) {
+  if (!gain) return null;
+  const w = 120, h = 32;
+  // Simple asymmetric mountain profile: flat start → climb → peak → descent
+  const peakX = loss ? Math.round(w * (gain / (gain + (loss || gain)))) : Math.round(w * 0.6);
+  const baseY = h - 4;
+  const peakY = 4;
+  const d = `M4,${baseY} C${Math.round(peakX * 0.4)},${baseY} ${Math.round(peakX * 0.7)},${peakY + 4} ${peakX},${peakY} C${Math.round(peakX + (w - peakX) * 0.3)},${peakY + 4} ${Math.round(w - 4)},${baseY - 6} ${w - 4},${baseY}`;
+  return (
+    <div className="jc-tc__elev">
+      <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} fill="none">
+        <defs>
+          <linearGradient id="elevGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="var(--accent-primary)" stopOpacity="0.5"/>
+            <stop offset="100%" stopColor="var(--accent-primary)" stopOpacity="0.05"/>
+          </linearGradient>
+        </defs>
+        <path d={`${d} L${w - 4},${baseY} L4,${baseY} Z`} fill="url(#elevGrad)"/>
+        <path d={d} stroke="var(--accent-primary)" strokeWidth="1.5" strokeLinecap="round"/>
+      </svg>
+      <span className="jc-tc__elev-label">↑ {gain}m{loss ? ` ↓ ${loss}m` : ''}</span>
+    </div>
+  );
+}
+
+function SeasonStrip({ bestSeason }) {
+  if (!bestSeason?.length) return null;
+  const currentMonthName = MONTH_NAMES[new Date().getMonth()];
+  return (
+    <div className="jc-tc__season">
+      {MONTHS_SHORT.map((m, i) => {
+        const full = MONTH_NAMES[i];
+        const isBest = bestSeason.includes(full);
+        const isCurrent = full === currentMonthName;
+        return (
+          <span
+            key={m}
+            className={`jc-tc__month${isBest ? ' jc-tc__month--best' : ''}${isCurrent ? ' jc-tc__month--now' : ''}`}
+          >{m}</span>
+        );
+      })}
+    </div>
+  );
+}
+
+function RifugioStops({ rifugios }) {
+  if (!rifugios?.length) return null;
+  const typeIcon = (type) => {
+    if (type === 'bivacco' || type === 'bivouac') return '⛺';
+    if (type === 'malga')   return '🧀';
+    return '🏠';
+  };
+  return (
+    <div className="jc-tc__section">
+      <p className="jc-tc__section-label">On the way</p>
+      {rifugios.map(r => (
+        <div key={r.id} className="jc-tc__rifugio">
+          <span className="jc-tc__rifugio-icon">{typeIcon(r.type)}</span>
+          <div className="jc-tc__rifugio-info">
+            <span className="jc-tc__rifugio-name">{r.name}</span>
+            {r.altitude && <span className="jc-tc__rifugio-alt">{r.altitude}m</span>}
+          </div>
+          <div className="jc-tc__rifugio-status">
+            {r.open_now === true  && <span className="jc-tc__open">open</span>}
+            {r.open_now === false && <span className="jc-tc__closed">closed</span>}
+            {r.booking_required   && r.open_now !== false && <span className="jc-tc__book">book ahead</span>}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function TransportRow({ transport }) {
+  const bus = transport?.bus;
+  const car = transport?.car;
+  if (!bus && !car) return null;
+  // Trim car text — just extract the key info (first sentence)
+  const carShort = car ? car.split('.')[0] + '.' : null;
+  return (
+    <div className="jc-tc__section">
+      <p className="jc-tc__section-label">Getting there</p>
+      {bus && (
+        <div className="jc-tc__transport-row">
+          <span className="jc-tc__transport-icon">🚌</span>
+          <span className="jc-tc__transport-text">{bus}</span>
+        </div>
+      )}
+      {carShort && (
+        <div className="jc-tc__transport-row">
+          <span className="jc-tc__transport-icon">🚗</span>
+          <span className="jc-tc__transport-text">{carShort}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TrailDetailCard({ trail, saved, onSave, onView, t }) {
+  const highlights = (trail.highlights || []).slice(0, 2);
+  return (
+    <div className="jc-trail-card">
+      {/* Photo */}
+      <div className="jc-trail-card__photo-wrap">
+        <img
+          src={trailImg(trail, 'card')}
+          alt={trail.name}
+          className="jc-trail-card__photo"
+          onError={e => { e.currentTarget.style.opacity = '0.2'; }}
+        />
+        <div className="jc-trail-card__photo-overlay" />
+        {trail.in_season === false && (
+          <span className="jc-trail-card__season-warn">⚠ Check season</span>
+        )}
+        <span className="jc-trail-card__pick-badge">
+          <img src="/logo.png" alt="" className="jc-trail-card__mark"
+            onError={e => { e.currentTarget.style.display = 'none'; }} />
+          {t('josephinePickBadge', "Josephine's Pick")}
+        </span>
+      </div>
+
+      {/* Body */}
+      <div className="jc-trail-card__body">
+        <p className="jc-trail-card__region">{trail.region}</p>
+        <h3 className="jc-trail-card__name">{trail.name}</h3>
+
+        {/* Core stats row */}
+        <div className="jc-trail-card__stats">
+          <span>{trail.distance_km} km</span>
+          <span className="jc-trail-card__dot">·</span>
+          <span>{trail.duration_hours}h</span>
+          <span className="jc-trail-card__dot">·</span>
+          <span style={{ textTransform: 'capitalize' }}>{trail.difficulty}</span>
+        </div>
+
+        {/* Elevation sparkline */}
+        <ElevationSparkline gain={trail.elevation_gain_m} loss={trail.elevation_loss_m} />
+
+        {/* Season strip */}
+        <SeasonStrip bestSeason={trail.best_season} />
+
+        {/* Getting there */}
+        <TransportRow transport={trail.transport} />
+
+        {/* Rifugio stops */}
+        <RifugioStops rifugios={trail.nearby_rifugios} />
+
+        {/* Highlights */}
+        {highlights.length > 0 && (
+          <div className="jc-tc__section">
+            <p className="jc-tc__section-label">Highlights</p>
+            <ul className="jc-tc__highlights">
+              {highlights.map((h, i) => <li key={i}>{h}</li>)}
+            </ul>
+          </div>
+        )}
+
+        {/* Josephine's insider note */}
+        {trail.josephine_note && (
+          <div className="jc-tc__insider">
+            <p className="jc-tc__insider-text">"{trail.josephine_note}"</p>
+            <span className="jc-tc__insider-sig">— Josephine</span>
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="jc-trail-card__actions">
+          <button className="jc-trail-card__cta" onClick={onView}>
+            {t('viewDetails', 'View full details →')}
+          </button>
+          <button
+            className={`jc-trail-card__save-btn${saved ? ' jc-trail-card__save-btn--saved' : ''}`}
+            onClick={e => { e.stopPropagation(); onSave(); }}
+          >
+            {saved ? '✓ Saved' : t('chipSaveHike', 'Save this hike')}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ── Component ───────────────────────────────────────────────────────── */
 function JosephineChat({ onBack, setCurrentView, viewTrail }) {
   const [lang, setLang] = useState(() => i18nInstance.language?.slice(0, 2) || 'en');
@@ -274,32 +461,111 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
     }).catch(() => {});
   };
 
-  /* ── Conditions builder (adaptive title) ────────────────────────────── */
+  /* ── Weather remark — short Josephine quip that follows the card ────────
+     Rotates through variants so it never feels copy-pasted.                */
+  const buildWeatherRemark = useCallback((conditions, seed = 0) => {
+    const { temp, condTitle, wind } = conditions;
+
+    let variants;
+    if (/storm|morning window/i.test(condTitle)) {
+      variants = [
+        "Waterproof jacket on, early start, off the ridge before noon. Those afternoon clouds aren't negotiating.",
+        "Pack a rain shell and move early. Once those storms build over the peaks, they mean it.",
+        "Get moving before 09:00. Rain layer on top, and keep an eye on the south sky.",
+      ];
+    } else if (/rain|waterproof/i.test(condTitle)) {
+      variants = [
+        "Grab a waterproof jacket — forest paths in the rain are stunning, you just need the right kit.",
+        "It'll be moody and beautiful out there. Rain jacket, waterproof boots, and lean into it.",
+        "Pack a proper rain layer. The Dolomites have a whole other mood when it's wet.",
+      ];
+    } else if (/fog|atmospheric|mist/i.test(condTitle)) {
+      variants = [
+        "Misty conditions — stick to marked paths and enjoy that rare light.",
+        "The fog gives the valleys a completely different personality. Low routes, good footing, no rush.",
+      ];
+    } else if (temp > 27 || /heat/i.test(condTitle)) {
+      variants = [
+        `${temp}°C today — sunscreen, sunglasses, and at least 2 litres of water before you set off.`,
+        "It's hot. Sunglasses, sunscreen, full water bottle. Start early or head straight to altitude.",
+        "Serious mountain sun today. Factor 50 above 2000m — the rock reflects more UV than you'd expect.",
+      ];
+    } else if (wind && wind > 30) {
+      variants = [
+        `Wind up to ${wind} km/h on the exposed sections — a windproof shell makes a real difference up high.`,
+        `${wind} km/h on the ridges. Windproof layer on top and you're set.`,
+      ];
+    } else if (/perfect|clear/i.test(condTitle)) {
+      variants = [
+        "Sunglasses and sunscreen — Dolomite limestone reflects more UV than it looks like it should.",
+        "Perfect day. Sunscreen, camera, and don't forget a light layer for the descent when it cools.",
+        "Clear skies, strong sun at altitude. Sunglasses aren't optional up here.",
+      ];
+    } else {
+      variants = [
+        "Light jacket in the pack — temperature drops fast when cloud rolls over the peaks.",
+        "Lovely hiking weather. A thin layer in your bag and you're good to go.",
+        "No weather drama today. Pack light and enjoy it.",
+      ];
+    }
+
+    return variants[seed % variants.length];
+  }, []);
+
+  /* ── Conditions builder (adaptive title + context-aware bullets) ──────── */
   const buildConditions = (w) => {
     const desc = (w?.description || '').toLowerCase();
-    let sky, emoji, condTitle;
+    const temp = w?.temperature ?? 14;
+    let sky, emoji, condTitle, vis, tip;
+
     if (/thunder|storm/.test(desc)) {
-      sky = t('skyRain', 'Showers possible'); emoji = '⛈';
-      condTitle = t('conditionsStorm', 'Afternoon storms — start early!');
+      sky      = t('skyRain', 'Showers possible');
+      emoji    = '⛈';
+      condTitle = t('conditionsStorm', 'Storm risk — short morning window only');
+      vis      = t('visReduced', 'Reduced visibility at altitude');
+      tip      = t('tipStorm', 'Be back in the valley before 13:00');
     } else if (/rain|shower|drizzle/.test(desc)) {
-      sky = t('skyRain', 'Showers possible'); emoji = '🌦️';
+      sky      = t('skyRain', 'Rain expected');
+      emoji    = '🌧️';
       condTitle = t('conditionsRain', 'Pack your waterproofs today.');
+      vis      = t('visReduced', 'Limited visibility possible');
+      tip      = t('tipRain', 'Rifugio hops and forest paths are ideal today');
+    } else if (/fog|mist/.test(desc)) {
+      sky      = t('skyFog', 'Misty');
+      emoji    = '🌫️';
+      condTitle = t('conditionsFog', 'Atmospheric morning — low routes best');
+      vis      = t('visFog', 'Patchy fog at altitude');
+      tip      = t('tipFog', 'Stick to marked paths — valley trails are magic today');
     } else if (/clear|sun/.test(desc)) {
-      sky = t('skyClear', 'Clear skies'); emoji = '☀️';
-      condTitle = t('conditionsClear', 'Perfect hiking weather today!');
+      sky      = t('skyClear', 'Clear skies');
+      emoji    = '☀️';
+      condTitle = temp > 27
+        ? t('conditionsHot', 'Great day — start early to beat the heat')
+        : t('conditionsClear', 'Perfect hiking weather today!');
+      vis      = (w?.visibility ?? 10) >= 9
+        ? t('visExcellent', 'Excellent visibility')
+        : t('visGood', 'Good visibility');
+      tip      = temp > 27
+        ? t('tipHot', 'Head to altitude or start before 09:00 — valley heat builds fast')
+        : t('tipClear', 'Start by 09:00 for the best light and coolest air');
     } else if (/cloud|overcast/.test(desc)) {
       const few = /few|scattered|partly/.test(desc);
-      sky = few ? t('skyPartly', 'Partly cloudy') : t('skyCloudy', 'Cloudy');
-      emoji = few ? '⛅' : '☁️';
+      sky      = few ? t('skyPartly', 'Partly cloudy') : t('skyCloudy', 'Overcast');
+      emoji    = few ? '⛅' : '☁️';
       condTitle = t('conditionsGood', 'Good conditions today');
+      vis      = (w?.visibility ?? 10) >= 7
+        ? t('visGood', 'Good visibility')
+        : t('visMod', 'Moderate visibility');
+      tip      = t('tipCloud', 'No storm risk — great day for a long walk');
     } else {
-      sky = t('skyPartly', 'Partly cloudy'); emoji = '⛅';
-      condTitle = t('conditionsClear', 'Perfect hiking weather today!');
+      sky      = t('skyPartly', 'Partly cloudy');
+      emoji    = '⛅';
+      condTitle = t('conditionsGood', 'Good conditions today');
+      vis      = t('visGood', 'Good visibility');
+      tip      = t('tipCloud', 'Conditions look fine — enjoy the mountains');
     }
-    const vis = (w?.visibility ?? 10) >= 9
-      ? t('visExcellent', 'Excellent visibility')
-      : t('visGood', 'Good visibility');
-    return { temp: w?.temperature ?? 14, sky, emoji, vis, wind: w?.wind_speed ?? null, condTitle };
+
+    return { temp, sky, emoji, vis, tip, wind: w?.wind_speed ?? null, condTitle };
   };
 
   /* ── Plan flow ───────────────────────────────────────────────────────── */
@@ -327,7 +593,15 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
     }
     setTyping(false);
     appendJosephineMessage({ type: 'conditions', conditions });
-    setTimeout(() => callRecommendAPI(data), 750);
+    // Short weather remark — appears 900ms after card, before trail results
+    setTimeout(() => {
+      appendJosephineMessage({
+        type: 'text',
+        text: buildWeatherRemark(conditions, Date.now()),
+        chips: null,
+      });
+    }, 900);
+    setTimeout(() => callRecommendAPI(data), 1800);
   };
 
   const callRecommendAPI = async (data, adjustments = {}) => {
@@ -485,16 +759,30 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
   const parseRecommendIntent = (text) => {
     const tl = text.toLowerCase();
     const TRIGGERS = [
+      // explicit ask patterns
       'give me a hike','find me a hike','suggest a hike','recommend a hike',
       'give me a trail','find me a trail','suggest a trail',
       'give me something','find something','show me a hike','show me a trail',
-      'any hike','a hike from','a trail from','hike starting from',
-      'trail starting from','hike near','trail near','something near',
-      'where can i hike','where should i hike','what trail',
+      // "any hike / trail / walk"
+      'any hike','any trail','any walk',
+      // "a hike/trail from/near"
+      'a hike from','a trail from','hike starting from','trail starting from',
+      'hike near','trail near','something near','walk near',
+      // "where / what"
+      'where can i hike','where should i hike','where to hike',
+      'what trail','what hike','what hikes','what trails','what walks',
+      // "can I do / can I go"
+      'can i do','can i go hiking','can i go for a hike',
+      // "I want to hike / walk"
+      'i want to hike','i want to walk','i want a hike','i want a trail',
+      // "looking for a hike / trail"
+      'looking for a hike','looking for a trail','looking for a walk',
     ];
-    // Also trigger on "a hike in [place]" / "hike in [place]"
-    const hasInPlace = /\bhike\b.*\bin\b|\btrail\b.*\bin\b|\bsomething\b.*\bin\b|\bwalk\b.*\bin\b/i.test(tl);
-    if (!TRIGGERS.some(x => tl.includes(x)) && !hasInPlace) return null;
+    // "hike/hikes/trail/trails/walk in [place]" — handles plurals too
+    const hasInPlace = /\bhikes?\b.*\bin\b|\btrails?\b.*\bin\b|\bwalks?\b.*\bin\b|\bsomething\b.*\bin\b/i.test(tl);
+    // "do starting in / do in" patterns
+    const hasDoIn = /\bdo\b.*\bstarting\s+in\b|\bdo\b.*\bin\b.*\??\s*$/i.test(tl);
+    if (!TRIGGERS.some(x => tl.includes(x)) && !hasInPlace && !hasDoIn) return null;
 
     // Match explicit prepositions first; fall back to "in" for place names
     const loc = text.match(/(?:from|near|around|starting from|starting at|close to)\s+([A-Za-zÀ-ÿ\s]+?)(?:\s*$|\s*[,.])/i)
@@ -613,7 +901,9 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
           : t('searching', 'Let me find you something…'),
         chips: null,
       });
-      callRecommendAPI(d);
+      // Run through conditions (weather card + remark) then trail results
+      // — same path as mood-tile planning so the experience is consistent
+      runConditionsThenOptions(d);
       return;
     }
 
@@ -763,7 +1053,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       }, 400);
       return;
     }
-    if (chip === t('retryChip')) { appendUserMessage(chip); runConditionsThenOptions(planningData); return; }
+    if (chip === t('retryChip')) { appendUserMessage(chip); callRecommendAPI(planningData); return; }
 
     // ── Geographic awareness chips ─────────────────────────────────────────
     if (chip === 'Yes, this works') {
@@ -920,8 +1210,8 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
                     </div>
                     <ul className="jc-conditions__list">
                       <li>✦ {msg.conditions.vis}</li>
-                      {msg.conditions.wind != null && <li>✦ {msg.conditions.wind} km/h wind</li>}
-                      <li>✦ {t('conditionsTip', 'Start by 09:00 to beat afternoon storms')}</li>
+                      {msg.conditions.wind != null && msg.conditions.wind > 0 && <li>✦ {msg.conditions.wind} km/h wind</li>}
+                      <li>✦ {msg.conditions.tip}</li>
                     </ul>
                   </div>
                 )}
@@ -934,7 +1224,13 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
                         disabled={!active}
                         onClick={() => { if (active) showTrailDetail(tr); }}>
                         <img className="jc-option__img" src={trailImg(tr, 'card')} alt={tr.name}
-                          onError={e => e.currentTarget.style.opacity='0.2'} />
+                          onError={e => {
+                            e.currentTarget.style.display = 'none';
+                            // hide overlay too — the gradient fallback on the button itself takes over
+                            const overlay = e.currentTarget.nextElementSibling;
+                            if (overlay?.classList.contains('jc-option__overlay')) overlay.style.display = 'none';
+                            e.currentTarget.closest('.jc-option').classList.add('jc-option--no-img');
+                          }} />
                         <div className="jc-option__overlay" />
                         <div className="jc-option__body">
                           <p className="jc-option__name">{tr.name}</p>
@@ -947,64 +1243,13 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
 
                 {/* Trail card — View details primary, Save secondary (fix 5); label removed (fix 10) */}
                 {msg.type === 'trail-card' && msg.trail && (
-                  <div className="jc-trail-card">
-                    <div className="jc-trail-card__photo-wrap">
-                      <img src={trailImg(msg.trail, 'card')} alt={msg.trail.name} className="jc-trail-card__photo"
-                        onError={e => e.currentTarget.style.opacity='0.2'} />
-                      <div className="jc-trail-card__photo-overlay" />
-                      {msg.trail.in_season === false && (
-                        <span className="jc-trail-card__season-warn">⚠ Check season</span>
-                      )}
-                      <span className="jc-trail-card__pick-badge">
-                        <img src="/logo.png" alt="" className="jc-trail-card__mark"
-                          onError={e => e.currentTarget.style.display='none'} />
-                        {t('josephinePickBadge', "Josephine's Pick")}
-                      </span>
-                    </div>
-                    <div className="jc-trail-card__body">
-                      <p className="jc-trail-card__region">{msg.trail.region}</p>
-                      <h3 className="jc-trail-card__name">{msg.trail.name}</h3>
-                      <div className="jc-trail-card__stats">
-                        <span>{msg.trail.distance_km} km</span><span className="jc-trail-card__dot">·</span>
-                        <span>{msg.trail.duration_hours}h</span><span className="jc-trail-card__dot">·</span>
-                        <span>{msg.trail.elevation_gain_m}m ↑</span>
-                      </div>
-
-                      {/* Note shown as italic quote without a label (fix 10) */}
-                      {msg.trail.josephine_note && (
-                        <div className="jc-why">
-                          <p className="jc-why__text">"{msg.trail.josephine_note}"</p>
-                        </div>
-                      )}
-
-                      {goodToKnowRows(msg.trail).length > 0 && (
-                        <div className="jc-gtk">
-                          <p className="jc-gtk__label">{t('goodToKnow', 'Good to know')}</p>
-                          <div className="jc-gtk__grid">
-                            {goodToKnowRows(msg.trail).map(([k, v]) => (
-                              <div className="jc-gtk__cell" key={k}>
-                                <span className="jc-gtk__key">{k}</span>
-                                <span className="jc-gtk__val">{v}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Hierarchy: View details (primary gold) → Save (secondary outlined) */}
-                      <div className="jc-trail-card__actions">
-                        <button className="jc-trail-card__cta" onClick={() => viewTrail?.(msg.trail)}>
-                          {t('viewDetails', 'View full details →')}
-                        </button>
-                        <button
-                          className={`jc-trail-card__save-btn${savedIds.includes(msg.trail.id) ? ' jc-trail-card__save-btn--saved' : ''}`}
-                          onClick={(e) => { e.stopPropagation(); saveHike(msg.trail); }}
-                        >
-                          {savedIds.includes(msg.trail.id) ? '✓ Saved' : t('chipSaveHike', 'Save this hike')}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                  <TrailDetailCard
+                    trail={msg.trail}
+                    saved={savedIds.includes(msg.trail.id)}
+                    onSave={() => saveHike(msg.trail)}
+                    onView={() => viewTrail?.(msg.trail)}
+                    t={t}
+                  />
                 )}
 
                 {/* Itinerary */}

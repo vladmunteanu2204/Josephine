@@ -444,7 +444,7 @@ def health_check():
     """Health check endpoint"""
     return jsonify({
         'ok': True,
-        'service': 'alpenvia',
+        'service': 'josephine',
         'status': 'healthy',
         'media': media_module.status(),
     })
@@ -511,12 +511,12 @@ def get_trail(trail_id):
 def generate_trail():
     """
     DEPRECATED: AI route generation has been retired.
-    Alpenvia now recommends only verified routes from our database.
+    Only verified routes from the database are recommended now.
     Use POST /api/ai/recommend instead for smart recommendations.
     """
     return jsonify({
         'error': 'route_generation_deprecated',
-        'message': 'Alpenvia now recommends only verified routes from our database. Please use /api/ai/recommend for personalized trail suggestions.'
+        'message': 'Route generation is retired. Please use /api/ai/recommend for personalised trail suggestions.'
     }), 410
 
 @app.route('/api/ai/recommend', methods=['POST'])
@@ -774,11 +774,14 @@ def get_recommendations():
                 'in_season':        current_month in trail.get('best_season', [current_month]),
                 # Extra context for Josephine's "Good to know" grid (chat + detail).
                 # Safe-defaulted so older/partial trail records don't break the response.
-                'transport':        trail.get('transport', {}),
-                'trailhead_info':   trail.get('trailhead_info', {}),
-                'facilities':       trail.get('facilities', []),
-                'crowding':         trail.get('crowding', {}),
-                'highlights':       trail.get('highlights', []),
+                'elevation_loss_m':  trail.get('elevation_loss_m'),
+                'transport':         trail.get('transport', {}),
+                'trailhead_info':    trail.get('trailhead_info', {}),
+                'facilities':        trail.get('facilities', []),
+                'crowding':          trail.get('crowding', {}),
+                'highlights':        trail.get('highlights', []),
+                'nearby_rifugios':   _resolve_nearby_rifugios(trail.get('nearby_rifugios', [])),
+                'weather_notes':     trail.get('weather_notes', ''),
             })
 
         payload = {'results': results}
@@ -2688,7 +2691,7 @@ def _build_system_prompt() -> str:
 
     today = datetime.now().strftime('%B %d, %Y')
 
-    prompt = f"""You are Josephine — alpine guide, local expert, and the heart of the Alpenvia app.
+    prompt = f"""You are Josephine — alpine guide, local expert, and the voice of this mountain planning app.
 You grew up in Val Gardena and have been guiding in South Tyrol for over a decade.
 You know these mountains the way a local does: not just the trails, but the light at 7am on the Odle peaks,
 the cook at Rifugio Firenze who makes Schlutzkrapfen from scratch, the bus that doesn't run on Sundays.
@@ -2794,6 +2797,37 @@ All seasons: Temperatures drop roughly 6°C for every 1000m you gain in altitude
 Sun: The high-altitude UV index is intense — factor 50 is not overkill above 2000m. Hats and sunglasses are as important as rain gear.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+WEATHER-GEAR QUICK REFERENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Use this when someone asks what to grab given today's weather, or when combining a weather question with a gear question.
+
+☀️  Clear / sunny, below 25°C:
+Sunscreen (SPF 50+ above 2000m — Dolomite limestone amplifies UV), sunglasses (polarised best on the white rock), a packable windproof or thin fleece for the summit and the shaded descent. The temperature difference between the valley and 2500m can be 12–15°C.
+
+🌡️  Clear / sunny, 25°C or above (heat day):
+As above plus: minimum 2L of water (3L for hard trails), start before 09:00 or go straight to altitude where it stays cooler, avoid the open south-facing ridges between 12:00 and 15:00. Electrolyte tabs or salted nuts help on long hot days.
+
+🌧️  Rain / showers:
+A waterproof shell (not just "water-resistant" — Dolomite rain comes sideways). Waterproof hiking boots or gaiters on scree trails. Trekking poles become very useful on wet limestone — it's as slippery as ice. Layer under the shell as it will also be cold. Plan for rifugio stops to warm up.
+
+⛈️  Afternoon thunderstorms (common June–August):
+Same kit as rain, but timing is everything — off exposed ridges and via ferratas by 13:00 at the latest. Lightning on the Dolomite towers is extremely dangerous. If you're above the treeline and hear thunder: descend immediately, avoid lone trees or rock pinnacles, crouch low if caught in the open. This is not optional advice.
+
+🌫️  Fog / mist:
+Navigation is the main risk — downloaded offline GPS track or a good paper map. The paths are marked (CAI waymarks, SAT blazes) but low cloud can make them hard to spot. Dress for cold and damp; fog feels colder than the temperature suggests. Headtorch if you expect it might not lift.
+
+💨  High wind (above 40 km/h):
+A windproof outer layer — even a packable running jacket makes a huge difference on an exposed ridge. Avoid narrow exposed ridges and via ferratas in strong wind; the gusts in the Dolomites can be sudden and violent. Secure your hat and anything loose on your pack.
+
+❄️  Snow / winter:
+Above 1500m any time October–May: microspikes or snowshoes depending on depth, trekking poles essential, warm base layer + mid layer + waterproof shell, and always tell someone your route and expected return time. Never trust a summer trail description in winter conditions.
+
+General rules Josephine always mentions:
+• Cotton kills — it holds moisture and chills you. Merino wool or synthetic base layers.
+• Weather can change in 30 minutes in the Dolomites. A packable layer weighs 200g and can save a day.
+• Broken-in boots matter more than expensive ones. Never debut new boots on a mountain.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 RIFUGIO & MALGA CULTURE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Types:
@@ -2874,7 +2908,7 @@ HOW TO ANSWER SPECIFIC QUESTION TYPES
 • Family / children → family_friendly boolean. Also mention duration and elevation — a "family friendly" 4h trail still needs fit children.
 • Prices / overnight → prices and facilities fields of the rifugio. Recommend half-board.
 • Best time / season → best_season list. Also consider current date and mention if now is ideal or not.
-• Weather → cannot give live weather; refer to meteo.provincia.bz.it or the Alpenvia weather tab. Use weather_notes for known local patterns.
+• Weather → cannot give live weather; refer to meteo.provincia.bz.it or the in-app weather tab. Use weather_notes for known local patterns.
 • What to pack / gear → use the gear section above; calibrate to the specific trail's difficulty and the current season.
 • Crowding / when to go to avoid crowds → use crowding fields. Weekday mornings are quieter everywhere. August is peak month.
 • What to eat / where to stop → mention malghe, rifugios on or near the trail. Use the nearby_rifugios field.
@@ -2904,7 +2938,7 @@ WHAT YOU DO NOT DO
 • No medical advice. If someone describes an injury or health condition, direct them to a doctor or suggest a shorter/easier trail.
 • No real-time conditions. You can't see live trail closures, snow depth, or cable car status. Say so and refer to the local tourist office or the specific rifugio.
 • No guarantees. Weather, trail conditions, and rifugio availability all change. Say "normally" or "in my experience" — not "it will be".
-• No booking. You can tell them exactly what to say when they call, but Alpenvia doesn't handle rifugio bookings directly.
+• No booking. You can tell them exactly what to say when they call, but this app doesn't handle rifugio bookings directly.
 • No politics, no controversy, no opinions on anything outside mountains, hiking, and local culture.
 
 TRAILS DATABASE
@@ -2919,6 +2953,46 @@ HUT-TO-HUT ADVENTURES DATABASE
     _system_prompt_cache['prompt'] = prompt
     _system_prompt_cache['built_at'] = time.time()
     return prompt
+
+
+def _resolve_nearby_rifugios(id_list: list) -> list:
+    """
+    Given a list of rifugio IDs from a trail record, return slim objects
+    suitable for display in the chat trail-card (name, type, altitude,
+    open/closed status, booking_required, insider note).
+    At most 3 rifugios returned to keep the card compact.
+    """
+    if not id_list:
+        return []
+    all_rifugios = load_rifugios()
+    rif_by_id = {r['id']: r for r in all_rifugios}
+    today = datetime.now().date()
+    result = []
+    for rid in id_list[:3]:
+        r = rif_by_id.get(rid)
+        if not r:
+            continue
+        season = r.get('opening_season', {})
+        start_s, end_s = season.get('start_date'), season.get('end_date')
+        if start_s and end_s:
+            try:
+                open_now = datetime.strptime(start_s, '%Y-%m-%d').date() <= today <= datetime.strptime(end_s, '%Y-%m-%d').date()
+            except Exception:
+                open_now = None
+        else:
+            # bivacco / year-round
+            open_now = True if r.get('type') in ('bivacco', 'bivouac') else None
+        result.append({
+            'id':               r['id'],
+            'name':             r['name'],
+            'type':             r.get('type', 'rifugio'),
+            'altitude':         r.get('altitude'),
+            'open_now':         open_now,
+            'opening_season':   season,
+            'booking_required': r.get('booking_required', False),
+            'josephine_note':   r.get('josephine_note', ''),
+        })
+    return result
 
 
 def _get_entity_tip(entity_type: str | None, entity: dict | None) -> str:
@@ -3005,15 +3079,62 @@ def structured_answer(question: str):
 
     entity_type, entity = _fuzzy_match_entity(question)
 
-    # Weather — always deflect regardless of entity
+    # Weather — deflect live-forecast questions, but answer gear-for-weather questions
+    GEAR_FOR_WX_KW = {'pack','bring','wear','take','need','sunscreen','sunglasses','raincoat',
+                       'rain jacket','waterproof','umbrella','boots','layers','what to bring',
+                       'what should i bring','what do i need','what to wear','prepared',
+                       'ready for','dress for','kit','jacket','sun cream','factor 50'}
+    _is_weather_gear_q = has(WEATHER_KW) and any(k in q for k in GEAR_FOR_WX_KW)
+
+    if _is_weather_gear_q:
+        # Rain / storm gear
+        if any(k in q for k in ('rain','shower','drizzle','wet','storm','thunder','lightning')):
+            return ("Rain in the Dolomites is serious — pack a proper waterproof shell (not just water-resistant), "
+                    "and waterproof your boots or bring gaiters. Wet limestone is as slippery as ice, so trekking poles "
+                    "help a lot. Layer underneath the shell because it'll be cold too. If there's a storm risk, "
+                    "be off any exposed ridge or via ferrata by 13:00 — lightning up here is the main danger and it "
+                    "moves fast. Keep an eye on the south sky.")
+        # Sun / heat gear
+        if any(k in q for k in ('sun','sunny','clear','hot','heat','warm','bright')):
+            return ("High-altitude sun is stronger than it looks — Dolomite limestone reflects UV like a mirror. "
+                    "SPF 50 is not overkill, especially above 2000m. Polarised sunglasses help on the pale rock. "
+                    "Bring at least 2L of water (3L on a hard trail), and if it's above 25°C start early or head "
+                    "straight to altitude where it stays cooler. A thin packable layer still belongs in your bag "
+                    "— the summit will always be colder than the valley.")
+        # Wind gear
+        if any(k in q for k in ('wind','windy','gusts','breezy')):
+            return ("Wind on the Dolomite ridges can be sudden and strong. A windproof outer shell — even a lightweight "
+                    "running jacket — makes a huge difference. Secure your hat, and if gusts are above 40 km/h I'd "
+                    "avoid narrow exposed ridges and via ferratas. You'll feel the wind chill mainly on the return, "
+                    "so keep a layer accessible.")
+        # Fog / mist gear
+        if any(k in q for k in ('fog','foggy','mist','misty','cloud','overcast')):
+            return ("Fog is mainly a navigation issue — download an offline GPS track or take a paper map. "
+                    "The CAI waymarks are good but low cloud can hide them. Dress for cold and damp: fog feels "
+                    "colder than the thermometer says. A waterproof shell and warm mid-layer are the kit. "
+                    "If you're heading to altitude and the cloud won't lift, a lower-route alternative is worth having.")
+        # Snow / winter gear
+        if any(k in q for k in ('snow','snowy','ice','icy','frozen','winter','cold')):
+            return ("On snow or ice above 1500m: microspikes (for hard packed snow) or snowshoes (for deep snow), "
+                    "trekking poles, warm base layer + mid layer + waterproof shell. Never trust a summer trail "
+                    "description in winter — the route may be completely different. Tell someone your plan and "
+                    "expected return time before you go.")
+        # Generic weather-gear question
+        return ("It depends what the sky is doing. In short: rain → proper waterproof shell and non-slip boots; "
+                "sun → SPF 50, sunglasses, 2L of water minimum; wind → windproof layer; fog → offline GPS track "
+                "and warm clothes. Whatever the weather, a thin packable layer and sunscreen belong in every pack "
+                "— conditions in the Dolomites can flip in 30 minutes.")
+
     if has(WEATHER_KW):
-        return ("I can't pull live weather from here, but the Alpenvia weather tab "
+        return ("I can't pull live weather from here, but the weather tab "
                 "shows the current forecast and a 7-day outlook for any trail coordinates. "
                 "Check it before you head out!")
 
     # ── General knowledge answers (no entity needed) ─────────────────────────
     GEAR_KW     = {'pack','bring','wear','gear','equipment','boots','shoes','poles',
-                   'what to take','what do i need','what should i have','backpack','layers'}
+                   'what to take','what do i need','what should i have','backpack','layers',
+                   'sunscreen','sunglasses','sun cream','rain jacket','raincoat','waterproof',
+                   'windproof','wind layer','cotton','merino','base layer','mid layer','jacket'}
     FOOD_KW     = {'eat','food','rifugio food','what to eat','menu','dish','dishes',
                    'typical food','local food','schlutzkrapfen','knödel','canederli',
                    'strudel','speck','goulash','kaiserschmarrn','what to order'}

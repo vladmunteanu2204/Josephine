@@ -733,15 +733,18 @@
 }
 
 .jc-trail-card__season-warn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
   display: inline-block;
   font-size: 10px;
   font-weight: 600;
   color: #c9a84c;
-  background: rgba(201,168,76,0.1);
-  border: 1px solid rgba(201,168,76,0.3);
+  background: rgba(8,14,8,0.82);
+  border: 1px solid rgba(201,168,76,0.4);
   border-radius: 6px;
-  padding: 2px 8px;
-  margin-top: 4px;
+  padding: 3px 8px;
+  backdrop-filter: blur(6px);
 }
 
 /* ── Conditions card ──────────────────────────────────────────────────── */
@@ -828,6 +831,16 @@
   border-color: rgba(201,168,76,0.55);
   transform: translateY(-2px);
 }
+
+/* No-image fallback — a subtle topographic gradient so the card still reads */
+.jc-option--no-img {
+  background: linear-gradient(135deg,
+    rgba(30,48,32,0.9) 0%,
+    rgba(15,26,15,1)   60%,
+    rgba(10,18,10,1)   100%);
+}
+.jc-option--no-img .jc-option__name  { color: #f0ece6; }
+.jc-option--no-img .jc-option__stats { color: rgba(240,236,230,0.6); }
 
 .jc-option__img {
   position: absolute;
@@ -1092,4 +1105,220 @@
 .jc-chip--save:hover {
   background: #d4b85c;
   border-color: #d4b85c;
+}
+
+/* ── Trail detail card — sub-components (jc-tc__*) ───────────────────── */
+
+/* Elevation sparkline row */
+.jc-tc__elev {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.jc-tc__elev-label {
+  font-size: 11px;
+  color: rgba(201,168,76,0.75);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Season strip — 12 month pills */
+.jc-tc__season {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-top: 8px;
+}
+
+.jc-tc__month {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 2px 5px;
+  border-radius: 4px;
+  color: rgba(240,236,230,0.3);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.jc-tc__month--best {
+  color: #c9a84c;
+  background: rgba(201,168,76,0.12);
+  border-color: rgba(201,168,76,0.25);
+}
+
+/* Current month gets a white ring on top of whatever state it's in */
+.jc-tc__month--now {
+  outline: 1px solid rgba(240,236,230,0.55);
+  outline-offset: 1px;
+}
+
+/* Shared section wrapper */
+.jc-tc__section {
+  margin-top: 10px;
+}
+
+.jc-tc__section-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: rgba(240,236,230,0.35);
+  margin: 0 0 6px;
+}
+
+/* Transport rows */
+.jc-tc__transport-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-bottom: 4px;
+}
+
+.jc-tc__transport-icon {
+  font-size: 13px;
+  line-height: 1.5;
+  flex-shrink: 0;
+}
+
+.jc-tc__transport-text {
+  font-size: 11px;
+  color: rgba(240,236,230,0.65);
+  line-height: 1.5;
+}
+
+/* Rifugio stop rows */
+.jc-tc__rifugio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  margin-bottom: 4px;
+}
+
+.jc-tc__rifugio-icon {
+  font-size: 14px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.jc-tc__rifugio-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.jc-tc__rifugio-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(240,236,230,0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.jc-tc__rifugio-alt {
+  font-size: 10px;
+  color: rgba(240,236,230,0.38);
+  font-variant-numeric: tabular-nums;
+}
+
+.jc-tc__rifugio-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.jc-tc__open {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #4ade80;
+  padding: 1px 5px;
+  background: rgba(74,222,128,0.1);
+  border-radius: 4px;
+}
+
+.jc-tc__closed {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(240,236,230,0.3);
+  padding: 1px 5px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 4px;
+}
+
+.jc-tc__book {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #c9a84c;
+  padding: 1px 5px;
+  background: rgba(201,168,76,0.1);
+  border-radius: 4px;
+}
+
+/* Highlights list */
+.jc-tc__highlights {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.jc-tc__highlights li {
+  font-size: 11px;
+  color: rgba(240,236,230,0.65);
+  line-height: 1.45;
+  padding-left: 12px;
+  position: relative;
+}
+
+.jc-tc__highlights li::before {
+  content: '·';
+  position: absolute;
+  left: 2px;
+  color: #c9a84c;
+}
+
+/* Josephine's insider note */
+.jc-tc__insider {
+  margin-top: 10px;
+  padding: 9px 12px;
+  border-left: 2px solid rgba(201,168,76,0.5);
+  background: rgba(201,168,76,0.05);
+  border-radius: 0 8px 8px 0;
+}
+
+.jc-tc__insider-text {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 12.5px;
+  color: rgba(240,236,230,0.78);
+  line-height: 1.55;
+  margin: 0 0 5px;
+}
+
+.jc-tc__insider-sig {
+  font-size: 10px;
+  color: rgba(201,168,76,0.6);
+  display: block;
+  text-align: right;
+  font-style: normal;
 }
