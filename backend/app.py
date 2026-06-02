@@ -1946,7 +1946,7 @@ def _deliver_booking_inquiry(inquiry, rif):
 
     try:
         if EMAIL_ENABLED and hut_email and verified:
-            subject_hut = f"Booking inquiry / Richiesta prenotazione — {inquiry['check_in']} → {inquiry['check_out']}"
+            subject_hut = f"Richiesta di prenotazione — {inquiry['check_in']} → {inquiry['check_out']}"
             ok, provider_id, err = send_email(hut_email, subject_hut, msg, reply_to=inquiry['user_email'])
             if ok:
                 status = 'emailed'; channel = 'email'

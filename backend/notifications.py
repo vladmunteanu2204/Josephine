@@ -60,48 +60,64 @@ def send_email(to, subject, text, reply_to=None):
         return (False, None, str(e))
 
 
+# Italian labels for the meal/board preference values stored on the inquiry.
+_MEALS_IT = {
+    'half_board': 'mezza pensione',
+    'breakfast': 'colazione',
+    'dinner': 'cena',
+    'none': 'nessun pasto',
+}
+
+
 def build_inquiry_text(inquiry, rifugio=None):
-    """Compose the hut-facing inquiry message (bilingual EN + IT, since huts are
-    typically Italian/German-speaking). Reused verbatim for the hut email body,
-    the hiker's confirmation copy, and the fallback WhatsApp/email draft."""
-    rif_name = inquiry.get('rifugio_name') or (rifugio or {}).get('name', 'the rifugio')
+    """Compose the hut-facing booking inquiry — written in ITALIAN, since the
+    rifugios are Italian-speaking. Reused verbatim for the hut email body, the
+    hiker's confirmation copy, and the WhatsApp/email fallback draft."""
+    rif_name = inquiry.get('rifugio_name') or (rifugio or {}).get('name', 'il rifugio')
     name = inquiry.get('user_name', '')
     email = inquiry.get('user_email', '')
     phone = inquiry.get('user_phone', '') or '—'
     ci = inquiry.get('check_in', '')
     co = inquiry.get('check_out', '')
-    adults = inquiry.get('adults', 1)
-    children = inquiry.get('children', 0)
+    adults = inquiry.get('adults', 1) or 1
+    children = inquiry.get('children', 0) or 0
     meal = inquiry.get('meal_preference', '')
-    dogs = 'yes / sì' if inquiry.get('dogs') else 'no'
+    meal_it = _MEALS_IT.get(meal, meal)
+    dogs = 'sì' if inquiry.get('dogs') else 'no'
     sr = (inquiry.get('special_requests') or '').strip()
     if len(sr) > 1000:
         sr = sr[:1000] + '…'
 
-    guests = f"{adults} adult(s) / adulti"
+    ospiti = f"{adults} adulto" if adults == 1 else f"{adults} adulti"
     if children:
-        guests += f" + {children} child(ren) / bambini"
+        ospiti += f" + {children} bambino" if children == 1 else f" + {children} bambini"
 
     lines = [
-        f"Booking inquiry — {rif_name}",
-        f"Richiesta di prenotazione — {rif_name}",
+        f"Gentile {rif_name},",
         "",
-        f"Check-in: {ci}",
-        f"Check-out: {co}",
-        f"Guests / Ospiti: {guests}",
-        f"Board / Trattamento: {meal}",
-        f"Dog / Cane: {dogs}",
+        "vorrei richiedere una prenotazione con i seguenti dettagli:",
+        "",
+        f"• Arrivo (check-in): {ci}",
+        f"• Partenza (check-out): {co}",
+        f"• Ospiti: {ospiti}",
+        f"• Trattamento: {meal_it}",
+        f"• Cane al seguito: {dogs}",
     ]
     if sr:
-        lines += ["", f"Notes / Note: {sr}"]
+        lines.append(f"• Note / richieste particolari: {sr}")
     lines += [
         "",
-        "— Guest / Ospite —",
-        f"Name / Nome: {name}",
-        f"Email: {email}",
-        f"Phone / Telefono: {phone}",
+        "I miei recapiti:",
+        f"• Nome: {name}",
+        f"• Email: {email}",
+        f"• Telefono: {phone}",
         "",
-        "Sent via Josephine. Please reply directly to the guest's email.",
-        "Inviato tramite Josephine. Si prega di rispondere direttamente all'email dell'ospite.",
+        "Resto in attesa di una vostra conferma sulla disponibilità.",
+        "Grazie mille e cordiali saluti,",
+        f"{name}",
+        "",
+        "—",
+        "Richiesta inviata tramite Josephine. Si prega di rispondere "
+        "direttamente all'email del cliente.",
     ]
     return "\n".join(lines)
