@@ -1,5 +1,24 @@
 # TODO — deferred setup
 
+## 0. Enable hut-booking auto-email (Resend)
+
+The booking system auto-emails a hut when its email is **verified**; until the
+provider is configured it runs in fallback mode (the hiker sends the inquiry via
+a one-tap WhatsApp/email/copy draft). Inquiries are always saved either way.
+
+- [ ] Create a Resend account + verify a sending domain.
+- [ ] Set backend env (Replit → Secrets):
+      `RESEND_API_KEY`, `BOOKING_FROM_EMAIL` (e.g. `Josephine <bookings@yourdomain>`).
+- [ ] In Admin → Rifugios, tick **"Booking email verified"** ONLY for huts whose
+      email you've confirmed is real (the seed emails in `rifugios.json` are
+      placeholders — do NOT trust them blindly).
+- [ ] Restart the backend. Then a booking to a verified hut emails it (Reply-To
+      the hiker) + sends the hiker a confirmation; unverified huts stay on the
+      one-tap fallback.
+- Code: `backend/notifications.py`, `backend/app.py` → `submit_booking_inquiry` /
+  `_deliver_booking_inquiry`. Per-IP rate limit + bilingual EN/IT message built in.
+- Optional later: an admin "Resend" action on a saved inquiry.
+
 ## 1. Enable Haiku (Josephine open-ended chat)
 
 The chat engine is fully wired for Claude Haiku, but it only activates when an
