@@ -458,3 +458,6 @@
     padding: 12px 8px;
   }
 }
+
+/* Design rollout (B): admin icon alignment */
+.mdm-h-icon, .save-btn, .remove-stage-btn { display: inline-flex; align-items: center; gap: 6px; }

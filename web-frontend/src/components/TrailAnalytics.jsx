@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import { Eye, Star, Check, Clock } from 'lucide-react';
 import './TrailAnalytics.css';
 
 function TrailAnalytics({ adminPassword }) {
@@ -91,23 +92,23 @@ function TrailAnalytics({ adminPassword }) {
                 </div>
                 <div className="trail-stats-grid">
                   <div className="stat-item">
-                    <span className="stat-icon">👁️</span>
+                    <span className="stat-icon"><Eye size={18} strokeWidth={2} /></span>
                     <span className="stat-value">{trail.views}</span>
                     <span className="stat-label">{t('admin.views')}</span>
                   </div>
                   <div className="stat-item">
-                    <span className="stat-icon">⭐</span>
+                    <span className="stat-icon"><Star size={18} strokeWidth={2} /></span>
                     <span className="stat-value">{trail.saves}</span>
                     <span className="stat-label">{t('admin.saves')}</span>
                   </div>
                   <div className="stat-item">
-                    <span className="stat-icon">✓</span>
+                    <span className="stat-icon"><Check size={18} strokeWidth={2.5} /></span>
                     <span className="stat-value">{trail.completions}</span>
                     <span className="stat-label">{t('admin.completions')}</span>
                   </div>
                   {trail.avg_duration > 0 && (
                     <div className="stat-item">
-                      <span className="stat-icon">⏱️</span>
+                      <span className="stat-icon"><Clock size={18} strokeWidth={2} /></span>
                       <span className="stat-value">{trail.avg_duration}h</span>
                       <span className="stat-label">{t('admin.avgDuration')}</span>
                     </div>

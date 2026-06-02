@@ -172,3 +172,6 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* Design rollout (B): admin icon alignment */
+.stat-icon { display: inline-flex; align-items: center; justify-content: center; color: var(--accent-primary); }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Map, { Source, Layer } from 'react-map-gl';
+import { Plus, MapPin, Pencil, Trash2 } from 'lucide-react';
 import './ChallengesManager.css';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -168,7 +169,7 @@ function ChallengesManager({ adminPassword }) {
       <div className="manager-header">
         <h2>Challenges Management</h2>
         <button className="btn-create" onClick={handleCreate}>
-          ➕ Create New Challenge
+          <Plus size={16} strokeWidth={2} /> Create New Challenge
         </button>
       </div>
 
@@ -180,7 +181,7 @@ function ChallengesManager({ adminPassword }) {
             {/* GPX Upload Section */}
             <div className="gpx-upload-section">
               <div className="gpx-upload-header">
-                <h4>📍 GPX Route Upload (Optional)</h4>
+                <h4 className="cm-h-icon"><MapPin size={16} strokeWidth={2} /> GPX Route Upload (Optional)</h4>
                 <p style={{ fontSize: '13px', opacity: 0.8, margin: '5px 0' }}>
                   Upload a GPX file to highlight the challenge route on the map for users
                 </p>
@@ -413,10 +414,10 @@ function ChallengesManager({ adminPassword }) {
               </div>
               <div className="challenge-actions">
                 <button className="btn-edit" onClick={() => handleEdit(challenge)}>
-                  ✏️ Edit
+                  <Pencil size={14} strokeWidth={2} /> Edit
                 </button>
                 <button className="btn-delete" onClick={() => handleDelete(challenge.id)}>
-                  🗑️ Delete
+                  <Trash2 size={14} strokeWidth={2} /> Delete
                 </button>
               </div>
             </div>

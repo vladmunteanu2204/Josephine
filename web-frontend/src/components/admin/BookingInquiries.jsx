@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import { RotateCw, X, AlertTriangle, Trash2 } from 'lucide-react';
 import './BookingInquiries.css';
 
 const STATUS_CONFIG = {
@@ -134,7 +135,7 @@ export default function BookingInquiries({ adminPassword }) {
           <h2 className="bk-title">📋 Booking Inquiries</h2>
           <p className="bk-sub">Rifugio booking requests from guests</p>
         </div>
-        <button className="bk-refresh" onClick={load}>↻ Refresh</button>
+        <button className="bk-refresh" onClick={load}><RotateCw size={15} strokeWidth={2} /> Refresh</button>
       </div>
 
       {/* Status quick-filter pills */}
@@ -155,12 +156,12 @@ export default function BookingInquiries({ adminPassword }) {
         <label>Check-in from <input type="date" value={filters.date_from} onChange={e => setFilters(f=>({...f,date_from:e.target.value}))} className="bk-date-input" /></label>
         <label>to <input type="date" value={filters.date_to} onChange={e => setFilters(f=>({...f,date_to:e.target.value}))} className="bk-date-input" /></label>
         {(filters.date_from || filters.date_to) && (
-          <button className="bk-clear-dates" onClick={() => setFilters(f=>({...f,date_from:'',date_to:''}))}>✕ Clear dates</button>
+          <button className="bk-clear-dates" onClick={() => setFilters(f=>({...f,date_from:'',date_to:''}))}><X size={14} strokeWidth={2} /> Clear dates</button>
         )}
       </div>
 
       {loading && <div className="bk-loading">Loading…</div>}
-      {error   && <div className="bk-error">⚠ {error}</div>}
+      {error   && <div className="bk-error"><AlertTriangle size={15} strokeWidth={2} /> {error}</div>}
 
       {!loading && !error && inquiries.length === 0 && (
         <div className="bk-empty">
@@ -203,7 +204,7 @@ export default function BookingInquiries({ adminPassword }) {
                   </td>
                   <td onClick={e => e.stopPropagation()}>
                     <button className="bk-btn-detail" onClick={() => openDetail(inq)}>Details</button>
-                    <button className="bk-btn-delete" onClick={() => deleteInquiry(inq.id)}>✕</button>
+                    <button className="bk-btn-delete" onClick={() => deleteInquiry(inq.id)} aria-label="Delete"><Trash2 size={15} strokeWidth={2} /></button>
                   </td>
                 </tr>
               ))}
@@ -218,7 +219,7 @@ export default function BookingInquiries({ adminPassword }) {
           <div className="bk-modal" onClick={e => e.stopPropagation()}>
             <div className="bk-modal-header">
               <h3>Booking #{selected.id}</h3>
-              <button className="bk-modal-close" onClick={() => setSelected(null)}>✕</button>
+              <button className="bk-modal-close" onClick={() => setSelected(null)} aria-label="Close"><X size={18} strokeWidth={2} /></button>
             </div>
 
             <div className="bk-modal-body">

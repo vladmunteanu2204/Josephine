@@ -98,3 +98,6 @@
   background: rgba(255, 255, 255, 0.1);
   margin: 1.5rem 0;
 }
+
+/* Design rollout (B): admin icon alignment */
+.cm-h-icon, .btn-create, .btn-edit, .btn-delete { display: inline-flex; align-items: center; gap: 6px; }

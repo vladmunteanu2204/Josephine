@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import { Mountain, Pencil, Trash2, Save, Image, CalendarRange, Footprints, Sparkles, Siren, MapPin } from 'lucide-react';
 import './MultiDayTrailsManager.css';
 
 const API_URL = import.meta.env.VITE_API_URL || '';
@@ -184,7 +185,7 @@ function MultiDayTrailsManager({ adminPassword }) {
   return (
     <div className="multiday-trails-manager">
       <div className="multiday-header">
-        <h2>🏔️ {t('multiday.availableTrails')}</h2>
+        <h2 className="mdm-h-icon"><Mountain size={20} strokeWidth={2} /> {t('multiday.availableTrails')}</h2>
         <button className="create-btn" onClick={handleCreateNew}>
           + {t('admin.createNewTrail')}
         </button>
@@ -238,11 +239,13 @@ function MultiDayTrailsManager({ adminPassword }) {
                     <button onClick={() => { setEditingTrail({ ...trail, emergency_contacts: trail.emergency_contacts || { mountain_rescue: '', weather: '', local_police: '' } }); setIsCreating(false); }} style={{
                       flex: 1, padding: '8px', background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.3)',
                       borderRadius: '8px', color: '#c9a84c', fontSize: '12px', cursor: 'pointer',
-                    }}>✏️ Edit</button>
-                    <button onClick={() => handleDelete(trail.id)} style={{
+                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '5px',
+                    }}><Pencil size={13} strokeWidth={2} /> Edit</button>
+                    <button onClick={() => handleDelete(trail.id)} aria-label="Delete" style={{
                       padding: '8px 12px', background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.2)',
                       borderRadius: '8px', color: '#f87171', fontSize: '12px', cursor: 'pointer',
-                    }}>🗑️</button>
+                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                    }}><Trash2 size={13} strokeWidth={2} /></button>
                   </div>
                 </div>
               </div>
@@ -257,7 +260,7 @@ function MultiDayTrailsManager({ adminPassword }) {
             <h3>{isCreating ? t('admin.createNewMultiDay') : `${t('admin.editing')}: ${editingTrail.name}`}</h3>
             <div className="editor-actions">
               <button onClick={handleSave} className="save-btn">
-                💾 {t('admin.saveTrail')}
+                <Save size={15} strokeWidth={2} /> {t('admin.saveTrail')}
               </button>
               <button onClick={() => { setEditingTrail(null); setIsCreating(false); }} className="cancel-btn">
                 {t('admin.cancel')}
@@ -369,7 +372,7 @@ function MultiDayTrailsManager({ adminPassword }) {
                 />
               </div>
               <div className="form-group">
-                <label>🏔️ {t('trail.josephineNote', 'Josephine says')} (EN)</label>
+                <label className="mdm-h-icon"><Mountain size={14} strokeWidth={2} /> {t('trail.josephineNote', 'Josephine says')} (EN)</label>
                 <textarea
                   value={editingTrail.josephineNote?.en || ''}
                   onChange={(e) => updateField('josephineNote', { ...(editingTrail.josephineNote || {}), en: e.target.value })}
@@ -378,7 +381,7 @@ function MultiDayTrailsManager({ adminPassword }) {
                 />
               </div>
               <div className="form-group">
-                <label>🏔️ {t('trail.josephineNote', 'Josephine dice')} (IT)</label>
+                <label className="mdm-h-icon"><Mountain size={14} strokeWidth={2} /> {t('trail.josephineNote', 'Josephine dice')} (IT)</label>
                 <textarea
                   value={editingTrail.josephineNote?.it || ''}
                   onChange={(e) => updateField('josephineNote', { ...(editingTrail.josephineNote || {}), it: e.target.value })}
@@ -387,7 +390,7 @@ function MultiDayTrailsManager({ adminPassword }) {
                 />
               </div>
               <div className="form-group">
-                <label>🏔️ {t('trail.josephineNote', 'Josephine sagt')} (DE)</label>
+                <label className="mdm-h-icon"><Mountain size={14} strokeWidth={2} /> {t('trail.josephineNote', 'Josephine sagt')} (DE)</label>
                 <textarea
                   value={editingTrail.josephineNote?.de || ''}
                   onChange={(e) => updateField('josephineNote', { ...(editingTrail.josephineNote || {}), de: e.target.value })}
@@ -399,7 +402,7 @@ function MultiDayTrailsManager({ adminPassword }) {
 
             {/* Media Section */}
             <div className="editor-section">
-              <h4>🖼️ {t('admin.media')}</h4>
+              <h4 className="mdm-h-icon"><Image size={16} strokeWidth={2} /> {t('admin.media')}</h4>
               <div className="form-grid">
                 <div className="form-group">
                   <label>{t('admin.heroImageUrl')}</label>
@@ -434,7 +437,7 @@ function MultiDayTrailsManager({ adminPassword }) {
 
             {/* Season & Planning */}
             <div className="editor-section">
-              <h4>📅 Season & Planning</h4>
+              <h4 className="mdm-h-icon"><CalendarRange size={16} strokeWidth={2} /> Season &amp; Planning</h4>
               <div className="form-grid">
                 <div className="form-group">
                   <label>Season opens (MM-DD)</label>
@@ -489,7 +492,7 @@ function MultiDayTrailsManager({ adminPassword }) {
             {/* Stages Section */}
             <div className="editor-section">
               <div className="section-header">
-                <h4>🥾 {t('admin.trailStages')} ({editingTrail.stages?.length || 0})</h4>
+                <h4 className="mdm-h-icon"><Footprints size={16} strokeWidth={2} /> {t('admin.trailStages')} ({editingTrail.stages?.length || 0})</h4>
                 <button onClick={handleAddStage} className="add-stage-btn">
                   + {t('admin.addStage')}
                 </button>
@@ -500,7 +503,7 @@ function MultiDayTrailsManager({ adminPassword }) {
                   <div className="stage-header">
                     <h5>{t('admin.stage')} {stage.stage_number}: {stage.name || t('admin.unnamed')}</h5>
                     <button onClick={() => handleRemoveStage(index)} className="remove-stage-btn">
-                      🗑️ {t('admin.remove')}
+                      <Trash2 size={14} strokeWidth={2} /> {t('admin.remove')}
                     </button>
                   </div>
 
@@ -583,7 +586,7 @@ function MultiDayTrailsManager({ adminPassword }) {
 
                   {/* Stage highlights */}
                   <div className="form-group">
-                    <label>✨ Stage highlights (one per line)</label>
+                    <label className="mdm-h-icon"><Sparkles size={14} strokeWidth={2} /> Stage highlights (one per line)</label>
                     <textarea
                       rows={3}
                       value={(stage.highlights || []).join('\n')}
@@ -663,7 +666,7 @@ function MultiDayTrailsManager({ adminPassword }) {
 
                   {/* Exit Routes */}
                   <div className="form-group">
-                    <label>🚨 Exit Routes / Emergency Descents (JSON array)</label>
+                    <label className="mdm-h-icon"><Siren size={14} strokeWidth={2} /> Exit Routes / Emergency Descents (JSON array)</label>
                     <textarea
                       rows={6}
                       style={{ fontFamily: 'monospace', fontSize: '12px' }}

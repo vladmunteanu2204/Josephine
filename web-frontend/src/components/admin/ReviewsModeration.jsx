@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Star, Calendar, Trash2, User, ThumbsUp } from 'lucide-react';
 import './ReviewsModeration.css';
 
 function ReviewsModeration({ adminPassword }) {
@@ -109,17 +110,21 @@ function ReviewsModeration({ adminPassword }) {
                   <span className="trail-id">ID: {review.trail_id}</span>
                 </div>
                 <div className="review-rating">
-                  {'⭐'.repeat(review.rating)}
+                  <span className="rm-stars">
+                    {Array.from({ length: review.rating }).map((_, i) => (
+                      <Star key={i} size={14} fill="currentColor" strokeWidth={0} />
+                    ))}
+                  </span>
                   <span className="rating-number">{review.rating}/5</span>
                 </div>
               </div>
               
               <div className="review-body">
                 <div className="review-meta">
-                  <span className="reviewer-name">👤 {review.user_name}</span>
-                  <span className="review-date">📅 {review.date}</span>
+                  <span className="reviewer-name"><User size={13} strokeWidth={2} /> {review.user_name}</span>
+                  <span className="review-date"><Calendar size={13} strokeWidth={2} /> {review.date}</span>
                   {review.helpful_count > 0 && (
-                    <span className="helpful-count">👍 {review.helpful_count} helpful</span>
+                    <span className="helpful-count"><ThumbsUp size={13} strokeWidth={2} /> {review.helpful_count} helpful</span>
                   )}
                 </div>
                 <p className="review-comment">{review.comment}</p>
@@ -130,7 +135,7 @@ function ReviewsModeration({ adminPassword }) {
                   className="btn-delete-review"
                   onClick={() => handleDelete(review.id, review.trail_id)}
                 >
-                  🗑️ Delete Review
+                  <Trash2 size={14} strokeWidth={2} /> Delete Review
                 </button>
               </div>
             </div>
