@@ -19,7 +19,7 @@ const Profile              = lazy(() => import('./components/Profile'));
 const SavedTrails          = lazy(() => import('./components/SavedTrails'));
 const Settings             = lazy(() => import('./components/Settings'));
 const Leaderboards         = lazy(() => import('./components/Leaderboards'));
-const HikePlanner          = lazy(() => import('./components/HikePlanner'));
+const MyPlan               = lazy(() => import('./components/planner/MyPlan'));
 const TermsAndConditions   = lazy(() => import('./components/TermsAndConditions'));
 const PrivacyPolicy        = lazy(() => import('./components/PrivacyPolicy'));
 const AdminPanel           = lazy(() => import('./components/AdminPanel'));
@@ -235,7 +235,7 @@ function App() {
 
           {currentView === 'planner' && (
             <GuestGuard setCurrentView={setCurrentView} onShowLogin={() => setShowLoginModal(true)}>
-              <HikePlanner onNavigate={navigate} />
+              <MyPlan onNavigate={navigate} />
             </GuestGuard>
           )}
 

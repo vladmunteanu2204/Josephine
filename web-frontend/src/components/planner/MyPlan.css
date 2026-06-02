@@ -1,0 +1,75 @@
+/* ============================================================
+   My Plan — container (mode chooser + saved plans)
+   ============================================================ */
+.myplan-page { min-height: 70vh; padding: 24px 0 80px; }
+
+.myplan-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: none; border: none; cursor: pointer;
+  color: var(--text-secondary); font-size: 14px; padding: 6px 0; margin-bottom: 12px;
+}
+.myplan-back:hover { color: var(--text-primary); }
+
+.myplan-head { margin-bottom: 22px; }
+.myplan-title {
+  font-family: var(--font-display); font-style: italic; font-weight: 300;
+  font-size: clamp(30px, 6vw, 46px); color: var(--text-primary); margin: 0 0 6px;
+}
+.myplan-sub { color: var(--text-secondary); font-size: 15px; margin: 0; }
+
+/* Mode chooser */
+.myplan-modes {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 36px;
+}
+.myplan-mode {
+  display: flex; align-items: center; gap: 14px; text-align: left;
+  padding: 18px; width: 100%; background: var(--surface-1);
+}
+.myplan-mode__icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 52px; height: 52px; flex-shrink: 0; border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--accent-primary) 12%, transparent);
+  color: var(--accent-primary);
+}
+.myplan-mode__body { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+.myplan-mode__title { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+.myplan-mode__desc { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+.myplan-mode__chev { color: var(--text-muted); flex-shrink: 0; }
+
+.myplan-section-title {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-muted); margin: 0 0 14px;
+}
+
+.myplan-state { color: var(--text-secondary); padding: 24px 0; }
+.myplan-empty {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  text-align: center; padding: 48px 20px; color: var(--text-muted);
+}
+.myplan-empty p { color: var(--text-secondary); margin: 0; }
+
+/* Saved plan rows */
+.myplan-list { display: flex; flex-direction: column; gap: 10px; }
+.myplan-row { display: flex; align-items: stretch; }
+.myplan-row__main {
+  display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;
+  background: none; border: none; cursor: pointer; text-align: left; padding: 14px 16px; color: inherit;
+}
+.myplan-row__icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; flex-shrink: 0; border-radius: var(--radius-sm);
+  background: var(--surface-2); color: var(--accent-primary);
+}
+.myplan-row__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.myplan-row__name { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+.myplan-row__meta { font-size: 13px; color: var(--text-secondary); }
+.myplan-row__del {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 48px; flex-shrink: 0; border: none; background: none; cursor: pointer;
+  color: var(--text-muted); border-left: 1px solid var(--border-subtle);
+}
+.myplan-row__del:hover { color: var(--diff-hard); background: var(--surface-1); }
+
+@media (max-width: 640px) {
+  .myplan-modes { grid-template-columns: 1fr; }
+}
