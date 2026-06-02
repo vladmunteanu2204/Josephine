@@ -38,7 +38,7 @@ export const SEASONS = {
       { icon: '☀️', label: 'Half-day escape',  bundle: { interests: [],                  duration_hours: 4,   difficulty: 'medium' } },
     ],
 
-    splashTagline:    'Summer in the Dolomites',
+    splashTagline:    'Summer in the mountains',
     splashLoadingText: 'Preparing your mountain day…',
   },
 
@@ -158,8 +158,8 @@ export function detectSeason(date = new Date()) {
   const m = date.getMonth() + 1; // 1–12
   const d = date.getDate();
   if ((m === 12 && d >= 21) || m <= 2 || (m === 3 && d <= 20)) return 'winter';
-  if ((m === 3 && d >= 21) || m <= 5 || (m === 6 && d <= 20)) return 'spring';
-  if ((m === 6 && d >= 21) || m <= 8 || (m === 9 && d <= 22)) return 'summer';
+  if ((m === 3 && d >= 21) || m <= 5) return 'spring';          // 21 Mar – 31 May
+  if (m >= 6 && m <= 8 || (m === 9 && d <= 22)) return 'summer'; // 1 Jun – 22 Sep
   return 'autumn';
 }
 

@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   overflow: hidden;
   /* Cinematic alpine photo — female hiker at golden hour */
   background-size: cover;
@@ -97,18 +97,21 @@
 
 .jph-splash__tagline {
   font-family: 'Inter', sans-serif;
-  font-size: clamp(9px, 2.2vw, 13px);
-  font-weight: 400;
-  color: #c9a84c;
+  font-size: clamp(10px, 2.4vw, 14px);
+  font-weight: 500;
+  color: #e8cc80;
   letter-spacing: 0.25em;
   text-transform: uppercase;
   margin: 0;
-  opacity: 0.9;
+  text-shadow:
+    0 1px 6px rgba(0,0,0,0.9),
+    0 2px 16px rgba(0,0,0,0.8);
 }
 
 /* ── Bottom info ── */
 .jph-splash__bottom {
-  position: relative;
+  position: absolute;
+  bottom: 0;
   z-index: 2;
   display: flex;
   flex-direction: column;

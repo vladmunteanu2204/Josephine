@@ -257,19 +257,18 @@
   align-self: flex-start;
 }
 
+/* Consecutive Josephine messages — tighten the gap */
+.jc-msg--grouped {
+  margin-top: -10px;
+}
+
 /* Avatar — larger, anchored to top so speech-bubble tail aligns */
 .jc-msg__avatar {
-  width: 68px;
-  height: 68px;
+  width: 76px;
+  height: 76px;
   border-radius: 50%;
-  background: rgba(201,168,76,0.1);
-  border: 1.5px solid rgba(201,168,76,0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex-shrink: 0;
   overflow: hidden;
-  box-shadow: 0 2px 16px rgba(201,168,76,0.18);
 }
 
 .jc-msg__avatar img {

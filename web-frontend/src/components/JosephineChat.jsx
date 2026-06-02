@@ -3,6 +3,7 @@ import { trailImg } from '../utils/trailImage';
 import i18nInstance from '../i18n';
 import axios from 'axios';
 import { detectSeason, getSeasonConfig } from '../hooks/useSeason';
+import { checkDistanceFromGPS, checkDistanceWarning, buildTransportNote } from '../utils/geoAwareness';
 import './JosephineChat.css';
 
 const _seasonOverride = new URLSearchParams(window.location.search).get('season');
@@ -126,8 +127,9 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
   const [savedIds, setSavedIds]       = useState(() => {
     try { return JSON.parse(localStorage.getItem(SAVED_KEY) || '[]'); } catch { return []; }
   });
-  const [refining, setRefining]       = useState(false);
-  const [chatHistory, setChatHistory] = useState([]);
+  const [refining, setRefining]           = useState(false);
+  const [awaitingRefinement, setAwaitingRefinement] = useState(null); // 'length' | 'difficulty' | null
+  const [chatHistory, setChatHistory]     = useState([]);
   const [showMenu, setShowMenu]       = useState(false);
   const [copyFeedback, setCopyFeedback] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -164,7 +166,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
     prevLangRef.current = lang;
     setMessages(makeInitialMessages());
     setPlanningStep(0); setPlanningData({}); setApiResults([]);
-    setSelectedTrail(null); setChatHistory([]);
+    setSelectedTrail(null); setChatHistory([]); setAwaitingRefinement(null);
     try { sessionStorage.removeItem(CHAT_SAVE_KEY); } catch {}
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lang]);
@@ -252,7 +254,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
     setMessages(makeInitialMessages());
     setPlanningStep(0); setPlanningData({}); setApiResults([]);
     setSelectedTrail(null); setRefining(false); setChatHistory([]);
-    setInput(''); setShowMenu(false);
+    setAwaitingRefinement(null); setInput(''); setShowMenu(false);
     try { sessionStorage.removeItem(CHAT_SAVE_KEY); } catch {}
   };
 
@@ -345,7 +347,22 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
         duration_hours: duration, difficulty, interests,
         family_friendly: data.family_friendly ?? false,
         start_area: data.startArea ?? '',
+        ...(data.max_distance_km ? { max_distance_km: data.max_distance_km } : {}),
       });
+      // Backend signals no trails near the requested area
+      if (response.data.area_not_found) {
+        const area = response.data.area || data.startArea || 'that area';
+        setTyping(false);
+        setTimeout(() => {
+          appendJosephineMessage({
+            type: 'text',
+            text: `I don't have any trails near ${area} in my database yet. Try a nearby valley or village — or let me suggest something in the wider Dolomites region?`,
+            chips: [t('chipPlanMyDay'), t('chipStartOver')],
+          });
+        }, 350);
+        return;
+      }
+
       const results = (response.data.results || []).slice(0, 3);
       setApiResults(results);
       setTyping(false);
@@ -356,13 +373,35 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
           duration_hours: duration, difficulty, interests,
           lastTrail: first.id, lastDifficulty: first.difficulty, lastRegion: first.region,
         });
+        const optionsIntros = [
+          "I found three beautiful options for you. Each one fits what you're after. ✦",
+          "Here are three trails I think you'll love. Take a look. ✦",
+          "Three picks — all curated for today. Let me know which speaks to you. ✦",
+          "I've pulled three routes that match perfectly. Which feels right? ✦",
+        ];
+
+        // ── Geographic awareness: warn if trail region is far from user ──────
+        // Primary: compare against user's actual GPS position (most accurate).
+        // Fallback: if GPS is unavailable, compare against their typed start area.
+        const distWarning =
+          checkDistanceFromGPS(userLat, userLon, first.region) ??
+          (data.startArea ? checkDistanceWarning(data.startArea, first.region) : null);
+
         setTimeout(() => {
-          appendJosephineMessage({ type: 'text', text: t('optionsIntro'), chips: null });
-          // Refinement chips surfaced directly on the options card (fix: was dead code before)
+          appendJosephineMessage({ type: 'text', text: optionsIntros[Math.floor(Math.random() * optionsIntros.length)], chips: null });
           appendJosephineMessage({
             type: 'options', trails: results,
             chips: [t('chipTooLong'), t('chipTooHard'), t('chipStartOver')],
           });
+          if (distWarning) {
+            setTimeout(() => {
+              appendJosephineMessage({
+                type: 'text',
+                text: buildTransportNote(distWarning, Date.now()),
+                chips: ['Yes, this works', 'Find something closer'],
+              });
+            }, 600);
+          }
         }, 350);
       } else {
         setTimeout(() => {
@@ -453,9 +492,17 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       'trail starting from','hike near','trail near','something near',
       'where can i hike','where should i hike','what trail',
     ];
-    if (!TRIGGERS.some(x => tl.includes(x))) return null;
-    const loc = text.match(/(?:from|near|around|starting from|starting at|close to)\s+([A-Za-zÀ-ÿ\s]+?)(?:\s*$|\s*[,.])/i);
-    const startArea = loc ? loc[1].trim() : '';
+    // Also trigger on "a hike in [place]" / "hike in [place]"
+    const hasInPlace = /\bhike\b.*\bin\b|\btrail\b.*\bin\b|\bsomething\b.*\bin\b|\bwalk\b.*\bin\b/i.test(tl);
+    if (!TRIGGERS.some(x => tl.includes(x)) && !hasInPlace) return null;
+
+    // Match explicit prepositions first; fall back to "in" for place names
+    const loc = text.match(/(?:from|near|around|starting from|starting at|close to)\s+([A-Za-zÀ-ÿ\s]+?)(?:\s*$|\s*[,.])/i)
+             ?? text.match(/\bin\s+([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ\s]{1,24})(?:\s*$|\s*[,?.])/i);
+    // For "in [place]" matches, filter out non-geographic phrases
+    const NON_PLACES = /^(the |a |an |my |this |that |summer|winter|spring|autumn|morning|afternoon|evening|july|june|august)/i;
+    const rawArea = loc ? loc[1].trim() : '';
+    const startArea = (rawArea && NON_PLACES.test(rawArea)) ? '' : rawArea;
     let difficulty = 'medium';
     if (/\b(easy|beginner|gentle|relaxed)\b/i.test(text)) difficulty = 'easy';
     if (/\b(hard|difficult|challenging|strenuous|expert)\b/i.test(text)) difficulty = 'hard';
@@ -472,6 +519,83 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
   const sendMessage = useCallback(async (text) => {
     if (!text.trim()) return;
     const trimmed = text.trim();
+    const tl = trimmed.toLowerCase();
+
+    // ── Refinement follow-up: length ────────────────────────────────────
+    if (awaitingRefinement === 'length') {
+      const kmMatch = tl.match(/(?:under|below|less than|max|maximum)?\s*(\d+(?:\.\d+)?)\s*km?/i);
+      const maxKm = kmMatch ? parseFloat(kmMatch[1])
+        : tl.includes('5') ? 5
+        : tl.includes('8') ? 8
+        : tl.includes('12') ? 12
+        : null;
+      if (maxKm) {
+        appendUserMessage(trimmed);
+        setInput('');
+        setAwaitingRefinement(null);
+        setRefining(true);
+        const d = { ...planningData, max_distance_km: maxKm };
+        setPlanningData(d);
+        const acks = [
+          `Perfect — finding trails under ${maxKm} km for you.`,
+          `On it — I'll keep it under ${maxKm} km.`,
+          `Got it. Looking for something under ${maxKm} km now.`,
+        ];
+        appendJosephineMessage({ type: 'text', text: acks[Math.floor(Math.random() * acks.length)], chips: null });
+        callRecommendAPI(d);
+        return;
+      }
+    }
+
+    // ── Refinement follow-up: difficulty ────────────────────────────────
+    if (awaitingRefinement === 'difficulty') {
+      let newDifficulty = null;
+      if (/easy|gentle|relaxed|beginner|stroll|simple/i.test(tl)) newDifficulty = 'easy';
+      else if (/moderate|medium|normal|manageable/i.test(tl)) newDifficulty = 'medium';
+      else if (/any|whatever|don.t mind|surprise/i.test(tl)) newDifficulty = planningData.difficulty ?? 'medium';
+      if (newDifficulty) {
+        appendUserMessage(trimmed);
+        setInput('');
+        setAwaitingRefinement(null);
+        setRefining(true);
+        const d = { ...planningData, difficulty: newDifficulty, max_distance_km: undefined };
+        setPlanningData(d);
+        const acks = {
+          easy: ["Perfect — finding something easy and scenic.", "On it — a relaxed trail, coming up.", "Easy it is. Looking now."],
+          medium: ["Great — looking for a moderate route.", "On it — something balanced, coming up.", "Moderate works. Searching now."],
+        };
+        const pool = acks[newDifficulty] || acks.medium;
+        appendJosephineMessage({ type: 'text', text: pool[Math.floor(Math.random() * pool.length)], chips: null });
+        callRecommendAPI(d);
+        return;
+      }
+    }
+
+    // ── Detect "too long / too hard" typed as free text ─────────────────
+    if (planningStep > 0 && /too long|too far|too many km|too much/i.test(tl)) {
+      setAwaitingRefinement('length');
+      const refDist = apiResults[0]?.distance_km;
+      const hint = refDist ? ` The shortest I suggested was ${refDist} km.` : '';
+      appendUserMessage(trimmed);
+      setInput('');
+      appendJosephineMessage({
+        type: 'text',
+        text: `How long would you like?${hint} Tell me a distance and I'll find it.`,
+        chips: ['Under 5 km', 'Under 8 km', 'Under 12 km'],
+      });
+      return;
+    }
+    if (planningStep > 0 && /too hard|too difficult|too steep|too challenging|too strenuous/i.test(tl)) {
+      setAwaitingRefinement('difficulty');
+      appendUserMessage(trimmed);
+      setInput('');
+      appendJosephineMessage({
+        type: 'text',
+        text: "What difficulty works for you today?",
+        chips: ['Easy walk', 'Moderate', 'Any level'],
+      });
+      return;
+    }
 
     const intent = parseRecommendIntent(trimmed);
     if (intent) {
@@ -485,7 +609,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       appendJosephineMessage({
         type: 'text',
         text: intent.startArea
-          ? t('searchingNear', `On it — let me find something near ${intent.startArea}…`)
+          ? `On it — let me find something near ${intent.startArea}…`
           : t('searching', 'Let me find you something…'),
         chips: null,
       });
@@ -503,13 +627,16 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
         { role: 'user', content: trimmed },
         { role: 'assistant', content: res.data.reply },
       ]);
-      appendJosephineMessage({ type: 'text', text: res.data.reply, chips: [t('chipPlanMyDay'), t('chipSurpriseMe')] });
+      // Structured knowledge answers (gear, food, bus, emergency…) stand alone —
+      // no planning CTAs. LLM / open-ended answers offer to continue the conversation.
+      const knowledgeChips = res.data.mode === 'structured' ? null : [t('chipPlanMyDay'), t('chipSurpriseMe')];
+      appendJosephineMessage({ type: 'text', text: res.data.reply, chips: knowledgeChips });
     } catch {
       setTyping(false);
       appendJosephineMessage({ type: 'text', text: t('windError'), chips: [t('chipPlanMyDay'), t('chipSurpriseMe')] });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chatHistory, lang, t]);
+  }, [chatHistory, lang, t, awaitingRefinement, apiResults, planningData, planningStep]);
 
   // Keep ref fresh so mic closure can call the latest version
   sendMsgRef.current = sendMessage;
@@ -589,19 +716,37 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
     }
     if (chip === t('chipTooLong')) {
       appendUserMessage(chip);
-      setRefining(true);
+      setAwaitingRefinement('length');
+      const refDist = apiResults[0]?.distance_km;
+      const hint = refDist ? ` The shortest I suggested was ${refDist} km.` : '';
+      const questions = [
+        `How long would you like?${hint} I can look for under 5 km, under 8 km — or tell me your preference.`,
+        `Good to know. What distance works for you?${hint} Pick below or just tell me.`,
+        `Noted. How far is comfortable for you?${hint} Give me a number and I'll find it.`,
+      ];
       setTimeout(() => {
-        appendJosephineMessage({ type: 'text', text: t('refineShorter'), chips: null });
-        callRecommendAPI(planningData, { durationDown: true });
+        appendJosephineMessage({
+          type: 'text',
+          text: questions[Math.floor(Math.random() * questions.length)],
+          chips: ['Under 5 km', 'Under 8 km', 'Under 12 km'],
+        });
       }, 400);
       return;
     }
     if (chip === t('chipTooHard')) {
       appendUserMessage(chip);
-      setRefining(true);
+      setAwaitingRefinement('difficulty');
+      const questions = [
+        "How challenging would you like it? I can find something easy, moderate — or you tell me.",
+        "Understood. What difficulty works for you today?",
+        "Of course. What level are you comfortable with?",
+      ];
       setTimeout(() => {
-        appendJosephineMessage({ type: 'text', text: t('refineEasier'), chips: null });
-        callRecommendAPI(planningData, { difficultyDown: true });
+        appendJosephineMessage({
+          type: 'text',
+          text: questions[Math.floor(Math.random() * questions.length)],
+          chips: ['Easy walk', 'Moderate', 'Any level'],
+        });
       }, 400);
       return;
     }
@@ -619,6 +764,32 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       return;
     }
     if (chip === t('retryChip')) { appendUserMessage(chip); runConditionsThenOptions(planningData); return; }
+
+    // ── Geographic awareness chips ─────────────────────────────────────────
+    if (chip === 'Yes, this works') {
+      appendUserMessage(chip);
+      appendJosephineMessage({
+        type: 'text',
+        text: "Perfect — enjoy the journey there too. Let me know if you need any other info.",
+        chips: null,
+      });
+      return;
+    }
+    if (chip === 'Find something closer') {
+      appendUserMessage(chip);
+      // Re-search with the same params but drop startArea so the backend
+      // returns trails from the wider region without a distance penalty
+      const d = { ...planningData, startArea: '' };
+      setPlanningData(d);
+      appendJosephineMessage({
+        type: 'text',
+        text: "Of course — let me find something closer to you.",
+        chips: null,
+      });
+      setTimeout(() => callRecommendAPI(d), 400);
+      return;
+    }
+
     sendMessage(chip);
   };
 
@@ -684,16 +855,20 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
 
       {/* Messages */}
       <div className="jc-messages" ref={messagesRef}>
-        {messages.map(msg => {
+        {messages.map((msg, idx) => {
           const active = isChipActive(msg);
+          const prevMsg = messages[idx - 1];
+          const isFirstInRun = msg.from === 'josephine' && prevMsg?.from !== 'josephine';
+          const isGrouped    = msg.from === 'josephine' && !isFirstInRun;
           return (
             <div key={msg.id}
               className={`jc-msg jc-msg--${msg.from}${
                 (msg.type === 'trail-card' || msg.type === 'options' || msg.type === 'conditions' ||
-                 msg.type === 'itinerary' || msg.type === 'mood-intro') ? ' jc-msg--card' : ''}`}
+                 msg.type === 'itinerary' || msg.type === 'mood-intro') ? ' jc-msg--card' : ''}${
+                isGrouped ? ' jc-msg--grouped' : ''}`}
             >
               {msg.from === 'josephine' && (
-                <div className="jc-msg__avatar">
+                <div className="jc-msg__avatar" style={isFirstInRun ? {} : { visibility: 'hidden' }}>
                   <img src="/josephine-portrait.png" alt=""
                     onError={e => { e.currentTarget.src='/logo.png'; }} />
                 </div>
