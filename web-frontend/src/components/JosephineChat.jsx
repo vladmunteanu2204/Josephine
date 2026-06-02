@@ -1035,11 +1035,13 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       setInput('');
       setTyping(true);
       const top = apiResults[0];
+      // Describe the trail factually — never claim the user requested
+      // parameters they didn't actually choose.
       const bits = [];
       if (top.difficulty)      bits.push(`a ${top.difficulty} route`);
       if (top.duration_hours)  bits.push(`around ${top.duration_hours}h`);
       if (top.distance_km)     bits.push(`${top.distance_km} km`);
-      const factual = bits.length ? `It matches what you asked for — ${bits.join(', ')}.` : '';
+      const factual = bits.length ? `It's ${bits.join(', ')}.` : '';
       const note = (top.josephine_note || '').trim();
       const text = [`${top.name} is my pick for today.`, factual, note].filter(Boolean).join(' ');
       setTimeout(() => {
