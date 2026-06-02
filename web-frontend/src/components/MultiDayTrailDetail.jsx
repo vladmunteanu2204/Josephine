@@ -4,6 +4,8 @@ import axios from 'axios';
 import {
   ArrowLeft, ArrowRight, Mountain, Footprints, BedDouble,
   CalendarRange, Ruler, TrendingUp, TrendingDown, Clock,
+  Hotel, Phone, Coffee, AlertTriangle, Siren, Bus, Lightbulb, Check,
+  LifeBuoy, CloudSun, ShieldAlert,
 } from 'lucide-react';
 import './MultiDayTrailDetail.css';
 
@@ -250,7 +252,7 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
                 {/* Overnight rifugio */}
                 {currentStage.overnight_rifugio_name && (
                   <div className="mdtd-overnight">
-                    <div className="mdtd-overnight__label">🏠 Overnight stay</div>
+                    <div className="mdtd-overnight__label"><Hotel size={15} strokeWidth={2} /> Overnight stay</div>
                     <div className="mdtd-overnight__name">{currentStage.overnight_rifugio_name}</div>
                     {currentStage.overnight_rifugio_details && (
                       <div className="mdtd-overnight__details">
@@ -261,7 +263,7 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
                           <span><BedDouble size={14} strokeWidth={2} /> {currentStage.overnight_rifugio_details.beds} beds</span>
                         )}
                         {currentStage.overnight_rifugio_details.contact && (
-                          <span>📞 {currentStage.overnight_rifugio_details.contact}</span>
+                          <span><Phone size={14} strokeWidth={2} /> {currentStage.overnight_rifugio_details.contact}</span>
                         )}
                       </div>
                     )}
@@ -283,7 +285,7 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
                 {/* Food stops */}
                 {currentStage.stops?.length > 0 && (
                   <div>
-                    <p className="mdtd-section__subtitle" style={{ marginBottom: 8 }}>☕ Food & drink on route</p>
+                    <p className="mdtd-section__subtitle mdtd-subtitle-icon" style={{ marginBottom: 8 }}><Coffee size={15} strokeWidth={2} /> Food &amp; drink on route</p>
                     <div className="mdtd-stops">
                       {currentStage.stops.map((stop, i) => (
                         <div key={i} className="mdtd-stop">
@@ -316,7 +318,7 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
                 {/* Weather risk */}
                 {currentStage.weather_risk && (
                   <div className="mdtd-weather-risk">
-                    <span className="mdtd-weather-risk__icon">⚠️</span>
+                    <span className="mdtd-weather-risk__icon"><AlertTriangle size={16} strokeWidth={2} /></span>
                     <span>{currentStage.weather_risk}</span>
                   </div>
                 )}
@@ -324,7 +326,7 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
                 {/* Exit routes */}
                 {currentStage.exit_routes?.length > 0 && (
                   <div>
-                    <p className="mdtd-section__subtitle" style={{ marginBottom: 8 }}>🚨 Emergency exits</p>
+                    <p className="mdtd-section__subtitle mdtd-subtitle-icon" style={{ marginBottom: 8 }}><Siren size={15} strokeWidth={2} /> Emergency exits</p>
                     {currentStage.exit_routes.map((exit, i) => (
                       <div key={i} style={{
                         padding: '14px 18px', background: 'rgba(248,113,113,0.04)',
@@ -336,8 +338,8 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
                         </div>
                         <div>{exit.description}</div>
                         {exit.transport && (
-                          <div style={{ marginTop: 6, color: 'rgba(240,236,230,0.45)' }}>
-                            🚌 {exit.transport}
+                          <div style={{ marginTop: 6, color: 'rgba(240,236,230,0.45)', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                            <Bus size={14} strokeWidth={2} /> {exit.transport}
                           </div>
                         )}
                       </div>
@@ -356,7 +358,7 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
           {/* Season */}
           {trail.best_season_start && (
             <div className="mdtd-season" style={{ marginBottom: 24 }}>
-              <span className="mdtd-season__icon">📅</span>
+              <span className="mdtd-season__icon"><CalendarRange size={18} strokeWidth={2} /></span>
               <div>
                 <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(240,236,230,0.4)', marginBottom: 4 }}>Best season</div>
                 <div>{formatSeason(trail.best_season_start)} – {formatSeason(trail.best_season_end)}</div>
@@ -380,7 +382,7 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
               <p className="mdtd-section__subtitle">Booking tips</p>
               <div className="mdtd-tips" style={{ marginBottom: 24 }}>
                 {trail.booking_tips.map((tip, i) => (
-                  <div key={i} className="mdtd-tip">💡 {tip}</div>
+                  <div key={i} className="mdtd-tip"><Lightbulb size={15} strokeWidth={2} /> {tip}</div>
                 ))}
               </div>
             </>
@@ -397,7 +399,7 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
                     className={`mdtd-checklist-item ${checkedItems[i] ? 'checked' : ''}`}
                     onClick={() => toggleCheck(i)}
                   >
-                    <span className="mdtd-checklist-box">{checkedItems[i] ? '✓' : ''}</span>
+                    <span className="mdtd-checklist-box">{checkedItems[i] ? <Check size={14} strokeWidth={3} /> : null}</span>
                     {item}
                   </button>
                 ))}
@@ -413,19 +415,19 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
             <div className="mdtd-emergency">
               {trail.emergency_contacts.mountain_rescue && (
                 <div className="mdtd-emergency-item">
-                  <span className="mdtd-emergency-item__label">🆘 Mountain rescue</span>
+                  <span className="mdtd-emergency-item__label"><LifeBuoy size={15} strokeWidth={2} /> Mountain rescue</span>
                   <span className="mdtd-emergency-item__value">{trail.emergency_contacts.mountain_rescue}</span>
                 </div>
               )}
               {trail.emergency_contacts.weather && (
                 <div className="mdtd-emergency-item">
-                  <span className="mdtd-emergency-item__label">🌤 Weather forecast</span>
+                  <span className="mdtd-emergency-item__label"><CloudSun size={15} strokeWidth={2} /> Weather forecast</span>
                   <span className="mdtd-emergency-item__value">{trail.emergency_contacts.weather}</span>
                 </div>
               )}
               {trail.emergency_contacts.local_police && (
                 <div className="mdtd-emergency-item">
-                  <span className="mdtd-emergency-item__label">🚔 Local police</span>
+                  <span className="mdtd-emergency-item__label"><ShieldAlert size={15} strokeWidth={2} /> Local police</span>
                   <span className="mdtd-emergency-item__value">{trail.emergency_contacts.local_police}</span>
                 </div>
               )}

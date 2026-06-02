@@ -764,3 +764,15 @@
 .mdtd-overnight__details span { display: inline-flex; align-items: center; gap: 5px; }
 .mdtd-cta__btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
 .mdtd-back-btn { display: inline-flex; align-items: center; justify-content: center; }
+
+/* ── Design rollout (A): content-label icon alignment ─────────────────── */
+.mdtd-overnight__label,
+.mdtd-subtitle-icon,
+.mdtd-tip,
+.mdtd-emergency-item__label { display: inline-flex; align-items: center; gap: 6px; }
+.mdtd-season__icon,
+.mdtd-weather-risk__icon { display: inline-flex; align-items: center; }
+.mdtd-checklist-box { display: inline-flex; align-items: center; justify-content: center; }
+.mdtd-tip svg,
+.mdtd-overnight__label svg,
+.mdtd-emergency-item__label svg { flex-shrink: 0; }
