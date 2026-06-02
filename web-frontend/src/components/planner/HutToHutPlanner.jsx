@@ -153,7 +153,6 @@ export default function HutToHutPlanner({ initial, onSave, onBack }) {
     setSaving(false);
   }, [trek, name, startDate, restBefore, skipped, bookings, nights]); // eslint-disable-line
 
-  const tips = trek?.booking_tips || [];
   const ec = trek?.emergency_contacts || {};
   const note = jNote(trek?.josephineNote);
 
@@ -323,13 +322,6 @@ export default function HutToHutPlanner({ initial, onSave, onBack }) {
         {/* Trek-level info */}
         {note && (
           <div className="hh-note"><Mountain size={16} strokeWidth={2} /><p>{note}</p></div>
-        )}
-
-        {tips.length > 0 && (
-          <details className="hh-foldout">
-            <summary>{t('rifugio.bookingInquiry', 'Booking tips')}</summary>
-            <ul className="hh-gear">{tips.map((tp, i) => <li key={i}>{tp}</li>)}</ul>
-          </details>
         )}
 
         {(ec.mountain_rescue || ec.weather || ec.local_police) && (
