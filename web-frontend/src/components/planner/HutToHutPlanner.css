@@ -1,0 +1,136 @@
+/* ============================================================
+   Hut-to-hut planner
+   ============================================================ */
+.hh-page { min-height: 70vh; padding: 24px 0 90px; }
+
+.hh-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: none; border: none; cursor: pointer;
+  color: var(--text-secondary); font-size: 14px; padding: 6px 0; margin-bottom: 14px;
+}
+.hh-back:hover { color: var(--text-primary); }
+
+.hh-head { margin-bottom: 22px; }
+.hh-title { font-family: var(--font-display); font-style: italic; font-weight: 300; font-size: clamp(28px, 6vw, 44px); color: var(--text-primary); margin: 0 0 6px; }
+.hh-sub { color: var(--text-secondary); font-size: 15px; margin: 0; max-width: 560px; }
+.hh-state { color: var(--text-secondary); padding: 24px 0; }
+.hh-empty { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 48px; text-align: center; color: var(--text-muted); }
+.hh-empty p { color: var(--text-secondary); margin: 0; }
+
+/* ── Trek picker ── */
+.hh-trek-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.hh-trek-card {
+  display: flex; flex-direction: column; text-align: left; cursor: pointer; position: relative;
+  background: var(--surface-1); border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-card);
+  transition: border-color .18s ease, transform .18s ease; padding: 0;
+}
+.hh-trek-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+.hh-trek-card__media { position: relative; aspect-ratio: 16/9; background: var(--surface-2); }
+.hh-trek-card__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hh-trek-card__scrim { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.4)); }
+.hh-trek-card__body { padding: 14px 16px; }
+.hh-trek-card__region { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 4px; }
+.hh-trek-card__name { font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: 20px; color: var(--text-primary); margin: 0 0 8px; }
+.hh-trek-card__meta { display: flex; flex-wrap: wrap; gap: 12px; margin: 0; font-size: 12px; color: var(--text-secondary); }
+.hh-trek-card__meta span { display: inline-flex; align-items: center; gap: 4px; }
+.hh-trek-card__diff { text-transform: capitalize; color: var(--accent-primary); font-weight: 600; }
+.hh-trek-card__chev { position: absolute; top: 14px; right: 14px; color: #fff; }
+
+/* ── Header (schedule view) ── */
+.hh-name {
+  width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-display); font-style: italic; font-weight: 300; font-size: clamp(24px, 5vw, 36px);
+  color: var(--text-primary); padding: 4px 0 8px; outline: none;
+}
+.hh-name:focus { border-color: var(--accent-primary); }
+.hh-trekline { display: inline-flex; align-items: center; gap: 6px; color: var(--text-secondary); font-size: 13px; margin: 10px 0; text-transform: capitalize; }
+.hh-trekline svg { color: var(--accent-primary); }
+.hh-start {
+  display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted);
+}
+.hh-start input {
+  height: var(--control-h); padding: 0 12px; background: var(--surface-1);
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-md); color: var(--text-primary); font-size: 14px; outline: none;
+}
+.hh-start input:focus { border-color: var(--accent-primary); }
+
+/* ── Nightly timeline ── */
+.hh-nights { margin: 22px 0; display: flex; flex-direction: column; gap: 0; }
+.hh-night { display: grid; grid-template-columns: 92px 1fr; gap: 12px; }
+.hh-night__rail { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; position: relative; padding-top: 4px; }
+.hh-night__date { font-size: 12px; font-weight: 700; color: var(--text-secondary); text-align: right; }
+.hh-night__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent-primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-primary) 15%, transparent); }
+.hh-night:not(:last-child) .hh-night__rail::after { content: ''; position: absolute; right: 4px; top: 24px; bottom: -12px; width: 2px; background: var(--border-subtle); }
+
+.hh-night__card { background: var(--surface-1); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px; margin-bottom: 12px; flex: 1; }
+.hh-night--rest .hh-night__dot { background: var(--text-muted); box-shadow: none; }
+.hh-night__card--rest { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--surface-2); border-style: dashed; }
+.hh-night__rest { display: inline-flex; align-items: center; gap: 6px; color: var(--text-secondary); font-weight: 600; font-size: 14px; }
+.hh-night--skipped .hh-night__card { opacity: 0.6; }
+
+.hh-night__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.hh-night__stage { font-size: 15px; font-weight: 700; color: var(--text-primary); margin: 0 0 4px; }
+.hh-night__stats { display: flex; flex-wrap: wrap; gap: 12px; margin: 0; font-size: 12px; color: var(--text-secondary); }
+.hh-night__stats span { display: inline-flex; align-items: center; gap: 4px; }
+.hh-night__stats svg { color: var(--text-muted); }
+.hh-skip-badge { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: var(--radius-pill); background: var(--surface-2); color: var(--text-muted); }
+
+.hh-hut { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-subtle); }
+.hh-hut__name { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: var(--text-primary); font-size: 14px; }
+.hh-hut__name svg { color: var(--accent-primary); }
+.hh-hut__meta { display: inline-flex; gap: 10px; font-size: 12px; color: var(--text-secondary); }
+.hh-hut__meta span { display: inline-flex; align-items: center; gap: 4px; }
+.hh-hut__warn { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--diff-medium); width: 100%; }
+.hh-hut--none { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 13px; font-style: italic; }
+
+.hh-book-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 10px; }
+.hh-status { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: var(--radius-pill); text-transform: capitalize; }
+.hh-status--none { background: var(--surface-2); color: var(--text-muted); }
+.hh-status--pending { background: color-mix(in srgb, var(--accent-primary) 16%, transparent); color: var(--accent-primary); }
+.hh-status--booked { background: color-mix(in srgb, var(--diff-easy) 18%, transparent); color: var(--diff-easy); }
+.hh-status--declined { background: color-mix(in srgb, var(--diff-hard) 16%, transparent); color: var(--diff-hard); }
+.hh-status-select { height: 30px; padding: 0 8px; background: var(--surface-2); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); color: var(--text-secondary); font-size: 12px; outline: none; cursor: pointer; margin-left: auto; }
+
+.hh-mini {
+  display: inline-flex; align-items: center; gap: 5px; cursor: pointer;
+  height: 30px; padding: 0 12px; border-radius: var(--radius-pill);
+  border: 1px solid var(--border-subtle); background: var(--surface-2); color: var(--text-secondary);
+  font-size: 12px; font-weight: 600; text-decoration: none;
+}
+.hh-mini:hover { color: var(--text-primary); border-color: var(--border-strong); }
+.hh-mini--accent { border-color: color-mix(in srgb, var(--accent-primary) 50%, transparent); background: color-mix(in srgb, var(--accent-primary) 12%, transparent); color: var(--accent-primary); }
+
+.hh-weather-risk { display: inline-flex; align-items: center; gap: 6px; margin: 10px 0 0; font-size: 12px; color: var(--diff-medium); }
+
+.hh-exits { margin-top: 10px; }
+.hh-exits__toggle { display: inline-flex; align-items: center; gap: 6px; background: none; border: none; cursor: pointer; color: var(--text-secondary); font-size: 13px; font-weight: 600; padding: 0; }
+.hh-exits__chev { transition: transform .18s ease; }
+.hh-exits__chev.is-open { transform: rotate(90deg); }
+.hh-exits__list { margin: 8px 0 0; padding-left: 16px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+.hh-exits__transport { display: inline-flex; align-items: center; gap: 4px; margin-left: 6px; color: var(--text-muted); }
+
+.hh-night__ops { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border-subtle); }
+
+/* ── Trek-level info ── */
+.hh-note { display: flex; gap: 12px; padding: 16px; background: color-mix(in srgb, var(--accent-primary) 8%, transparent); border: 1px solid color-mix(in srgb, var(--accent-primary) 25%, transparent); border-radius: var(--radius-md); margin-bottom: 16px; }
+.hh-note svg { color: var(--accent-primary); flex-shrink: 0; }
+.hh-note p { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.6; }
+
+.hh-foldout { background: var(--surface-1); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 0 16px; margin-bottom: 12px; }
+.hh-foldout summary { cursor: pointer; padding: 14px 0; font-weight: 700; color: var(--text-primary); font-size: 14px; }
+.hh-gear, .hh-contacts { margin: 0 0 14px; padding-left: 18px; color: var(--text-secondary); font-size: 13px; line-height: 1.7; }
+.hh-contacts { list-style: none; padding-left: 0; }
+.hh-contacts li { display: inline-flex; align-items: center; gap: 8px; }
+.hh-contacts svg { color: var(--text-muted); }
+
+.hh-actions { margin-top: 18px; }
+.hh-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: var(--btn-h); padding: 0 24px; border-radius: var(--radius-md); font-size: 15px; font-weight: 700; cursor: pointer; border: 1px solid transparent; }
+.hh-btn:disabled { opacity: 0.5; cursor: default; }
+.hh-btn--primary { background: var(--accent-primary); color: var(--accent-contrast); width: 100%; }
+
+@media (max-width: 640px) {
+  .hh-night { grid-template-columns: 64px 1fr; gap: 8px; }
+  .hh-night__date { font-size: 11px; }
+}
