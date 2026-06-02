@@ -16,6 +16,7 @@ from datetime import datetime, timedelta
 from functools import wraps
 import media as media_module  # image upload / R2 delivery
 from weather_service import weather_service
+from notifications import EMAIL_ENABLED, send_email, build_inquiry_text
 try:
     from replit.object_storage import Client as ObjectStorageClient
 except ImportError:
@@ -1909,23 +1910,97 @@ def get_rifugio_detail(rifugio_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+_booking_attempts: dict = {}            # ip → [timestamps]
+_booking_lock = threading.Lock()
+MAX_BOOKINGS_PER_HOUR = 6
+
+def _booking_rate_ok(ip: str) -> bool:
+    """Dedicated per-IP limiter for booking inquiries (kept separate from the
+    LLM limiter `_rate_allowed`, which spends the chat budget)."""
+    now = time.time()
+    window = now - 3600
+    with _booking_lock:
+        bucket = [t for t in _booking_attempts.get(ip, []) if t > window]
+        if len(bucket) >= MAX_BOOKINGS_PER_HOUR:
+            _booking_attempts[ip] = bucket
+            return False
+        bucket.append(now)
+        _booking_attempts[ip] = bucket
+        return True
+
+
+def _deliver_booking_inquiry(inquiry, rif):
+    """Send the inquiry to the hut when it has a VERIFIED email; otherwise mark
+    it for client-side fallback. Mutates `inquiry` with delivery_* fields and
+    returns the `delivery` dict for the client. Never raises."""
+    contact = (rif or {}).get('contact', {}) or {}
+    hut_email    = (contact.get('email') or '').strip()
+    hut_whatsapp = (contact.get('whatsapp') or '').strip()
+    hut_phone    = (contact.get('phone') or '').strip()
+    verified     = bool((rif or {}).get('booking_email_verified'))
+    msg = build_inquiry_text(inquiry, rif)
+
+    status = 'fallback'
+    channel = 'whatsapp' if hut_whatsapp else ('email' if hut_email else ('phone' if hut_phone else 'none'))
+    provider_id = None
+
+    try:
+        if EMAIL_ENABLED and hut_email and verified:
+            subject_hut = f"Booking inquiry / Richiesta prenotazione — {inquiry['check_in']} → {inquiry['check_out']}"
+            ok, provider_id, err = send_email(hut_email, subject_hut, msg, reply_to=inquiry['user_email'])
+            if ok:
+                status = 'emailed'; channel = 'email'
+                # Confirmation copy to the hiker (best-effort; failure ignored).
+                confirm = (f"Hi {inquiry['user_name']},\n\nWe've sent your inquiry to "
+                           f"{inquiry['rifugio_name']}. They'll reply to you directly at "
+                           f"{inquiry['user_email']}.\n\n--- Copy of your inquiry ---\n\n{msg}")
+                send_email(inquiry['user_email'], f"Your inquiry to {inquiry['rifugio_name']}", confirm)
+            else:
+                status = 'failed'
+                print(f"[booking] email send failed for {inquiry['id']}: {err}")
+    except Exception as e:
+        status = 'failed'
+        print(f"[booking] delivery error for {inquiry.get('id')}: {e}")
+
+    inquiry['delivery_status'] = status
+    inquiry['delivery_channel'] = channel
+    inquiry['delivery_at'] = datetime.utcnow().isoformat() + 'Z'
+    inquiry['provider_message_id'] = provider_id
+
+    return {
+        'status': status,
+        'channel': channel,
+        'hut_email': hut_email or None,
+        'hut_whatsapp': hut_whatsapp or None,
+        'hut_phone': hut_phone or None,
+        'prefilled_message': msg,
+    }
+
+
 @app.route('/api/booking-inquiries', methods=['POST'])
 def submit_booking_inquiry():
-    """Submit a booking inquiry for a rifugio"""
+    """Submit a booking inquiry and (when the hut's email is verified) email it
+    to the hut automatically, with the hiker as Reply-To + a confirmation copy.
+    Otherwise return a `delivery` object so the client offers a one-tap fallback."""
     try:
-        data = request.json
-        
+        data = request.json or {}
+
         # Validate required fields
         required_fields = ['rifugio_id', 'rifugio_name', 'name', 'email', 'check_in', 'check_out', 'adults']
         for field in required_fields:
             if field not in data:
                 return jsonify({'error': f'Missing required field: {field}'}), 400
-        
-        # Load and prepare inquiry
+
+        # Per-IP rate limit (before persisting)
+        ip = request.headers.get('X-Forwarded-For', request.remote_addr or '0.0.0.0').split(',')[0].strip()
+        if not _booking_rate_ok(ip):
+            return jsonify({'error': 'rate_limited',
+                            'message': 'Too many inquiries — please try again later.'}), 429
+
         inquiries = load_booking_inquiries()
-        
+
         inquiry = {
-            'id': f"inq-{len(inquiries) + 1:04d}",
+            'id': f"inq-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}-{random.randint(1000, 9999)}",
             'rifugio_id': data['rifugio_id'],
             'rifugio_name': data['rifugio_name'],
             'user_name': data['name'],
@@ -1940,20 +2015,25 @@ def submit_booking_inquiry():
             'dogs': data.get('dogs', False),
             'status': 'pending',
             'created_at': datetime.utcnow().isoformat() + 'Z',
-            'contact_method': data.get('contact_method', 'email')
+            'contact_method': data.get('contact_method', 'email'),
         }
-        
+
+        # Persist first so a delivery failure never loses the inquiry.
         inquiries.append(inquiry)
         save_booking_inquiries(inquiries)
-        
-        # TODO: Send email/WhatsApp notification
-        # For now, just log the inquiry
-        print(f"Booking inquiry submitted: {inquiry['id']} for {inquiry['rifugio_name']}")
-        
+
+        # Resolve the hut and attempt delivery.
+        rif = next((r for r in load_rifugios() if r.get('id') == data['rifugio_id']), None)
+        delivery = _deliver_booking_inquiry(inquiry, rif)
+        save_booking_inquiries(inquiries)   # re-save with delivery_* fields
+
+        print(f"Booking inquiry {inquiry['id']} for {inquiry['rifugio_name']} → {delivery['status']}")
+
         return jsonify({
             'success': True,
             'inquiry_id': inquiry['id'],
-            'message': 'Your booking inquiry has been submitted successfully!'
+            'message': 'Your booking inquiry has been submitted successfully!',
+            'delivery': delivery,
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
