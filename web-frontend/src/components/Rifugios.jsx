@@ -3,6 +3,11 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import Map, { Marker, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import {
+  Search, X, List, Map as MapIcon, Mountain,
+  BedDouble, UtensilsCrossed, ShowerHead, Wifi, Dog,
+} from 'lucide-react';
+import { SegmentedControl } from './ui';
 import './Rifugios.css';
 
 const API_URL = import.meta.env.PROD
@@ -193,66 +198,65 @@ function Rifugios({ onNavigate, initialType, onTypeConsumed, initialStatus, onSt
 
       {/* ── Filter bar ── */}
       <div className="rif-filters">
-        <div className="container rif-filters__inner">
+        <div className="container rif-bar">
           <div className="rif-search-wrap">
-            <svg className="rif-search-icon" width="16" height="16" viewBox="0 0 20 20" fill="none">
-              <circle cx="9" cy="9" r="6" stroke="currentColor" strokeWidth="1.8"/>
-              <path d="M13.5 13.5L17 17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-            </svg>
+            <Search size={18} strokeWidth={2} className="rif-search-icon" aria-hidden="true" />
             <input
               className="rif-search"
               placeholder={t('rifugio.searchPlaceholder')}
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
+            {search && (
+              <button className="rif-search-clear" onClick={() => setSearch('')} aria-label={t('common.clear', 'Clear')}>
+                <X size={16} strokeWidth={2} />
+              </button>
+            )}
           </div>
 
-          {/* Type group */}
-          <div className="rif-filter-group">
-            <span className="rif-filter-group__label">{t('rifugio.type')}</span>
-            <div className="rif-pills">
-              {['', 'rifugio', 'malga', 'bivacco'].map(v => (
-                <button
-                  key={v}
-                  className={`rif-pill ${typeFilter === v ? 'active' : ''}`}
-                  onClick={() => setTypeFilter(v)}
-                >
-                  {v ? t(`rifugio.type${v.charAt(0).toUpperCase()}${v.slice(1)}`) : t('rifugio.allTypes')}
-                </button>
-              ))}
-            </div>
-          </div>
+          {/* Type */}
+          <SegmentedControl
+            size="sm"
+            ariaLabel={t('rifugio.type')}
+            value={typeFilter}
+            onChange={setTypeFilter}
+            options={[
+              { value: '',        label: t('rifugio.allTypes') },
+              { value: 'rifugio', label: t('rifugio.typeRifugio') },
+              { value: 'malga',   label: t('rifugio.typeMalga') },
+              { value: 'bivacco', label: t('rifugio.typeBivacco') },
+            ]}
+          />
 
-          <span className="rif-filter-divider" aria-hidden="true" />
+          {/* Status */}
+          <SegmentedControl
+            size="sm"
+            ariaLabel={t('rifugio.status')}
+            value={statusFilter}
+            onChange={setStatusFilter}
+            options={[
+              { value: '',       label: t('rifugio.anyStatus') },
+              { value: 'open',   label: t('rifugio.statusOpen') },
+              { value: 'closed', label: t('rifugio.statusClosed') },
+            ]}
+          />
 
-          {/* Status group */}
-          <div className="rif-filter-group">
-            <span className="rif-filter-group__label">{t('rifugio.status')}</span>
-            <div className="rif-pills">
-              {['', 'open', 'closed'].map(v => (
-                <button
-                  key={v}
-                  className={`rif-pill ${statusFilter === v ? 'active' : ''}`}
-                  onClick={() => setStatusFilter(v)}
-                >
-                  {v ? t(`rifugio.status${v.charAt(0).toUpperCase()}${v.slice(1)}`) : t('rifugio.anyStatus')}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <span className="rif-filter-divider" aria-hidden="true" />
-
-          {/* Map toggle */}
-          <button
-            className={`rif-pill rif-pill--map ${showMap ? 'active' : ''}`}
-            onClick={() => setShowMap(v => !v)}
-          >
-            {showMap ? `☰ ${t('rifugio.listView', 'List')}` : `🗺 ${t('rifugio.mapView', 'Map')}`}
-          </button>
+          {/* List / Map mode switch */}
+          <SegmentedControl
+            size="sm"
+            ariaLabel="View mode"
+            value={showMap ? 'map' : 'list'}
+            onChange={v => setShowMap(v === 'map')}
+            options={[
+              { value: 'list', label: t('rifugio.listView', 'List'), icon: List },
+              { value: 'map',  label: t('rifugio.mapView', 'Map'),  icon: MapIcon },
+            ]}
+          />
 
           {(search || typeFilter || statusFilter) && (
-            <button className="rif-clear" onClick={clearAll}>{t('common.clear', 'Clear')} ×</button>
+            <button className="rif-clear" onClick={clearAll}>
+              <X size={14} strokeWidth={2} /> {t('common.clear', 'Clear')}
+            </button>
           )}
         </div>
       </div>
@@ -285,8 +289,9 @@ function Rifugios({ onNavigate, initialType, onTypeConsumed, initialStatus, onSt
 
           {filtered.length === 0 ? (
             <div className="rif-empty">
-              <p>No rifugios match your filters.</p>
-              <button className="rif-clear" onClick={clearAll}>Clear filters</button>
+              <Mountain size={48} strokeWidth={1.25} aria-hidden="true" />
+              <p>{t('rifugio.noResults', 'No rifugios match your filters.')}</p>
+              <button className="rif-clear" onClick={clearAll}>{t('common.clear', 'Clear')}</button>
             </div>
           ) : (
             <div className="rif-grid">
@@ -322,7 +327,7 @@ function Rifugios({ onNavigate, initialType, onTypeConsumed, initialStatus, onSt
                       <h3 className="rif-card__name">{r.name}</h3>
 
                       <div className="rif-card__meta">
-                        <span className="rif-card__meta-alt">⛰ {r.altitude}m</span>
+                        <span className="rif-card__meta-alt"><Mountain size={13} strokeWidth={2} /> {r.altitude}m</span>
                         {formatSeason(r.opening_season) && (
                           <>
                             <span className="rif-card__meta-sep">·</span>
@@ -335,11 +340,11 @@ function Rifugios({ onNavigate, initialType, onTypeConsumed, initialStatus, onSt
 
                       {r.facilities && (
                         <div className="rif-card__amenities">
-                          {r.facilities.beds > 0  && <span className="rif-card__amenity">🛏 {r.facilities.beds}</span>}
-                          {r.facilities.meals     && <span className="rif-card__amenity">🍽</span>}
-                          {r.facilities.showers   && <span className="rif-card__amenity">🚿</span>}
-                          {r.facilities.wifi      && <span className="rif-card__amenity">📶</span>}
-                          {r.facilities.dogs      && <span className="rif-card__amenity">🐕</span>}
+                          {r.facilities.beds > 0  && <span className="rif-card__amenity"><BedDouble size={15} strokeWidth={2} /> {r.facilities.beds}</span>}
+                          {r.facilities.meals     && <span className="rif-card__amenity" title="Meals"><UtensilsCrossed size={15} strokeWidth={2} /></span>}
+                          {r.facilities.showers   && <span className="rif-card__amenity" title="Showers"><ShowerHead size={15} strokeWidth={2} /></span>}
+                          {r.facilities.wifi      && <span className="rif-card__amenity" title="WiFi"><Wifi size={15} strokeWidth={2} /></span>}
+                          {r.facilities.dogs      && <span className="rif-card__amenity" title="Dog-friendly"><Dog size={15} strokeWidth={2} /></span>}
                         </div>
                       )}
 

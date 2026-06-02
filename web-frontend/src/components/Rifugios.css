@@ -469,3 +469,61 @@
   cursor: pointer;
   align-self: flex-start;
 }
+
+/* ── Phase 3 design refresh (tokens + lucide alignment) ───────────────── */
+.rif-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.rif-search-wrap { position: relative; flex: 1 1 220px; min-width: 180px; }
+.rif-search { width: 100%; padding-right: 38px; }
+.rif-search-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.rif-search-clear:hover { background: var(--surface-2); color: var(--text-primary); }
+
+.rif-clear { display: inline-flex; align-items: center; gap: 6px; }
+
+.rif-card__meta-alt {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.rif-card__meta-alt svg { color: var(--text-muted); }
+
+.rif-card__amenity {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  opacity: 1;
+}
+.rif-card__amenity svg { color: var(--text-muted); }
+
+.rif-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  color: var(--text-muted);
+}
+.rif-empty p { color: var(--text-secondary); margin: 0; }
