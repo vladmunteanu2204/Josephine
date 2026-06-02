@@ -201,46 +201,58 @@ function Rifugios({ onNavigate, initialType, onTypeConsumed, initialStatus, onSt
             </svg>
             <input
               className="rif-search"
-              placeholder="Search rifugios…"
+              placeholder={t('rifugio.searchPlaceholder')}
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
           </div>
 
-          <div className="rif-pills">
-            {['', 'rifugio', 'malga', 'bivacco'].map(v => (
-              <button
-                key={v}
-                className={`rif-pill ${typeFilter === v ? 'active' : ''}`}
-                onClick={() => setTypeFilter(v)}
-              >
-                {v ? TYPE_LABELS[v] : 'All types'}
-              </button>
-            ))}
+          {/* Type group */}
+          <div className="rif-filter-group">
+            <span className="rif-filter-group__label">{t('rifugio.type')}</span>
+            <div className="rif-pills">
+              {['', 'rifugio', 'malga', 'bivacco'].map(v => (
+                <button
+                  key={v}
+                  className={`rif-pill ${typeFilter === v ? 'active' : ''}`}
+                  onClick={() => setTypeFilter(v)}
+                >
+                  {v ? t(`rifugio.type${v.charAt(0).toUpperCase()}${v.slice(1)}`) : t('rifugio.allTypes')}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="rif-pills">
-            {['', 'open', 'closed'].map(v => (
-              <button
-                key={v}
-                className={`rif-pill ${statusFilter === v ? 'active' : ''}`}
-                onClick={() => setStatusFilter(v)}
-              >
-                {v ? STATUS_CONFIG[v]?.label : 'Any status'}
-              </button>
-            ))}
+          <span className="rif-filter-divider" aria-hidden="true" />
+
+          {/* Status group */}
+          <div className="rif-filter-group">
+            <span className="rif-filter-group__label">{t('rifugio.status')}</span>
+            <div className="rif-pills">
+              {['', 'open', 'closed'].map(v => (
+                <button
+                  key={v}
+                  className={`rif-pill ${statusFilter === v ? 'active' : ''}`}
+                  onClick={() => setStatusFilter(v)}
+                >
+                  {v ? t(`rifugio.status${v.charAt(0).toUpperCase()}${v.slice(1)}`) : t('rifugio.anyStatus')}
+                </button>
+              ))}
+            </div>
           </div>
+
+          <span className="rif-filter-divider" aria-hidden="true" />
 
           {/* Map toggle */}
           <button
             className={`rif-pill rif-pill--map ${showMap ? 'active' : ''}`}
             onClick={() => setShowMap(v => !v)}
           >
-            {showMap ? '☰ List' : '🗺 Map'}
+            {showMap ? `☰ ${t('rifugio.listView', 'List')}` : `🗺 ${t('rifugio.mapView', 'Map')}`}
           </button>
 
           {(search || typeFilter || statusFilter) && (
-            <button className="rif-clear" onClick={clearAll}>Clear ×</button>
+            <button className="rif-clear" onClick={clearAll}>{t('common.clear', 'Clear')} ×</button>
           )}
         </div>
       </div>

@@ -19,7 +19,7 @@ function formatDate(iso) {
   return `${d} ${months[parseInt(m, 10) - 1]} ${y}`;
 }
 
-function RifugioDetail({ rifugioId, onNavigate }) {
+function RifugioDetail({ rifugioId, onNavigate, onShowLogin }) {
   const { t } = useTranslation();
   const { currentUser } = useAuth();
   const toast = useToast();
@@ -311,7 +311,7 @@ function RifugioDetail({ rifugioId, onNavigate }) {
 
           {/* Reviews */}
           <section className="rd-section">
-            <ReviewsSection rifugioId={rifugioId} />
+            <ReviewsSection rifugioId={rifugioId} onShowLogin={onShowLogin} />
           </section>
         </div>
 

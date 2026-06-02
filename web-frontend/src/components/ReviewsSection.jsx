@@ -2,23 +2,41 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useToast } from '../contexts/ToastContext';
+import { useAuth } from '../contexts/AuthContext';
+import AuthPromptModal from './AuthPromptModal';
 import './ReviewsSection.css';
 
 const API_URL = '/api';
 
-function ReviewsSection({ trailId, rifugioId }) {
+function ReviewsSection({ trailId, rifugioId, onShowLogin }) {
   const { t } = useTranslation();
   const toast = useToast();
+  const { currentUser } = useAuth();
   const [reviews, setReviews] = useState([]);
   const [statistics, setStatistics] = useState({ average_rating: 0, total_reviews: 0 });
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const [formData, setFormData] = useState({
     user_name: '',
     rating: 5,
     comment: ''
   });
   const [submitting, setSubmitting] = useState(false);
+
+  // Reviews are for registered users only. Guests get the sign-in prompt;
+  // logged-in users get the form with their display name pre-filled.
+  const openReviewForm = () => {
+    if (!currentUser) {
+      setShowAuthPrompt(true);
+      return;
+    }
+    setFormData(prev => ({
+      ...prev,
+      user_name: prev.user_name || currentUser.displayName || currentUser.email || '',
+    }));
+    setShowForm(v => !v);
+  };
 
   const entityId = rifugioId || trailId;
   const reviewsUrl = rifugioId
@@ -44,6 +62,10 @@ function ReviewsSection({ trailId, rifugioId }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!currentUser) {
+      setShowAuthPrompt(true);
+      return;
+    }
     if (!formData.user_name.trim() || !formData.comment.trim()) {
       toast.warning(t('trail.reviewFieldsRequired') || 'Please fill in all required fields');
       return;
@@ -51,7 +73,11 @@ function ReviewsSection({ trailId, rifugioId }) {
 
     try {
       setSubmitting(true);
-      const response = await axios.post(reviewsUrl, formData);
+      const response = await axios.post(reviewsUrl, {
+        ...formData,
+        user_id: currentUser.uid,
+        user_name: formData.user_name || currentUser.displayName || currentUser.email,
+      });
       
       setReviews([response.data.review, ...reviews]);
       
@@ -95,9 +121,9 @@ function ReviewsSection({ trailId, rifugioId }) {
           </div>
         </div>
         
-        <button 
+        <button
           className="btn-write-review"
-          onClick={() => setShowForm(!showForm)}
+          onClick={openReviewForm}
         >
           ✍️ {t('trail.writeReview')}
         </button>
@@ -198,12 +224,19 @@ function ReviewsSection({ trailId, rifugioId }) {
           <div className="no-reviews">
             <div className="no-reviews-icon">💬</div>
             <p>{t('trail.noReviewsYet')}</p>
-            <button className="btn-write-review" onClick={() => setShowForm(true)}>
+            <button className="btn-write-review" onClick={openReviewForm}>
               ✍️ {t('trail.writeReview')}
             </button>
           </div>
         )}
       </div>
+
+      <AuthPromptModal
+        isOpen={showAuthPrompt}
+        onClose={() => setShowAuthPrompt(false)}
+        onLogin={() => { setShowAuthPrompt(false); onShowLogin?.(); }}
+        message="Sign in to share your experience and help other hikers."
+      />
     </div>
   );
 }

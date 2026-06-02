@@ -10,7 +10,10 @@
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(201, 168, 76, 0.12);
-  position: sticky;
+  /* fixed (not sticky) so the bar reliably follows the scroll on desktop even
+     when an ancestor establishes a scroll/overflow context. .main-content
+     already reserves padding-top (80px desktop / 70px mobile) for it. */
+  position: fixed;
   top: var(--safe-top);
   left: 0;
   right: 0;

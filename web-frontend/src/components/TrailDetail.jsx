@@ -477,7 +477,7 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin }
         {/* Nearby Rifugios */}
         <NearbyRifugios ids={fullTrail.nearby_rifugios} onViewRifugio={viewRifugio} />
 
-        <ReviewsSection trailId={fullTrail.id} />
+        <ReviewsSection trailId={fullTrail.id} onShowLogin={onShowLogin} />
 
       </div>
 

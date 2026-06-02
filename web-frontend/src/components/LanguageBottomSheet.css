@@ -7,7 +7,11 @@
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  z-index: var(--z-modal-backdrop);
+  /* --z-modal-backdrop is not defined globally; without the fallback the whole
+     declaration is invalid and z-index resolves to `auto`, leaving the backdrop
+     BEHIND the header and other stacked content — so outside clicks never reach
+     its onClick handler and the sheet "won't close". 3999 = just under the sheet. */
+  z-index: var(--z-modal-backdrop, 3999);
   animation: fadeIn 0.25s ease;
 }
 
@@ -26,8 +30,28 @@
   z-index: var(--z-modal);
   padding: 0 0 max(24px, env(safe-area-inset-bottom));
   animation: slideUpSheet 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  max-height: 90vh;
-  overflow: hidden;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+/* Desktop: a bottom sheet spanning the full width is far too large here, so
+   render a compact centred modal instead (and drop the slide-up animation,
+   which would fight the centring transform). */
+@media (min-width: 900px) {
+  .language-sheet {
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 360px;
+    max-width: calc(100vw - 48px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 20px;
+    animation: fadeIn 0.2s ease;
+  }
+  .language-sheet-handle { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

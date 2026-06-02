@@ -4,6 +4,8 @@ import i18nInstance from '../i18n';
 import axios from 'axios';
 import { detectSeason, getSeasonConfig } from '../hooks/useSeason';
 import { checkDistanceFromGPS, checkDistanceWarning, buildTransportNote } from '../utils/geoAwareness';
+import { useAuth } from '../contexts/AuthContext';
+import AuthPromptModal from './AuthPromptModal';
 import './JosephineChat.css';
 
 const _seasonOverride = new URLSearchParams(window.location.search).get('season');
@@ -17,6 +19,38 @@ const WX_LAT = 46.5, WX_LON = 11.35;
 // Mutable: updated when geolocation resolves so the planning-flow weather
 // card uses the user's real position rather than the Dolomites fallback.
 let userLat = WX_LAT, userLon = WX_LON;
+// True only once we have the user's REAL position (not the Dolomites
+// fallback) — so "X km away" is only shown when it's actually meaningful.
+let userLocated = false;
+
+/* ── Distance helpers (for "X km away" on recommended trails) ─────────── */
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371, toRad = d => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1), dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+// Best-effort trailhead coordinate from the recommend payload.
+function trailStartLatLon(tr) {
+  const c = tr?.geometry?.coordinates;            // GeoJSON LineString → [[lon,lat], …]
+  if (Array.isArray(c) && Array.isArray(c[0]) && c[0].length >= 2) {
+    return { lat: c[0][1], lon: c[0][0] };
+  }
+  const th = tr?.trailhead_info?.coordinates;
+  if (th && typeof th.lat === 'number' && (typeof th.lng === 'number' || typeof th.lon === 'number')) {
+    return { lat: th.lat, lon: th.lng ?? th.lon };
+  }
+  return null;
+}
+// Returns rounded km from the user to the trailhead, or null when unknown.
+function distanceFromUserKm(tr) {
+  if (!userLocated) return null;
+  const s = trailStartLatLon(tr);
+  if (!s) return null;
+  const km = haversineKm(userLat, userLon, s.lat, s.lon);
+  return (isFinite(km) && km >= 0.1) ? km : null;
+}
 
 /* ── Weather → Josephine opening message ─────────────────────────────── */
 function buildWeatherGreeting(w) {
@@ -262,7 +296,9 @@ function TrailDetailCard({ trail, saved, onSave, onView, t }) {
 }
 
 /* ── Component ───────────────────────────────────────────────────────── */
-function JosephineChat({ onBack, setCurrentView, viewTrail }) {
+function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
+  const { currentUser } = useAuth();
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const [lang, setLang] = useState(() => i18nInstance.language?.slice(0, 2) || 'en');
   useEffect(() => {
     const handler = (lng) => setLang((lng || i18nInstance.language || 'en').slice(0, 2));
@@ -406,7 +442,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
 
     if (typeof navigator !== 'undefined' && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        pos => showMessage(pos.coords.latitude, pos.coords.longitude),
+        pos => { userLocated = true; showMessage(pos.coords.latitude, pos.coords.longitude); },
         ()  => showMessage(WX_LAT, WX_LON),
         { timeout: 5000, maximumAge: 300000 },
       );
@@ -738,6 +774,12 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
   /* Save → persist + itinerary timeline with "View saved" CTA */
   const saveHike = (trail) => {
     if (!trail) return;
+    // Saving is a members-only feature — guests get the sign-in prompt instead
+    // of a silent localStorage write that never syncs to an account.
+    if (!currentUser) {
+      setShowAuthPrompt(true);
+      return;
+    }
     setSavedIds(prev => {
       const next = prev.includes(trail.id) ? prev : [...prev, trail.id];
       try { localStorage.setItem(SAVED_KEY, JSON.stringify(next)); } catch {}
@@ -1333,6 +1375,16 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
                         <div className="jc-option__body">
                           <p className="jc-option__name">{tr.name}</p>
                           <p className="jc-option__stats">{tr.distance_km} km · {tr.duration_hours}h · <span className="jc-option__diff">{tr.difficulty}</span></p>
+                          {(() => {
+                            const km = distanceFromUserKm(tr);
+                            if (km == null) return null;
+                            const kmText = km < 10 ? km.toFixed(1) : String(Math.round(km));
+                            return (
+                              <p className="jc-option__away">
+                                📍 {t('kmAway', '{{km}} km away').replace('{{km}}', kmText)}
+                              </p>
+                            );
+                          })()}
                         </div>
                       </button>
                     ))}
@@ -1437,6 +1489,13 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
           </svg>
         </button>
       </div>
+
+      <AuthPromptModal
+        isOpen={showAuthPrompt}
+        onClose={() => setShowAuthPrompt(false)}
+        onLogin={() => { setShowAuthPrompt(false); onShowLogin?.(); }}
+        message="Sign in to save this hike and keep your plans in sync across all your devices."
+      />
     </div>
   );
 }

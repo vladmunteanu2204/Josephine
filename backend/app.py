@@ -837,13 +837,20 @@ def get_trail_reviews(trail_id):
 
 @app.route('/api/trails/<trail_id>/reviews', methods=['POST'])
 def add_trail_review(trail_id):
-    """Add a new review for a trail (mock implementation)"""
+    """Add a new review for a trail (registered users only)."""
     try:
         data = request.json or {}
-        
+
+        # Reviews are restricted to registered users — the client sends the
+        # authenticated Firebase uid. Reject anonymous submissions.
+        if not str(data.get('user_id', '')).strip():
+            return jsonify({'error': 'authentication_required',
+                            'message': 'Please sign in to submit a review.'}), 401
+
         new_review = {
             'id': f"rev_{trail_id}_{datetime.now().timestamp()}",
             'trail_id': trail_id,
+            'user_id': data.get('user_id'),
             'user_name': data.get('user_name', 'Anonymous'),
             'rating': data.get('rating', 5),
             'comment': data.get('comment', ''),
@@ -1687,12 +1694,17 @@ def get_rifugio_reviews(rifugio_id):
 
 @app.route('/api/rifugios/<rifugio_id>/reviews', methods=['POST'])
 def add_rifugio_review(rifugio_id):
-    """Submit a visitor review for a rifugio."""
+    """Submit a visitor review for a rifugio (registered users only)."""
     try:
         data = request.json or {}
+        # Reviews are restricted to registered users (Firebase uid required).
+        if not str(data.get('user_id', '')).strip():
+            return jsonify({'error': 'authentication_required',
+                            'message': 'Please sign in to submit a review.'}), 401
         new_review = {
             'id': f"rev_{rifugio_id}_{datetime.now().timestamp()}",
             'rifugio_id': rifugio_id,
+            'user_id': data.get('user_id'),
             'user_name': data.get('user_name', 'Anonymous'),
             'rating': data.get('rating', 5),
             'comment': data.get('comment', ''),
@@ -3102,6 +3114,19 @@ def _fuzzy_match_entity(question: str):
     return best if best_score >= 10 else (None, None)
 
 
+def _vary(seed_text, options):
+    """Pick one phrasing from `options`, stable for a given question text but
+    spread across the set for different phrasings — so Josephine doesn't repeat
+    the identical sentence to everyone. Deterministic (md5) so it never breaks
+    response caching."""
+    if not options:
+        return ''
+    if isinstance(options, str):
+        return options
+    h = int(hashlib.md5((seed_text or '').encode('utf-8')).hexdigest(), 16)
+    return options[h % len(options)]
+
+
 def structured_answer(question: str):
     """
     Layer 2: deterministic answer from trail/rifugio data.
@@ -3225,41 +3250,189 @@ def structured_answer(question: str):
             return ("For hard or alpine routes, stiff mountain boots are non-negotiable — Dolomite scree will destroy trail runners. "
                     "Carry 3L of water, a full rain layer, first-aid kit, an emergency thermal blanket, and download the GPS track before leaving (no signal above 1600m usually). "
                     "Via ferrata routes also need a harness and lanyard.")
-        return ("For a medium hike the most important thing is hiking boots with ankle support — Dolomite scree demands it. "
-                "Pack 2L of water, a rain layer (afternoon thunderstorms are common June–August, aim to be below the treeline by 1pm), a snack, and sunscreen. "
-                "Trekking poles help significantly on the descent. "
-                "Temperatures drop roughly 6°C per 1000m, so always bring a layer even on a warm valley day.")
+        return _vary(q, [
+            ("For a medium hike the most important thing is hiking boots with ankle support — Dolomite scree demands it. "
+             "Pack 2L of water, a rain layer (afternoon thunderstorms are common June–August, aim to be below the treeline by 1pm), a snack, and sunscreen. "
+             "Trekking poles help significantly on the descent. "
+             "Temperatures drop roughly 6°C per 1000m, so always bring a layer even on a warm valley day."),
+            ("Think layers and good footwear. Boots with a grippy sole and ankle support, 2L of water, and a packable waterproof — "
+             "the weather flips fast above the treeline. Add sunscreen and a hat (UV is fierce on the pale rock), a couple of snacks, "
+             "and poles for the knees on the way down. A warm mid-layer earns its place in the bag even in July: "
+             "it's roughly 6°C colder for every 1000m you climb."),
+        ])
 
     if _is_food_q:
-        return ("The things I always tell people to try: Schlutzkrapfen — half-moon pasta filled with ricotta and spinach, butter-tossed. "
-                "The best version I know is in Val Gardena. Also Speck with rye bread and local cheese at any malga stop, "
-                "Kaiserschmarrn for dessert, and a cold Weizen on the terrace. "
-                "If you're visiting in autumn, Torggelen — the tradition of going to farm restaurants for new wine and roasted chestnuts — is worth planning a whole day around.")
+        return _vary(q, [
+            ("The things I always tell people to try: Schlutzkrapfen — half-moon pasta filled with ricotta and spinach, butter-tossed. "
+             "The best version I know is in Val Gardena. Also Speck with rye bread and local cheese at any malga stop, "
+             "Kaiserschmarrn for dessert, and a cold Weizen on the terrace. "
+             "If you're visiting in autumn, Torggelen — going to farm restaurants for new wine and roasted chestnuts — is worth planning a whole day around."),
+            ("South Tyrol food is half Italian, half Austrian, and all worth your appetite. Start with Speck and a slab of mountain cheese, "
+             "then Knödel (Canederli) — bread dumplings in broth or with butter and cheese. Schlutzkrapfen if you see them fresh-made. "
+             "For dessert it's Kaiserschmarrn or apple strudel, no debate. Wash it down with a Weizen or a glass of local Vernatsch. "
+             "Eat your big meal at a malga or rifugio at altitude — it always tastes better up there."),
+        ])
 
     if _is_booking_q:
-        return ("Most rifugios don't use online booking — call them directly. "
-                "Say: 'Buonasera, vorrei prenotare mezza pensione per [number] persone per la notte del [date].' "
-                "They'll ask which trail you're arriving on — that's a safety protocol, not just curiosity. "
-                "July and August weekends fill up 2–3 weeks out. Half-board (dinner + bed + breakfast) is always better value than paying à la carte — ask for it specifically.")
+        return _vary(q, [
+            ("Most rifugios don't use online booking — call them directly. "
+             "Say: 'Buonasera, vorrei prenotare mezza pensione per [number] persone per la notte del [date].' "
+             "They'll ask which trail you're arriving on — that's a safety protocol, not just curiosity. "
+             "July and August weekends fill up 2–3 weeks out. Half-board (dinner + bed + breakfast) is better value than à la carte — ask for it specifically."),
+            ("Booking a rifugio is old-school: phone, not website. A few words of Italian go a long way — ask for 'mezza pensione' (half board), "
+             "which is bed, dinner and breakfast, and almost always the best deal. Bring a sleeping-bag liner (sacco lenzuolo) — most huts require one. "
+             "Weekends in high summer book out weeks ahead, so call early, and let them know roughly when and via which trail you'll arrive."),
+        ])
 
     if _is_rifugio_q:
-        return ("A rifugio is a staffed mountain hut — meals, beds, and usually a terrace with a view. "
-                "A malga is a working alpine dairy farm, simpler, often just cheese, bread, and soup, but sometimes the most honest stop on the trail. "
-                "Bivacchi are unstaffed emergency shelters — always unlocked, always free, no food. "
-                "Tipping 5–10% is normal and appreciated at rifugios, and most prefer cash.")
+        return _vary(q, [
+            ("A rifugio is a staffed mountain hut — meals, beds, and usually a terrace with a view. "
+             "A malga is a working alpine dairy farm, simpler, often just cheese, bread, and soup, but sometimes the most honest stop on the trail. "
+             "Bivacchi are unstaffed emergency shelters — always unlocked, always free, no food. "
+             "Tipping 5–10% is normal at rifugios, and most prefer cash."),
+            ("Three kinds of mountain stop up here: a rifugio is the full experience — staffed, hot meals, a bed, sometimes a hot shower. "
+             "A malga is a real dairy farm that feeds passing hikers; simple, cheap, unforgettable cheese. "
+             "A bivacco is a bare metal or stone shelter, always open and free, meant for emergencies or self-sufficient nights. "
+             "At rifugios bring cash, a liner sheet for the bunk, and your own slippers if you're fussy — they swap your boots for hut shoes at the door."),
+        ])
 
     if _is_bus_q:
-        return ("SAD buses cover the whole region — most routes run hourly on weekdays, less on Sundays. "
-                "Guests in registered accommodation get the Südtirol Guest Pass which makes all SAD buses free. "
-                "The Alto Adige/Südtirol Pass (€35/day or weekly) includes buses, most trains, and the main cable cars. "
-                "The VinschgauBahn from Merano to Malles is one of the most scenic rail journeys in the Alps — worth taking even if you have no particular destination in mind.")
+        return _vary(q, [
+            ("SAD buses cover the whole region — most routes run hourly on weekdays, less on Sundays. "
+             "Guests in registered accommodation get the Südtirol Guest Pass, which makes all SAD buses free. "
+             "The Alto Adige/Südtirol Pass includes buses, most trains, and the main cable cars. "
+             "The VinschgauBahn from Merano to Malles is one of the most scenic rail journeys in the Alps."),
+            ("Public transport here is genuinely good. The integrated network (bus + train + many cable cars) runs on the Südtirol Pass, "
+             "and if you're staying overnight ask your host for the free Guest Pass — it covers the SAD buses. "
+             "Timetables and live times are on the 'suedtirolmobil' app or sad.it. Plan around Sunday/holiday reductions, and check the last bus back "
+             "before you commit to a one-way hike — valley services can stop surprisingly early."),
+        ])
 
     if _is_emergency_q:
-        return ("Alpine rescue in Italy: call 118 (Soccorso Alpino) — it's completely free, no billing ever. "
-                "If you can, give them your GPS coordinates — on iPhone open Maps, long press the screen, coordinates appear at the top. "
-                "The mountain distress signal is 6 whistle blasts or torch flashes per minute. "
-                "If a storm catches you on an exposed ridge: descend immediately, crouch away from the high point, avoid lone trees and summit crosses. "
-                "Always tell someone your plan before heading out.")
+        return _vary(q, [
+            ("Alpine rescue in Italy: call 118 (Soccorso Alpino) — completely free, no billing ever. "
+             "If you can, give them your GPS coordinates — on iPhone open Maps, long-press the screen, the coordinates appear at the top. "
+             "The mountain distress signal is 6 whistle blasts or torch flashes per minute. "
+             "If a storm catches you on an exposed ridge: descend immediately, crouch away from the high point, avoid lone trees and summit crosses. "
+             "Always tell someone your plan before heading out."),
+            ("In an emergency call 118 — that's mountain rescue (Soccorso Alpino), and it's free. The Europe-wide 112 works too and can locate you. "
+             "Install the GeoResQ or 'Where ARE U' app beforehand so it can send your exact position. "
+             "Six signals a minute (whistle, light or shout) is the recognised call for help; three a minute is the reply. "
+             "Caught by lightning on a ridge? Get down fast, ditch metal poles, and crouch low on your pack away from the summit cross. "
+             "And always leave your route and return time with someone in the valley."),
+        ])
+
+    # ── More general-knowledge topics (no specific trail/rifugio needed) ──────
+    # These broaden Josephine's "bible" so far fewer everyday questions fall
+    # through to the generic fallback. Triggers are deliberately multi-word /
+    # specific so they don't hijack questions about a named place.
+
+    # WHEN TO START / time of day
+    if any(k in q for k in ('what time should i start','when should i start','best time of day','what time to set off',
+                            'how early should i','too late to start','start early','what time do i','when to set off')):
+        return _vary(q, [
+            ("Start early — it's the single best habit in these mountains. Be walking by 8, ideally 7 in high summer. "
+             "Afternoon thunderstorms build fast from about 13:00–14:00, so an early start gets you off the exposed ground before they arrive, "
+             "gives you the quiet trails and the best light, and leaves a margin if anything runs long."),
+            ("Early. Always earlier than feels necessary. The classic Dolomite pattern is clear mornings and building cloud after lunch, "
+             "with storms possible by mid-afternoon, so aim to summit or turn around by around midday. "
+             "An 7–8am start also means parking is still free and the rifugio terraces aren't packed yet."),
+        ])
+
+    # DRINKING WATER / refills
+    if any(k in q for k in ('drinking water','refill water','water on the trail','is the water safe','fill up water',
+                            'water source','water sources','can i drink','where to fill','springs on the','fountain',
+                            'tap water','water fountain','enough water')):
+        return ("Carry 2L as a baseline, 3L on a hot or hard day. You can refill at rifugios and at most village fountains "
+                "(if it doesn't say 'Kein Trinkwasser / Acqua non potabile', it's drinkable). High mountain streams look pristine "
+                "but can have livestock upstream, so I wouldn't drink untreated unless you have a filter or purification tablets. "
+                "Malghe will almost always top up your bottle if you ask nicely.")
+
+    # CASH / CARDS
+    if any(k in q for k in ('cash or card','do they take card','credit card','accept card','accept cards','need cash',
+                            'how much cash','take cards','pay by card','contactless','bancomat','do i need cash','atm')):
+        return ("Bring cash. Many rifugios and malghe are card-friendly now, but signal is patchy up high and card machines fail, "
+                "so I always carry enough euros to cover meals, a bed and a drink or two. Smaller dairy farms are often cash-only. "
+                "Draw money in the valley — ATMs (Bancomat) are easy to find in towns but non-existent on the mountain.")
+
+    # ALTITUDE / acclimatization
+    if any(k in q for k in ('altitude sickness','acclimat','high altitude','elevation sickness','thin air','soroche',
+                            'dizzy at altitude','altitude affect','get altitude')):
+        return ("Good news — most of South Tyrol's trails top out between 2000 and 3000m, where serious altitude sickness is uncommon. "
+                "You might feel a little more breathless and tire faster than at home, so pace yourself, hydrate well, and don't gain "
+                "huge height too fast if you've come straight from sea level. On the 3000m+ summits and glaciers, take it slow and turn "
+                "back if you get a persistent headache, nausea or dizziness — that's your body telling you to descend.")
+
+    # NAVIGATION / trail markings
+    if any(k in q for k in ('trail marking','waymark','way-mark','cai number','red and white','red-white','get lost',
+                            'how do i navigate','offline map','gps track','trail sign','signpost','blaze','follow the trail',
+                            'trail number','path number','how are trails marked','find my way')):
+        return ("Trails here use the CAI system: red-white-red paint flashes and numbered signposts at every junction. "
+                "Each path has a number — note the numbers for your route rather than place names, since signs list many destinations. "
+                "Red-white-red is a normal footpath; a number on a red background usually means a more demanding or via-ferrata route. "
+                "Phone signal drops above the valleys, so download an offline map or GPS track (Komoot, Outdooractive or maps.me) before you set off.")
+
+    # FITNESS / preparation
+    if any(k in q for k in ('how fit','fitness level','fit enough','get in shape','prepare physically','out of shape',
+                            'how hard is hiking','training for','am i fit','do i need to be fit')):
+        return ("You don't need to be an athlete — you need a realistic match between the route and your legs. "
+                "If you can walk briskly for 2–3 hours with some uphill, plenty of easy and medium trails are open to you. "
+                "The honest test is descent: knees and ankles take a beating going down, so poles help and steady pacing beats speed. "
+                "Tell me how long you usually walk and how much climbing feels comfortable, and I'll point you at trails that fit.")
+
+    # PHOTOGRAPHY / best light
+    if any(k in q for k in ('photography','best photo','photo spot','where to take photos','sunrise spot','sunset spot',
+                            'golden hour','best views for photos','instagram','drone','take pictures','photogenic')):
+        return ("The Dolomites glow at dawn and dusk — that pink-gold light on the rock is called enrosadira, and it's worth setting an alarm for. "
+                "For sunrise, places like Seceda, the Alpe di Siusi and the Tre Cime saddle are unbeatable; for sunset, anywhere with the peaks to your east. "
+                "Shoot in the first and last hour of light, bring a small tripod for the low sun, and remember drones are restricted in the nature parks — "
+                "check local rules before you fly. Tell me your area and I'll suggest a viewpoint.")
+
+    # CONNECTIVITY / phone signal
+    if any(k in q for k in ('phone signal','cell signal','mobile signal','reception','wifi on the trail','data coverage',
+                            'sim card','no signal','internet on the','phone reception','will i have signal')):
+        return ("Don't count on it. Coverage is good in the valleys and towns but disappears on the far side of a ridge or in deep valleys, "
+                "and even rifugio WiFi is slow and weather-dependent. Download your maps, tickets and trail notes offline before you leave, "
+                "tell someone your plan, and keep your phone in battery-saver — its real job up there is the GPS and the emergency call, not Instagram.")
+
+    # LANGUAGE
+    if any(k in q for k in ('what language','do they speak english','speak english','useful phrases','italian phrases',
+                            'german phrases','how do i say','language in south tyrol','which language','english spoken')):
+        return ("South Tyrol is trilingual: German is the everyday language for most locals, Italian is official everywhere, and in a few "
+                "Dolomite valleys they speak Ladin. English is widely understood in tourist areas. A few words go a long way though — "
+                "'Grüß Gott' (hello), 'Danke' (thanks), 'Buongiorno' and 'Grazie' all earn a smile. In a rifugio, "
+                "'Ein Bier, bitte' or 'Un'acqua, per favore' will never fail you.")
+
+    # MOUNTAIN GUIDE
+    if any(k in q for k in ('hire a guide','mountain guide','guided tour','guided hike','do i need a guide','alpine guide',
+                            'need a guide','book a guide')):
+        return ("For marked trails you don't need a guide — good preparation and an offline map are enough. "
+                "But for glaciers, harder via ferrate, or any off-trail/alpine objective, a certified mountain guide (Bergführer / guida alpina) "
+                "is money well spent: they carry the safety kit, read the conditions, and know the escape routes. "
+                "Local guiding offices and alpine schools in the main valleys can pair you with one — book a few days ahead in peak season.")
+
+    # TOILETS / facilities
+    if any(k in q for k in ('toilet','bathroom',' wc','restroom','where can i pee','where to go to the bathroom')):
+        return ("Rifugios and malghe have toilets — a small coin or a purchase is the polite norm at the busier ones. "
+                "Between huts there's nothing, so go before you leave the last one. If you're caught out, step well away from the path and "
+                "any water source, and pack out any paper — these are protected landscapes and they stay beautiful because people take their litter home.")
+
+    # WHO ARE YOU / WHAT CAN YOU DO
+    if any(k in q for k in ('who are you','what are you','what can you do','what do you do','how can you help',
+                            'your name','what is your name','how do you work','what are you for')):
+        return ("I'm Josephine — your alpine companion for South Tyrol and the Dolomites. "
+                "I can plan your day around the weather and how you're feeling, recommend trails and rifugios, "
+                "and answer the practical stuff: opening seasons, how to get there, gear, dogs, difficulty, food, and emergencies. "
+                "Tell me how much time you have and what kind of day you want, and I'll build it for you.")
+
+    # SIMPLE GREETING
+    if q.strip() in {'hi','hello','hey','ciao','hallo','salve','hi!','hello!','hey!','good morning','good afternoon','good evening','servus','grüß gott'} \
+       or any(q.strip().startswith(g) for g in ('hi ','hello ','hey ','ciao ','hallo ')):
+        return _vary(q, [
+            ("Hello! Lovely to see you. Shall I find you a trail for today — tell me how much time you have and the kind of day you're after?"),
+            ("Hi there! Ready for a mountain day? Give me your mood and your spare hours and I'll plan something that fits."),
+            ("Grüß Gott! I'm all yours — want a trail recommendation, a rifugio, or just some local know-how?"),
+        ])
 
     # Need an entity for most answers
     if entity is None:
@@ -3506,11 +3679,18 @@ def josephine_chat():
 
     # ── Layer 3: Claude Haiku (paid, with cache + rate limit) ──────────
     if not ANTHROPIC_API_KEY:
+        default_no_key = _vary(message, [
+            ("I know these mountains well, but that one's a bit beyond what I can answer offline. "
+             "Try me on opening seasons, how to reach a place, trail difficulty, gear, dogs, food or "
+             "getting around — or tap 'Plan my day' and I'll build you a route right now."),
+            ("Good question — let me steer us somewhere I can really help. Ask me about a trail or rifugio, "
+             "what to pack, the best time to set off, whether dogs are welcome, or how to get there by bus. "
+             "Or just tell me how much time you have and I'll plan your day."),
+            ("That's a little outside my map, but I'm great with the practical stuff: seasons, access, difficulty, "
+             "gear, water, cash, food and dogs. Want me to suggest a trail for today instead? Tell me your mood and your hours."),
+        ])
         return jsonify({
-            'reply': NO_KEY_REPLIES.get(lang,
-                "I know these mountains well, but that question needs a bit more thought. "
-                "Try asking me about opening times, how to reach a place, trail difficulty, "
-                "or whether dogs are allowed — I can answer those instantly!"),
+            'reply': NO_KEY_REPLIES.get(lang, default_no_key),
             'mode': 'no_key'
         })
 

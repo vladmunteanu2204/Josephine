@@ -90,6 +90,26 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
     startTrailTimer(featuredTrails);
   };
 
+  /* ── Touch swipe for the cinematic showcase (mobile) ── */
+  const cinemaTouchX = useRef(null);
+  const cinemaTouchY = useRef(null);
+  const onCinemaTouchStart = (e) => {
+    cinemaTouchX.current = e.touches[0].clientX;
+    cinemaTouchY.current = e.touches[0].clientY;
+  };
+  const onCinemaTouchEnd = (e) => {
+    if (cinemaTouchX.current == null || featuredTrails.length < 2) return;
+    const dx = e.changedTouches[0].clientX - cinemaTouchX.current;
+    const dy = e.changedTouches[0].clientY - cinemaTouchY.current;
+    cinemaTouchX.current = null;
+    cinemaTouchY.current = null;
+    // Ignore mostly-vertical gestures (page scroll) and tiny taps
+    if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy)) return;
+    const n = featuredTrails.length;
+    if (dx < 0) goToTrail((activeTrail + 1) % n);
+    else        goToTrail((activeTrail - 1 + n) % n);
+  };
+
   /* ── Data loading ── */
   useEffect(() => {
     const load = async () => {
@@ -186,7 +206,12 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
       {/* ══════════════════════════════════════════
           2. CINEMATIC TRAIL SHOWCASE — full viewport
       ══════════════════════════════════════════ */}
-      <section className="hp-cinema" id="hp-cinema">
+      <section
+        className="hp-cinema"
+        id="hp-cinema"
+        onTouchStart={onCinemaTouchStart}
+        onTouchEnd={onCinemaTouchEnd}
+      >
         {/* Background slides — only the active and immediately adjacent slides get
             a background-image so we don't fetch all 5 trail photos up front. */}
         {featuredTrails.map((trail, i) => {
@@ -291,13 +316,6 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
               </div>
             ))}
           </div>
-
-          <button
-            className="hp-convo__cta"
-            onClick={() => setCurrentView('josephine')}
-          >
-            {t('convo.startCta')}
-          </button>
         </div>
       </section>
 

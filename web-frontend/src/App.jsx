@@ -267,7 +267,7 @@ function App() {
           )}
 
           {currentView === 'rifugio-detail' && selectedRifugio && (
-            <RifugioDetail rifugioId={selectedRifugio} onNavigate={navigate} />
+            <RifugioDetail rifugioId={selectedRifugio} onNavigate={navigate} onShowLogin={() => setShowLoginModal(true)} />
           )}
 
           {currentView === 'multiday-trails' && (
@@ -279,12 +279,14 @@ function App() {
           )}
 
           {currentView === 'josephine' && (
-            <JosephineChat onBack={goBack} setCurrentView={setCurrentView} viewTrail={viewTrail} />
+            <JosephineChat onBack={goBack} setCurrentView={setCurrentView} viewTrail={viewTrail} onShowLogin={() => setShowLoginModal(true)} />
           )}
           </Suspense>
         </main>
 
-        <Footer setCurrentView={setCurrentView} />
+        {/* The marketing footer (incl. its "Plan my day with Josephine" CTA) is
+            redundant while the user is already in the chat — hide it there. */}
+        {currentView !== 'josephine' && <Footer setCurrentView={setCurrentView} />}
 
         <BottomNav
           currentView={currentView}
