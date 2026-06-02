@@ -647,12 +647,28 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
           duration_hours: duration, difficulty, interests,
           lastTrail: first.id, lastDifficulty: first.difficulty, lastRegion: first.region,
         });
-        const optionsIntros = [
-          "I found three beautiful options for you. Each one fits what you're after. ✦",
-          "Here are three trails I think you'll love. Take a look. ✦",
-          "Three picks — all curated for today. Let me know which speaks to you. ✦",
-          "I've pulled three routes that match perfectly. Which feels right? ✦",
-        ];
+        // Intro copy must match the number of trails actually shown — promising
+        // "three" when only one or two match (e.g. a specific area like Tirolo)
+        // reads as a bug.
+        const introsByCount = {
+          1: [
+            "I found one that fits beautifully — here it is. ✦",
+            "One pick stands out for what you're after. Take a look. ✦",
+            "Here's the one I'd choose for you today. ✦",
+          ],
+          2: [
+            "I found two lovely options for you. Take a look. ✦",
+            "Here are two trails I think you'll love. ✦",
+            "Two picks — both curated for today. Which speaks to you? ✦",
+          ],
+          3: [
+            "I found three beautiful options for you. Each one fits what you're after. ✦",
+            "Here are three trails I think you'll love. Take a look. ✦",
+            "Three picks — all curated for today. Let me know which speaks to you. ✦",
+            "I've pulled three routes that match perfectly. Which feels right? ✦",
+          ],
+        };
+        const optionsIntros = introsByCount[results.length] || introsByCount[3];
 
         // ── Geographic awareness: warn if trail region is far from user ──────
         // Primary: compare against user's actual GPS position (most accurate).
