@@ -299,8 +299,25 @@
     "madeIn": "Entwickelt mit ❤️ im Herzen Südtirols, Italien",
     "about": "Über Uns",
     "contact": "Kontakt",
+    "support": "Unterstütze uns ☕",
     "privacy": "Datenschutz",
     "terms": "Nutzungsbedingungen"
+  },
+  "donate": {
+    "title": "Spendier Josephine einen Kaffee",
+    "subtitle": "Josephine ist ein kleines, unabhängiges Herzensprojekt. Ein Kaffee oder zwei helfen, die Wege aktuell zu halten, die Hütten-Infos zu pflegen und das Projekt am Leben zu erhalten. Danke für deine Unterstützung.",
+    "back": "Zurück",
+    "coffee": "Kaffee",
+    "coffees": "Kaffee",
+    "fewer": "Weniger Kaffee",
+    "more": "Mehr Kaffee",
+    "namePlaceholder": "Dein Name (optional)",
+    "messagePlaceholder": "Hinterlasse eine Nachricht (optional)",
+    "support": "Unterstützen",
+    "redirecting": "Weiterleitung zur Kasse…",
+    "secure": "Sichere Zahlung über Lemon Squeezy. Wir sehen deine Kartendaten nie.",
+    "comingSoon": "Spenden sind bald verfügbar — danke, dass du das Projekt unterstützen möchtest! Schau bald wieder vorbei.",
+    "error": "Beim Starten der Zahlung ist etwas schiefgelaufen. Bitte versuche es erneut."
   },
   "profile": {
     "title": "Profil",

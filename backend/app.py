@@ -99,6 +99,25 @@ if ANTHROPIC_API_KEY:
     except Exception as _e:
         print(f"Warning: Could not init Anthropic client: {_e}")
 
+# ── Donations: Lemon Squeezy "buy me a coffee" (optional) ────────────────────
+# Donations degrade gracefully: if these aren't set the donate UI shows a
+# "coming soon" state instead of erroring. Set all three to go live.
+LEMONSQUEEZY_API_KEY    = os.environ.get('LEMONSQUEEZY_API_KEY')
+LEMONSQUEEZY_STORE_ID   = os.environ.get('LEMONSQUEEZY_STORE_ID')
+LEMONSQUEEZY_VARIANT_ID = os.environ.get('LEMONSQUEEZY_VARIANT_ID')  # a "pay what you want" variant
+# Price of a single "coffee" in the store's currency, in cents (default €3.00).
+try:
+    DONATION_COFFEE_PRICE_CENTS = int(os.environ.get('DONATION_COFFEE_PRICE_CENTS', '300'))
+except ValueError:
+    DONATION_COFFEE_PRICE_CENTS = 300
+DONATION_CURRENCY = os.environ.get('DONATION_CURRENCY', 'EUR')
+DONATION_MAX_COFFEES = 50  # safety cap on a single donation
+# Optional: where Lemon Squeezy sends the buyer back after a successful payment.
+APP_BASE_URL = os.environ.get('APP_BASE_URL', '').rstrip('/')
+DONATIONS_ENABLED = bool(LEMONSQUEEZY_API_KEY and LEMONSQUEEZY_STORE_ID and LEMONSQUEEZY_VARIANT_ID)
+if not DONATIONS_ENABLED:
+    print("Note: Lemon Squeezy env not fully set — donations run in 'coming soon' mode.")
+
 # ── PostgreSQL (optional — falls back to JSON files if DATABASE_URL not set) ──
 from db import DB_AVAILABLE, get_db, create_tables, row_to_trail, row_to_rifugio, row_to_mdt
 from sqlalchemy import text as _sql
@@ -3730,6 +3749,117 @@ def josephine_chat():
             'reply': "The mountain winds are interfering with my signal — try again in a moment!",
             'mode': 'error'
         })
+
+
+# ── Donations (Lemon Squeezy "buy me a coffee") ──────────────────────────────
+@app.route('/api/donate/config', methods=['GET'])
+def donate_config():
+    """Public config the donate page needs to render: whether donations are
+    live, the price of one 'coffee', the currency and suggested quantities."""
+    return jsonify({
+        'enabled':       DONATIONS_ENABLED,
+        'coffee_price':  DONATION_COFFEE_PRICE_CENTS,   # cents
+        'currency':      DONATION_CURRENCY,
+        'presets':       [1, 3, 5],                     # quick-pick coffee counts
+        'max_coffees':   DONATION_MAX_COFFEES,
+    })
+
+
+@app.route('/api/donate/checkout', methods=['POST'])
+def donate_checkout():
+    """Create a Lemon Squeezy checkout for an N-coffee donation and return its
+    hosted checkout URL. The amount is computed server-side (never trusted from
+    the client) as coffees × unit price."""
+    if not DONATIONS_ENABLED:
+        return jsonify({'error': 'donations_disabled',
+                        'message': 'Donations are not configured yet.'}), 503
+
+    data = request.get_json(silent=True) or {}
+
+    # Resolve the number of coffees (preferred) or a raw amount in cents.
+    try:
+        coffees = int(data.get('coffees') or 0)
+    except (TypeError, ValueError):
+        coffees = 0
+    if coffees > 0:
+        amount_cents = coffees * DONATION_COFFEE_PRICE_CENTS
+    else:
+        try:
+            amount_cents = int(data.get('amount_cents') or 0)
+        except (TypeError, ValueError):
+            amount_cents = 0
+        coffees = max(1, round(amount_cents / DONATION_COFFEE_PRICE_CENTS)) if amount_cents else 0
+
+    # Clamp to sane bounds.
+    min_cents = DONATION_COFFEE_PRICE_CENTS
+    max_cents = DONATION_COFFEE_PRICE_CENTS * DONATION_MAX_COFFEES
+    if amount_cents < min_cents or amount_cents > max_cents:
+        return jsonify({'error': 'invalid_amount',
+                        'message': f'Donation must be between {min_cents} and {max_cents} cents.'}), 400
+
+    name    = (data.get('name')    or '').strip()[:100]
+    email   = (data.get('email')   or '').strip()[:200]
+    message = (data.get('message') or '').strip()[:500]
+
+    attributes = {
+        'custom_price': amount_cents,
+        'product_options': {
+            'redirect_url': f"{APP_BASE_URL}/#donate" if APP_BASE_URL else None,
+            'receipt_thank_you_note': "Thank you for supporting Josephine — it genuinely keeps the trails alive! ☕",
+        },
+        'checkout_data': {
+            'custom': {
+                'coffees': str(coffees),
+                'source':  'josephine-app',
+                **({'message': message} if message else {}),
+            },
+        },
+        'checkout_options': {'embed': False, 'dark': True},
+    }
+    if name:
+        attributes['checkout_data']['name'] = name
+    if email:
+        attributes['checkout_data']['email'] = email
+    # Drop a null redirect_url so we don't send an invalid value.
+    if not attributes['product_options']['redirect_url']:
+        attributes['product_options'].pop('redirect_url')
+
+    payload = {
+        'data': {
+            'type': 'checkouts',
+            'attributes': attributes,
+            'relationships': {
+                'store':   {'data': {'type': 'stores',   'id': str(LEMONSQUEEZY_STORE_ID)}},
+                'variant': {'data': {'type': 'variants', 'id': str(LEMONSQUEEZY_VARIANT_ID)}},
+            },
+        }
+    }
+
+    try:
+        import requests
+        resp = requests.post(
+            'https://api.lemonsqueezy.com/v1/checkouts',
+            json=payload,
+            headers={
+                'Accept':        'application/vnd.api+json',
+                'Content-Type':  'application/vnd.api+json',
+                'Authorization': f'Bearer {LEMONSQUEEZY_API_KEY}',
+            },
+            timeout=12,
+        )
+        if resp.status_code not in (200, 201):
+            print(f"[donate] Lemon Squeezy error {resp.status_code}: {resp.text[:500]}")
+            return jsonify({'error': 'checkout_failed',
+                            'message': 'Could not start checkout. Please try again.'}), 502
+        url = (resp.json().get('data', {}).get('attributes', {}) or {}).get('url')
+        if not url:
+            return jsonify({'error': 'checkout_failed',
+                            'message': 'Checkout URL missing from provider response.'}), 502
+        return jsonify({'checkout_url': url, 'coffees': coffees, 'amount_cents': amount_cents})
+    except Exception as e:
+        print(f"[donate] checkout exception: {e}")
+        return jsonify({'error': 'checkout_failed',
+                        'message': 'Could not reach the payment provider.'}), 502
 
 
 # Serve React frontend (catch-all route for SPA)

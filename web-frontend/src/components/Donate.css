@@ -1,0 +1,195 @@
+/* ============================================================
+   Donate — "buy me a coffee" page
+   ============================================================ */
+
+.donate-page {
+  min-height: 70vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 20px 80px;
+}
+
+.donate-card {
+  width: 100%;
+  max-width: 460px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(201, 168, 76, 0.16);
+  border-radius: 20px;
+  padding: 32px 26px 26px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  text-align: center;
+  position: relative;
+}
+
+.donate-back {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: none;
+  border: none;
+  color: rgba(240, 236, 230, 0.55);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 6px;
+  transition: color 0.18s ease;
+}
+.donate-back:hover { color: #f0ece6; }
+
+.donate-mark {
+  font-size: 46px;
+  line-height: 1;
+  margin: 6px 0 14px;
+}
+
+.donate-title {
+  font-size: 26px;
+  font-weight: 300;
+  font-style: italic;
+  color: #f0ece6;
+  margin: 0 0 12px;
+}
+
+.donate-sub {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(240, 236, 230, 0.6);
+  margin: 0 auto 24px;
+  max-width: 380px;
+}
+
+.donate-state {
+  font-size: 14px;
+  color: rgba(240, 236, 230, 0.6);
+  padding: 24px 0;
+}
+.donate-state--soon p {
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 12px;
+  padding: 18px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Coffee quantity stepper ── */
+.donate-coffees {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 8px 0 16px;
+}
+
+.donate-step {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 168, 76, 0.4);
+  background: transparent;
+  color: #c9a84c;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  flex-shrink: 0;
+}
+.donate-step:hover:not(:disabled) {
+  background: rgba(201, 168, 76, 0.14);
+}
+.donate-step:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.donate-coffees__display {
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.donate-coffees__icons {
+  font-size: 22px;
+  letter-spacing: 2px;
+  min-height: 26px;
+}
+.donate-coffees__count {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(240, 236, 230, 0.7);
+}
+
+/* ── Presets ── */
+.donate-presets {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+.donate-preset {
+  padding: 6px 16px;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  color: rgba(240, 236, 230, 0.6);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.donate-preset:hover { border-color: rgba(255, 255, 255, 0.3); color: #f0ece6; }
+.donate-preset.active {
+  background: rgba(201, 168, 76, 0.14);
+  border-color: rgba(201, 168, 76, 0.5);
+  color: #c9a84c;
+}
+
+/* ── Inputs ── */
+.donate-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: #f0ece6;
+  outline: none;
+  margin-bottom: 12px;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+.donate-input::placeholder { color: rgba(240, 236, 230, 0.35); }
+.donate-input:focus { border-color: rgba(201, 168, 76, 0.45); }
+.donate-textarea { resize: vertical; line-height: 1.5; }
+
+.donate-error {
+  color: #f3a3a3;
+  font-size: 13px;
+  margin: 0 0 12px;
+}
+
+/* ── Submit ── */
+.donate-submit {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #c9a84c 0%, #d8a25a 100%);
+  color: #1a1208;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.2s ease;
+  margin-top: 4px;
+}
+.donate-submit:hover:not(:disabled) { transform: translateY(-1px); }
+.donate-submit:disabled { opacity: 0.6; cursor: default; }
+
+.donate-secure {
+  font-size: 12px;
+  color: rgba(240, 236, 230, 0.4);
+  margin: 14px 0 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+  .donate-card { padding: 28px 18px 22px; }
+  .donate-title { font-size: 23px; }
+}

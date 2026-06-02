@@ -29,6 +29,7 @@ const RifugioDetail        = lazy(() => import('./components/RifugioDetail'));
 const MultiDayTrails       = lazy(() => import('./components/MultiDayTrails'));
 const MultiDayTrailDetail  = lazy(() => import('./components/MultiDayTrailDetail'));
 const JosephineChat        = lazy(() => import('./components/JosephineChat'));
+const Donate               = lazy(() => import('./components/Donate'));
 
 // Redirects guests away from members-only views and shows the login prompt.
 // AuthProvider already holds children until auth is resolved, so currentUser
@@ -280,6 +281,10 @@ function App() {
 
           {currentView === 'josephine' && (
             <JosephineChat onBack={goBack} setCurrentView={setCurrentView} viewTrail={viewTrail} onShowLogin={() => setShowLoginModal(true)} />
+          )}
+
+          {currentView === 'donate' && (
+            <Donate onBack={goBack} />
           )}
           </Suspense>
         </main>

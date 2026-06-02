@@ -27,7 +27,8 @@ function Footer({ setCurrentView }) {
 
           <nav className="footer-nav">
             <button className="footer-nav__link" onClick={() => setCurrentView('home')}>Home</button>
-<button className="footer-nav__link" onClick={() => setCurrentView('josephine')}>Josephine</button>
+            <button className="footer-nav__link" onClick={() => setCurrentView('josephine')}>Josephine</button>
+            <button className="footer-nav__link" onClick={() => setCurrentView('donate')}>{t('footer.support', 'Support us ☕')}</button>
             <button className="footer-nav__link" onClick={() => setCurrentView('terms')}>{t('footer.terms')}</button>
             <button className="footer-nav__link" onClick={() => setCurrentView('privacy')}>{t('footer.privacy')}</button>
           </nav>

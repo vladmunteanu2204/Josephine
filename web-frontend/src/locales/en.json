@@ -304,8 +304,25 @@
     "madeIn": "Crafted with ❤️ in South Tyrol, Italy",
     "about": "About",
     "contact": "Contact",
+    "support": "Support us ☕",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service"
+  },
+  "donate": {
+    "title": "Buy Josephine a coffee",
+    "subtitle": "Josephine is a small, independent labour of love. A coffee or two helps keep the trails mapped, the rifugios up to date, and the lights on. Thank you for your support.",
+    "back": "Back",
+    "coffee": "coffee",
+    "coffees": "coffees",
+    "fewer": "Fewer coffees",
+    "more": "More coffees",
+    "namePlaceholder": "Your name (optional)",
+    "messagePlaceholder": "Leave a message (optional)",
+    "support": "Support",
+    "redirecting": "Taking you to checkout…",
+    "secure": "Secure checkout via Lemon Squeezy. We never see your card details.",
+    "comingSoon": "Donations are coming soon — thank you for wanting to support the cause! Please check back shortly.",
+    "error": "Something went wrong starting checkout. Please try again."
   },
   "profile": {
     "title": "Profile",

@@ -299,8 +299,25 @@
     "madeIn": "Creata con ❤️ nel cuore dell'Alto Adige, Italia",
     "about": "Chi Siamo",
     "contact": "Contatti",
+    "support": "Sostienici ☕",
     "privacy": "Privacy Policy",
     "terms": "Termini di Servizio"
+  },
+  "donate": {
+    "title": "Offri un caffè a Josephine",
+    "subtitle": "Josephine è un piccolo progetto indipendente fatto con passione. Un caffè o due aiutano a mantenere i sentieri aggiornati, i rifugi in ordine e il progetto vivo. Grazie per il tuo sostegno.",
+    "back": "Indietro",
+    "coffee": "caffè",
+    "coffees": "caffè",
+    "fewer": "Meno caffè",
+    "more": "Più caffè",
+    "namePlaceholder": "Il tuo nome (facoltativo)",
+    "messagePlaceholder": "Lascia un messaggio (facoltativo)",
+    "support": "Sostieni",
+    "redirecting": "Ti porto al pagamento…",
+    "secure": "Pagamento sicuro tramite Lemon Squeezy. Non vediamo mai i dati della tua carta.",
+    "comingSoon": "Le donazioni saranno presto disponibili — grazie per voler sostenere il progetto! Torna a trovarci a breve.",
+    "error": "Qualcosa è andato storto durante l'avvio del pagamento. Riprova."
   },
   "profile": {
     "title": "Profilo",
