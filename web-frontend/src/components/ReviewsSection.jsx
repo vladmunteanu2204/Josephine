@@ -224,9 +224,6 @@ function ReviewsSection({ trailId, rifugioId, onShowLogin }) {
           <div className="no-reviews">
             <div className="no-reviews-icon">💬</div>
             <p>{t('trail.noReviewsYet')}</p>
-            <button className="btn-write-review" onClick={openReviewForm}>
-              ✍️ {t('trail.writeReview')}
-            </button>
           </div>
         )}
       </div>
