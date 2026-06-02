@@ -357,10 +357,6 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
               </div>
             ))}
           </div>
-
-          <button className="hp-meet__cta" onClick={() => setCurrentView('josephine')}>
-            {t('meet.cta', 'Plan your day with Josephine →')}
-          </button>
         </div>
       </section>
 

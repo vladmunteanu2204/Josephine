@@ -9,15 +9,6 @@ function Footer({ setCurrentView }) {
     <footer className="app-footer">
       <div className="footer-container">
 
-        {/* Final CTA */}
-        <div className="footer-cta">
-          <h2 className="footer-cta__title">Ready for your next mountain day?</h2>
-          <p className="footer-cta__sub">Josephine knows every trail, rifugio and hidden path in the Dolomites.</p>
-          <button className="footer-cta__btn" onClick={() => setCurrentView('josephine')}>
-            Plan my day with Josephine →
-          </button>
-        </div>
-
         {/* Brand + nav */}
         <div className="footer-mid">
           <div className="footer-wordmark">
