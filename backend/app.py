@@ -1370,6 +1370,56 @@ def save_hike_plan():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/hike-plans/<plan_id>', methods=['PUT'])
+def update_hike_plan(plan_id):
+    """Update an existing hike plan (owner only — ownership keyed by email,
+    matching the app's current client-trust model with no token verification)."""
+    try:
+        body = request.json or {}
+        if not body.get('user_email'):
+            return jsonify({'error': 'user_email required'}), 400
+
+        plans_data = load_plans()
+        idx = next((i for i, p in enumerate(plans_data['plans']) if p.get('id') == plan_id), None)
+        if idx is None:
+            return jsonify({'error': 'Plan not found'}), 404
+
+        existing = plans_data['plans'][idx]
+        if existing.get('user_email') != body.get('user_email'):
+            return jsonify({'error': 'Forbidden — not your plan'}), 403
+
+        # Preserve immutable fields; the client owns the rest of the envelope.
+        body['id'] = existing['id']
+        body['created_at'] = existing.get('created_at')
+        body['user_email'] = existing.get('user_email')
+        body['updated_at'] = datetime.now().isoformat()
+        plans_data['plans'][idx] = body
+        save_plans(plans_data)
+        return jsonify({'success': True, 'plan': body})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/hike-plans/<plan_id>', methods=['DELETE'])
+def delete_hike_plan(plan_id):
+    """Delete a hike plan (owner only, ownership keyed by ?email=)."""
+    try:
+        user_email = request.args.get('email')
+        if not user_email:
+            return jsonify({'error': 'Email parameter required'}), 400
+
+        plans_data = load_plans()
+        plan = next((p for p in plans_data['plans'] if p.get('id') == plan_id), None)
+        if plan is None:
+            return jsonify({'error': 'Plan not found'}), 404
+        if plan.get('user_email') != user_email:
+            return jsonify({'error': 'Forbidden — not your plan'}), 403
+
+        plans_data['plans'] = [p for p in plans_data['plans'] if p.get('id') != plan_id]
+        save_plans(plans_data)
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/admin/hike-plans', methods=['GET'])
 @require_admin_auth
 def get_all_plans():
