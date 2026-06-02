@@ -1947,14 +1947,17 @@ def _deliver_booking_inquiry(inquiry, rif):
     try:
         if EMAIL_ENABLED and hut_email and verified:
             subject_hut = f"Richiesta di prenotazione — {inquiry['check_in']} → {inquiry['check_out']}"
-            ok, provider_id, err = send_email(hut_email, subject_hut, msg, reply_to=inquiry['user_email'])
+            hiker_email = inquiry.get('user_email')
+            # Reply-To AND Cc the hiker: a plain "Reply" reaches them (Reply-To),
+            # a "Reply All" reaches them (Cc), and the Cc copy is their own
+            # confirmation + puts them on the real thread.
+            ok, provider_id, err = send_email(
+                hut_email, subject_hut, msg,
+                reply_to=hiker_email,
+                cc=[hiker_email] if hiker_email else None,
+            )
             if ok:
                 status = 'emailed'; channel = 'email'
-                # Confirmation copy to the hiker (best-effort; failure ignored).
-                confirm = (f"Hi {inquiry['user_name']},\n\nWe've sent your inquiry to "
-                           f"{inquiry['rifugio_name']}. They'll reply to you directly at "
-                           f"{inquiry['user_email']}.\n\n--- Copy of your inquiry ---\n\n{msg}")
-                send_email(inquiry['user_email'], f"Your inquiry to {inquiry['rifugio_name']}", confirm)
             else:
                 status = 'failed'
                 print(f"[booking] email send failed for {inquiry['id']}: {err}")

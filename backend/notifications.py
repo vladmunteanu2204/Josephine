@@ -30,7 +30,7 @@ if not EMAIL_ENABLED:
           "run in fallback mode (the hiker sends the inquiry themselves).")
 
 
-def send_email(to, subject, text, reply_to=None):
+def send_email(to, subject, text, reply_to=None, cc=None):
     """Send a plain-text email via Resend.
     Returns (ok: bool, provider_id: str|None, error: str|None)."""
     if not EMAIL_ENABLED:
@@ -43,6 +43,8 @@ def send_email(to, subject, text, reply_to=None):
     }
     if reply_to:
         payload['reply_to'] = reply_to
+    if cc:
+        payload['cc'] = cc if isinstance(cc, list) else [cc]
     try:
         resp = requests.post(
             'https://api.resend.com/emails',
@@ -117,7 +119,7 @@ def build_inquiry_text(inquiry, rifugio=None):
         f"{name}",
         "",
         "—",
-        "Richiesta inviata tramite Josephine. Si prega di rispondere "
-        "direttamente all'email del cliente.",
+        f"Per rispondere, scrivete direttamente al cliente all'indirizzo {email} "
+        "(in copia a questa email). Richiesta inviata tramite Josephine.",
     ]
     return "\n".join(lines)
