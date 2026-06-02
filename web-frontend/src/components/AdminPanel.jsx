@@ -17,10 +17,7 @@ import MultiDayTrailsManager from './admin/MultiDayTrailsManager';
 import './AdminPanel.css';
 
 const ADMIN_EMAIL = 'vladmunteanu2204@gmail.com';
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || '';
-if (!import.meta.env.VITE_ADMIN_PASSWORD) {
-  console.warn('[AdminPanel] VITE_ADMIN_PASSWORD env var is not set — admin API calls will be rejected by the server.');
-}
+const ADMIN_TOKEN_KEY = 'jph_admin_token';
 
 const TABS = [
   { id: 'dashboard',  label: '🎯 Dashboard' },
@@ -41,41 +38,65 @@ const TABS = [
 function AdminPanel({ onNavigate }) {
   const { t } = useTranslation();
   const { currentUser } = useAuth();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [adminPassword, setAdminPassword] = useState('');
+  // The admin JWT obtained from /api/admin/login. Persisted in sessionStorage
+  // so a reload within the session keeps you logged in. The password is NEVER
+  // stored or bundled — it's typed at runtime and exchanged for this token.
+  const [token, setToken] = useState(() => {
+    try { return sessionStorage.getItem(ADMIN_TOKEN_KEY) || ''; } catch { return ''; }
+  });
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [loggingIn, setLoggingIn] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
+  const isAdminUser = currentUser?.email === ADMIN_EMAIL;
+
+  // Attach the admin JWT only to admin requests (admin endpoints + the
+  // ?_admin=1 draft loaders), so normal public requests stay untouched.
   useEffect(() => {
-    if (currentUser?.email === ADMIN_EMAIL) {
-      setIsAuthenticated(true);
-      setAdminPassword(ADMIN_PASSWORD);
-    }
-    setIsCheckingAuth(false);
-  }, [currentUser]);
+    if (!token) return;
+    const id = axios.interceptors.request.use((cfg) => {
+      const url = cfg.url || '';
+      const p = cfg.params || {};
+      // `_admin` can arrive in the query string (TrailManager) or via axios
+      // `params` (RifugiosManager) — match both so draft loaders authenticate.
+      const adminParam = p._admin === 1 || p._admin === '1' || p._admin === true;
+      if (url.includes('/api/admin') || url.includes('_admin=1') || url.includes('_admin=true') || adminParam) {
+        cfg.headers = cfg.headers || {};
+        cfg.headers['Authorization'] = `Bearer ${token}`;
+      }
+      return cfg;
+    });
+    return () => axios.interceptors.request.eject(id);
+  }, [token]);
 
-  // Allow Dashboard to jump to the trails tab with a specific trail pre-selected
-  const handleNavigateToTrail = (trailId) => {
-    setActiveTab('trails');
-    // TrailManager will need to handle this — for now just switch tab
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoginError('');
+    setLoggingIn(true);
+    try {
+      const res = await axios.post('/api/admin/login', { password });
+      const tok = res.data?.token;
+      if (!tok) throw new Error('No token returned');
+      try { sessionStorage.setItem(ADMIN_TOKEN_KEY, tok); } catch {}
+      setToken(tok);
+      setPassword('');
+    } catch (err) {
+      setLoginError(err?.response?.data?.error || 'Login failed. Check the password and try again.');
+    } finally {
+      setLoggingIn(false);
+    }
   };
 
-  if (isCheckingAuth) {
-    return (
-      <div className="admin-login-page">
-        <div className="admin-login-container">
-          <div className="admin-login-card">
-            <div className="admin-login-header">
-              <h1>🔐 Admin Panel</h1>
-              <p>Verifying access...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const handleLogout = () => {
+    try { sessionStorage.removeItem(ADMIN_TOKEN_KEY); } catch {}
+    setToken('');
+  };
 
-  if (!isAuthenticated) {
+  const handleNavigateToTrail = () => setActiveTab('trails');
+
+  // Not the admin account → no access at all.
+  if (!isAdminUser) {
     return (
       <div className="admin-login-page">
         <div className="admin-login-container">
@@ -87,13 +108,47 @@ function AdminPanel({ onNavigate }) {
                 Only the site administrator can access this area.
               </p>
             </div>
-            <button
-              className="admin-login-btn"
-              onClick={() => onNavigate('home')}
-              style={{ marginTop: '20px' }}
-            >
+            <button className="admin-login-btn" onClick={() => onNavigate('home')} style={{ marginTop: '20px' }}>
               ← Back to Home
             </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Admin account but no valid session token yet → ask for the password,
+  // which is exchanged for a short-lived JWT (never stored client-side).
+  if (!token) {
+    return (
+      <div className="admin-login-page">
+        <div className="admin-login-container">
+          <div className="admin-login-card">
+            <div className="admin-login-header">
+              <h1>🔐 Admin Panel</h1>
+              <p>Enter the admin password to continue.</p>
+            </div>
+            <form onSubmit={handleLogin} style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Admin password"
+                autoFocus
+                style={{
+                  padding: '12px 14px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.18)',
+                  background: 'rgba(255,255,255,0.05)', color: '#f0ece6', fontSize: 15, outline: 'none',
+                }}
+              />
+              {loginError && <p style={{ color: '#f3a3a3', fontSize: 13, margin: 0 }}>{loginError}</p>}
+              <button className="admin-login-btn" type="submit" disabled={loggingIn || !password}>
+                {loggingIn ? 'Signing in…' : 'Sign in'}
+              </button>
+              <button type="button" className="admin-login-btn" onClick={() => onNavigate('home')}
+                style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.18)' }}>
+                ← Back to Home
+              </button>
+            </form>
           </div>
         </div>
       </div>
@@ -109,7 +164,7 @@ function AdminPanel({ onNavigate }) {
           </button>
           <div className="admin-title-section">
             <h1>⚙️ Josephine Admin</h1>
-            <button className="logout-btn" onClick={() => { setIsAuthenticated(false); setAdminPassword(''); }}>
+            <button className="logout-btn" onClick={handleLogout}>
               🔒 Logout
             </button>
           </div>
@@ -130,17 +185,17 @@ function AdminPanel({ onNavigate }) {
         </div>
 
         <div className="admin-content">
-          {activeTab === 'dashboard'    && <Dashboard adminPassword={adminPassword} onNavigateToTrail={handleNavigateToTrail} />}
-          {activeTab === 'trails'       && <TrailManager adminPassword={adminPassword} />}
-          {activeTab === 'multiday'     && <MultiDayTrailsManager adminPassword={adminPassword} />}
-          {activeTab === 'rifugios'     && <RifugiosManager adminPassword={adminPassword} />}
-          {activeTab === 'bookings'     && <BookingInquiries adminPassword={adminPassword} />}
-          {activeTab === 'reviews'      && <ReviewsModeration adminPassword={adminPassword} />}
-          {activeTab === 'plans'        && <UserPlansManager adminPassword={adminPassword} />}
-          {activeTab === 'users'        && <UserManagement adminPassword={adminPassword} />}
-          {activeTab === 'analytics'    && <TrailAnalytics adminPassword={adminPassword} />}
-          {ENABLE_GAMIFICATION && activeTab === 'challenges'   && <ChallengesManager adminPassword={adminPassword} />}
-          {ENABLE_GAMIFICATION && activeTab === 'gamification' && <GamificationStats adminPassword={adminPassword} />}
+          {activeTab === 'dashboard'    && <Dashboard adminPassword={token} onNavigateToTrail={handleNavigateToTrail} />}
+          {activeTab === 'trails'       && <TrailManager adminPassword={token} />}
+          {activeTab === 'multiday'     && <MultiDayTrailsManager adminPassword={token} />}
+          {activeTab === 'rifugios'     && <RifugiosManager adminPassword={token} />}
+          {activeTab === 'bookings'     && <BookingInquiries adminPassword={token} />}
+          {activeTab === 'reviews'      && <ReviewsModeration adminPassword={token} />}
+          {activeTab === 'plans'        && <UserPlansManager adminPassword={token} />}
+          {activeTab === 'users'        && <UserManagement adminPassword={token} />}
+          {activeTab === 'analytics'    && <TrailAnalytics adminPassword={token} />}
+          {ENABLE_GAMIFICATION && activeTab === 'challenges'   && <ChallengesManager adminPassword={token} />}
+          {ENABLE_GAMIFICATION && activeTab === 'gamification' && <GamificationStats adminPassword={token} />}
         </div>
       </div>
     </div>

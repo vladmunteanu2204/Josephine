@@ -172,12 +172,27 @@ def admin_login():
     token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
     return jsonify({'token': token, 'expires_in': JWT_EXPIRY_HOURS * 3600})
 
+def _has_valid_admin_jwt() -> bool:
+    """True if the request carries a valid admin Bearer JWT. Used both by the
+    decorator and to gate the `_admin` content bypass on public read routes."""
+    auth = request.headers.get('Authorization', '')
+    if not auth.startswith('Bearer '):
+        return False
+    try:
+        jwt.decode(auth[7:], JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        return True
+    except jwt.InvalidTokenError:   # covers ExpiredSignatureError too
+        return False
+
 def require_admin_auth(f):
-    """Decorator: accept either a valid JWT (Bearer token) or the legacy
-    X-Admin-Password header so the existing AdminPanel keeps working."""
+    """Decorator: require a valid admin JWT (Bearer token).
+
+    The legacy X-Admin-Password header path was removed: any VITE_* value is
+    bundled into the browser build, so accepting the raw password from a header
+    turned it into a public secret. Admins now exchange the password for a
+    short-lived JWT via /api/admin/login (which keeps the brute-force lockout)."""
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        # ── 1. Try JWT Bearer token ──
         auth = request.headers.get('Authorization', '')
         if auth.startswith('Bearer '):
             token = auth[7:]
@@ -188,15 +203,7 @@ def require_admin_auth(f):
                 return jsonify({'error': 'Token expired — please log in again'}), 401
             except jwt.InvalidTokenError:
                 return jsonify({'error': 'Invalid token'}), 401
-        # ── 2. Legacy header (backwards-compat, still works) ──
-        ip = request.headers.get('X-Forwarded-For', request.remote_addr or '0.0.0.0').split(',')[0].strip()
-        if _is_locked_out(ip):
-            return jsonify({'error': 'Too many failed attempts. Try again in 15 minutes.'}), 429
-        pw = request.headers.get('X-Admin-Password', '')
-        if pw and pw == ADMIN_PASSWORD:
-            return f(*args, **kwargs)
-        _record_failed(ip)
-        return jsonify({'error': 'Unauthorized - Invalid admin credentials'}), 401
+        return jsonify({'error': 'Unauthorized - admin login required'}), 401
     return decorated_function
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -305,6 +312,17 @@ def save_trail(trail: dict):
         except Exception as e:
             print(f"[db] save_trail fallback to JSON: {e}")
     return False   # caller must do JSON write as fallback
+
+def _db_delete_row(table: str, row_id: str):
+    """Delete a row by id from a known table when PostgreSQL is in use.
+    `table` is always a fixed literal ('trails' / 'rifugios'), never user input."""
+    if not DB_AVAILABLE:
+        return
+    try:
+        with get_db() as conn:
+            conn.execute(_sql(f"DELETE FROM {table} WHERE id = :id"), {'id': row_id})
+    except Exception as e:
+        print(f"[db] delete from {table} failed: {e}")
 
 def load_reviews():
     """Load reviews data — from PostgreSQL if available, else JSON (TTL-cached)."""
@@ -486,7 +504,9 @@ def get_trails():
     interest = request.args.get('interest')
     
     all_trails = trails['trails']
-    is_admin = request.args.get('_admin') == '1'
+    # The `_admin` bypass (showing drafts) now requires a valid admin JWT —
+    # previously anyone could append ?_admin=1 to read unpublished content.
+    is_admin = request.args.get('_admin') == '1' and _has_valid_admin_jwt()
 
     # Public endpoint: only show published trails; admin bypass shows all
     if not is_admin:
@@ -1035,11 +1055,14 @@ def create_trail():
             return jsonify({'error': 'Trail ID already exists'}), 400
         
         trails['trails'].append(trail_data)
-        
+
         trails_path = TRAILS_PATH
         atomic_json_write(trails_path, trails)
         _invalidate_cache(TRAILS_PATH)
-        
+        # Persist to Postgres too (the source of truth in prod); JSON above is
+        # the safety-net mirror. save_trail no-ops when DB isn't configured.
+        save_trail(trail_data)
+
         return jsonify({'success': True, 'trail': trail_data}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -1057,11 +1080,12 @@ def update_trail(trail_id):
             return jsonify({'error': 'Trail not found'}), 404
         
         trails['trails'][trail_index] = trail_data
-        
+
         trails_path = TRAILS_PATH
         atomic_json_write(trails_path, trails)
         _invalidate_cache(TRAILS_PATH)
-        
+        save_trail(trail_data)   # mirror to Postgres when available
+
         return jsonify({'success': True, 'trail': trail_data})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -1077,11 +1101,12 @@ def delete_trail(trail_id):
         
         if len(trails['trails']) == original_count:
             return jsonify({'error': 'Trail not found'}), 404
-        
+
         trails_path = TRAILS_PATH
         atomic_json_write(trails_path, trails)
         _invalidate_cache(TRAILS_PATH)
-        
+        _db_delete_row('trails', trail_id)   # remove from Postgres too
+
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -1102,6 +1127,7 @@ def publish_trail(trail_id):
         trails_path = TRAILS_PATH
         atomic_json_write(trails_path, trails)
         _invalidate_cache(TRAILS_PATH)
+        save_trail(trail)   # mirror the status change to Postgres
         return jsonify({'success': True, 'status': new_status})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -1122,6 +1148,7 @@ def publish_rifugio(rifugio_id):
         rifugio['status'] = new_status
         rifugios_path = os.path.join(BASE_DIR, 'backend', 'data', 'rifugios.json')
         atomic_json_write(rifugios_path, rifugios)
+        save_rifugio(rifugio)   # mirror the status change to Postgres
         return jsonify({'success': True, 'status': new_status})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -1755,8 +1782,9 @@ def get_rifugios():
         status_filter = request.args.get('status')  # open, closed, opening_soon
         search_query = request.args.get('search', '').lower()
         
-        # Public endpoint: only show published rifugios; admin bypass shows all
-        is_admin = request.args.get('_admin') == '1'
+        # Public endpoint: only show published rifugios; admin bypass (drafts)
+        # now requires a valid admin JWT, not just the query flag.
+        is_admin = request.args.get('_admin') == '1' and _has_valid_admin_jwt()
         if not is_admin:
             rifugios = [r for r in rifugios if r.get('status', 'published') == 'published']
 
@@ -2108,7 +2136,10 @@ def delete_rifugio(rifugio_id):
         
         rifugios = [r for r in rifugios if r['id'] != rifugio_id]
         save_rifugios(rifugios)
-        
+        # save_rifugios is upsert-only, so it can't remove the deleted row from
+        # Postgres — delete it explicitly.
+        _db_delete_row('rifugios', rifugio_id)
+
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
