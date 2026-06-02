@@ -125,7 +125,10 @@
         "facilities": "WC, picnic benches at the church"
       },
       "nearby_rifugios": [
-        "rif-067"
+        {
+          "id": "rif-067",
+          "name": "Malga Fedare"
+        }
       ],
       "crowding": {
         "level": "high",
@@ -3957,10 +3960,22 @@
         "facilities": "WC, café at cable car station"
       },
       "nearby_rifugios": [
-        "rif-055",
-        "rif-001",
-        "rif-053",
-        "rif-005"
+        {
+          "id": "rif-055",
+          "name": "Rifugio Gomagoi"
+        },
+        {
+          "id": "rif-001",
+          "name": "Rifugio Bolzano"
+        },
+        {
+          "id": "rif-053",
+          "name": "Rifugio Kassianerhütte"
+        },
+        {
+          "id": "rif-005",
+          "name": "Malga Frara"
+        }
       ],
       "crowding": {
         "level": "medium",
@@ -13929,8 +13944,14 @@
         "facilities": "WC, mountain restaurants at ski base"
       },
       "nearby_rifugios": [
-        "rif-076",
-        "rif-001"
+        {
+          "id": "rif-076",
+          "name": "Bivacco Marzelini"
+        },
+        {
+          "id": "rif-001",
+          "name": "Rifugio Bolzano"
+        }
       ],
       "crowding": {
         "level": "low",
@@ -15747,9 +15768,18 @@
         "facilities": "WC in village, café at Schenna castle"
       },
       "nearby_rifugios": [
-        "rif-055",
-        "rif-053",
-        "rif-005"
+        {
+          "id": "rif-055",
+          "name": "Rifugio Gomagoi"
+        },
+        {
+          "id": "rif-053",
+          "name": "Rifugio Kassianerhütte"
+        },
+        {
+          "id": "rif-005",
+          "name": "Malga Frara"
+        }
       ],
       "crowding": {
         "level": "low",
@@ -17655,9 +17685,18 @@
         "facilities": "No WC at trailhead; WC in Lagundo village (5 min)"
       },
       "nearby_rifugios": [
-        "rif-055",
-        "rif-053",
-        "rif-005"
+        {
+          "id": "rif-055",
+          "name": "Rifugio Gomagoi"
+        },
+        {
+          "id": "rif-053",
+          "name": "Rifugio Kassianerhütte"
+        },
+        {
+          "id": "rif-005",
+          "name": "Malga Frara"
+        }
       ],
       "crowding": {
         "level": "medium",
@@ -19619,6 +19658,7 @@
       },
       "nearby_rifugios": [
         {
+          "id": null,
           "name": "Rifugio Seceda",
           "elevation_m": 2519,
           "distance_from_trail_km": 0
@@ -19727,6 +19767,7 @@
       },
       "nearby_rifugios": [
         {
+          "id": "rif-043",
           "name": "Rifugio Auronzo",
           "elevation_m": 2320,
           "distance_from_trail_km": 2.1
@@ -19937,6 +19978,7 @@
       },
       "nearby_rifugios": [
         {
+          "id": "rif-043",
           "name": "Rifugio Auronzo",
           "elevation_m": 2320,
           "distance_from_trail_km": 0
@@ -20046,6 +20088,7 @@
       },
       "nearby_rifugios": [
         {
+          "id": null,
           "name": "Rifugio Sarntaler Alm",
           "elevation_m": 2350,
           "distance_from_trail_km": 2.5
@@ -20361,7 +20404,10 @@
         "facilities": "None at trailhead; nearest facilities at Rifugio Fedare (5km into trail)"
       },
       "nearby_rifugios": [
-        "Rifugio Fedare (on-trail, overnight beds available)"
+        {
+          "id": "rif-004",
+          "name": "Rifugio Fedare"
+        }
       ],
       "crowding": {
         "level": "medium",
@@ -21208,7 +21254,10 @@
         "facilities": "WC and restaurant at Rifugio Auronzo; no facilities on trail itself"
       },
       "nearby_rifugios": [
-        "Rifugio Auronzo (at trailhead, 2,320m, +39 0436 4206)"
+        {
+          "id": "rif-043",
+          "name": "Rifugio Auronzo"
+        }
       ],
       "crowding": {
         "level": "medium",
@@ -21311,7 +21360,10 @@
         "facilities": "WC at village parking area; Rifugio Hasenhöhe has WC and restaurant halfway through hike"
       },
       "nearby_rifugios": [
-        "Rifugio Hasenhöhe (at 2,150m, on-trail, +39 0473 667159)"
+        {
+          "id": null,
+          "name": "Rifugio Hasenhöhe"
+        }
       ],
       "crowding": {
         "level": "low",
@@ -21419,8 +21471,14 @@
         "facilities": "Rifugio café, WC, and detailed route information at trailhead"
       },
       "nearby_rifugios": [
-        "Auronzo Rifugio (2,320m, at trailhead)",
-        "Lavaredo Rifugio (2,344m, on circuit)"
+        {
+          "id": null,
+          "name": "Auronzo Rifugio"
+        },
+        {
+          "id": null,
+          "name": "Lavaredo Rifugio"
+        }
       ],
       "crowding": {
         "level": "high",
@@ -21734,7 +21792,10 @@
         "facilities": "Small village store and café at trailhead; main facilities at Sarntal Rifugio (2.5 hours up trail)"
       },
       "nearby_rifugios": [
-        "Sarntal Rifugio (2,340m, on upper trail)"
+        {
+          "id": null,
+          "name": "Sarntal Rifugio"
+        }
       ],
       "crowding": {
         "level": "low",
@@ -22259,10 +22320,12 @@
       },
       "nearby_rifugios": [
         {
+          "id": "rif-043",
           "name": "Rifugio Auronzo",
           "elevation": 2602
         },
         {
+          "id": null,
           "name": "Rifugio Lavaredo",
           "elevation": 2344
         }
@@ -22580,10 +22643,12 @@
       },
       "nearby_rifugios": [
         {
+          "id": null,
           "name": "Rifugio Cir",
           "elevation": 2050
         },
         {
+          "id": null,
           "name": "Rifugio Ghedina",
           "elevation": 2293
         }
@@ -22696,8 +22761,14 @@
         "facilities": "Restrooms, snack bar, cable car station building"
       },
       "nearby_rifugios": [
-        "Rifugio Auronzo",
-        "Rifugio Sorau"
+        {
+          "id": "rif-043",
+          "name": "Rifugio Auronzo"
+        },
+        {
+          "id": null,
+          "name": "Rifugio Sorau"
+        }
       ],
       "crowding": {
         "level": "high",
@@ -22919,8 +22990,14 @@
         "facilities": "Cable car station with café and restrooms; Rifugio Seceda midway with full services"
       },
       "nearby_rifugios": [
-        "Rifugio Seceda",
-        "Rifugio Passo Ghedina"
+        {
+          "id": null,
+          "name": "Rifugio Seceda"
+        },
+        {
+          "id": null,
+          "name": "Rifugio Passo Ghedina"
+        }
       ],
       "crowding": {
         "level": "high",

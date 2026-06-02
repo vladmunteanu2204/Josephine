@@ -2984,38 +2984,26 @@ HUT-TO-HUT ADVENTURES DATABASE
 
 def _resolve_nearby_rifugios(id_list: list) -> list:
     """
-    Given a list of rifugio IDs from a trail record, return slim objects
-    suitable for display in the chat trail-card (name, type, altitude,
-    open/closed status, booking_required, insider note).
-    At most 3 rifugios returned to keep the card compact.
+    Given a trail's nearby_rifugios list, return slim objects suitable for the
+    chat trail-card (name, type, altitude, open/closed status, booking_required,
+    insider note). At most 3 rifugios are returned to keep the card compact.
+
+    Entries are tolerated in any of the historical shapes:
+      • string id      ("rif-067")            → enriched from the rifugios table
+      • inline dict     ({id?, name, ...})     → table-enriched if id resolves,
+                                                  otherwise used as-is
+      • free-text name  ("Rifugio Auronzo")    → skipped (no record to show)
+    Passing a dict to a dict-keyed lookup previously raised
+    "unhashable type: 'dict'" and 500'd the recommend endpoint.
     """
     if not id_list:
         return []
     all_rifugios = load_rifugios()
     rif_by_id = {r['id']: r for r in all_rifugios}
     today = datetime.now().date()
-    result = []
-    for entry in id_list[:3]:
-        # nearby_rifugios has two shapes across the dataset:
-        #   1) a string id  ("rif-067")  → look up the full record
-        #   2) an inline dict ({name, elevation_m, ...}) → use as-is
-        # Passing a dict to rif_by_id.get() raised "unhashable type: 'dict'".
-        if isinstance(entry, dict):
-            result.append({
-                'id':               entry.get('id'),
-                'name':             entry.get('name', ''),
-                'type':             entry.get('type', 'rifugio'),
-                'altitude':         entry.get('altitude') or entry.get('elevation_m'),
-                'open_now':         None,
-                'opening_season':   entry.get('opening_season', {}),
-                'booking_required': entry.get('booking_required', False),
-                'josephine_note':   entry.get('josephine_note', ''),
-            })
-            continue
-        r = rif_by_id.get(entry)
-        if not r:
-            continue
-        season = r.get('opening_season', {})
+
+    def _from_record(r):
+        season = r.get('opening_season', {}) or {}
         start_s, end_s = season.get('start_date'), season.get('end_date')
         if start_s and end_s:
             try:
@@ -3023,18 +3011,44 @@ def _resolve_nearby_rifugios(id_list: list) -> list:
             except Exception:
                 open_now = None
         else:
-            # bivacco / year-round
             open_now = True if r.get('type') in ('bivacco', 'bivouac') else None
-        result.append({
-            'id':               r['id'],
-            'name':             r['name'],
+        return {
+            'id':               r.get('id'),
+            'name':             r.get('name', ''),
             'type':             r.get('type', 'rifugio'),
             'altitude':         r.get('altitude'),
             'open_now':         open_now,
             'opening_season':   season,
             'booking_required': r.get('booking_required', False),
             'josephine_note':   r.get('josephine_note', ''),
-        })
+        }
+
+    result = []
+    for entry in id_list[:3]:
+        # Normalise the entry to (rid, inline-dict).
+        if isinstance(entry, str):
+            rid, inline = entry, None
+        elif isinstance(entry, dict):
+            rid, inline = entry.get('id'), entry
+        else:
+            continue
+
+        r = rif_by_id.get(rid) if isinstance(rid, str) else None
+        if r:
+            result.append(_from_record(r))
+        elif inline:
+            # No matching record — render straight from the inline object.
+            result.append({
+                'id':               inline.get('id'),
+                'name':             inline.get('name', ''),
+                'type':             inline.get('type', 'rifugio'),
+                'altitude':         inline.get('altitude') or inline.get('elevation_m'),
+                'open_now':         None,
+                'opening_season':   inline.get('opening_season', {}),
+                'booking_required': inline.get('booking_required', False),
+                'josephine_note':   inline.get('josephine_note', ''),
+            })
+        # else: bare string that isn't a known id (free-text name) → skip
     return result
 
 
