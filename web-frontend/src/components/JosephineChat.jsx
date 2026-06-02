@@ -1025,6 +1025,32 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       return;
     }
 
+    // ── "Why this one?" — explain the current recommendation locally ─────
+    // Uses the pick's own Josephine note + stats, so it never falls through
+    // to the offline fallback when there's a recommendation on screen.
+    const askedWhy = /\bwhy\b/i.test(tl);
+    const whyTarget = /(this|that|\bit\b|one|trail|hike|route|pick|chos|recommend|suggest)/i.test(tl);
+    if (apiResults.length > 0 && askedWhy && (whyTarget || tl.replace(/[^a-z]/gi, '') === 'why')) {
+      appendUserMessage(trimmed);
+      setInput('');
+      setTyping(true);
+      const top = apiResults[0];
+      const bits = [];
+      if (top.difficulty)      bits.push(`a ${top.difficulty} route`);
+      if (top.duration_hours)  bits.push(`around ${top.duration_hours}h`);
+      if (top.distance_km)     bits.push(`${top.distance_km} km`);
+      const factual = bits.length ? `It matches what you asked for — ${bits.join(', ')}.` : '';
+      const note = (top.josephine_note || '').trim();
+      const text = [`${top.name} is my pick for today.`, factual, note].filter(Boolean).join(' ');
+      setTimeout(() => {
+        setTyping(false);
+        appendJosephineMessage({ type: 'text', text, chips: null });
+        // Re-surface the trail right here so it's easy to open.
+        appendJosephineMessage({ type: 'options', trails: [top], chips: [t('chipStartOver')] });
+      }, 450);
+      return;
+    }
+
     const intent = parseRecommendIntent(trimmed);
     if (intent) {
       appendUserMessage(trimmed);
@@ -1356,13 +1382,13 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
                   </div>
                 )}
 
-                {/* Three options (disabled when spent — fix 9) */}
+                {/* Trail options — always tappable, even after the conversation
+                    moves on, so a recommended hike never becomes inaccessible. */}
                 {msg.type === 'options' && msg.trails?.length > 0 && (
-                  <div className={`jc-options${!active ? ' jc-options--spent' : ''}`}>
+                  <div className="jc-options">
                     {msg.trails.map((tr, i) => (
                       <button key={tr.id || i} className="jc-option"
-                        disabled={!active}
-                        onClick={() => { if (active) showTrailDetail(tr); }}>
+                        onClick={() => showTrailDetail(tr)}>
                         <img className="jc-option__img" src={trailImg(tr, 'card')} alt={tr.name}
                           onError={e => {
                             e.currentTarget.style.display = 'none';
