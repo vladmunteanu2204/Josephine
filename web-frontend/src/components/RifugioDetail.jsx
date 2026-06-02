@@ -9,7 +9,7 @@ import ReviewsSection from './ReviewsSection';
 import HutBookingSheet from './planner/HutBookingSheet';
 import {
   ArrowLeft, Heart, Mountain, MapPin, BedDouble,
-  UtensilsCrossed, ShowerHead, Wifi, Dog, Phone, Globe, Mail, MessageCircle,
+  UtensilsCrossed, ShowerHead, Wifi, Dog, Phone, Globe, Mail, MessageCircle, CalendarCheck,
 } from 'lucide-react';
 import './RifugioDetail.css';
 
@@ -276,6 +276,15 @@ function RifugioDetail({ rifugioId, onNavigate, onShowLogin }) {
 
         {/* ── Sidebar ── */}
         <aside className="rd-sidebar">
+
+          {/* Booking CTA */}
+          <div className="rd-sidebar-card rd-book-card">
+            <h3 className="rd-sidebar-card__title">{t('rifugio.bookingInquiry')}</h3>
+            {rifugio.booking_note && <p className="rd-booking-note">{rifugio.booking_note}</p>}
+            <button className="rd-book-cta" onClick={() => setShowBookingForm(true)}>
+              <CalendarCheck size={16} strokeWidth={2} /> {t('rifugio.submitInquiry')}
+            </button>
+          </div>
 
           {/* Opening season */}
           {rifugio.opening_season?.start_date && (

@@ -649,3 +649,13 @@
 .rd-contact { display: inline-flex; align-items: center; gap: 8px; }
 .rd-contact svg { color: var(--text-muted); flex-shrink: 0; }
 .rd-back-btn, .rd-save-btn { display: inline-flex; align-items: center; justify-content: center; }
+
+/* Booking CTA card */
+.rd-book-card { display: flex; flex-direction: column; gap: 10px; }
+.rd-book-cta {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 13px; border: none; border-radius: var(--radius-md, 12px);
+  background: var(--accent-primary, #c9a84c); color: var(--accent-contrast, #1a1208);
+  font-size: 15px; font-weight: 700; cursor: pointer; transition: filter 0.18s ease;
+}
+.rd-book-cta:hover { filter: brightness(1.06); }
