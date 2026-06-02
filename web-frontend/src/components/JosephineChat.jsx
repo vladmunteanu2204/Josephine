@@ -782,6 +782,32 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
   /* ── Freeform intent parser ──────────────────────────────────────────── */
   const parseRecommendIntent = (text) => {
     const tl = text.toLowerCase();
+
+    // Theme / mood keywords → the real interest tags used by the trail
+    // catalog (panoramic views, alpine lakes, forests, summits, waterfalls,
+    // glaciers, wildlife, cultural routes). Matching one of these is what
+    // lets discovery queries like "where can I see a waterfall?" or
+    // "I want a moody hike" reach the free local recommend engine instead
+    // of the generic chat fallback (which needs an API key).
+    const THEMES = [
+      [/\bwaterfalls?\b|\bcascad/i,                                   'waterfalls'],
+      [/\blakes?\b|\btarns?\b|\bturquoise\b/i,                        'alpine lakes'],
+      [/\bglaciers?\b|\bice\b|\bsnowfield/i,                          'glaciers'],
+      [/\bforests?\b|\bwoods?\b|\bwoodland\b|\btrees?\b/i,            'forests'],
+      [/\bsummits?\b|\bpeaks?\b|\bridge\b|\bscrambl|\bvia ferrata\b/i,'summits'],
+      [/\bwildlife\b|\bmarmot|\banimals?\b|\bbirds?\b|\bdeer\b/i,     'wildlife'],
+      [/\bcultur|\bhistor|\bheritage\b|\bchurch|\bcastle|\bvillage|\bmalga|\bfarm|\bcheese\b/i, 'cultural routes'],
+      // light / atmosphere / mood → scenic panoramic trails
+      [/\bsunset|\bsunrise|\bgolden hour|\balpenglow|\bstargaz|\bnight sky\b/i,                         'panoramic views'],
+      [/\bmoody|\batmospher|\bmisty|\bmist\b|\bfoggy|\bfog\b|\bdramatic|\bwild\b|\bromantic|\bpeaceful|\bquiet|\bserene|\bmagical?\b/i, 'panoramic views'],
+      [/\bview|\bpanoram|\bvista|\bscenic|\blookout|\boverlook|\bphoto\b/i,                             'panoramic views'],
+      [/\bwildflower|\bbloom|\bmeadow|\bflowers?\b/i,                                                   'panoramic views'],
+    ];
+    const themeInterests = [];
+    for (const [re, tag] of THEMES) {
+      if (re.test(tl) && !themeInterests.includes(tag)) themeInterests.push(tag);
+    }
+
     const TRIGGERS = [
       // explicit ask patterns
       'give me a hike','find me a hike','suggest a hike','recommend a hike',
@@ -806,24 +832,33 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
     const hasInPlace = /\bhikes?\b.*\bin\b|\btrails?\b.*\bin\b|\bwalks?\b.*\bin\b|\bsomething\b.*\bin\b/i.test(tl);
     // "do starting in / do in" patterns
     const hasDoIn = /\bdo\b.*\bstarting\s+in\b|\bdo\b.*\bin\b.*\??\s*$/i.test(tl);
-    if (!TRIGGERS.some(x => tl.includes(x)) && !hasInPlace && !hasDoIn) return null;
+    // Discovery verbs + a hike/theme word are enough on their own.
+    const hasDiscoveryVerb = /\b(where can i|where should i|where to|i want|i'd like|i would like|i'm looking for|looking for|show me|take me|suggest|recommend|to see|go see|see (?:a|some|the)|how about|what about|got any|any good)\b/i.test(tl);
+    const hasHikeWord = /\b(hike|hikes|trail|trails|walk|walks|route|routes|path|paths)\b/i.test(tl);
+    const dogAsk = /\bdog|\bpup\b|\bpooch\b/i.test(tl);
+
+    const triggered =
+      TRIGGERS.some(x => tl.includes(x)) ||
+      hasInPlace || hasDoIn ||
+      (themeInterests.length > 0 && (hasDiscoveryVerb || hasHikeWord)) ||
+      (dogAsk && hasHikeWord);
+
+    if (!triggered) return null;
 
     // Match explicit prepositions first; fall back to "in" for place names
     const loc = text.match(/(?:from|near|around|starting from|starting at|close to)\s+([A-Za-zÀ-ÿ\s]+?)(?:\s*$|\s*[,.])/i)
              ?? text.match(/\bin\s+([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ\s]{1,24})(?:\s*$|\s*[,?.])/i);
     // For "in [place]" matches, filter out non-geographic phrases
-    const NON_PLACES = /^(the |a |an |my |this |that |summer|winter|spring|autumn|morning|afternoon|evening|july|june|august)/i;
+    const NON_PLACES = /^(the |a |an |my |this |that |summer|winter|spring|autumn|fall|morning|afternoon|evening|july|june|august|mind|order)/i;
     const rawArea = loc ? loc[1].trim() : '';
     const startArea = (rawArea && NON_PLACES.test(rawArea)) ? '' : rawArea;
     let difficulty = 'medium';
-    if (/\b(easy|beginner|gentle|relaxed)\b/i.test(text)) difficulty = 'easy';
-    if (/\b(hard|difficult|challenging|strenuous|expert)\b/i.test(text)) difficulty = 'hard';
-    const interests = [];
-    if (/\blake|lakes\b/i.test(text)) interests.push('alpine lakes');
-    if (/\bview|panoram|summit\b/i.test(text)) interests.push('panoramic views');
-    if (/\bforest|wood\b/i.test(text)) interests.push('forests');
-    if (/\bloop\b/i.test(text)) interests.push('loop');
-    if (/\bdog\b/i.test(text)) interests.push('dog-friendly');
+    if (/\b(easy|beginner|gentle|relaxed|stroll|leisurely|family)\b/i.test(text)) difficulty = 'easy';
+    if (/\b(hard|difficult|challenging|strenuous|expert|tough|demanding)\b/i.test(text)) difficulty = 'hard';
+
+    const interests = [...themeInterests];
+    if (/\bloop\b/i.test(text) && !interests.includes('loop')) interests.push('loop');
+    if (dogAsk) interests.push('dog-friendly');
     return { startArea, difficulty, interests };
   };
 
@@ -909,6 +944,45 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       return;
     }
 
+    // ── Dog-policy question ("should I bring my dog?", "are dogs allowed?") ─
+    // Answer about the trail currently in view if there is one; otherwise
+    // offer to find dog-friendly trails. Routes locally — no API key needed.
+    const isDogQuestion =
+      /\bdog|\bpup\b|\bpooch\b/i.test(tl) &&
+      /\b(bring|take|allow|ok|okay|welcome|fine|friendly|leash)\b/i.test(tl) &&
+      /\?|should|can i|may i|is it|are dogs|do (?:they|you)|allowed/i.test(tl);
+    if (isDogQuestion) {
+      appendUserMessage(trimmed);
+      setInput('');
+      setTyping(true);
+      setTimeout(() => {
+        setTyping(false);
+        if (selectedTrail) {
+          const ok = selectedTrail.dog_friendly;
+          appendJosephineMessage({
+            type: 'text',
+            text: ok
+              ? `Yes — ${selectedTrail.name} is marked dog-friendly, so your dog is welcome. Bring water and keep them on a leash near grazing pastures and any exposed sections.`
+              : `${selectedTrail.name} isn't marked dog-friendly — there may be exposed, protected or livestock areas where dogs aren't ideal. I'd play it safe. Want me to find a dog-friendly trail nearby instead?`,
+            chips: ok ? [t('chipStartOver')] : ['Find me a dog-friendly trail', t('chipStartOver')],
+          });
+        } else {
+          const d = {
+            duration_hours: 3, difficulty: 'easy', interests: ['dog-friendly'],
+            withDog: true, family_friendly: false, startArea: '',
+          };
+          setPlanningData(d);
+          appendJosephineMessage({
+            type: 'text',
+            text: "Happy to bring your dog along! Let me find dog-friendly trails for you…",
+            chips: null,
+          });
+          runConditionsThenOptions(d);
+        }
+      }, 400);
+      return;
+    }
+
     const intent = parseRecommendIntent(trimmed);
     if (intent) {
       appendUserMessage(trimmed);
@@ -950,7 +1024,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
       appendJosephineMessage({ type: 'text', text: t('windError'), chips: [t('chipPlanMyDay'), t('chipSurpriseMe')] });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chatHistory, lang, t, awaitingRefinement, apiResults, planningData, planningStep]);
+  }, [chatHistory, lang, t, awaitingRefinement, apiResults, planningData, planningStep, selectedTrail]);
 
   // Keep ref fresh so mic closure can call the latest version
   sendMsgRef.current = sendMessage;
