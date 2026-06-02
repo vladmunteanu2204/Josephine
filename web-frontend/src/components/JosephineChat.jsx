@@ -194,7 +194,7 @@ function TrailDetailCard({ trail, saved, onSave, onView, t }) {
           <span className="jc-trail-card__season-warn">⚠ Check season</span>
         )}
         <span className="jc-trail-card__pick-badge">
-          <img src="/logo.png" alt="" className="jc-trail-card__mark"
+          <img src="/logo.webp" alt="" className="jc-trail-card__mark"
             onError={e => { e.currentTarget.style.display = 'none'; }} />
           {t('josephinePickBadge', "Josephine's Pick")}
         </span>
@@ -1102,8 +1102,8 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
         </button>
         <div className="jc-header__identity">
           <div className="jc-header__avatar">
-            <img src="/josephine-portrait.png" alt="" className="jc-header__mark"
-              onError={e => { e.currentTarget.src='/logo.png'; }} />
+            <img src="/josephine-portrait.webp" alt="" className="jc-header__mark"
+              onError={e => { e.currentTarget.src='/logo.webp'; }} />
           </div>
           <div>
             <p className="jc-header__name">Josephine</p>
@@ -1159,8 +1159,8 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
             >
               {msg.from === 'josephine' && (
                 <div className="jc-msg__avatar" style={isFirstInRun ? {} : { visibility: 'hidden' }}>
-                  <img src="/josephine-portrait.png" alt=""
-                    onError={e => { e.currentTarget.src='/logo.png'; }} />
+                  <img src="/josephine-portrait.webp" alt=""
+                    onError={e => { e.currentTarget.src='/logo.webp'; }} />
                 </div>
               )}
 
@@ -1294,7 +1294,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
         {typing && (
           <div className="jc-msg jc-msg--josephine">
             <div className="jc-msg__avatar">
-              <img src="/josephine-portrait.png" alt="" onError={e => { e.currentTarget.src='/logo.png'; }} />
+              <img src="/josephine-portrait.webp" alt="" onError={e => { e.currentTarget.src='/logo.webp'; }} />
             </div>
             <div className="jc-bubble jc-bubble--typing"><span /><span /><span /></div>
           </div>

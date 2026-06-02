@@ -387,7 +387,7 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin }
         {noteText && (
           <div className="td-jph-note">
             <div className="td-jph-note__header">
-              <img src="/josephine-portrait.png" alt="Josephine" className="td-jph-note__mark" />
+              <img src="/josephine-portrait.webp" alt="Josephine" className="td-jph-note__mark" />
               <span className="td-jph-note__label">{t('trail.whyPicked', 'Why Josephine picked this')}</span>
             </div>
             <p className="td-jph-note__text">{noteText}</p>

@@ -10,7 +10,7 @@
  *   <img src={trailImg(trail, 'card')} alt={trailImgAlt(trail)} />
  */
 
-const FALLBACK = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800';
+const FALLBACK = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=70&auto=format';
 
 /**
  * @param {object} trail  - trail or rifugio object from the API

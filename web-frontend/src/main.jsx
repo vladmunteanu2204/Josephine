@@ -25,7 +25,7 @@ function ErrorScreen({ error }) {
       background: '#080e08', color: '#f0ece6', fontFamily: 'Inter, sans-serif',
       gap: 16, padding: 32, textAlign: 'center',
     }}>
-      <img src="/logo.png" alt="" style={{ width: 56, opacity: 0.6 }} />
+      <img src="/logo.webp" alt="" style={{ width: 56, opacity: 0.6 }} />
       <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic',
                    fontSize: 28, margin: 0, color: '#c9a84c' }}>
         Something went wrong

@@ -187,14 +187,21 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
           2. CINEMATIC TRAIL SHOWCASE — full viewport
       ══════════════════════════════════════════ */}
       <section className="hp-cinema" id="hp-cinema">
-        {/* Background slides */}
-        {featuredTrails.map((trail, i) => (
-          <div
-            key={trail.id}
-            className={`hp-cinema__slide ${i === activeTrail ? 'hp-cinema__slide--active' : ''}`}
-            style={{ backgroundImage: `url('${trailImg(trail, 'card')}')` }}
-          />
-        ))}
+        {/* Background slides — only the active and immediately adjacent slides get
+            a background-image so we don't fetch all 5 trail photos up front. */}
+        {featuredTrails.map((trail, i) => {
+          const n = featuredTrails.length;
+          const near = i === activeTrail
+            || i === (activeTrail + 1) % n
+            || i === (activeTrail - 1 + n) % n;
+          return (
+            <div
+              key={trail.id}
+              className={`hp-cinema__slide ${i === activeTrail ? 'hp-cinema__slide--active' : ''}`}
+              style={near ? { backgroundImage: `url('${trailImg(trail, 'card')}')` } : undefined}
+            />
+          );
+        })}
         <div className="hp-cinema__scrim" />
 
         {/* Trail info */}
@@ -277,7 +284,7 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
                     src={seasonAsset(config, 'portrait')}
                     alt=""
                     className="hp-convo__avatar"
-                    onError={e => { e.currentTarget.src = '/josephine-portrait.png'; }}
+                    onError={e => { e.currentTarget.src = '/josephine-portrait.webp'; }}
                   />
                 )}
                 <p className="hp-convo__text">{msg.text}</p>
@@ -313,7 +320,7 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
               src={seasonAsset(config, 'portrait')}
               alt="Josephine"
               className="hp-meet__portrait-img"
-              onError={e => { e.currentTarget.src = '/josephine-portrait.png'; }}
+              onError={e => { e.currentTarget.src = '/josephine-portrait.webp'; }}
             />
           </div>
 
@@ -347,7 +354,7 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
 
           {/* Josephine voice intro */}
           <div className="hp-huts__intro">
-            <img src="/logo.png" alt="" className="hp-huts__j-mark" onError={e => e.currentTarget.style.display='none'} />
+            <img src="/logo.webp" alt="" className="hp-huts__j-mark" onError={e => e.currentTarget.style.display='none'} />
             <p className="hp-huts__voice">
               "Whether you need a warm meal at a malga or a bed for the night at a rifugio, the mountains have a place waiting for you."
             </p>
@@ -406,7 +413,7 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
         <div
           className="hp-paths__card"
           onClick={() => setCurrentView('multiday-trails')}
-          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200')` }}
+          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=70&auto=format')` }}
         >
           <div className="hp-paths__scrim" />
           <div className="hp-paths__body">
@@ -428,14 +435,14 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
         <div
           className="hp-paths__card hp-paths__card--narya"
           onClick={() => navigateToCatalog ? navigateToCatalog(['dog-friendly']) : setCurrentView('catalog')}
-          style={{ backgroundImage: `url('/josephine-with-narya.png')` }}
+          style={{ backgroundImage: `url('/josephine-with-narya.webp')` }}
         >
           <div className="hp-paths__scrim hp-paths__scrim--narya" />
           <div className="hp-paths__body">
             {/* Narya character badge */}
             <div className="hp-narya-badge">
               <img
-                src="/narya.png"
+                src="/narya.webp"
                 alt="Narya"
                 className="hp-narya-badge__img"
                 onError={e => e.currentTarget.style.display = 'none'}

@@ -72,8 +72,16 @@ function App() {
   const [catalogInitialTags, setCatalogInitialTags] = useState([]);
   const [rifugiosInitialType, setRifugiosInitialType] = useState('');
   const [rifugiosInitialStatus, setRifugiosInitialStatus] = useState('');
-  const [showSplash, setShowSplash] = useState(true);
-  const handleSplashComplete = useCallback(() => setShowSplash(false), []);
+  // Show the splash only once per browser session — returning to the tab or
+  // navigating back shouldn't replay the 2-3s intro every time.
+  const [showSplash, setShowSplash] = useState(() => {
+    try { return !sessionStorage.getItem('jph_splash_seen'); }
+    catch { return true; }
+  });
+  const handleSplashComplete = useCallback(() => {
+    try { sessionStorage.setItem('jph_splash_seen', '1'); } catch {}
+    setShowSplash(false);
+  }, []);
   const [isGPSActive, setIsGPSActive] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 

@@ -3,9 +3,12 @@
    ============================================================ */
 
 .jph-header {
-  background: rgba(12, 24, 13, 0.88);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  /* Higher opacity + smaller blur: a sticky element repaints its backdrop on
+     every scroll frame, and blur(24px) saturate(180%) is a major jank source on
+     mid-range phones. 14px over a more opaque base keeps the frosted look cheaply. */
+  background: rgba(12, 24, 13, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(201, 168, 76, 0.12);
   position: sticky;
   top: var(--safe-top);

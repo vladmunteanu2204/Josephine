@@ -19,7 +19,7 @@ export default function AuthPromptModal({ isOpen, onClose, onLogin, message }) {
         <button className="apm-close" onClick={onClose} aria-label="Close">✕</button>
 
         <div className="apm-mark-wrap">
-          <img src="/logo.png" alt="" className="apm-mark" />
+          <img src="/logo.webp" alt="" className="apm-mark" />
         </div>
 
         <h2 className="apm-title">Members only</h2>

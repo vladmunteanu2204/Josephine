@@ -83,7 +83,7 @@ function BottomNav({ currentView, setCurrentView, onJosephineOpen, onShowLogin }
         aria-label="Talk to Josephine"
       >
         <div className="jph-bottom-nav__j-ring">
-          <img src="/logo.png" alt="" className="jph-bottom-nav__j-mark" />
+          <img src="/logo.webp" alt="" className="jph-bottom-nav__j-mark" />
         </div>
       </button>
 

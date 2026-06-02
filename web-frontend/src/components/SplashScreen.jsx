@@ -11,7 +11,7 @@ function SplashScreen({ onComplete }) {
   const [phase, setPhase] = useState('enter');
 
   useEffect(() => {
-    const minDisplayTime = 2400;
+    const minDisplayTime = 1300;
     const startTime = Date.now();
     let t1, t2;
 
@@ -22,7 +22,7 @@ function SplashScreen({ onComplete }) {
         setPhase('exit');
         t2 = setTimeout(() => {
           if (onComplete) onComplete();
-        }, 900);
+        }, 600);
       }, remainingTime);
     };
 

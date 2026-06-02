@@ -2,12 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Josephine — Your local companion in the mountains</title>
     
     <link rel="manifest" href="/manifest.json" />
-    <link rel="icon" type="image/png" href="/logo.png" />
-    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <!-- Hero is a CSS background (undiscoverable by the preload scanner); hint it
+         so it's ready when the splash dismisses. Summer is the only shipped photo;
+         other seasons fall back to it. -->
+    <link rel="preload" as="image" href="/hero-alpine-summer.webp" fetchpriority="high" />
     <meta name="theme-color" content="#1a2a1c" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />

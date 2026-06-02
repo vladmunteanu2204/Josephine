@@ -35,7 +35,7 @@ function JosephineWidget({ setCurrentView }) {
         <div className="jph-widget__panel" role="dialog" aria-label="Josephine companion">
           <div className="jph-widget__portrait-wrap">
             <div className="jph-widget__portrait-fallback">
-              <img src="/logo.png" alt="Josephine" className="jph-widget__mark-fallback" />
+              <img src="/logo.webp" alt="Josephine" className="jph-widget__mark-fallback" />
             </div>
           </div>
 
@@ -76,7 +76,7 @@ function JosephineWidget({ setCurrentView }) {
         aria-label="Talk to Josephine"
         aria-expanded={isOpen}
       >
-        <img src="/logo.png" alt="" className="jph-widget__trigger-mark" />
+        <img src="/logo.webp" alt="" className="jph-widget__trigger-mark" />
         {!isOpen && <span className="jph-widget__pulse" aria-hidden="true" />}
       </button>
     </>

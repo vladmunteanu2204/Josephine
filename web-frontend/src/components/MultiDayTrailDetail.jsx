@@ -130,7 +130,7 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
 
           {josephineNote && (
             <div className="mdtd-josephine-note">
-              <img src="/josephine-portrait.png" alt="Josephine" className="mdtd-josephine-note__portrait" />
+              <img src="/josephine-portrait.webp" alt="Josephine" className="mdtd-josephine-note__portrait" />
               <div className="mdtd-josephine-note__body">
                 <p className="mdtd-josephine-note__label">Josephine's tip</p>
                 <p className="mdtd-josephine-note__text">{josephineNote}</p>

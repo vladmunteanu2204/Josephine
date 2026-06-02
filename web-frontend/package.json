@@ -1,7 +1,7 @@
 {
-  "name": "alpenvia-web",
+  "name": "josephine-web",
   "version": "1.0.0",
-  "description": "Alpenvia - Alpine hiking recommendations for South Tyrol & Trentino",
+  "description": "Josephine - Alpine hiking recommendations for South Tyrol & Trentino",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",

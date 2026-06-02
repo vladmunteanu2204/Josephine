@@ -137,8 +137,12 @@ button:active::before {
   height: 300px;
 }
 
-button:hover {
-  transform: translateY(-2px);
+/* Hover lift only on devices with a real pointer — prevents "sticky hover"
+   where a tapped button stays raised on touchscreens until you tap elsewhere. */
+@media (hover: hover) and (pointer: fine) {
+  button:hover {
+    transform: translateY(-2px);
+  }
 }
 
 button:active {
@@ -163,11 +167,13 @@ input, select {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.btn-primary:hover {
-  box-shadow: 0 8px 24px rgba(212, 165, 116, 0.4),
-              inset 0 1px 0 rgba(255, 255, 255, 0.3),
-              0 0 20px rgba(212, 165, 116, 0.2);
-  transform: translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover {
+    box-shadow: 0 8px 24px rgba(212, 165, 116, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                0 0 20px rgba(212, 165, 116, 0.2);
+    transform: translateY(-2px);
+  }
 }
 
 .btn-secondary {
@@ -183,10 +189,12 @@ input, select {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
-.btn-secondary:hover {
-  background: linear-gradient(145deg, rgba(50, 50, 50, 0.9), rgba(40, 40, 40, 0.7));
-  border-color: rgba(212, 165, 116, 0.3);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+@media (hover: hover) and (pointer: fine) {
+  .btn-secondary:hover {
+    background: linear-gradient(145deg, rgba(50, 50, 50, 0.9), rgba(40, 40, 40, 0.7));
+    border-color: rgba(212, 165, 116, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
 }
 
 .card {

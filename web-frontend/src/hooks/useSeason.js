@@ -7,9 +7,9 @@
 
 export const SEASONS = {
   summer: {
-    heroImage:    '/hero-alpine-summer.png',
-    splashImage:  '/splash-summer.png',
-    portrait:     '/josephine-portrait.png',
+    heroImage:    '/hero-alpine-summer.webp',
+    splashImage:  '/splash-summer.webp',
+    portrait:     '/josephine-portrait.webp',
     heroPosition: '72% 50%',
 
     tokens: {
@@ -46,9 +46,9 @@ export const SEASONS = {
     // Seasonal photos not yet provided — remove keys so seasonAsset falls back to summer.
     // Add heroImage/splashImage/portrait here once you drop the files into public/.
     heroPosition: '72% 50%',
-    fallbackHeroImage:   '/hero-alpine-summer.png',
-    fallbackSplashImage: '/splash-summer.png',
-    fallbackPortrait:    '/josephine-portrait.png',
+    fallbackHeroImage:   '/hero-alpine-summer.webp',
+    fallbackSplashImage: '/splash-summer.webp',
+    fallbackPortrait:    '/josephine-portrait.webp',
 
     tokens: {
       '--accent-primary':  '#c8782a',
@@ -82,9 +82,9 @@ export const SEASONS = {
 
   winter: {
     heroPosition: '72% 40%',
-    fallbackHeroImage:   '/hero-alpine-summer.png',
-    fallbackSplashImage: '/splash-summer.png',
-    fallbackPortrait:    '/josephine-portrait.png',
+    fallbackHeroImage:   '/hero-alpine-summer.webp',
+    fallbackSplashImage: '/splash-summer.webp',
+    fallbackPortrait:    '/josephine-portrait.webp',
 
     tokens: {
       '--accent-primary':  '#a0bcd0',
@@ -118,9 +118,9 @@ export const SEASONS = {
 
   spring: {
     heroPosition: '72% 50%',
-    fallbackHeroImage:   '/hero-alpine-summer.png',
-    fallbackSplashImage: '/splash-summer.png',
-    fallbackPortrait:    '/josephine-portrait.png',
+    fallbackHeroImage:   '/hero-alpine-summer.webp',
+    fallbackSplashImage: '/splash-summer.webp',
+    fallbackPortrait:    '/josephine-portrait.webp',
 
     tokens: {
       '--accent-primary':  '#6abf6a',

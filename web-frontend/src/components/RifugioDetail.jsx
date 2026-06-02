@@ -248,7 +248,7 @@ function RifugioDetail({ rifugioId, onNavigate }) {
           {/* Josephine's Note */}
           {rifugio.josephine_note && (
             <div className="rd-josephine-note">
-              <img src="/josephine-portrait.png" alt="Josephine" className="rd-josephine-note__portrait" />
+              <img src="/josephine-portrait.webp" alt="Josephine" className="rd-josephine-note__portrait" />
               <div className="rd-josephine-note__body">
                 <p className="rd-josephine-note__label">Josephine's tip</p>
                 <p className="rd-josephine-note__text">"{rifugio.josephine_note}"</p>
