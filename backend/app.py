@@ -1989,9 +1989,7 @@ def submit_booking_inquiry():
         data = request.json or {}
 
         # Validate required fields
-        # rifugio_id is optional: planner treks reference some huts by name only
-        # (not in the rifugio directory). Name is enough to record + send.
-        required_fields = ['rifugio_name', 'name', 'email', 'check_in', 'check_out', 'adults']
+        required_fields = ['rifugio_id', 'rifugio_name', 'name', 'email', 'check_in', 'check_out', 'adults']
         for field in required_fields:
             if field not in data:
                 return jsonify({'error': f'Missing required field: {field}'}), 400
@@ -2006,7 +2004,7 @@ def submit_booking_inquiry():
 
         inquiry = {
             'id': f"inq-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}-{random.randint(1000, 9999)}",
-            'rifugio_id': data.get('rifugio_id', ''),
+            'rifugio_id': data['rifugio_id'],
             'rifugio_name': data['rifugio_name'],
             'user_name': data['name'],
             'user_email': data['email'],
@@ -2028,8 +2026,7 @@ def submit_booking_inquiry():
         save_booking_inquiries(inquiries)
 
         # Resolve the hut and attempt delivery.
-        rid = data.get('rifugio_id')
-        rif = next((r for r in load_rifugios() if r.get('id') == rid), None) if rid else None
+        rif = next((r for r in load_rifugios() if r.get('id') == data['rifugio_id']), None)
         delivery = _deliver_booking_inquiry(inquiry, rif)
         save_booking_inquiries(inquiries)   # re-save with delivery_* fields
 

@@ -15,7 +15,7 @@ const API_URL = import.meta.env.PROD
    auto-emails verified huts and returns a `delivery` object. On auto-send we
    close with a success toast; otherwise we show a one-tap fallback panel so the
    hiker sends the inquiry themselves. Always reports inquiry_id via onSubmitted. */
-export default function HutBookingSheet({ rifugioId, rifugioName, prefill = {}, fallbackContact = {}, onClose, onSubmitted }) {
+export default function HutBookingSheet({ rifugioId, rifugioName, prefill = {}, onClose, onSubmitted }) {
   const { t } = useTranslation();
   const toast = useToast();
   const [submitting, setSubmitting] = useState(false);
@@ -42,6 +42,10 @@ export default function HutBookingSheet({ rifugioId, rifugioName, prefill = {}, 
       toast.warning(t('rifugio.bookingDateRequired', 'Please pick check-in and check-out dates.'));
       return;
     }
+    if (!rifugioId) {
+      toast.error(t('planner.bookingUnavailable', 'Booking is not available for this hut.'));
+      return;
+    }
     try {
       setSubmitting(true);
       const res = await axios.post(`${API_URL}/booking-inquiries`, {
@@ -57,14 +61,8 @@ export default function HutBookingSheet({ rifugioId, rifugioName, prefill = {}, 
         toast.success(t('rifugio.bookingEmailed', "We've emailed the hut — they'll reply to you directly."));
         onClose?.();
       } else {
-        // fallback / failed → show one-tap send options. Backfill contacts the
-        // backend couldn't resolve (e.g. trek huts not in the rifugio directory).
-        setResult({
-          ...delivery,
-          hut_email: delivery.hut_email || fallbackContact.email || null,
-          hut_whatsapp: delivery.hut_whatsapp || fallbackContact.whatsapp || null,
-          hut_phone: delivery.hut_phone || fallbackContact.phone || null,
-        });
+        // fallback / failed → show one-tap send options
+        setResult(delivery);
       }
     } catch (err) {
       console.error('Booking inquiry failed:', err);

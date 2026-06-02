@@ -265,9 +265,13 @@ export default function HutToHutPlanner({ initial, onSave, onBack }) {
                         {n.booking.status === 'booked' && <Check size={12} strokeWidth={2.5} />}
                         {t(`planner.booking_${n.booking.status}`, n.booking.status)}
                       </span>
-                      <button className="hh-mini hh-mini--accent" onClick={() => setBookingNight(n)}>
-                        {t('planner.bookHut', 'Book hut')}
-                      </button>
+                      {n.hut.rifugio_id ? (
+                        <button className="hh-mini hh-mini--accent" onClick={() => setBookingNight(n)}>
+                          {t('planner.bookHut', 'Book hut')}
+                        </button>
+                      ) : n.hut.contact ? (
+                        <a className="hh-mini" href={`tel:${n.hut.contact}`}><Phone size={13} strokeWidth={2} /> {n.hut.contact}</a>
+                      ) : null}
                       <select className="hh-status-select" value={n.booking.status} onChange={e => setNightStatus(n.stage_number, e.target.value)} aria-label={t('planner.bookingStatus', 'Booking status')}>
                         {BOOKING_STATUSES.map(s => <option key={s} value={s}>{t(`planner.booking_${s}`, s)}</option>)}
                       </select>
@@ -338,9 +342,9 @@ export default function HutToHutPlanner({ initial, onSave, onBack }) {
         </div>
       </div>
 
-      {bookingNight && bookingNight.hut && (
+      {bookingNight && bookingNight.hut?.rifugio_id && (
         <HutBookingSheet
-          rifugioId={bookingNight.hut.rifugio_id || ''}
+          rifugioId={bookingNight.hut.rifugio_id}
           rifugioName={bookingNight.hut.name}
           prefill={{
             name: currentUser?.displayName || '',
@@ -348,11 +352,6 @@ export default function HutToHutPlanner({ initial, onSave, onBack }) {
             check_in: bookingNight.date,
             check_out: fmtYMD(addDays(parseYMD(bookingNight.date), 1)),
           }}
-          fallbackContact={
-            (bookingNight.hut.contact || '').includes('@')
-              ? { email: bookingNight.hut.contact }
-              : { phone: bookingNight.hut.contact || '' }
-          }
           onClose={() => setBookingNight(null)}
           onSubmitted={(inquiryId) => onBooked(bookingNight.stage_number, inquiryId)}
         />
