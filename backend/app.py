@@ -225,12 +225,20 @@ def load_trail_segments():
     return _cached_json(segments_path)
 
 def load_complete_trails():
-    """Load all trails — from PostgreSQL if available, else JSON file (TTL-cached)."""
+    """Load all trails — from PostgreSQL if available, else JSON file (TTL-cached).
+
+    Falls back to the bundled JSON not only on a DB *error* but also when the
+    DB returns *zero* trails. A freshly provisioned (but un-seeded) Postgres
+    table is a valid, error-free query that returns no rows — without this
+    guard the catalog and recommend endpoints would silently go empty.
+    """
     if DB_AVAILABLE:
         try:
             with get_db() as conn:
                 rows = conn.execute(_sql("SELECT * FROM trails ORDER BY rating DESC NULLS LAST")).fetchall()
-            return {'trails': [row_to_trail(r) for r in rows]}
+            if rows:
+                return {'trails': [row_to_trail(r) for r in rows]}
+            print("[db] trails table is empty — falling back to bundled JSON")
         except Exception as e:
             print(f"[db] load_complete_trails fallback to JSON: {e}")
     trails_path = os.path.join(BASE_DIR, 'data', 'trails.json')
@@ -1464,7 +1472,9 @@ def load_rifugios():
         try:
             with get_db() as conn:
                 rows = conn.execute(_sql("SELECT * FROM rifugios ORDER BY name")).fetchall()
-            return [row_to_rifugio(r) for r in rows]
+            if rows:
+                return [row_to_rifugio(r) for r in rows]
+            print("[db] rifugios table is empty — falling back to bundled JSON")
         except Exception as e:
             print(f"[db] load_rifugios fallback to JSON: {e}")
     rifugios_path = os.path.join(BASE_DIR, 'backend', 'data', 'rifugios.json')
@@ -2141,7 +2151,9 @@ def load_multi_day_trails():
         try:
             with get_db() as conn:
                 rows = conn.execute(_sql("SELECT * FROM multi_day_trails ORDER BY name")).fetchall()
-            return {'trails': [row_to_mdt(r) for r in rows]}
+            if rows:
+                return {'trails': [row_to_mdt(r) for r in rows]}
+            print("[db] multi_day_trails table is empty — falling back to bundled JSON")
         except Exception as e:
             print(f"[db] load_multi_day_trails fallback to JSON: {e}")
     try:
