@@ -923,3 +923,31 @@
   color: rgba(240,236,230,0.4);
 }
 .sr-empty-icon { font-size: 48px; margin-bottom: 16px; }
+
+/* ── Phase 4 design refresh (primitives + lucide alignment) ───────────── */
+.sr-mood-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sr-input-wrap { position: relative; display: flex; align-items: center; }
+.sr-input-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+.sr-input-wrap .sr-input { padding-left: 42px; }
+
+.sr-dog-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-primary);
+}
+
+.sr-refine-btn { display: inline-flex; align-items: center; gap: 6px; }
+.sr-hero-cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.sr-cta { display: inline-flex; align-items: center; justify-content: center; gap: 10px; }
+.sr-empty-icon { color: var(--text-muted); display: flex; justify-content: center; }

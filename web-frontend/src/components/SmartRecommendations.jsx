@@ -2,7 +2,13 @@ import React, { useState } from 'react';
 import { trailImg, trailImgAlt } from '../utils/trailImage';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import {
+  Waves, Mountain, MountainSnow, Trees, Landmark, Repeat,
+  Dog, MapPin, ArrowRight, Sparkles,
+  Heart, ArrowLeft, RotateCcw, Compass,
+} from 'lucide-react';
 import { useToast } from '../contexts/ToastContext';
+import { SegmentedControl, Chip } from './ui';
 import './SmartRecommendations.css';
 
 const API_URL = '/api';
@@ -15,18 +21,18 @@ const DURATION_OPTIONS = [
 ];
 
 const DIFFICULTY_OPTIONS = [
-  { key: 'easy',   dots: 1, label: 'Easy'     },
-  { key: 'medium', dots: 2, label: 'Moderate' },
-  { key: 'hard',   dots: 3, label: 'Hard'     },
+  { key: 'easy',   label: 'Easy'     },
+  { key: 'medium', label: 'Moderate' },
+  { key: 'hard',   label: 'Hard'     },
 ];
 
 const MOOD_OPTIONS = [
-  { id: 'alpine lakes',    label: 'Alpine lakes'    },
-  { id: 'panoramic views', label: 'Panoramic views' },
-  { id: 'via ferrata',     label: 'Via ferrata'     },
-  { id: 'forests',         label: 'Forests'         },
-  { id: 'cultural routes', label: 'Culture'         },
-  { id: 'loop',            label: 'Loop trails'     },
+  { id: 'alpine lakes',    label: 'Alpine lakes',    icon: Waves },
+  { id: 'panoramic views', label: 'Panoramic views', icon: Mountain },
+  { id: 'via ferrata',     label: 'Via ferrata',     icon: MountainSnow },
+  { id: 'forests',         label: 'Forests',         icon: Trees },
+  { id: 'cultural routes', label: 'Culture',         icon: Landmark },
+  { id: 'loop',            label: 'Loop trails',     icon: Repeat },
 ];
 
 const DIFF_COLOR = { easy: '#4ade80', medium: '#c9a84c', hard: '#ef4444' };
@@ -137,7 +143,7 @@ function SmartRecommendations({ viewTrail, onBack }) {
   // Adaptive CTA label — reflects whether the user made intentional choices
   const hasFilters = moods.length > 0 || withDog || startArea.trim().length > 0;
   const isDefault  = duration === 3 && difficulty === 'medium' && !hasFilters;
-  const ctaLabel   = isDefault ? 'Surprise me, Josephine' : 'Find my trail →';
+  const ctaLabel   = isDefault ? 'Surprise me, Josephine' : 'Find my trail';
 
   const toggleSave = (trail, e) => {
     e.stopPropagation();
@@ -163,14 +169,12 @@ function SmartRecommendations({ viewTrail, onBack }) {
 
         <div className="sr-results-nav">
           {onBack && (
-            <button className="sr-back-btn" onClick={onBack}>
-              <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-                <path d="M12 4L6 10L12 16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+            <button className="sr-back-btn" onClick={onBack} aria-label="Back">
+              <ArrowLeft size={18} strokeWidth={2} />
             </button>
           )}
           <button className="sr-refine-btn" onClick={goBackToForm}>
-            ↺ Refine search
+            <RotateCcw size={15} strokeWidth={2} /> Refine search
           </button>
         </div>
 
@@ -178,7 +182,7 @@ function SmartRecommendations({ viewTrail, onBack }) {
 
         {results.length === 0 ? (
           <div className="sr-empty">
-            <div className="sr-empty-icon">◈</div>
+            <div className="sr-empty-icon"><Compass size={48} strokeWidth={1.25} /></div>
             <p>{t('recommendations.noResults')}</p>
           </div>
         ) : (
@@ -203,8 +207,9 @@ function SmartRecommendations({ viewTrail, onBack }) {
                     className={`sr-hero-save-btn ${savedTrailIds.includes(hero.id) ? 'saved' : ''}`}
                     onClick={e => toggleSave(hero, e)}
                     aria-label="Save trail"
+                    aria-pressed={savedTrailIds.includes(hero.id)}
                   >
-                    {savedTrailIds.includes(hero.id) ? '♥' : '♡'}
+                    <Heart size={18} strokeWidth={2} fill={savedTrailIds.includes(hero.id) ? 'currentColor' : 'none'} />
                   </button>
                 </div>
 
@@ -224,7 +229,7 @@ function SmartRecommendations({ viewTrail, onBack }) {
                     <span className="sr-hero-dot">·</span>
                     <span>{hero.duration_hours}h</span>
                     <span className="sr-hero-dot">·</span>
-                    <span>{hero.elevation_gain_m}m ↑</span>
+                    <span>{hero.elevation_gain_m} m</span>
                   </div>
 
                   {/* Josephine's reasoning */}
@@ -236,7 +241,7 @@ function SmartRecommendations({ viewTrail, onBack }) {
                   )}
 
                   <button className="sr-hero-cta" onClick={e => { e.stopPropagation(); viewTrail(hero); }}>
-                    View Details →
+                    View Details <ArrowRight size={16} strokeWidth={2} />
                   </button>
                 </div>
               </div>
@@ -271,8 +276,9 @@ function SmartRecommendations({ viewTrail, onBack }) {
                       className={`sr-list-save-btn ${savedTrailIds.includes(trail.id) ? 'saved' : ''}`}
                       onClick={e => toggleSave(trail, e)}
                       aria-label="Save"
+                      aria-pressed={savedTrailIds.includes(trail.id)}
                     >
-                      {savedTrailIds.includes(trail.id) ? '♥' : '♡'}
+                      <Heart size={17} strokeWidth={2} fill={savedTrailIds.includes(trail.id) ? 'currentColor' : 'none'} />
                     </button>
                   </div>
                 ))}
@@ -306,34 +312,25 @@ function SmartRecommendations({ viewTrail, onBack }) {
         {/* Duration */}
         <div className="sr-section">
           <p className="sr-label">How long do you have?</p>
-          <div className="sr-segment">
-            {DURATION_OPTIONS.map(opt => (
-              <button
-                key={opt.value}
-                className={`sr-segment-btn ${duration === opt.value ? 'active' : ''}`}
-                onClick={() => setDuration(opt.value)}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
+          <SegmentedControl
+            block
+            ariaLabel="Duration"
+            value={duration}
+            onChange={setDuration}
+            options={DURATION_OPTIONS.map(o => ({ value: o.value, label: o.label }))}
+          />
         </div>
 
         {/* Difficulty */}
         <div className="sr-section">
           <p className="sr-label">Difficulty</p>
-          <div className="sr-diff-row">
-            {DIFFICULTY_OPTIONS.map(opt => (
-              <button
-                key={opt.key}
-                className={`sr-diff-btn ${difficulty === opt.key ? 'active' : ''}`}
-                onClick={() => setDifficulty(opt.key)}
-              >
-                <DifficultyDots count={opt.dots} />
-                <span className="sr-diff-label">{opt.label}</span>
-              </button>
-            ))}
-          </div>
+          <SegmentedControl
+            block
+            ariaLabel="Difficulty"
+            value={difficulty}
+            onChange={setDifficulty}
+            options={DIFFICULTY_OPTIONS.map(o => ({ value: o.key, label: o.label }))}
+          />
         </div>
 
         {/* Mood */}
@@ -341,13 +338,14 @@ function SmartRecommendations({ viewTrail, onBack }) {
           <p className="sr-label">I'm in the mood for… <span className="sr-label-hint">(pick any)</span></p>
           <div className="sr-mood-grid">
             {MOOD_OPTIONS.map(m => (
-              <button
+              <Chip
                 key={m.id}
-                className={`sr-mood-btn ${moods.includes(m.id) ? 'active' : ''}`}
+                icon={m.icon}
+                active={moods.includes(m.id)}
                 onClick={() => toggleMood(m.id)}
               >
                 {m.label}
-              </button>
+              </Chip>
             ))}
           </div>
         </div>
@@ -355,7 +353,7 @@ function SmartRecommendations({ viewTrail, onBack }) {
         {/* Dog toggle */}
         <div className="sr-section sr-dog-row">
           <div className="sr-dog-info">
-            <span className="sr-dog-icon">🐾</span>
+            <span className="sr-dog-icon"><Dog size={22} strokeWidth={2} /></span>
             <div>
               <p className="sr-dog-label">With my dog</p>
               <p className="sr-dog-hint">Filter for dog-friendly trails</p>
@@ -374,13 +372,16 @@ function SmartRecommendations({ viewTrail, onBack }) {
         {/* Start area */}
         <div className="sr-section">
           <p className="sr-label">Starting from <span className="sr-label-hint">(optional)</span></p>
-          <input
-            type="text"
-            className="sr-input"
-            placeholder="e.g. Cortina, Innsbruck, Bolzano…"
-            value={startArea}
-            onChange={e => setStartArea(e.target.value)}
-          />
+          <div className="sr-input-wrap">
+            <MapPin size={18} strokeWidth={2} className="sr-input-icon" aria-hidden="true" />
+            <input
+              type="text"
+              className="sr-input"
+              placeholder="e.g. Cortina, Innsbruck, Bolzano…"
+              value={startArea}
+              onChange={e => setStartArea(e.target.value)}
+            />
+          </div>
         </div>
 
         {error && <p className="sr-error">{error}</p>}
@@ -389,7 +390,7 @@ function SmartRecommendations({ viewTrail, onBack }) {
         <div className="sr-cta-wrap">
           <button className="sr-cta" onClick={handleSubmit}>
             <span className="sr-cta-text">{ctaLabel}</span>
-            {isDefault && <span className="sr-cta-arrow">↓</span>}
+            {isDefault ? <Sparkles size={18} strokeWidth={2} /> : <ArrowRight size={18} strokeWidth={2} />}
           </button>
         </div>
 
