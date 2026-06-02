@@ -685,7 +685,15 @@ function JosephineChat({ onBack, setCurrentView, viewTrail }) {
           });
         }, 350);
       }
-    } catch {
+    } catch (err) {
+      // Surface the real cause so production failures are diagnosable from
+      // the browser console (status + server error body) instead of only the
+      // generic "mountain winds" copy the user sees.
+      console.error(
+        '[recommend] request failed:',
+        err?.response?.status,
+        err?.response?.data || err?.message || err
+      );
       setTyping(false);
       setPlanningStep(0);
       setTimeout(() => {

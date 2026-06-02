@@ -553,6 +553,10 @@ def get_recommendations():
         # Fix 2: current month for season awareness
         current_month = datetime.now().strftime('%B')   # e.g. "June"
         trails = load_complete_trails()['trails']
+        # Diagnostic: surfaces "loaded 0 trails" in production logs when the
+        # deployed environment has no trail data (empty DB table or missing JSON).
+        print(f"[recommend] loaded {len(trails)} trails "
+              f"(source={'db' if DB_AVAILABLE else 'json'})")
 
         # Hard distance filter — only applied when user specified a max
         if max_distance_km:
@@ -564,16 +568,25 @@ def get_recommendations():
             reasons = []
             warnings = []
 
+            # Safe-defaulted core fields — production DB rows may have NULLs or
+            # missing keys, and a single KeyError/AttributeError here would 500
+            # the whole endpoint (surfacing as "mountain winds" on the client).
+            t_difficulty = (trail.get('difficulty') or 'medium')
+            try:
+                t_duration = float(trail.get('duration_hours') or 3)
+            except (TypeError, ValueError):
+                t_duration = 3.0
+
             # ── Difficulty ──────────────────────────────────────────────
-            if trail['difficulty'].lower() == difficulty.lower():
+            if t_difficulty.lower() == difficulty.lower():
                 score += 4
-                reasons.append(trail['difficulty'])
-            elif (difficulty == 'medium' and trail['difficulty'] == 'easy') or \
-                 (difficulty == 'hard'   and trail['difficulty'] == 'medium'):
+                reasons.append(t_difficulty)
+            elif (difficulty == 'medium' and t_difficulty == 'easy') or \
+                 (difficulty == 'hard'   and t_difficulty == 'medium'):
                 score += 1
 
             # ── Duration ────────────────────────────────────────────────
-            duration_diff = abs(trail['duration_hours'] - duration_hours)
+            duration_diff = abs(t_duration - duration_hours)
             if duration_diff <= 0.5:
                 score += 3
             elif duration_diff <= 1.5:
@@ -612,7 +625,7 @@ def get_recommendations():
                 if trail.get('family_friendly'):
                     score += 3
                     reasons.append("family-friendly")
-                elif trail['difficulty'] == 'hard':
+                elif t_difficulty == 'hard':
                     score -= 5    # hard trails are poor family choices
 
             # ── Location ─────────────────────────────────────────────────
@@ -622,12 +635,12 @@ def get_recommendations():
                 # so village names like "Tirolo" match trails in "Merano & Surroundings"
                 # that mention Tirolo in their access or trailhead text.
                 search_fields = ' '.join([
-                    trail.get('region', ''),
-                    trail.get('name', ''),
-                    trail.get('access_info', ''),
-                    str(trail.get('trailhead_info', {}).get('parking', '')),
-                    trail.get('description', '')[:200],  # first 200 chars of description
-                    str(trail.get('transport', {}).get('car', '')),
+                    trail.get('region') or '',
+                    trail.get('name') or '',
+                    trail.get('access_info') or '',
+                    str((trail.get('trailhead_info') or {}).get('parking', '')),
+                    (trail.get('description') or '')[:200],  # first 200 chars of description
+                    str((trail.get('transport') or {}).get('car', '')),
                 ]).lower()
                 if area_l in search_fields:
                     score += 6
@@ -681,12 +694,12 @@ def get_recommendations():
                 if f"near {start_area}" in item['reasons']
                 or any(
                     word in ' '.join([
-                        item['trail'].get('region', ''),
-                        item['trail'].get('name', ''),
-                        item['trail'].get('access_info', ''),
-                        str(item['trail'].get('trailhead_info', {}).get('parking', '')),
-                        item['trail'].get('description', '')[:200],
-                        str(item['trail'].get('transport', {}).get('car', '')),
+                        item['trail'].get('region') or '',
+                        item['trail'].get('name') or '',
+                        item['trail'].get('access_info') or '',
+                        str((item['trail'].get('trailhead_info') or {}).get('parking', '')),
+                        (item['trail'].get('description') or '')[:200],
+                        str((item['trail'].get('transport') or {}).get('car', '')),
                     ]).lower()
                     for word in specific_tokens
                 )
@@ -751,12 +764,12 @@ def get_recommendations():
             )
 
             results.append({
-                'id':               trail['id'],
-                'name':             trail['name'],
-                'distance_km':      trail['distance_km'],
-                'duration_hours':   trail['duration_hours'],
-                'elevation_gain_m': trail['elevation_gain_m'],
-                'difficulty':       trail['difficulty'],
+                'id':               trail.get('id'),
+                'name':             trail.get('name', ''),
+                'distance_km':      trail.get('distance_km'),
+                'duration_hours':   trail.get('duration_hours'),
+                'elevation_gain_m': trail.get('elevation_gain_m'),
+                'difficulty':       trail.get('difficulty', 'medium'),
                 'geometry':         {'type': 'LineString', 'coordinates': coords_list},
                 'pois':             pois_formatted,
                 'tags':             trail.get('interests', []),
@@ -790,7 +803,9 @@ def get_recommendations():
         return jsonify(payload)
 
     except Exception as e:
+        import traceback
         print(f"Error in recommendations: {str(e)}")
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/trails/<trail_id>/reviews', methods=['GET'])
