@@ -33,7 +33,33 @@
   --header-h: 64px;
   --z-navbar: 1000;
   --z-dropdown: 3000;
+  --z-modal-backdrop: 3900;
   --z-modal: 4000;
+
+  /* ── UI design system (Phase 0) ─────────────────────────────────────────
+     Standardized primitives so screens stop hand-rolling sizes/colours.
+     ACCENT RULE: --accent-primary is seasonally themed and is reserved for
+     PRIMARY actions and SELECTED states ONLY. Everywhere else use the
+     text/border/surface tokens below — no spraying accent or glow around. */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  --control-h: 44px;       /* default control height = min mobile tap target */
+  --control-h-sm: 36px;
+  --btn-h: 48px;
+
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --surface-1: rgba(255, 255, 255, 0.03);
+  --surface-2: rgba(255, 255, 255, 0.06);
+  --shadow-card: 0 8px 28px rgba(0, 0, 0, 0.35);
+  --accent-contrast: #1a1208;   /* legible text/icon colour on an accent fill */
 }
 
 * {

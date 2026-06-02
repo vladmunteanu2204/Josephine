@@ -1,12 +1,17 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { trailImg, trailImgAlt } from '../utils/trailImage';
+import React, { useState, useEffect, useMemo } from 'react';
+import { trailImg } from '../utils/trailImage';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import Map, { Marker, Popup, NavigationControl } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import {
+  Search, X, SlidersHorizontal, LayoutGrid, Map as MapIcon,
+  Heart, Ruler, Clock, TrendingUp, Star, Mountain, ArrowRight,
+} from 'lucide-react';
 import { useToast } from '../contexts/ToastContext';
 import { useAuth } from '../contexts/AuthContext';
 import AuthPromptModal from './AuthPromptModal';
+import { Card, Chip, SegmentedControl } from './ui';
 import './TrailCatalog.css';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -31,7 +36,7 @@ function CatalogMap({ trails, onViewTrail }) {
   if (!MAPBOX_TOKEN) {
     return (
       <div className="catalog-map-fallback">
-        <span className="catalog-map-fallback__icon">◈</span>
+        <MapIcon size={40} strokeWidth={1.5} aria-hidden="true" />
         <p>Map requires a Mapbox token (VITE_MAPBOX_TOKEN)</p>
       </div>
     );
@@ -85,10 +90,10 @@ function CatalogMap({ trails, onViewTrail }) {
                 <p className="cmp-region">{popup.region}</p>
                 <p className="cmp-name">{popup.name}</p>
                 <p className="cmp-stats">
-                  {popup.distance_km} km · {popup.duration_hours}h · {popup.elevation_gain_m}m ↑
+                  {popup.distance_km} km · {popup.duration_hours}h · {popup.elevation_gain_m} m
                 </p>
                 <button className="cmp-btn" onClick={() => { setPopup(null); onViewTrail(popup); }}>
-                  View trail →
+                  View trail <ArrowRight size={14} strokeWidth={2} />
                 </button>
               </div>
             </div>
@@ -107,18 +112,16 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
   const { currentUser } = useAuth();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const [trails, setTrails] = useState([]);
-  // filteredTrails derived via useMemo — no extra setState render cycle
   const [loading, setLoading] = useState(true);
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
   const [selectedTags, setSelectedTags] = useState(initialTags);
   const [searchQuery, setSearchQuery] = useState('');
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'map'
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'map'
+  const [showFilters, setShowFilters] = useState(false);
   const [savedTrailIds, setSavedTrailIds] = useState(() => {
     const saved = localStorage.getItem('savedTrails');
     if (!saved) return [];
-    
     const parsed = JSON.parse(saved);
-    // Migration: Convert old format (full objects) to new format (IDs only)
     if (parsed.length > 0 && typeof parsed[0] === 'object') {
       const ids = parsed.map(trail => trail.id);
       localStorage.setItem('savedTrails', JSON.stringify(ids));
@@ -127,9 +130,7 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
     return parsed;
   });
 
-  useEffect(() => {
-    loadTrails();
-  }, []);
+  useEffect(() => { loadTrails(); }, []);
 
   useEffect(() => {
     if (initialTags && initialTags.length > 0) {
@@ -141,8 +142,7 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
   const loadTrails = async () => {
     try {
       const response = await axios.get(`${API_URL}/trails`);
-      const trailData = response.data.trails || [];
-      setTrails(trailData);
+      setTrails(response.data.trails || []);
     } catch (error) {
       console.error('Error loading trails:', error);
     } finally {
@@ -152,11 +152,9 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
 
   const filteredTrails = useMemo(() => {
     let filtered = [...trails];
-
     if (selectedDifficulty !== 'all') {
       filtered = filtered.filter(t => t.difficulty?.toLowerCase() === selectedDifficulty);
     }
-
     if (selectedTags.length > 0) {
       filtered = filtered.filter(trail => {
         const trailTags = trail.tags || trail.interests || [];
@@ -165,7 +163,6 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
         );
       });
     }
-
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(trail =>
@@ -174,39 +171,48 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
         trail.description?.toLowerCase().includes(query)
       );
     }
-
     return filtered;
   }, [trails, selectedDifficulty, selectedTags, searchQuery]);
 
   const toggleTag = (tag) => {
-    setSelectedTags(prev =>
-      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
-    );
+    setSelectedTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
   };
 
   const toggleSaveTrail = (trail, e) => {
     e.stopPropagation();
     if (!currentUser) { setShowAuthPrompt(true); return; }
     const isSaved = savedTrailIds.includes(trail.id);
-    
-    let newSaved;
-    if (isSaved) {
-      newSaved = savedTrailIds.filter(id => id !== trail.id);
-      toast.info(t('recommendations.trailUnsaved') || `${trail.name} removed from saved trails`);
-    } else {
-      newSaved = [...savedTrailIds, trail.id];
-      toast.success(t('recommendations.trailSaved') || `${trail.name} saved!`);
-    }
-    
+    const newSaved = isSaved
+      ? savedTrailIds.filter(id => id !== trail.id)
+      : [...savedTrailIds, trail.id];
+    toast[isSaved ? 'info' : 'success'](
+      isSaved
+        ? (t('recommendations.trailUnsaved') || `${trail.name} removed from saved trails`)
+        : (t('recommendations.trailSaved') || `${trail.name} saved!`)
+    );
     setSavedTrailIds(newSaved);
     localStorage.setItem('savedTrails', JSON.stringify(newSaved));
   };
 
-  const isTrailSaved = (trailId) => {
-    return savedTrailIds.includes(trailId);
-  };
+  const isTrailSaved = (trailId) => savedTrailIds.includes(trailId);
+
+  const clearAll = () => { setSelectedDifficulty('all'); setSelectedTags([]); setSearchQuery(''); };
 
   const allTags = ['alpine lakes', 'panoramic views', 'forests', 'family friendly', 'loop trail', 'cultural routes'];
+
+  const DIFFS = [
+    { value: 'all',    label: t('catalog.all') },
+    { value: 'easy',   label: t('catalog.easy') },
+    { value: 'medium', label: t('catalog.medium') },
+    { value: 'hard',   label: t('catalog.hard') },
+  ];
+  const VIEWS = [
+    { value: 'grid', label: t('catalog.gridView', 'Grid'), icon: LayoutGrid },
+    { value: 'map',  label: t('catalog.mapView', 'Map'),  icon: MapIcon },
+  ];
+
+  const activeCount = (selectedDifficulty !== 'all' ? 1 : 0) + selectedTags.length;
+  const hasActive = activeCount > 0 || !!searchQuery.trim();
 
   return (
     <div className="catalog-page">
@@ -217,180 +223,162 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
         </div>
       </div>
 
-      <div className="container catalog-container">
-        {/* Sticky Sidebar */}
-        <aside className="filters-sidebar">
-          <div className="filters-sticky">
-            <h3 className="filters-title">{t('catalog.filters')}</h3>
-
-            {/* Search Bar */}
-            <div className="filter-section">
-              <label className="filter-label">{t('catalog.search')}</label>
-              <div className="search-box">
-                <span className="search-icon">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="7" cy="7" r="5" stroke="currentColor" strokeWidth="1.5"/>
-                    <path d="M11 11L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
-                </span>
-                <input
-                  type="text"
-                  className="search-input"
-                  placeholder={t('catalog.searchPlaceholder')}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                {searchQuery && (
-                  <button className="search-clear" onClick={() => setSearchQuery('')}>
-                    ✕
-                  </button>
-                )}
-              </div>
-            </div>
-
-            {/* Difficulty Filter */}
-            <div className="filter-section">
-              <label className="filter-label">{t('catalog.filterByDifficulty')}</label>
-              <div className="filter-options">
-                {['all', 'easy', 'medium', 'hard'].map(diff => (
-                  <button
-                    key={diff}
-                    className={`filter-option ${selectedDifficulty === diff ? 'active' : ''}`}
-                    onClick={() => setSelectedDifficulty(diff)}
-                  >
-                    {t(`catalog.${diff}`)}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Tags Filter */}
-            <div className="filter-section">
-              <label className="filter-label">{t('catalog.filterByTags')}</label>
-              <div className="filter-tags">
-                {allTags.map(tag => (
-                  <button
-                    key={tag}
-                    className={`filter-tag ${selectedTags.includes(tag) ? 'active' : ''}`}
-                    onClick={() => toggleTag(tag)}
-                  >
-                    {tag}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Clear All */}
-            {(selectedDifficulty !== 'all' || selectedTags.length > 0 || searchQuery) && (
-              <button 
-                className="clear-filters-btn" 
-                onClick={() => {
-                  setSelectedDifficulty('all');
-                  setSelectedTags([]);
-                  setSearchQuery('');
-                }}
-              >
-                {t('catalog.clearFilters')}
+      <div className="container">
+        {/* Compact sticky filter bar */}
+        <div className="tc-bar">
+          <div className="tc-search">
+            <Search size={18} strokeWidth={2} className="tc-search__icon" aria-hidden="true" />
+            <input
+              type="text"
+              className="tc-search__input"
+              placeholder={t('catalog.searchPlaceholder')}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {searchQuery && (
+              <button className="tc-search__clear" onClick={() => setSearchQuery('')} aria-label={t('catalog.clearFilters')}>
+                <X size={16} strokeWidth={2} />
               </button>
             )}
           </div>
-        </aside>
 
-        {/* Main Content */}
-        <main className="catalog-main">
-          <div className="catalog-controls">
-            <p className="results-count">
-              {t('catalog.showing')} <strong>{filteredTrails.length}</strong> {filteredTrails.length !== 1 ? t('catalog.trails') : t('catalog.trail')}
-            </p>
+          <button className={`tc-filter-btn${activeCount ? ' is-active' : ''}`} onClick={() => setShowFilters(true)}>
+            <SlidersHorizontal size={18} strokeWidth={2} />
+            <span>{t('catalog.filters')}</span>
+            {activeCount > 0 && <span className="tc-filter-btn__badge">{activeCount}</span>}
+          </button>
 
-            <div className="view-toggle">
-              <button
-                className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
-                onClick={() => setViewMode('grid')}
-                aria-label="Grid view"
-              >
-                ▦
-              </button>
-              <button
-                className={`view-btn ${viewMode === 'map' ? 'active' : ''}`}
-                onClick={() => setViewMode('map')}
-                aria-label="Map view"
-              >
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 2L1 4V16L6 14L12 16L17 14V2L12 4L6 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
-                  <path d="M6 2V14" stroke="currentColor" strokeWidth="1.5"/>
-                  <path d="M12 4V16" stroke="currentColor" strokeWidth="1.5"/>
-                </svg>
-              </button>
-            </div>
+          <SegmentedControl
+            options={VIEWS}
+            value={viewMode}
+            onChange={setViewMode}
+            ariaLabel="View mode"
+            className="tc-viewseg"
+          />
+        </div>
+
+        {/* Selected-filter chips */}
+        {hasActive && (
+          <div className="tc-active">
+            {selectedDifficulty !== 'all' && (
+              <Chip active removable onRemove={() => setSelectedDifficulty('all')}>
+                {t(`catalog.${selectedDifficulty}`)}
+              </Chip>
+            )}
+            {selectedTags.map(tag => (
+              <Chip key={tag} active removable onRemove={() => toggleTag(tag)} className="tc-cap">
+                {tag}
+              </Chip>
+            ))}
+            <button className="tc-clear-link" onClick={clearAll}>{t('catalog.clearFilters')}</button>
           </div>
+        )}
 
-          {loading ? (
-            <div className="loading-catalog">{t('catalog.loadingTrails')}</div>
-          ) : viewMode === 'grid' ? (
-            filteredTrails.length > 0 ? (
-              <div className="trail-grid-catalog">
-                {filteredTrails.map(trail => (
-                  <div 
-                    key={trail.id}
-                    className="trail-card-catalog"
-                    onClick={() => viewTrail(trail)}
-                  >
+        <p className="tc-count">
+          {t('catalog.showing')} <strong>{filteredTrails.length}</strong>{' '}
+          {filteredTrails.length !== 1 ? t('catalog.trails') : t('catalog.trail')}
+        </p>
+
+        {/* Content */}
+        {loading ? (
+          <div className="tc-grid">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="tc-card tc-card--skeleton" aria-hidden="true">
+                <div className="tc-card__media" />
+                <div className="tc-card__body">
+                  <span className="tc-sk tc-sk--sm" />
+                  <span className="tc-sk tc-sk--lg" />
+                  <span className="tc-sk tc-sk--row" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : viewMode === 'map' ? (
+          <CatalogMap trails={filteredTrails} onViewTrail={viewTrail} />
+        ) : filteredTrails.length > 0 ? (
+          <div className="tc-grid">
+            {filteredTrails.map(trail => {
+              const saved = isTrailSaved(trail.id);
+              return (
+                <Card key={trail.id} as="article" interactive className="tc-card" onClick={() => viewTrail(trail)}>
+                  <div className="tc-card__media">
+                    <img src={trailImg(trail, 'thumb')} alt={trail.name} className="tc-card__img" loading="lazy" />
+                    <div className="tc-card__scrim" />
+                    {trail.difficulty && (
+                      <span className={`tc-diff tc-diff--${trail.difficulty}`}>{t(`catalog.${trail.difficulty}`)}</span>
+                    )}
                     <button
-                      className={`save-btn-catalog ${isTrailSaved(trail.id) ? 'saved' : ''}`}
+                      className={`tc-save${saved ? ' is-saved' : ''}`}
                       onClick={(e) => toggleSaveTrail(trail, e)}
-                      aria-label={isTrailSaved(trail.id) ? t('recommendations.unsaveTrail') : t('recommendations.saveTrail')}
+                      aria-label={saved ? t('recommendations.unsaveTrail') : t('recommendations.saveTrail')}
+                      aria-pressed={saved}
                     >
-                      {isTrailSaved(trail.id) ? '❤️' : '🤍'}
+                      <Heart size={18} strokeWidth={2} fill={saved ? 'currentColor' : 'none'} />
                     </button>
-                    <img 
-                      src={trailImg(trail, 'thumb')} 
-                      alt={trail.name}
-                      className="trail-image-catalog"
-                    />
-                    <div className="trail-content-catalog">
-                      <div className="trail-header-catalog">
-                        <h3 className="trail-name-catalog">{trail.name}</h3>
-                        <span className={`badge-catalog badge-${trail.difficulty}`}>
-                          {t(`catalog.${trail.difficulty}`)}
-                        </span>
-                      </div>
-                      <p className="trail-region-catalog">{trail.region}</p>
-                      <div className="trail-stats-catalog">
-                        <div className="stat-catalog">
-                          <span className="stat-icon">📏</span>
-                          <span>{trail.distance_km} km</span>
-                        </div>
-                        <div className="stat-catalog">
-                          <span className="stat-icon">⏱️</span>
-                          <span>{trail.duration_hours}h</span>
-                        </div>
-                        <div className="stat-catalog">
-                          <span className="stat-icon">⛰️</span>
-                          <span>{trail.elevation_gain_m}m</span>
-                        </div>
-                        {trail.rating && (
-                          <div className="stat-catalog">
-                            <span className="stat-icon">⭐</span>
-                            <span>{trail.rating}</span>
-                          </div>
-                        )}
-                      </div>
+                  </div>
+                  <div className="tc-card__body">
+                    <p className="tc-card__region">{trail.region}</p>
+                    <h3 className="tc-card__name">{trail.name}</h3>
+                    <div className="tc-card__metrics">
+                      <span className="tc-metric"><Ruler size={14} strokeWidth={2} />{trail.distance_km} km</span>
+                      <span className="tc-metric"><Clock size={14} strokeWidth={2} />{trail.duration_hours}h</span>
+                      <span className="tc-metric"><TrendingUp size={14} strokeWidth={2} />{trail.elevation_gain_m} m</span>
+                      {trail.rating ? (
+                        <span className="tc-metric tc-metric--rating"><Star size={14} strokeWidth={2} fill="currentColor" />{trail.rating}</span>
+                      ) : null}
                     </div>
                   </div>
+                </Card>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="tc-empty">
+            <Mountain size={48} strokeWidth={1.25} aria-hidden="true" />
+            <p>{t('catalog.noMatchingTrails')}</p>
+            {hasActive && (
+              <button className="tc-clear-link" onClick={clearAll}>{t('catalog.clearFilters')}</button>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Filters bottom sheet */}
+      {showFilters && (
+        <>
+          <div className="tc-sheet-backdrop" onClick={() => setShowFilters(false)} aria-hidden="true" />
+          <div className="tc-sheet" role="dialog" aria-modal="true" aria-label={t('catalog.filters')}>
+            <div className="tc-sheet__handle" />
+            <div className="tc-sheet__head">
+              <h3>{t('catalog.filters')}</h3>
+              <button className="tc-sheet__close" onClick={() => setShowFilters(false)} aria-label={t('catalog.clearFilters')}>
+                <X size={20} strokeWidth={2} />
+              </button>
+            </div>
+
+            <div className="tc-sheet__section">
+              <label className="tc-sheet__label">{t('catalog.filterByDifficulty')}</label>
+              <SegmentedControl block options={DIFFS} value={selectedDifficulty} onChange={setSelectedDifficulty} ariaLabel={t('catalog.filterByDifficulty')} />
+            </div>
+
+            <div className="tc-sheet__section">
+              <label className="tc-sheet__label">{t('catalog.filterByTags')}</label>
+              <div className="tc-sheet__tags">
+                {allTags.map(tag => (
+                  <Chip key={tag} active={selectedTags.includes(tag)} onClick={() => toggleTag(tag)} className="tc-cap">
+                    {tag}
+                  </Chip>
                 ))}
               </div>
-            ) : (
-              <div className="empty-state-catalog">
-                <div className="empty-icon-catalog">🏔️</div>
-                <p>{t('catalog.noMatchingTrails')}</p>
-              </div>
-            )
-          ) : (
-            <CatalogMap trails={filteredTrails} onViewTrail={viewTrail} />
-          )}
-        </main>
-      </div>
+            </div>
+
+            <div className="tc-sheet__actions">
+              {hasActive && <button className="tc-sheet__clear" onClick={clearAll}>{t('catalog.clearFilters')}</button>}
+              <button className="tc-sheet__done" onClick={() => setShowFilters(false)}>{t('catalog.done', 'Done')}</button>
+            </div>
+          </div>
+        </>
+      )}
 
       <AuthPromptModal
         isOpen={showAuthPrompt}
