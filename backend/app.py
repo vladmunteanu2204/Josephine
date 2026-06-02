@@ -3664,6 +3664,9 @@ def josephine_chat():
     message = body.get('message', '').strip()
     history = body.get('history', [])[-10:]   # last 5 pairs max
     lang    = body.get('lang', 'en')[:2].lower()   # 'en', 'it', 'de'
+    # Optional: factual context about the trail the user is currently viewing,
+    # so the LLM can answer about "it" without inventing details.
+    context = (body.get('context') or '').strip()[:1500]
 
     # Language instruction appended to system prompt
     LANG_INSTRUCTIONS = {
@@ -3736,6 +3739,12 @@ def josephine_chat():
 
     try:
         system_prompt = _build_system_prompt()
+        if context:
+            system_prompt = system_prompt + (
+                "\n\nThe user is currently looking at this trail. If they ask about "
+                "'it' or 'this trail', answer using ONLY these facts and do not invent "
+                f"anything beyond them:\n{context}"
+            )
         if lang_instruction:
             system_prompt = system_prompt + f"\n\n{lang_instruction}"
         response = _anthropic_client.messages.create(

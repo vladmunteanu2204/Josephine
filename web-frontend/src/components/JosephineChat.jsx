@@ -52,6 +52,95 @@ function distanceFromUserKm(tr) {
   return (isFinite(km) && km >= 0.1) ? km : null;
 }
 
+/* ── Context-aware trail Q&A (offline, factual) ───────────────────────────
+   Answers follow-up questions about the trail currently on screen STRICTLY
+   from its own fields. Returns { text } to reply, { action:'view' } to open
+   the trail, or null — and null deliberately lets the question fall through
+   to Haiku (the LLM) rather than guessing. Never invents missing data. */
+function _seasonRange(arr) {
+  if (!Array.isArray(arr) || !arr.length) return '';
+  return arr.length > 1 ? `${arr[0]}–${arr[arr.length - 1]}` : arr[0];
+}
+function answerAboutTrail(trail, tl) {
+  if (!trail) return null;
+  const name = trail.name || 'this trail';
+  const has = (v) => v !== undefined && v !== null && v !== '' && !(Array.isArray(v) && v.length === 0);
+
+  // Distance / length (must mention km / distance / far / length)
+  if (/\b(how far|how many km|what'?s the distance|distance|how long is it in km|length)\b/i.test(tl)) {
+    return has(trail.distance_km) ? { text: `${name} is ${trail.distance_km} km.` } : null;
+  }
+  // Duration / time
+  if (/\b(how long|how many hours|how much time|how long does it take|duration|take to (do|hike|walk|complete))\b/i.test(tl)) {
+    return has(trail.duration_hours) ? { text: `${name} takes around ${trail.duration_hours}h at a steady pace.` } : null;
+  }
+  // Elevation / climb
+  if (/\b(elevation|ascent|vertical|height gain|how much (up|climb|climbing))\b/i.test(tl)) {
+    return has(trail.elevation_gain_m) ? { text: `${name} climbs about ${trail.elevation_gain_m} m.` } : null;
+  }
+  // Difficulty
+  if (/\b(how hard|how difficult|is it hard|is it easy|is it tough|is it steep|difficulty|how challenging)\b/i.test(tl)) {
+    if (!has(trail.difficulty)) return null;
+    const d = String(trail.difficulty).toLowerCase();
+    const extra = d === 'easy' ? 'Suitable for most people.'
+      : d === 'hard' ? 'Best for fit, experienced hikers — good footwear matters.'
+      : 'A moderate effort — steady fitness and proper shoes recommended.';
+    return { text: `${name} is rated ${trail.difficulty}. ${extra}` };
+  }
+  // Season / when's it open
+  if (/\b(when.*(best|to go)|best (time|season|month)|in season|what season|when (is it )?open|is it open)\b/i.test(tl)) {
+    const s = _seasonRange(trail.best_season);
+    return s ? { text: `${name} is best ${s}.` } : null;
+  }
+  // Getting there / transport / parking
+  if (/\b(how (do|to)( i)? (get|reach)|getting there|by bus|by car|parking|how to reach|drive there|public transport)\b/i.test(tl)) {
+    const car = trail.transport?.car;
+    const bus = trail.transport?.bus;
+    const parking = trail.trailhead_info?.parking;
+    const parts = [];
+    if (bus) parts.push(`By bus: ${bus}`);
+    if (car) parts.push(`By car: ${car}`);
+    if (!parts.length && parking) parts.push(`Parking: ${parking}`);
+    return parts.length ? { text: `Getting to ${name} — ${parts.join(' · ')}` } : null;
+  }
+  // Food / rifugio nearby
+  if (/\b(eat|food|lunch|coffee|drink|refreshment|rifugio|hut|malga|somewhere to (eat|stop))\b/i.test(tl)) {
+    const rifs = Array.isArray(trail.nearby_rifugios) ? trail.nearby_rifugios.map(r => r?.name).filter(Boolean) : [];
+    return rifs.length ? { text: `Near ${name} you've got ${rifs.slice(0, 3).join(', ')} for a bite or a rest.` } : null;
+  }
+  // Family / kids
+  if (/\b(family|kids|children|child|toddler|stroller|pushchair)\b/i.test(tl)) {
+    if (trail.family_friendly === true)  return { text: `Yes — ${name} is family-friendly.` };
+    if (trail.family_friendly === false) return { text: `${name} isn't marked family-friendly — probably better for older kids or adults.` };
+    return null;
+  }
+  // Open it / show on map
+  if (/\b(show .*(map|it)|on the map|open (it|the trail)|view details|see (details|more))\b/i.test(tl)) {
+    return { action: 'view' };
+  }
+  return null;
+}
+
+// Compact factual context handed to Haiku so it can answer about "it"
+// without inventing details. Only includes fields that are present.
+function buildTrailContext(trail) {
+  if (!trail) return '';
+  const L = [];
+  if (trail.name)            L.push(`Name: ${trail.name}`);
+  if (trail.region)          L.push(`Region: ${trail.region}`);
+  if (trail.difficulty)      L.push(`Difficulty: ${trail.difficulty}`);
+  if (trail.duration_hours)  L.push(`Duration: ${trail.duration_hours}h`);
+  if (trail.distance_km)     L.push(`Distance: ${trail.distance_km} km`);
+  if (trail.elevation_gain_m) L.push(`Elevation gain: ${trail.elevation_gain_m} m`);
+  if (trail.dog_friendly !== undefined)    L.push(`Dog-friendly: ${trail.dog_friendly ? 'yes' : 'no'}`);
+  if (trail.family_friendly !== undefined) L.push(`Family-friendly: ${trail.family_friendly ? 'yes' : 'no'}`);
+  const s = _seasonRange(trail.best_season);
+  if (s) L.push(`Best season: ${s}`);
+  const rifs = Array.isArray(trail.nearby_rifugios) ? trail.nearby_rifugios.map(r => r?.name).filter(Boolean) : [];
+  if (rifs.length) L.push(`Nearby huts: ${rifs.slice(0, 4).join(', ')}`);
+  return L.join('. ');
+}
+
 /* ── Weather → Josephine opening message ─────────────────────────────── */
 function buildWeatherGreeting(w) {
   const desc = (w?.description || '').toLowerCase();
@@ -910,6 +999,9 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
     if (!text.trim()) return;
     const trimmed = text.trim();
     const tl = trimmed.toLowerCase();
+    // The trail the conversation is currently centred on (an opened trail, or
+    // the top recommendation). Used for context-aware Q&A and to ground Haiku.
+    const ctxTrail = selectedTrail || apiResults[0] || null;
 
     // ── Refinement follow-up: length ────────────────────────────────────
     if (awaitingRefinement === 'length') {
@@ -1054,6 +1146,29 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       return;
     }
 
+    // ── Context-aware Q&A about the trail on screen (offline, factual) ───
+    // Answers only from the trail's own fields; if it can't, it returns null
+    // and we fall through to Haiku rather than guessing.
+    if (ctxTrail) {
+      const ans = answerAboutTrail(ctxTrail, tl);
+      if (ans?.action === 'view') {
+        appendUserMessage(trimmed);
+        setInput('');
+        showTrailDetail(ctxTrail);
+        return;
+      }
+      if (ans?.text) {
+        appendUserMessage(trimmed);
+        setInput('');
+        setTyping(true);
+        setTimeout(() => {
+          setTyping(false);
+          appendJosephineMessage({ type: 'text', text: ans.text, chips: [t('chipStartOver')] });
+        }, 350);
+        return;
+      }
+    }
+
     const intent = parseRecommendIntent(trimmed);
     if (intent) {
       appendUserMessage(trimmed);
@@ -1080,7 +1195,12 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
     setInput('');
     setTyping(true);
     try {
-      const res = await axios.post('/api/chat', { message: trimmed, history: chatHistory.slice(-10), lang });
+      const res = await axios.post('/api/chat', {
+        message: trimmed,
+        history: chatHistory.slice(-10),
+        lang,
+        ...(ctxTrail ? { context: buildTrailContext(ctxTrail) } : {}),
+      });
       setTyping(false);
       setChatHistory(prev => [...prev,
         { role: 'user', content: trimmed },
