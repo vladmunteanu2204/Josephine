@@ -1,0 +1,74 @@
+/* ============================================================
+   Hut booking sheet — self-contained (used by RifugioDetail + planner)
+   ============================================================ */
+.hbs-overlay {
+  position: fixed; inset: 0; z-index: var(--z-modal, 4000);
+  background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.hbs-modal {
+  background: var(--bg-secondary, #0f1a0f);
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 25%, transparent);
+  border-radius: var(--radius-lg, 16px);
+  max-width: 580px; width: 100%; max-height: 90vh; overflow-y: auto;
+}
+.hbs-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 22px; border-bottom: 1px solid var(--border-subtle);
+}
+.hbs-header h2 {
+  font-family: var(--font-display); font-style: italic; font-weight: 400;
+  font-size: 22px; color: var(--accent-primary); margin: 0;
+}
+.hbs-close {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border: none; background: var(--surface-1);
+  border-radius: 50%; color: var(--text-secondary); cursor: pointer;
+}
+.hbs-close:hover { background: var(--surface-2); color: var(--text-primary); }
+
+/* Form */
+.hbs-form { padding: 20px 22px; }
+.hbs-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.hbs-group { margin-bottom: 14px; }
+.hbs-group label {
+  display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-muted); margin-bottom: 6px;
+}
+.hbs-group input, .hbs-group select, .hbs-group textarea {
+  width: 100%; padding: 10px 12px; box-sizing: border-box;
+  background: var(--surface-1); border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm); color: var(--text-primary); font-size: 14px;
+  font-family: inherit;
+}
+.hbs-group input:focus, .hbs-group select:focus, .hbs-group textarea:focus {
+  outline: none; border-color: color-mix(in srgb, var(--accent-primary) 45%, transparent);
+}
+.hbs-checkbox { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; color: var(--text-secondary); font-size: 14px; }
+.hbs-submit {
+  width: 100%; padding: 14px; border: none; border-radius: var(--radius-md);
+  background: var(--accent-primary); color: var(--accent-contrast);
+  font-size: 15px; font-weight: 700; cursor: pointer; transition: opacity 0.2s;
+}
+.hbs-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Outcome / fallback panel */
+.hbs-outcome { padding: 20px 22px 22px; }
+.hbs-outcome__intro { color: var(--text-secondary); font-size: 14px; line-height: 1.6; margin: 0 0 16px; }
+.hbs-actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+.hbs-action {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: var(--btn-h); padding: 0 16px; border-radius: var(--radius-md);
+  border: 1px solid var(--border-strong); background: var(--surface-1);
+  color: var(--text-primary); font-size: 15px; font-weight: 600; cursor: pointer; text-decoration: none;
+}
+.hbs-action:hover { border-color: var(--accent-primary); }
+.hbs-action--wa { background: color-mix(in srgb, #25d366 16%, transparent); border-color: color-mix(in srgb, #25d366 45%, transparent); color: #25d366; }
+.hbs-done {
+  width: 100%; height: var(--btn-h); border: none; border-radius: var(--radius-md);
+  background: var(--accent-primary); color: var(--accent-contrast); font-size: 15px; font-weight: 700; cursor: pointer;
+}
+
+@media (max-width: 560px) {
+  .hbs-row { grid-template-columns: 1fr; }
+}

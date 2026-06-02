@@ -862,7 +862,16 @@
     "submitInquiry": "Submit Inquiry",
     "bookingSuccess": "Your booking inquiry has been submitted successfully! The rifugio will contact you soon.",
     "bookingError": "Failed to submit booking inquiry. Please try again.",
-    "bookingDateRequired": "Please select check-in and check-out dates"
+    "bookingDateRequired": "Please select check-in and check-out dates",
+    "bookingEmailed": "We've emailed the hut — they'll reply to you directly.",
+    "bookingFallbackIntro": "Saved! Now send your inquiry to the hut in one tap:",
+    "bookingFailedIntro": "Saved — but we couldn't email the hut automatically. Send it in one tap:",
+    "sendViaWhatsApp": "Send via WhatsApp",
+    "emailTheHut": "Email the hut",
+    "callTheHut": "Call the hut",
+    "copyMessage": "Copy message",
+    "messageCopied": "Message copied — paste it to the hut.",
+    "emailVerified": "Booking email verified"
   },
   "multiday": {
     "heroTitle": "Hut-to-Hut Multi-Day Treks",

@@ -857,7 +857,16 @@
     "submitInquiry": "Anfrage Senden",
     "bookingSuccess": "Ihre Buchungsanfrage wurde erfolgreich übermittelt! Das Rifugio wird Sie bald kontaktieren.",
     "bookingError": "Fehler beim Senden der Buchungsanfrage. Bitte versuchen Sie es erneut.",
-    "bookingDateRequired": "Bitte wählen Sie Check-in- und Check-out-Daten aus"
+    "bookingDateRequired": "Bitte wählen Sie Check-in- und Check-out-Daten aus",
+    "bookingEmailed": "Wir haben die Hütte per E-Mail kontaktiert — sie antwortet dir direkt.",
+    "bookingFallbackIntro": "Gespeichert! Sende deine Anfrage jetzt mit einem Tipp an die Hütte:",
+    "bookingFailedIntro": "Gespeichert — aber die automatische E-Mail hat nicht geklappt. Sende sie mit einem Tipp:",
+    "sendViaWhatsApp": "Per WhatsApp senden",
+    "emailTheHut": "Hütte per E-Mail",
+    "callTheHut": "Hütte anrufen",
+    "copyMessage": "Nachricht kopieren",
+    "messageCopied": "Nachricht kopiert — füge sie für die Hütte ein.",
+    "emailVerified": "Buchungs-E-Mail verifiziert"
   },
   "multiday": {
     "heroTitle": "Mehrtägige Hüttenwanderungen",

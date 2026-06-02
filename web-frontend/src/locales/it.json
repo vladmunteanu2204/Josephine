@@ -857,7 +857,16 @@
     "submitInquiry": "Invia Richiesta",
     "bookingSuccess": "La tua richiesta di prenotazione è stata inviata con successo! Il rifugio ti contatterà presto.",
     "bookingError": "Impossibile inviare la richiesta di prenotazione. Riprova.",
-    "bookingDateRequired": "Seleziona le date di check-in e check-out"
+    "bookingDateRequired": "Seleziona le date di check-in e check-out",
+    "bookingEmailed": "Abbiamo inviato un'email al rifugio — ti risponderanno direttamente.",
+    "bookingFallbackIntro": "Salvato! Ora invia la tua richiesta al rifugio con un tocco:",
+    "bookingFailedIntro": "Salvato — ma non siamo riusciti a inviare l'email automaticamente. Invialo con un tocco:",
+    "sendViaWhatsApp": "Invia con WhatsApp",
+    "emailTheHut": "Invia email al rifugio",
+    "callTheHut": "Chiama il rifugio",
+    "copyMessage": "Copia messaggio",
+    "messageCopied": "Messaggio copiato — incollalo al rifugio.",
+    "emailVerified": "Email di prenotazione verificata"
   },
   "multiday": {
     "heroTitle": "Trekking Multi-Giorno Rifugio a Rifugio",
