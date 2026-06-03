@@ -815,6 +815,95 @@ def _apply_dispersal(results, now_dt, weather):
         return results
 
 
+# ── Place gazetteer for proximity ranking ────────────────────────────────────
+# When a named start area doesn't textually match any trail (e.g. "Naturno" in
+# the Vinschgau, where we have no trail with that name in its fields) we still
+# want to answer with the NEAREST trails rather than abandoning location and
+# returning region-wide top scorers. These are [lat, lon]; mirror of the
+# frontend geoAwareness AREA_COORDS so the two stay in step.
+_AREA_COORDS = {
+    'merano': [46.672, 11.159], 'meran': [46.672, 11.159],
+    'tirolo': [46.699, 11.155], 'tirol': [46.699, 11.155],
+    'lagundo': [46.686, 11.138], 'algund': [46.686, 11.138],
+    'lana': [46.615, 11.150], 'marlengo': [46.651, 11.131], 'marling': [46.651, 11.131],
+    'scena': [46.685, 11.170], 'schenna': [46.685, 11.170],
+    'rablà': [46.660, 11.080], 'rabland': [46.660, 11.080],
+    'bolzano': [46.498, 11.354], 'bozen': [46.498, 11.354],
+    'appiano': [46.448, 11.252], 'eppan': [46.448, 11.252],
+    'caldaro': [46.373, 11.244], 'kaltern': [46.373, 11.244],
+    'renon': [46.559, 11.413], 'ritten': [46.559, 11.413],
+    'bressanone': [46.716, 11.656], 'brixen': [46.716, 11.656],
+    'vipiteno': [46.893, 11.433], 'sterzing': [46.893, 11.433],
+    'ortisei': [46.575, 11.671], 'st. ulrich': [46.575, 11.671],
+    'santa cristina': [46.563, 11.722], 'selva': [46.552, 11.763], 'wolkenstein': [46.552, 11.763],
+    'val gardena': [46.575, 11.720], 'gröden': [46.575, 11.720], 'grödental': [46.575, 11.720],
+    'alpe di siusi': [46.543, 11.628], 'seiser alm': [46.543, 11.628],
+    'passo gardena': [46.510, 11.822], 'grödner joch': [46.510, 11.822],
+    'sarentino': [46.631, 11.357], 'sarnthein': [46.631, 11.357],
+    'val sarentino': [46.631, 11.357], 'sarntal': [46.631, 11.357],
+    'brunico': [46.796, 11.936], 'bruneck': [46.796, 11.936],
+    'campo tures': [46.918, 11.957], 'sand in taufers': [46.918, 11.957],
+    'dobbiaco': [46.731, 12.218], 'toblach': [46.731, 12.218],
+    'san candido': [46.732, 12.285], 'innichen': [46.732, 12.285],
+    'sesto': [46.700, 12.349], 'sexten': [46.700, 12.349],
+    'val pusteria': [46.796, 12.000], 'pustertal': [46.796, 12.000],
+    'lago di braies': [46.694, 12.084], 'pragser wildsee': [46.694, 12.084],
+    'naturns': [46.649, 11.006], 'naturno': [46.649, 11.006],
+    'silandro': [46.628, 10.773], 'schlanders': [46.628, 10.773],
+    'malles': [46.684, 10.549], 'mals': [46.684, 10.549],
+    'glorenza': [46.673, 10.560], 'glurns': [46.673, 10.560],
+    'prato allo stelvio': [46.614, 10.597], 'prad': [46.614, 10.597],
+    'vinschgau': [46.660, 10.850], 'venosta': [46.660, 10.850], 'val venosta': [46.660, 10.850],
+    'reschenpass': [46.831, 10.519], 'reschen': [46.808, 10.530], 'resia': [46.808, 10.530],
+    'cortina': [46.540, 12.137], "cortina d'ampezzo": [46.540, 12.137],
+    'corvara': [46.549, 11.872], 'alta badia': [46.565, 11.894], 'val badia': [46.626, 11.878],
+    'canazei': [46.476, 11.771], 'misurina': [46.584, 12.173],
+    'tre cime': [46.620, 12.302], 'drei zinnen': [46.620, 12.302],
+}
+
+
+def _resolve_area_coords(area):
+    """[lat, lon] for a named place, or None. Exact first, then containment."""
+    if not area:
+        return None
+    a = area.lower().strip()
+    if a in _AREA_COORDS:
+        return _AREA_COORDS[a]
+    # Longest key contained in the text wins (so 'val gardena' beats 'val').
+    best = None
+    for key, co in _AREA_COORDS.items():
+        if key in a and (best is None or len(key) > len(best[0])):
+            best = (key, co)
+    return best[1] if best else None
+
+
+# Region centroid [lat, lon] — fallback location when a trail has no coordinate
+# path (most don't yet). Every trail carries a `region`, so this gives proximity
+# ranking something to work with region-wide.
+_REGION_COORDS = {
+    'bolzano & surroundings': [46.498, 11.354],
+    'merano & surroundings':  [46.672, 11.159],
+    'val gardena':            [46.565, 11.710],
+    'val pusteria':           [46.760, 12.050],
+    'val sarentino':          [46.631, 11.370],
+    'vinschgau':              [46.660, 10.850],
+    'dolomites':              [46.570, 12.100],
+    'south tyrol':            [46.600, 11.400],  # generic
+}
+
+
+def _trail_centroid(trail):
+    """Mean [lat, lon] of a trail's coordinate path ([lng, lat] points). Falls
+    back to the trail's region centroid when it has no coordinate path."""
+    lats, lngs = [], []
+    for p in (trail.get('coordinates') or []):
+        if isinstance(p, (list, tuple)) and len(p) >= 2:
+            lngs.append(p[0]); lats.append(p[1])
+    if lats:
+        return [sum(lats) / len(lats), sum(lngs) / len(lngs)]
+    return _REGION_COORDS.get(str(trail.get('region', '')).lower())
+
+
 @app.route('/api/ai/recommend', methods=['POST'])
 @app.route('/api/recommendations', methods=['POST'])
 def get_recommendations():
@@ -1017,13 +1106,32 @@ def get_recommendations():
                     for word in specific_tokens
                 )
             ]
-            # If we found area-matched trails use them; otherwise fall back to
-            # all trails but signal to the caller that none were near the area.
+            # If we found area-matched trails use them; otherwise try proximity:
+            # resolve the place to coordinates and keep the trails physically
+            # nearest to it (so "I'm in Naturno" returns Vinschgau/Merano trails,
+            # not region-wide top scorers in Val Gardena 50+ km away).
             if area_matched:
                 scored_trails = area_matched
             else:
-                # Return empty so the frontend can show an honest "not found" message
-                return jsonify({'results': [], 'area_not_found': True, 'area': start_area})
+                origin = _resolve_area_coords(start_area)
+                NEAR_RADIUS_KM = 45.0
+                near = []
+                if origin:
+                    for item in scored_trails:
+                        ctr = _trail_centroid(item['trail'])
+                        if not ctr:
+                            continue
+                        dist = haversine(origin[0], origin[1], ctr[0], ctr[1])
+                        if dist <= NEAR_RADIUS_KM:
+                            # Proximity bonus (closer ranks higher) + honest reason.
+                            item['score'] += max(0.0, 6.0 - dist / 9.0)
+                            item['reasons'].append(f"near {start_area}")
+                            near.append(item)
+                if near:
+                    scored_trails = near
+                else:
+                    # Truly nothing close (or unknown place) → honest "not found".
+                    return jsonify({'results': [], 'area_not_found': True, 'area': start_area})
 
         # Hiking with a dog → only ever return dog-friendly trails; if there are
         # none (here / in this area), say so honestly instead of recommending a
