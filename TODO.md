@@ -91,3 +91,32 @@ To do when revisited:
   `pip install -r backend/requirements.txt` can't fully sync locally. Installed
   `flask-talisman` directly so local `import app` works. Production/Replit uses
   a compatible Python; no prod impact.
+
+## 5. Audit closure status
+
+The full code audit (P0 data-loss/identity → P1 correctness/consolidation →
+P2 polish → hygiene) is **closed**. Done & committed: persistence routed
+through Postgres (reviews/plans/bookings/challenges), crash-safe writes,
+client-trust hardening (scoped `/api/hikes`, unguessable ids, CORS fail-closed),
+404 + deep-link resilience, input validation, single API client, accessible
+Modal/Sheet primitives, z-index + colour tokens, full JosephineChat +
+transport-note i18n, WCAG `--text-muted`, functional emoji→lucide, dead-code
+removal, atexit analytics flush, `_chat_cache` cap, generic 500 responses,
+dead `X-Admin-Password` header removed.
+
+**Won't-fix / needs-infra (consciously accepted, not oversights):**
+- **CSP `'unsafe-inline'`** stays for `style-src`/`script-src`: the UI uses
+  inline `style={{}}` pervasively; removing it needs a nonce/hash pipeline
+  (build-system change) or a large inline-style refactor. Revisit if/when a
+  CSP-hardening pass is scoped.
+- **Per-worker in-memory rate limits / lockout** (`_booking_rate_ok`,
+  `_failed_attempts`, chat limiter): correct within one worker, but not shared
+  across gunicorn workers. Making them global needs Redis or a DB-backed
+  counter (infra). Acceptable at current scale; revisit with multi-worker load.
+
+**Deferred — structural refactor (own session):** split the ~4,000-line
+`backend/app.py` into blueprints/service modules, break up the god-functions
+(`get_recommendations`, `structured_answer`), and add a frontend navigation
+context to end prop-drilling. User-invisible and high-risk; best done in a
+dedicated session with heavy incremental testing rather than bundled with
+feature work.
