@@ -613,7 +613,9 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       const moments = await fetchAlmanac(lat, lon, 3);
       if (moments.length) {
         almanacRestRef.current = moments.slice(1);
-        after(() => showAlmanacMoment(moments[0]), 900);
+        // Append directly (not via the tracked `after` timer) so StrictMode's
+        // mount/unmount cleanup can't clear it before it fires.
+        showAlmanacMoment(moments[0]);
       }
     };
 

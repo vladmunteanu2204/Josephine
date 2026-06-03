@@ -336,10 +336,21 @@ weather gate passes; year-varying events phrased approximately).
   (plan-around-it → seeds recommend; more moments; share = postcard hook).
 - Locales: only short validity-label `tj` keys ("tonight", "{n} days left").
 
-**Phasing:** P1 = json + engine + API + chat surfacing + enrosadira/first-snow
-gates. P2 = location-personalised ranking, elevation-aware larch, share→postcard,
-push notifications. P3 = real event feeds (market/Almabtrieb dates), admin
-curation UI, webcam/first-snow auto-detection.
+**Phasing:**
+- **P1 — DONE** (commits 1281046 backend, 5dbe771 frontend): almanac.json (12
+  moments EN/IT/DE), almanac.py engine, GET /api/almanac, chat surfacing (leads
+  on open + "what's happening" intent + Plan-around-it / What-else chips),
+  enrosadira & first-snow weather gates. Verified across seasons + browser preview.
+- **P2 — TODO:** location-personalised ranking (pass real user coords),
+  elevation-aware larch (gold descends over weeks), share → postcard hook, and
+  **push notifications** (the morning "larches peak this week, go before 8"
+  nudge — the killer use; needs notification infra, see notifications.py).
+- **P3 — TODO:** real event feeds (market/Almabtrieb exact dates from a source),
+  admin curation UI for moments, webcam/first-snow auto-detection.
+
+**⚠️ OWNER ACTION (open):** hand Claude extra/vetted moments + confirm the
+`_review`-flagged date windows in almanac.json — the gate before launch. Do this
+when you have time; Claude will fold them in and re-verify.
 
 **Verify:** active_moments at seeded dates (Oct⇒larch, Jun⇒wildflowers,
 Dec⇒markets), clear vs cloudy ⇒ enrosadira on/off, year-wrap window, EN/IT/DE
