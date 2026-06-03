@@ -456,6 +456,11 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
 
   // Reset page scroll on mount so entering the chat never lands at the footer
   useEffect(() => { window.scrollTo(0, 0); }, []);
+  // Reset the module-level location/weather globals on unmount so a fresh chat
+  // session never reuses a previous session's coordinates or weather.
+  useEffect(() => () => {
+    userLat = WX_LAT; userLon = WX_LON; userLocated = false; lastWeather = null;
+  }, []);
   const t = useCallback(
     (key, fallback) => {
       const full = `josephineChat.${key}`;

@@ -15,7 +15,12 @@ import atexit
 import sqlite3
 import threading
 import jwt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+try:
+    from zoneinfo import ZoneInfo
+    _TZ_LOCAL = ZoneInfo('Europe/Rome')   # South Tyrol local time
+except Exception:                          # pragma: no cover
+    _TZ_LOCAL = None
 from functools import wraps
 import media as media_module  # image upload / R2 delivery
 from weather_service import weather_service
@@ -670,6 +675,21 @@ def generate_trail():
         'message': 'Route generation is retired. Please use /api/ai/recommend for personalised trail suggestions.'
     }), 410
 
+def _local_now(iso_str):
+    """Parse the client's `now` (usually a UTC ISO string ending in 'Z') and
+    return it as a NAIVE Europe/Rome local datetime — so peak-hour / daylight
+    logic evaluates in South Tyrol time, not UTC. Falls back to local now."""
+    if iso_str:
+        try:
+            dt = datetime.fromisoformat(str(iso_str).replace('Z', '+00:00'))
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt.astimezone(_TZ_LOCAL).replace(tzinfo=None) if _TZ_LOCAL else dt.replace(tzinfo=None)
+        except (ValueError, TypeError):
+            pass
+    return datetime.now(_TZ_LOCAL).replace(tzinfo=None) if _TZ_LOCAL else datetime.now()
+
+
 _DISPERSAL_PENALTY = 6.0   # max score points subtracted from a hotspot at peak
 
 
@@ -776,7 +796,7 @@ def get_recommendations():
         # Dispersal/temporal inputs (optional). `now` = client local ISO; weather
         # = the {description, sunset} the client already fetched. Both degrade
         # gracefully when absent (server time, no daylight/fair-weather signal).
-        now_dt = dispersal._parse_iso(data.get('now')) or datetime.now()
+        now_dt = _local_now(data.get('now'))
         weather_ctx = data.get('weather') if isinstance(data.get('weather'), dict) else None
 
         # Cache recommendations by params — stable within the same calendar day
@@ -4300,8 +4320,11 @@ def josephine_chat():
             'mode': 'no_key'
         })
 
-    # Cache key includes language so EN/IT/DE are cached separately
-    cache_key = f"{lang}:{message}"
+    # Cache key includes language AND the on-screen trail context — otherwise
+    # "is it dog-friendly?" asked while viewing different trails would collide
+    # and return the first cached answer for everyone (wrong-trail answers).
+    ctx_sig = hashlib.sha256((context or '').encode()).hexdigest()[:10]
+    cache_key = f"{lang}:{ctx_sig}:{message}"
     cached = _cache_get(cache_key)
     if cached:
         return jsonify({'reply': cached, 'mode': 'cached'})
@@ -4317,19 +4340,31 @@ def josephine_chat():
         })
 
     try:
-        system_prompt = _build_system_prompt()
+        # Static knowledge base as a cached system block (Anthropic prompt
+        # caching) — it's identical across requests, so we don't resend/pay for
+        # it every call. Per-request context + language go in a small live block.
+        system_blocks = [{
+            'type': 'text',
+            'text': _build_system_prompt(),
+            'cache_control': {'type': 'ephemeral'},
+        }]
+        extra = ''
         if context:
-            system_prompt = system_prompt + (
+            extra += (
                 "\n\nThe user is currently looking at this trail. If they ask about "
                 "'it' or 'this trail', answer using ONLY these facts and do not invent "
                 f"anything beyond them:\n{context}"
             )
         if lang_instruction:
-            system_prompt = system_prompt + f"\n\n{lang_instruction}"
-        response = _anthropic_client.messages.create(
+            extra += f"\n\n{lang_instruction}"
+        if extra:
+            system_blocks.append({'type': 'text', 'text': extra})
+
+        response = _anthropic_client.with_options(timeout=20.0).messages.create(
             model='claude-haiku-4-5',
             max_tokens=400,
-            system=system_prompt,
+            temperature=0,   # factual concierge — never embellish/fabricate
+            system=system_blocks,
             messages=history + [{'role': 'user', 'content': message}],
         )
         reply = response.content[0].text
@@ -4468,6 +4503,14 @@ def serve_frontend(path):
         return send_from_directory(app.static_folder, path)
     # Otherwise, serve index.html (for React Router)
     return send_from_directory(app.static_folder, 'index.html')
+
+# One-time integrity check: warn if any hotspot references a trail id that
+# isn't in the published catalog (keeps the curated hotspots.json honest).
+try:
+    dispersal.validate_hotspots([t.get('id') for t in load_complete_trails().get('trails', [])])
+except Exception as _e:
+    print(f"[dispersal] startup validation skipped: {_e}")
+
 
 if __name__ == '__main__':
     # Development only — production uses gunicorn (see Procfile / start command).
