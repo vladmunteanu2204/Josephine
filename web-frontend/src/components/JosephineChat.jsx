@@ -1082,11 +1082,14 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
 
     if (!triggered) return null;
 
-    // Match explicit prepositions first; fall back to "in" for place names
-    const loc = text.match(/(?:from|near|around|starting from|starting at|close to)\s+([A-Za-zÀ-ÿ\s]+?)(?:\s*$|\s*[,.])/i)
-             ?? text.match(/\bin\s+([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ\s]{1,24})(?:\s*$|\s*[,?.])/i);
-    // For "in [place]" matches, filter out non-geographic phrases
-    const NON_PLACES = /^(the |a |an |my |this |that |summer|winter|spring|autumn|fall|morning|afternoon|evening|july|june|august|mind|order)/i;
+    // Match explicit prepositions first; fall back to "in"/"at" for place names.
+    // "staying at / at <hotel>" lets a guest give their accommodation as origin
+    // (the backend resolves hotels/POIs, not just towns).
+    const loc = text.match(/(?:starting from|starting at|close to|staying at|stay at|coming from|from|near|around)\s+([A-Za-zÀ-ÿ\s'’.&-]+?)(?:\s*$|\s*[,.?!])/i)
+             ?? text.match(/\bat\s+([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ\s'’.&-]{1,34})(?:\s*$|\s*[,.?!])/i)
+             ?? text.match(/\bin\s+([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ\s'’.&-]{1,24})(?:\s*$|\s*[,?.])/i);
+    // Filter out non-geographic phrases (times, seasons, filler).
+    const NON_PLACES = /^(the |a |an |my |this |that |summer|winter|spring|autumn|fall|morning|afternoon|evening|night|noon|midday|altitude|home|july|june|august|mind|order|least|most|all)\b/i;
     const rawArea = loc ? loc[1].trim() : '';
     const startArea = (rawArea && NON_PLACES.test(rawArea)) ? '' : rawArea;
     // null = the user didn't name a difficulty → the engine shouldn't bias.

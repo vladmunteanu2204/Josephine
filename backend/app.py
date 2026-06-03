@@ -892,6 +892,17 @@ _PLACES_CACHE = {'index': None, 'keys': None}
 # geocode fallback — keep results inside the province.
 _ST_BBOX = (10.38, 46.20, 12.50, 47.10)
 _CONNECTIVES = (' in ', ' im ', ' an der ', ' an ', ' a ', ' bei ', ' presso ')
+# Well-known places OUTSIDE South Tyrol. A user who types one of these means
+# that city — never let the live geocoder snap to a coincidental in-region POI
+# (e.g. "Vienna" -> a "Hotel Vienna" in Val Badia, "Innsbruck" -> "Via Innsbruck").
+_NON_ST_PLACES = {
+    'vienna', 'wien', 'innsbruck', 'munich', 'munchen', 'münchen', 'salzburg',
+    'zurich', 'zürich', 'verona', 'venice', 'venezia', 'venedig', 'milan',
+    'milano', 'mailand', 'rome', 'roma', 'rom', 'trento', 'trient', 'trent',
+    'florence', 'firenze', 'naples', 'napoli', 'turin', 'torino', 'graz',
+    'klagenfurt', 'lienz', 'kufstein', 'garmisch', 'paris', 'london', 'berlin',
+    'prague', 'prag', 'budapest',
+}
 
 
 def _norm_place(s):
@@ -977,6 +988,9 @@ def _geocode_live(area):
     if not area or not area.strip():
         return None
     key = _norm_place(area)
+    # A famous place outside South Tyrol → don't snap to a coincidental in-region POI.
+    if key in _NON_ST_PLACES:
+        return None
     try:
         row = _db_conn.execute('SELECT lat, lon FROM geocode_cache WHERE q=?', (key,)).fetchone()
         if row is not None:
@@ -984,11 +998,15 @@ def _geocode_live(area):
     except Exception:  # noqa: BLE001
         pass
     coords = None
+    # Accept settlements AND named POIs (hotels, huts, castles, lakes) so a guest
+    # can say "I'm at Hotel Kuglerhof" — but reject linear features (a street
+    # named "Via Innsbruck" must NOT make the city of Innsbruck resolve).
+    _REJECT_CLASS = {'highway', 'railway', 'waterway', 'route', 'aerialway', 'power', 'barrier'}
     try:
         params = urllib.parse.urlencode({
             'q': f'{area}, Südtirol, Italy', 'format': 'json', 'limit': 5,
             'viewbox': '10.38,47.10,12.50,46.20', 'bounded': 1, 'countrycodes': 'it',
-            'featuretype': 'settlement', 'addressdetails': 1,
+            'addressdetails': 1,
         })
         req = urllib.request.Request(
             'https://nominatim.openstreetmap.org/search?' + params,
@@ -996,11 +1014,9 @@ def _geocode_live(area):
         with urllib.request.urlopen(req, timeout=3) as r:
             arr = json.loads(r.read().decode())
         for hit in arr:
-            # Only real settlements (not streets/buildings) actually in the
-            # province of Bolzano — guards against "Via Innsbruck" in Bolzano
-            # matching the city of Innsbruck.
-            if hit.get('class') not in ('place', 'boundary'):
+            if hit.get('class') in _REJECT_CLASS:
                 continue
+            # Must actually be in the province of Bolzano (South Tyrol).
             addr = hit.get('address', {}) or {}
             blob = ' '.join(str(v).lower() for v in addr.values())
             if not any(s in blob for s in ('it-bz', 'bolzano', 'südtirol', 'sudtirol', 'alto adige')):
