@@ -384,7 +384,7 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
         isOpen={showAuthPrompt}
         onClose={() => setShowAuthPrompt(false)}
         onLogin={() => onShowLogin?.()}
-        message="Sign in to save trails and access them across all your devices."
+        message="Sign in to save and revisit your favourite trails."
       />
     </div>
   );

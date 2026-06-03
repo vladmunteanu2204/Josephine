@@ -6,6 +6,7 @@ import CelebrationModal from './CelebrationModal';
 import TripSummary from './TripSummary';
 import { checkNewBadges } from '../utils/gamification';
 import { useToast } from '../contexts/ToastContext';
+import { useAuth } from '../contexts/AuthContext';
 import './ActiveHikeTracker.css';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -25,6 +26,7 @@ const CHECKPOINT_PASSED_RADIUS = 40; // meters to mark as passed after reaching
 function ActiveHikeTracker({ trail, onEnd }) {
   const { t } = useTranslation();
   const toast = useToast();
+  const { currentUser } = useAuth();
   const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [isTracking, setIsTracking] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -937,6 +939,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
 
     // Save hike data (use refs for latest data)
     const hikeData = {
+      user_email: currentUser?.email || null,
       trail_id: trail.id,
       trail_name: trail.name,
       start_time: new Date(startTimeRef.current).toISOString(),

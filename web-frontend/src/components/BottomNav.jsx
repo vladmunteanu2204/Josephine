@@ -17,7 +17,7 @@ function BottomNav({ currentView, setCurrentView, onJosephineOpen, onShowLogin }
     if (GATED_VIEWS.includes(key) && !currentUser) {
       setAuthPromptMsg(
         key === 'savedTrails'
-          ? 'Sign in to see your saved trails across all your devices.'
+          ? 'Sign in to save and revisit your favourite trails.'
           : 'Sign in to access trip planning and personalised features.'
       );
       setShowAuthPrompt(true);

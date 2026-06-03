@@ -1643,7 +1643,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         isOpen={showAuthPrompt}
         onClose={() => setShowAuthPrompt(false)}
         onLogin={() => { setShowAuthPrompt(false); onShowLogin?.(); }}
-        message="Sign in to save this hike and keep your plans in sync across all your devices."
+        message="Sign in to save this hike to your favourites."
       />
     </div>
   );

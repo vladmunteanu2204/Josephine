@@ -46,6 +46,33 @@ function GuestGuard({ setCurrentView, onShowLogin, children }) {
   return children;
 }
 
+// All hash routes the app knows how to render. Anything else → NotFound.
+const KNOWN_VIEWS = new Set([
+  'home', 'recommendations', 'catalog', 'detail', 'profile', 'savedTrails',
+  'settings', 'leaderboards', 'planner', 'terms', 'privacy', 'admin',
+  'challenges', 'rifugios', 'rifugio-detail', 'multiday-trails',
+  'multiday-detail', 'josephine', 'donate',
+]);
+
+// Shown for an unknown hash (typo, stale/shared link) instead of a blank page.
+function NotFound({ onHome }) {
+  return (
+    <div style={{
+      display: 'flex', flexDirection: 'column', alignItems: 'center',
+      justifyContent: 'center', minHeight: '60vh', textAlign: 'center',
+      padding: '2rem', color: 'var(--text-primary, #e8e6df)',
+    }}>
+      <h1 style={{ fontSize: '3rem', margin: 0 }}>404</h1>
+      <p style={{ opacity: 0.8, marginTop: '0.5rem' }}>
+        We couldn’t find that page.
+      </p>
+      <button className="btn-primary" style={{ marginTop: '1.25rem' }} onClick={onHome}>
+        Back to home
+      </button>
+    </div>
+  );
+}
+
 // Minimal loading fallback — dark bg matches app shell
 function ViewLoader() {
   return (
@@ -121,6 +148,15 @@ function App() {
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
+
+  // Detail views need their target held in state. On a hard refresh or a shared
+  // link that state is gone, so fall back to the parent list rather than render
+  // a blank screen.
+  useEffect(() => {
+    if (currentView === 'detail' && !selectedTrail) setCurrentView('catalog');
+    else if (currentView === 'rifugio-detail' && !selectedRifugio) setCurrentView('rifugios');
+    else if (currentView === 'multiday-detail' && !selectedMultiDayTrail) setCurrentView('multiday-trails');
+  }, [currentView, selectedTrail, selectedRifugio, selectedMultiDayTrail]);
 
   const viewTrail = (trail) => {
     setPreviousView(currentView);
@@ -285,6 +321,10 @@ function App() {
 
           {currentView === 'donate' && (
             <Donate onBack={goBack} />
+          )}
+
+          {!KNOWN_VIEWS.has(currentView) && (
+            <NotFound onHome={() => setCurrentView('home')} />
           )}
           </Suspense>
         </main>

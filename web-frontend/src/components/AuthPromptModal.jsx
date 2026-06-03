@@ -24,7 +24,7 @@ export default function AuthPromptModal({ isOpen, onClose, onLogin, message }) {
 
         <h2 className="apm-title">Members only</h2>
         <p className="apm-msg">
-          {message || 'Sign in to unlock this feature and keep your trails in sync across all your devices.'}
+          {message || 'Sign in to unlock this feature and save your favourite trails.'}
         </p>
 
         <button className="apm-signin-btn" onClick={() => { onClose(); onLogin(); }}>

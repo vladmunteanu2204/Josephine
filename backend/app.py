@@ -2,9 +2,11 @@ from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
 from flask_talisman import Talisman
 import os
+import re
 import json
 import math
 import random
+import secrets
 import io
 import fcntl
 import hashlib
@@ -47,8 +49,21 @@ app = Flask(__name__,
             static_folder='../web-frontend/dist',
             static_url_path='')
 
-# ── CORS — restrict to explicit origins in production ─────────────────────
-ALLOWED_ORIGINS = os.environ.get('ALLOWED_ORIGINS', '*').split(',')
+# ── CORS — fail closed in production ──────────────────────────────────────
+# Dev defaults to '*' for convenience; production refuses the wildcard and
+# requires an explicit ALLOWED_ORIGINS list so we never echo arbitrary origins.
+_is_prod_env = os.environ.get('FLASK_ENV', 'development') == 'production'
+_allowed_origins_raw = os.environ.get('ALLOWED_ORIGINS', '').strip()
+if _is_prod_env:
+    if not _allowed_origins_raw:
+        raise RuntimeError(
+            "ALLOWED_ORIGINS must be set to an explicit comma-separated list in "
+            "production (wildcard CORS is refused for safety)."
+        )
+    ALLOWED_ORIGINS = [o.strip() for o in _allowed_origins_raw.split(',') if o.strip()]
+else:
+    ALLOWED_ORIGINS = ([o.strip() for o in _allowed_origins_raw.split(',') if o.strip()]
+                       if _allowed_origins_raw else '*')
 CORS(app, origins=ALLOWED_ORIGINS)
 
 # ── Security headers via flask-talisman ───────────────────────────────────
@@ -236,12 +251,31 @@ def _invalidate_cache(path: str):
 
 
 def atomic_json_write(path, data):
-    """Write JSON to path with an exclusive file lock to prevent corruption."""
-    with open(path, 'a+') as lock_file:
+    """Write JSON crash-safely: serialise to a temp file in the same directory,
+    then os.replace() (atomic rename) into place. A dedicated .lock file held
+    under an exclusive flock serialises concurrent writers; the rename ensures a
+    reader (or a crash) never observes a truncated/corrupt file."""
+    dir_name = os.path.dirname(path) or '.'
+    # Lock file lives in the system temp dir (keyed by the target path) so it
+    # never pollutes the repo and is never itself replaced — a stable inode for
+    # cross-process mutual exclusion.
+    lock_path = os.path.join(
+        tempfile.gettempdir(),
+        'alpenvia-' + hashlib.md5(os.path.abspath(path).encode()).hexdigest() + '.lock')
+    with open(lock_path, 'a+') as lock_file:
         fcntl.flock(lock_file, fcntl.LOCK_EX)
         try:
-            with open(path, 'w') as f:
-                json.dump(data, f, indent=2)
+            fd, tmp_path = tempfile.mkstemp(dir=dir_name, suffix='.tmp')
+            try:
+                with os.fdopen(fd, 'w') as f:
+                    json.dump(data, f, indent=2)
+                os.replace(tmp_path, path)   # atomic on POSIX
+            except Exception:
+                try:
+                    os.unlink(tmp_path)
+                except OSError:
+                    pass
+                raise
         finally:
             fcntl.flock(lock_file, fcntl.LOCK_UN)
 MULTI_DAY_TRAILS_FILE = os.path.join(BASE_DIR, 'backend', 'data', 'multi_day_trails.json')
@@ -326,18 +360,70 @@ def _db_delete_row(table: str, row_id: str):
         print(f"[db] delete from {table} failed: {e}")
 
 def load_reviews():
-    """Load reviews data — from PostgreSQL if available, else JSON (TTL-cached)."""
+    """Load reviews in the nested shape the GET endpoints consume:
+        {reviews: {entity_id: [review, ...]}, statistics: {entity_id: {...}}}
+    From PostgreSQL if available (grouped + stats computed live), else JSON
+    (TTL-cached). `entity_id` is a trail id or a rifugio id (they share the
+    `reviews.trail_id` column / JSON namespace; ids are globally distinct)."""
     if DB_AVAILABLE:
         try:
             with get_db() as conn:
                 rows = conn.execute(_sql(
-                    "SELECT trail_id, user_email, rating, comment, created_at, data FROM reviews ORDER BY created_at DESC"
+                    "SELECT trail_id, data FROM reviews ORDER BY created_at ASC"
                 )).fetchall()
-            return [dict(r._mapping) for r in rows]
+            grouped = {}
+            for r in rows:
+                rev = dict(r.data) if r.data else {}
+                grouped.setdefault(r.trail_id, []).append(rev)
+            stats = {}
+            for eid, revs in grouped.items():
+                if revs:
+                    avg = sum(rv.get('rating', 0) for rv in revs) / len(revs)
+                    stats[eid] = {'average_rating': round(avg, 2),
+                                  'total_reviews': len(revs)}
+            return {'reviews': grouped, 'statistics': stats}
         except Exception as e:
             print(f"[db] load_reviews fallback to JSON: {e}")
     reviews_path = os.path.join(BASE_DIR, 'data', 'reviews.json')
     return _cached_json(reviews_path)
+
+
+def save_review(entity_id, review):
+    """Persist a single review for a trail or rifugio. Writes a row to the
+    `reviews` table in DB mode, else appends to the nested reviews.json and
+    recomputes that entity's statistics. Mirrors the save_trail/save_rifugio
+    DB-first-with-JSON-fallback idiom."""
+    if DB_AVAILABLE:
+        try:
+            with get_db() as conn:
+                conn.execute(_sql("""
+                    INSERT INTO reviews (trail_id, user_email, rating, comment, data)
+                    VALUES (:trail_id, :user_email, :rating, :comment, :data::jsonb)
+                """), {
+                    'trail_id': entity_id,
+                    'user_email': review.get('user_id') or review.get('user_email'),
+                    'rating': review.get('rating'),
+                    'comment': review.get('comment', ''),
+                    'data': json.dumps(review),
+                })
+            return True
+        except Exception as e:
+            print(f"[db] save_review fallback to JSON: {e}")
+    reviews_path = os.path.join(BASE_DIR, 'data', 'reviews.json')
+    try:
+        with open(reviews_path, 'r') as f:
+            reviews_data = json.load(f)
+    except FileNotFoundError:
+        reviews_data = {'reviews': {}, 'statistics': {}}
+    revs = reviews_data.setdefault('reviews', {}).setdefault(entity_id, [])
+    revs.append(review)
+    avg = sum(r.get('rating', 0) for r in revs) / len(revs)
+    reviews_data.setdefault('statistics', {})[entity_id] = {
+        'average_rating': round(avg, 2), 'total_reviews': len(revs)
+    }
+    atomic_json_write(reviews_path, reviews_data)
+    _invalidate_cache(reviews_path)
+    return True
 
 def compress_image(file_data, filename):
     """
@@ -516,13 +602,18 @@ def get_trails():
     filtered_trails = all_trails
 
     if difficulty:
-        filtered_trails = [t for t in filtered_trails if t['difficulty'].lower() == difficulty.lower()]
-    
+        filtered_trails = [t for t in filtered_trails
+                           if (t.get('difficulty') or '').lower() == difficulty.lower()]
+
     if duration_max:
-        filtered_trails = [t for t in filtered_trails if t['duration_hours'] <= duration_max]
-    
+        filtered_trails = [t for t in filtered_trails
+                           if t.get('duration_hours') is not None
+                           and t['duration_hours'] <= duration_max]
+
     if interest:
-        filtered_trails = [t for t in filtered_trails if interest.lower() in [i.lower() for i in t['interests']]]
+        il = interest.lower()
+        filtered_trails = [t for t in filtered_trails
+                           if il in [str(i).lower() for i in (t.get('interests') or [])]]
 
     total = len(filtered_trails)
 
@@ -902,7 +993,9 @@ def add_trail_review(trail_id):
             'date': datetime.now().strftime('%Y-%m-%d'),
             'helpful_count': 0
         }
-        
+
+        save_review(trail_id, new_review)
+
         return jsonify({
             'success': True,
             'review': new_review,
@@ -940,7 +1033,8 @@ def save_hike():
         
         # Add new hike
         hike_entry = {
-            'id': f"hike-{datetime.now().strftime('%Y%m%d%H%M%S')}",
+            'id': f"hike-{datetime.now().strftime('%Y%m%d%H%M%S')}-{secrets.token_hex(4)}",
+            'user_email': hike_data.get('user_email'),
             'trail_id': hike_data.get('trail_id'),
             'trail_name': hike_data.get('trail_name'),
             'start_time': hike_data.get('start_time'),
@@ -969,18 +1063,23 @@ def save_hike():
 
 @app.route('/api/hikes', methods=['GET'])
 def get_hikes():
-    """Get all completed hikes"""
+    """Get completed hikes for one owner. Scoped by required ?email= so this
+    route never returns other users' GPS tracks (client-trust ownership)."""
     try:
+        user_email = request.args.get('email')
+        if not user_email:
+            return jsonify({'error': 'Email parameter required'}), 400
+
         hikes_path = os.path.join(BASE_DIR, 'data', 'completed_hikes.json')
-        
         if not os.path.exists(hikes_path):
             return jsonify({'hikes': [], 'count': 0})
-        
+
         with open(hikes_path, 'r') as f:
             hikes = json.load(f)
-        
-        return jsonify({'hikes': hikes.get('hikes', []), 'count': len(hikes.get('hikes', []))})
-    
+
+        mine = [h for h in hikes.get('hikes', []) if h.get('user_email') == user_email]
+        return jsonify({'hikes': mine, 'count': len(mine)})
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -1218,8 +1317,22 @@ def parse_gpx():
 @app.route('/api/admin/reviews/<review_id>', methods=['DELETE'])
 @require_admin_auth
 def delete_review(review_id):
-    """Delete a review and update trail statistics (Admin)"""
+    """Delete a review and update entity statistics (Admin)."""
     try:
+        # DB mode: delete by the review's own id; statistics are computed live in
+        # load_reviews, so no recalculation/re-save is needed.
+        if DB_AVAILABLE:
+            try:
+                with get_db() as conn:
+                    res = conn.execute(
+                        _sql("DELETE FROM reviews WHERE data->>'id' = :rid"),
+                        {'rid': review_id})
+                if (res.rowcount or 0) == 0:
+                    return jsonify({'error': 'Review not found'}), 404
+                return jsonify({'success': True})
+            except Exception as e:
+                print(f"[db] delete_review fallback to JSON: {e}")
+
         body = request.get_json(silent=True) or {}
         trail_id = body.get('trail_id')
         if not trail_id:
@@ -1250,6 +1363,7 @@ def delete_review(review_id):
             reviews_data['reviews'].pop(trail_id, None)
 
         atomic_json_write(reviews_path, reviews_data)
+        _invalidate_cache(reviews_path)
         return jsonify({'success': True, 'remaining': len(trail_reviews)})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -1258,15 +1372,35 @@ def delete_review(review_id):
 CHALLENGES_FILE = os.path.join(BASE_DIR, 'data', 'challenges.json')
 
 def load_challenges():
-    """Load challenges from JSON file (TTL-cached)"""
+    """Load challenges — from PostgreSQL if available, else JSON (TTL-cached)."""
+    if DB_AVAILABLE:
+        try:
+            with get_db() as conn:
+                rows = conn.execute(_sql("SELECT data FROM challenges")).fetchall()
+            return {'challenges': [dict(r.data) if r.data else {} for r in rows]}
+        except Exception as e:
+            print(f"[db] load_challenges fallback to JSON: {e}")
     try:
         return _cached_json(CHALLENGES_FILE)
     except FileNotFoundError:
         return {'challenges': []}
 
 def save_challenges(data):
-    """Save challenges to JSON file"""
+    """Save the full challenges set. DB mode replaces all rows (the set is small
+    and always saved whole by the admin endpoints); else writes JSON."""
+    if DB_AVAILABLE:
+        try:
+            with get_db() as conn:
+                conn.execute(_sql("DELETE FROM challenges"))
+                for c in data.get('challenges', []):
+                    conn.execute(
+                        _sql("INSERT INTO challenges (id, data) VALUES (:id, :data::jsonb)"),
+                        {'id': c.get('id'), 'data': json.dumps(c)})
+            return
+        except Exception as e:
+            print(f"[db] save_challenges fallback to JSON: {e}")
     atomic_json_write(CHALLENGES_FILE, data)
+    _invalidate_cache(CHALLENGES_FILE)
 
 @app.route('/api/challenges', methods=['GET'])
 def get_challenges():
@@ -1325,19 +1459,70 @@ def delete_challenge(challenge_id):
         return jsonify({'error': str(e)}), 500
 
 # Hike Plans Management
-def load_plans():
-    """Load hike plans from JSON file"""
-    plans_path = os.path.join(BASE_DIR, 'data', 'plans.json')
+# DB mode stores one row per plan in the `plans` table (the app's string id lives
+# in data->>'id'; the table's SERIAL id is internal). Dev mode keeps the JSON
+# collection. load_plans returns the {plans:[...]} envelope in both modes.
+def _plans_path():
+    return os.path.join(BASE_DIR, 'data', 'plans.json')
+
+def _load_plans_json():
     try:
-        with open(plans_path, 'r') as f:
+        with open(_plans_path(), 'r') as f:
             return json.load(f)
     except FileNotFoundError:
         return {'plans': []}
 
+def _save_plans_json(plans_data):
+    atomic_json_write(_plans_path(), plans_data)
+
+def load_plans():
+    """Load all hike plans — from PostgreSQL if available, else JSON."""
+    if DB_AVAILABLE:
+        try:
+            with get_db() as conn:
+                rows = conn.execute(
+                    _sql("SELECT data FROM plans ORDER BY created_at ASC")).fetchall()
+            return {'plans': [dict(r.data) if r.data else {} for r in rows]}
+        except Exception as e:
+            print(f"[db] load_plans fallback to JSON: {e}")
+    return _load_plans_json()
+
 def save_plans(plans_data):
-    """Save hike plans to JSON file"""
-    plans_path = os.path.join(BASE_DIR, 'data', 'plans.json')
-    atomic_json_write(plans_path, plans_data)
+    """Whole-collection save (JSON/dev). DB mode mutates per-plan via the
+    _plan_db_* helpers in the endpoints, so this only touches the JSON file."""
+    _save_plans_json(plans_data)
+
+def _plan_db_insert(plan):
+    with get_db() as conn:
+        conn.execute(_sql("""
+            INSERT INTO plans (user_email, trail_id, plan_date, data)
+            VALUES (:email, :trail_id, :plan_date, :data::jsonb)
+        """), {
+            'email': plan.get('user_email'),
+            'trail_id': (plan.get('trek') or {}).get('trek_id') or plan.get('trail_id'),
+            'plan_date': plan.get('start_date') or None,
+            'data': json.dumps(plan),
+        })
+
+def _plan_db_get(plan_id):
+    with get_db() as conn:
+        row = conn.execute(
+            _sql("SELECT data FROM plans WHERE data->>'id' = :pid"),
+            {'pid': plan_id}).fetchone()
+    return (dict(row.data) if row and row.data else None)
+
+def _plan_db_update(plan_id, plan):
+    with get_db() as conn:
+        res = conn.execute(
+            _sql("UPDATE plans SET data = :data::jsonb WHERE data->>'id' = :pid"),
+            {'data': json.dumps(plan), 'pid': plan_id})
+    return res.rowcount or 0
+
+def _plan_db_delete(plan_id):
+    with get_db() as conn:
+        res = conn.execute(
+            _sql("DELETE FROM plans WHERE data->>'id' = :pid"), {'pid': plan_id})
+    return res.rowcount or 0
 
 @app.route('/api/hike-plans', methods=['GET'])
 def get_user_plans():
@@ -1360,13 +1545,18 @@ def save_hike_plan():
         plan_data = request.json
         if not plan_data.get('user_email'):
             return jsonify({'error': 'user_email required'}), 400
-        
-        plans_data = load_plans()
-        plan_data['id'] = f"plan-{datetime.now().strftime('%Y%m%d%H%M%S')}-{len(plans_data['plans'])}"
+
+        # Unguessable id (defense-in-depth under the email-ownership gate).
+        plan_data['id'] = f"plan-{datetime.now().strftime('%Y%m%d%H%M%S')}-{secrets.token_hex(4)}"
         plan_data['created_at'] = datetime.now().isoformat()
-        plans_data['plans'].append(plan_data)
-        save_plans(plans_data)
-        
+
+        if DB_AVAILABLE:
+            _plan_db_insert(plan_data)
+        else:
+            plans_data = _load_plans_json()
+            plans_data['plans'].append(plan_data)
+            _save_plans_json(plans_data)
+
         return jsonify({'success': True, 'plan': plan_data}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -1380,7 +1570,20 @@ def update_hike_plan(plan_id):
         if not body.get('user_email'):
             return jsonify({'error': 'user_email required'}), 400
 
-        plans_data = load_plans()
+        if DB_AVAILABLE:
+            existing = _plan_db_get(plan_id)
+            if existing is None:
+                return jsonify({'error': 'Plan not found'}), 404
+            if existing.get('user_email') != body.get('user_email'):
+                return jsonify({'error': 'Forbidden — not your plan'}), 403
+            body['id'] = existing['id']
+            body['created_at'] = existing.get('created_at')
+            body['user_email'] = existing.get('user_email')
+            body['updated_at'] = datetime.now().isoformat()
+            _plan_db_update(plan_id, body)
+            return jsonify({'success': True, 'plan': body})
+
+        plans_data = _load_plans_json()
         idx = next((i for i, p in enumerate(plans_data['plans']) if p.get('id') == plan_id), None)
         if idx is None:
             return jsonify({'error': 'Plan not found'}), 404
@@ -1395,7 +1598,7 @@ def update_hike_plan(plan_id):
         body['user_email'] = existing.get('user_email')
         body['updated_at'] = datetime.now().isoformat()
         plans_data['plans'][idx] = body
-        save_plans(plans_data)
+        _save_plans_json(plans_data)
         return jsonify({'success': True, 'plan': body})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -1408,7 +1611,16 @@ def delete_hike_plan(plan_id):
         if not user_email:
             return jsonify({'error': 'Email parameter required'}), 400
 
-        plans_data = load_plans()
+        if DB_AVAILABLE:
+            existing = _plan_db_get(plan_id)
+            if existing is None:
+                return jsonify({'error': 'Plan not found'}), 404
+            if existing.get('user_email') != user_email:
+                return jsonify({'error': 'Forbidden — not your plan'}), 403
+            _plan_db_delete(plan_id)
+            return jsonify({'success': True})
+
+        plans_data = _load_plans_json()
         plan = next((p for p in plans_data['plans'] if p.get('id') == plan_id), None)
         if plan is None:
             return jsonify({'error': 'Plan not found'}), 404
@@ -1416,7 +1628,7 @@ def delete_hike_plan(plan_id):
             return jsonify({'error': 'Forbidden — not your plan'}), 403
 
         plans_data['plans'] = [p for p in plans_data['plans'] if p.get('id') != plan_id]
-        save_plans(plans_data)
+        _save_plans_json(plans_data)
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -1630,19 +1842,71 @@ def save_rifugios(rifugios_data):
     atomic_json_write(rifugios_path, rifugios_data)
     _invalidate_cache(rifugios_path)
 
-def load_booking_inquiries():
-    """Load booking inquiries from JSON file"""
-    inquiries_path = os.path.join(BASE_DIR, 'data', 'booking_inquiries.json')
+def _booking_path():
+    return os.path.join(BASE_DIR, 'data', 'booking_inquiries.json')
+
+def _load_booking_inquiries_json():
     try:
-        with open(inquiries_path, 'r') as f:
+        with open(_booking_path(), 'r') as f:
             return json.load(f)
     except FileNotFoundError:
         return []
 
+def _save_booking_inquiries_json(inquiries_data):
+    atomic_json_write(_booking_path(), inquiries_data)
+
+def load_booking_inquiries():
+    """Load booking inquiries (list) — from PostgreSQL if available, else JSON.
+    DB stores one row per inquiry; the app's string id lives in data->>'id'."""
+    if DB_AVAILABLE:
+        try:
+            with get_db() as conn:
+                rows = conn.execute(
+                    _sql("SELECT data FROM booking_inquiries ORDER BY created_at ASC")).fetchall()
+            return [dict(r.data) if r.data else {} for r in rows]
+        except Exception as e:
+            print(f"[db] load_booking_inquiries fallback to JSON: {e}")
+    return _load_booking_inquiries_json()
+
 def save_booking_inquiries(inquiries_data):
-    """Save booking inquiries to JSON file"""
-    inquiries_path = os.path.join(BASE_DIR, 'data', 'booking_inquiries.json')
-    atomic_json_write(inquiries_path, inquiries_data)
+    """Whole-collection JSON save (dev). DB mode mutates per-inquiry via the
+    _booking_db_* helpers in the endpoints."""
+    _save_booking_inquiries_json(inquiries_data)
+
+def _booking_db_insert(inq):
+    with get_db() as conn:
+        conn.execute(_sql("""
+            INSERT INTO booking_inquiries (rifugio_id, user_email, status, data)
+            VALUES (:rifugio_id, :user_email, :status, :data::jsonb)
+        """), {
+            'rifugio_id': inq.get('rifugio_id'),
+            'user_email': inq.get('user_email'),
+            'status': inq.get('status', 'pending'),
+            'data': json.dumps(inq),
+        })
+
+def _booking_db_update(inq_id, inq):
+    with get_db() as conn:
+        res = conn.execute(_sql("""
+            UPDATE booking_inquiries SET status = :status, data = :data::jsonb
+            WHERE data->>'id' = :iid
+        """), {'status': inq.get('status', 'pending'),
+               'data': json.dumps(inq), 'iid': inq_id})
+    return res.rowcount or 0
+
+def _booking_db_get(inq_id):
+    with get_db() as conn:
+        row = conn.execute(
+            _sql("SELECT data FROM booking_inquiries WHERE data->>'id' = :iid"),
+            {'iid': inq_id}).fetchone()
+    return (dict(row.data) if row and row.data else None)
+
+def _booking_db_delete(inq_id):
+    with get_db() as conn:
+        res = conn.execute(
+            _sql("DELETE FROM booking_inquiries WHERE data->>'id' = :iid"),
+            {'iid': inq_id})
+    return res.rowcount or 0
 
 def get_rifugio_status(rifugio):
     """Determine current status of rifugio based on dates"""
@@ -1813,6 +2077,7 @@ def add_rifugio_review(rifugio_id):
             'date': datetime.now().strftime('%Y-%m-%d'),
             'helpful_count': 0,
         }
+        save_review(rifugio_id, new_review)
         return jsonify({'success': True, 'review': new_review,
                         'message': 'Review submitted successfully'}), 201
     except Exception as e:
@@ -1980,6 +2245,42 @@ def _deliver_booking_inquiry(inquiry, rif):
     }
 
 
+_EMAIL_RE = re.compile(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
+
+
+def _validate_booking(data):
+    """Validate a booking inquiry payload. Returns an error string or None.
+    Rejects empty/whitespace required fields, malformed email, bad/inverted
+    dates, and out-of-range guest counts (previously these passed through and
+    could 500 downstream or send garbage to the hut)."""
+    required = ['rifugio_id', 'rifugio_name', 'name', 'email', 'check_in', 'check_out', 'adults']
+    for field in required:
+        val = data.get(field)
+        if val is None or (isinstance(val, str) and not val.strip()):
+            return f'Missing required field: {field}'
+
+    if not _EMAIL_RE.match(str(data['email']).strip()):
+        return 'Invalid email address'
+
+    try:
+        ci = datetime.strptime(str(data['check_in']).strip(), '%Y-%m-%d').date()
+        co = datetime.strptime(str(data['check_out']).strip(), '%Y-%m-%d').date()
+    except (ValueError, TypeError):
+        return 'Dates must be YYYY-MM-DD'
+    if co <= ci:
+        return 'Check-out must be after check-in'
+
+    try:
+        adults = int(data['adults'])
+        children = int(data.get('children', 0) or 0)
+    except (ValueError, TypeError):
+        return 'Guest counts must be whole numbers'
+    if not (1 <= adults <= 20) or not (0 <= children <= 10):
+        return 'Guest counts out of range'
+
+    return None
+
+
 @app.route('/api/booking-inquiries', methods=['POST'])
 def submit_booking_inquiry():
     """Submit a booking inquiry and (when the hut's email is verified) email it
@@ -1988,11 +2289,9 @@ def submit_booking_inquiry():
     try:
         data = request.json or {}
 
-        # Validate required fields
-        required_fields = ['rifugio_id', 'rifugio_name', 'name', 'email', 'check_in', 'check_out', 'adults']
-        for field in required_fields:
-            if field not in data:
-                return jsonify({'error': f'Missing required field: {field}'}), 400
+        err = _validate_booking(data)
+        if err:
+            return jsonify({'error': err}), 400
 
         # Per-IP rate limit (before persisting)
         ip = request.headers.get('X-Forwarded-For', request.remote_addr or '0.0.0.0').split(',')[0].strip()
@@ -2000,21 +2299,19 @@ def submit_booking_inquiry():
             return jsonify({'error': 'rate_limited',
                             'message': 'Too many inquiries — please try again later.'}), 429
 
-        inquiries = load_booking_inquiries()
-
         inquiry = {
-            'id': f"inq-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}-{random.randint(1000, 9999)}",
+            'id': f"inq-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}-{secrets.token_hex(4)}",
             'rifugio_id': data['rifugio_id'],
             'rifugio_name': data['rifugio_name'],
-            'user_name': data['name'],
-            'user_email': data['email'],
-            'user_phone': data.get('phone', ''),
-            'check_in': data['check_in'],
-            'check_out': data['check_out'],
-            'adults': data['adults'],
-            'children': data.get('children', 0),
+            'user_name': str(data['name']).strip(),
+            'user_email': str(data['email']).strip(),
+            'user_phone': str(data.get('phone', '')).strip(),
+            'check_in': str(data['check_in']).strip(),
+            'check_out': str(data['check_out']).strip(),
+            'adults': int(data['adults']),
+            'children': int(data.get('children', 0) or 0),
             'meal_preference': data.get('meal_preference', 'half_board'),
-            'special_requests': data.get('special_requests', ''),
+            'special_requests': str(data.get('special_requests', ''))[:2000],
             'dogs': data.get('dogs', False),
             'status': 'pending',
             'created_at': datetime.utcnow().isoformat() + 'Z',
@@ -2022,13 +2319,23 @@ def submit_booking_inquiry():
         }
 
         # Persist first so a delivery failure never loses the inquiry.
-        inquiries.append(inquiry)
-        save_booking_inquiries(inquiries)
+        if DB_AVAILABLE:
+            _booking_db_insert(inquiry)
+        else:
+            inquiries = _load_booking_inquiries_json()
+            inquiries.append(inquiry)
+            _save_booking_inquiries_json(inquiries)
 
-        # Resolve the hut and attempt delivery.
+        # Resolve the hut and attempt delivery (mutates inquiry with delivery_*).
         rif = next((r for r in load_rifugios() if r.get('id') == data['rifugio_id']), None)
         delivery = _deliver_booking_inquiry(inquiry, rif)
-        save_booking_inquiries(inquiries)   # re-save with delivery_* fields
+
+        # Re-save with delivery_* fields.
+        if DB_AVAILABLE:
+            _booking_db_update(inquiry['id'], inquiry)
+        else:
+            inquiries[-1] = inquiry
+            _save_booking_inquiries_json(inquiries)
 
         print(f"Booking inquiry {inquiry['id']} for {inquiry['rifugio_name']} → {delivery['status']}")
 
@@ -2074,17 +2381,29 @@ def update_booking_inquiry(inquiry_id):
     """Update booking inquiry status (Admin)"""
     try:
         data = request.json or {}
-        inquiries = load_booking_inquiries()
+        allowed_fields = ['status', 'admin_notes']
+
+        if DB_AVAILABLE:
+            inq = _booking_db_get(inquiry_id)
+            if inq is None:
+                return jsonify({'error': 'Inquiry not found'}), 404
+            for field in allowed_fields:
+                if field in data:
+                    inq[field] = data[field]
+            inq['updated_at'] = datetime.utcnow().isoformat() + 'Z'
+            _booking_db_update(inquiry_id, inq)
+            return jsonify({'success': True, 'inquiry': inq})
+
+        inquiries = _load_booking_inquiries_json()
         idx = next((i for i, inq in enumerate(inquiries) if inq['id'] == inquiry_id), None)
         if idx is None:
             return jsonify({'error': 'Inquiry not found'}), 404
 
-        allowed_fields = ['status', 'admin_notes']
         for field in allowed_fields:
             if field in data:
                 inquiries[idx][field] = data[field]
         inquiries[idx]['updated_at'] = datetime.utcnow().isoformat() + 'Z'
-        save_booking_inquiries(inquiries)
+        _save_booking_inquiries_json(inquiries)
         return jsonify({'success': True, 'inquiry': inquiries[idx]})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -2094,12 +2413,17 @@ def update_booking_inquiry(inquiry_id):
 def delete_booking_inquiry(inquiry_id):
     """Delete a booking inquiry (Admin)"""
     try:
-        inquiries = load_booking_inquiries()
+        if DB_AVAILABLE:
+            if _booking_db_delete(inquiry_id) == 0:
+                return jsonify({'error': 'Inquiry not found'}), 404
+            return jsonify({'success': True})
+
+        inquiries = _load_booking_inquiries_json()
         original = len(inquiries)
         inquiries = [i for i in inquiries if i['id'] != inquiry_id]
         if len(inquiries) == original:
             return jsonify({'error': 'Inquiry not found'}), 404
-        save_booking_inquiries(inquiries)
+        _save_booking_inquiries_json(inquiries)
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -2586,7 +2910,8 @@ def get_gamification_analytics():
     """Get gamification statistics (Admin)"""
     try:
         hikes_data = load_completed_hikes()
-        
+        challenges_data = load_challenges()
+
         # Calculate badge unlock statistics
         # This is a simplified version - in real app would check localStorage for each user
         total_hikes = len(hikes_data['hikes'])
