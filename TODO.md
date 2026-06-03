@@ -295,6 +295,51 @@ Three pillars, in bet order:
 What NOT to do: don't bolt on more utility when it feels flat — soul is depth.
 One character with memory + one living almanac + one postcard beats ten tabs.
 
+### 8b-bis. Converged soul plan (Claude + Codex independently agreed)
+
+A second independent analysis (Codex) landed on the SAME core — Daily Briefing
+(=Almanac), "told like a local", "not the famous viewpoint" (=dispersal),
+handwritten itinerary (=postcard), "today from your hotel" (=Concierge). When
+two analyses converge, the differentiator is no longer the idea — it's
+**execution + curation**. North-star reframe to adopt (Codex's best line):
+**"the soul is when Josephine protects you from choosing wrong"** (wrong trail,
+weather, crowd, hut, effort, timing).
+
+The genuinely additive pieces to build, in order, AFTER the Almanac:
+
+1. **Mood-first front door (next soul build).** Lead with "tell Josephine the
+   day you want" — open emotional input, not hours/difficulty: "I want to feel
+   small", "impress my date", "scared of heights", "peaceful walk + good
+   lunch", "old dog, still loves adventure". We have mood *tiles* already; this
+   is the open free-text version + the emotional framing as the entry. Cheap,
+   high-impact, partly built. NOTE: reliable free-text→plan currently leans on
+   the LLM — grow the deterministic mood→criteria map in Layer 2 to keep it
+   cheap (ties to the LLM-cost work).
+
+2. **The Daily Plan Card.** The single, unified OUTPUT of every plan AND the
+   share artifact AND the hotel handout — one beautiful, sendable card: start
+   time · route · hut stop · weather note · dog/family note · transport/parking
+   · Josephine's personal tip · save/share. This subsumes the "postcard" (pillar
+   3) — make it the output of planning, not just a post-trip recap. Ties
+   Almanac + dispersal + timing together.
+
+3. **Per-trail "local intelligence" content layer (the moat + the bottleneck).**
+   Taste + story + small details: opinions ("famous but mobbed after 10",
+   "better after rain — the forest smells incredible", "skip today, clouds hide
+   the view"), story hooks ("the path locals take when tourists go to Braies",
+   "first Dolomites hike for someone you love"), and the details no generic app
+   has (where to park without chaos, which malga has the best dumplings, where
+   dogs drink, where sunset actually lands, muddy-after-rain). This is ~70%
+   CURATION, not code — owner's ongoing work, fed by the knowledge-gap logger
+   (Layer 2.5). MUST be real (never-fabricate) — not LLM-generated.
+
+**Skip the literal numeric "Josephine Score" (92/100).** It's the "4.8 stars"
+trap Codex himself warns against — false precision, and it WILL sometimes be
+wrong (breaks the never-fabricate rule + the trust the whole thesis rests on).
+KEEP its signals — crowd fit, weather fit, dog fit, effort/reward — but surface
+them as honest qualitative reasons ("quiet today · dog-friendly · wet up high ·
+best before 11"), NOT a number.
+
 ## 8c. Living Almanac — build spec ("this week in the mountains")
 
 Curated engine of fleeting, real, local moments Josephine *tells* you, gated on
