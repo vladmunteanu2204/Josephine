@@ -1,4 +1,6 @@
 import React from 'react';
+import { X } from 'lucide-react';
+import { Modal } from './ui';
 import './AuthPromptModal.css';
 
 /**
@@ -11,18 +13,18 @@ import './AuthPromptModal.css';
  *   message    {string} — optional custom message line
  */
 export default function AuthPromptModal({ isOpen, onClose, onLogin, message }) {
-  if (!isOpen) return null;
-
   return (
-    <div className="apm-overlay" onClick={onClose} role="dialog" aria-modal="true">
-      <div className="apm-card" onClick={e => e.stopPropagation()}>
-        <button className="apm-close" onClick={onClose} aria-label="Close">✕</button>
+    <Modal isOpen={isOpen} onClose={onClose} ariaLabelledby="apm-title">
+      <div className="apm-card">
+        <button className="apm-close" onClick={onClose} aria-label="Close">
+          <X size={20} strokeWidth={2} />
+        </button>
 
         <div className="apm-mark-wrap">
           <img src="/logo.webp" alt="" className="apm-mark" />
         </div>
 
-        <h2 className="apm-title">Members only</h2>
+        <h2 className="apm-title" id="apm-title">Members only</h2>
         <p className="apm-msg">
           {message || 'Sign in to unlock this feature and save your favourite trails.'}
         </p>
@@ -35,6 +37,6 @@ export default function AuthPromptModal({ isOpen, onClose, onLogin, message }) {
           Maybe later
         </button>
       </div>
-    </div>
+    </Modal>
   );
 }

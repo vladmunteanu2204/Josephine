@@ -12,7 +12,7 @@ import { resolveHut } from './hutResolver';
 import HutBookingSheet from './HutBookingSheet';
 import './HutToHutPlanner.css';
 
-const API_URL = '/api';
+import { API_URL } from '../../api';
 
 /* ── Date helpers — UTC-noon anchored so day math never shifts across DST ── */
 const todayYMD = () => new Date().toISOString().slice(0, 10);

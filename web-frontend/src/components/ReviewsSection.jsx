@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import AuthPromptModal from './AuthPromptModal';
 import './ReviewsSection.css';
 
-const API_URL = '/api';
+import { API_URL } from '../api';
 
 function ReviewsSection({ trailId, rifugioId, onShowLogin }) {
   const { t } = useTranslation();

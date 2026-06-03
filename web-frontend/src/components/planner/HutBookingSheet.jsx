@@ -3,12 +3,8 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { X, MessageCircle, Mail, Phone, Copy } from 'lucide-react';
 import { useToast } from '../../contexts/ToastContext';
+import { API_URL } from '../../api';
 import './HutBookingSheet.css';
-
-// Match RifugioDetail's base so booking reaches the backend in dev too.
-const API_URL = import.meta.env.PROD
-  ? '/api'
-  : `${window.location.protocol}//${window.location.hostname}:8000/api`;
 
 /* Reusable hut booking-inquiry modal. Self-contained styling (works from both
    RifugioDetail and the planner). POSTs to /api/booking-inquiries; the backend

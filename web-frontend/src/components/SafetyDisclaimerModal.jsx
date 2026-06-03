@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Modal } from './ui';
 import './SafetyDisclaimerModal.css';
 
 function SafetyDisclaimerModal({ onAccept, onCancel, trailName }) {
@@ -13,10 +14,10 @@ function SafetyDisclaimerModal({ onAccept, onCancel, trailName }) {
   };
 
   return (
-    <div className="modal-overlay">
+    <Modal isOpen onClose={onCancel} closeOnBackdrop={false} ariaLabelledby="safety-modal-title">
       <div className="safety-modal">
         <div className="modal-header">
-          <h2 className="modal-title">⚠️ {t('safetyDisclaimer.title')}</h2>
+          <h2 className="modal-title" id="safety-modal-title">⚠️ {t('safetyDisclaimer.title')}</h2>
         </div>
 
         <div className="modal-content">
@@ -114,7 +115,7 @@ function SafetyDisclaimerModal({ onAccept, onCancel, trailName }) {
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }
 

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import './Donate.css';
 
-const API_URL = '/api';
+import { API_URL } from '../api';
 
 /* "Buy me a coffee" style donation page — powered by Lemon Squeezy.
    Anyone can donate (no login required). The amount is computed server-side

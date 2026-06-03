@@ -11,7 +11,7 @@ import EquipmentChecklist from '../EquipmentChecklist';
 import SafetyTips from '../SafetyTips';
 import './DayByDayPlanner.css';
 
-const API_URL = '/api';
+import { API_URL } from '../../api';
 const DIFF_RANK = { easy: 1, medium: 2, hard: 3 };
 
 const num = (v) => (parseFloat(v) || 0);

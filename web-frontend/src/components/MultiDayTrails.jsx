@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Mountain, CalendarRange, Ruler, TrendingUp, Footprints, MapPin, ArrowRight } from 'lucide-react';
 import './MultiDayTrails.css';
 
-const API_URL = '/api';
+import { API_URL } from '../api';
 
 const DIFFICULTY_COLORS = {
   easy:        { bg: 'rgba(74,222,128,0.15)',  text: '#4ade80' },

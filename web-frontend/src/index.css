@@ -35,6 +35,12 @@
   --z-dropdown: 3000;
   --z-modal-backdrop: 3900;
   --z-modal: 4000;
+  /* App-wide modal tier — sits above page chrome, the Josephine widget and the
+     bottom-sheet overlays. Used by the shared <Modal> primitive (ui/Modal). */
+  --z-app-modal-backdrop: 9990;
+  --z-app-modal: 10000;
+  --z-toast: 100000;
+  --z-fullscreen: 999999;   /* immersive takeovers (active hike, splash) */
 
   /* ── UI design system (Phase 0) ─────────────────────────────────────────
      Standardized primitives so screens stop hand-rolling sizes/colours.

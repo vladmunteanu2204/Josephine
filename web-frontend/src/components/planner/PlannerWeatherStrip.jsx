@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { Thermometer, Cloud, Wind } from 'lucide-react';
 
-const API_URL = '/api';
+import { API_URL } from '../../api';
 
 /* Compact, honest weather chip: shows CURRENT conditions at a coordinate,
    explicitly labelled "Now" so it's never mistaken for a future-date forecast

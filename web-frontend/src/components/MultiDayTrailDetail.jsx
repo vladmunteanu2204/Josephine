@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import './MultiDayTrailDetail.css';
 
-const API_URL = '/api';
+import { API_URL } from '../api';
 
 const DIFFICULTY_COLORS = {
   easy:        { bg: 'rgba(74,222,128,0.15)',  text: '#4ade80' },

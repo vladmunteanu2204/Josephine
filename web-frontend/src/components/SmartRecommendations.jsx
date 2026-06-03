@@ -11,7 +11,7 @@ import { useToast } from '../contexts/ToastContext';
 import { SegmentedControl, Chip } from './ui';
 import './SmartRecommendations.css';
 
-const API_URL = '/api';
+import { API_URL } from '../api';
 
 const DURATION_OPTIONS = [
   { label: '< 2h',     value: 1.5 },

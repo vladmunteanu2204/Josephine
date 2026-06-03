@@ -9,7 +9,7 @@ import DayByDayPlanner from './DayByDayPlanner';
 import HutToHutPlanner from './HutToHutPlanner';
 import './MyPlan.css';
 
-const API_URL = '/api';
+import { API_URL } from '../../api';
 const LS_KEY = 'josephine_hike_plans';
 
 /* "My Plan" — top-level container. Lists saved plans and lets the user start

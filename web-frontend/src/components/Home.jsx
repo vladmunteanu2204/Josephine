@@ -7,7 +7,7 @@ import { seasonAsset } from '../hooks/useSeason';
 import { ChevronLeft, ChevronRight, ChevronDown, ArrowRight } from 'lucide-react';
 import './Home.css';
 
-const API_URL = '/api';
+import { API_URL } from '../api';
 
 function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail }) {
   const { t } = useTranslation();

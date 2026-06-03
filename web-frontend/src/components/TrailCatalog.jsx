@@ -12,6 +12,7 @@ import { useToast } from '../contexts/ToastContext';
 import { useAuth } from '../contexts/AuthContext';
 import AuthPromptModal from './AuthPromptModal';
 import { Card, Chip, SegmentedControl } from './ui';
+import { API_URL } from '../api';
 import './TrailCatalog.css';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -103,8 +104,6 @@ function CatalogMap({ trails, onViewTrail }) {
     </div>
   );
 }
-
-const API_URL = '/api';
 
 function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin }) {
   const { t } = useTranslation();
