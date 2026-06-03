@@ -262,6 +262,39 @@ South-Tyrol-specific local intelligence, not map data.
 First thing to fund if only one: the overtourism dispersal feature + a
 tourism-board partnership.
 
+## 8b. The "soul" — what makes people talk about it (vision, not yet built)
+
+Diagnosis: today Josephine is an excellent *utility*. Utilities don't spread —
+**characters and feelings** do. The "companion" is a promise the product
+doesn't yet keep (every chat starts from zero). Soul = depth, not more tabs.
+Three pillars, in bet order:
+
+1. **Living Almanac — "this week in the mountains"** (highest-leverage bet).
+   A card surfacing real, time-sensitive, hyper-local moments: larch gold
+   (~10 days in Oct), enrosadira firing tonight (clear sky), Almabtrieb cattle
+   drives, first snow dusting, wildflower peak, Törggelen opening, Christmas
+   markets, "Braies most turquoise right now — go before 8". This is the
+   screenshot-and-share, open-it-every-morning magic AND the deepest moat (pure
+   South Tyrol local intelligence nobody can fake). Rides existing weather/
+   season/dispersal/gazetteer. MUST be real/sourced (never-fabricate rule) —
+   curate a seasonal-events + natural-phenomena calendar; gate phenomena on
+   live weather.
+
+2. **Josephine with memory + point of view.** Cross-session memory, opinions,
+   warmth so the relationship compounds ("last time you did Seceda at sunrise —
+   ready for something wilder?"; "you hate crowds, so not Braies today"). She
+   has favourites, is honest ("that one's overrated"), has a backstory. The
+   relationship IS the product. Needs a per-user memory store (prefs, past
+   picks, mood) + voice/persona guidelines; respect privacy.
+
+3. **Shareable postcard** — a beautiful, personal end-of-day recap people
+   *want* to post (route + photo + Josephine's handwritten-feel note + the
+   enrosadira they caught, subtly branded). The organic word-of-mouth engine.
+   Build on the existing TripSummary.
+
+What NOT to do: don't bolt on more utility when it feels flat — soul is depth.
+One character with memory + one living almanac + one postcard beats ten tabs.
+
 ## 9. Crowd dispersal + temporal intelligence (spec)
 
 The flagship differentiator. Reframed from the discussion: it's a **temporal
