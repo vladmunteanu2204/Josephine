@@ -144,3 +144,45 @@ was left (internal tool, alert-heavy, low ROI).
   cosmetic only; tidy opportunistically.
 - Testing left the dev Firebase session cleared on `localhost:5173` (re-login in
   dev) and dev servers may still be running (backend `:8000`, vite `:5173`).
+
+## 7. Product roadmap — next development phases
+
+From the market research (Codex + our own scan): no incumbent owns the
+"what should I do **today**?" decision; Josephine's edge is the season- and
+weather-aware engine that picks one good answer now. Locked decisions:
+prioritise a **B2B hotel/farm-stay concierge**, with **real verified rifugio
+contacts** as the only near-term data enabler (no Open Data Hub / affiliate /
+pilot yet). The audit just made this buildable — booking inquiries, plans and
+reviews now durably persist (P0), so the concierge wedge has a real backbone.
+
+Build bottom-up (each phase shippable on its own):
+
+- **Phase 0 — Verified-hut activation (do first; cheap, high-leverage).**
+  Secure real hut booking emails/phones; tick `booking_email_verified` per hut
+  so the already-built booking system flips from hiker-sends-fallback to true
+  auto-send. Add an admin affordance (verified-only filter + "X/42 verified"
+  count) in `RifugiosManager`. This is the credibility floor for any B2B pitch.
+
+- **Phase 1 — Today-Near-Me.** One-tap "best hike from here, right now":
+  reuse `POST /api/ai/recommend` + weather + a new `nearestAreaName(lat,lon)`
+  export in `geoAwareness.js`; client-side soft re-rank by distance / open huts
+  / crowding / weather. New `utils/todayEngine.js` + `components/TodayNearMe.jsx`,
+  route in `App.jsx`. Serves as the consumer hook **and** the B2B demo. While
+  here, extract a clean `recommend()` service fn out of the `get_recommendations`
+  god-function (incremental, not the full app.py split).
+
+- **Phase 2 — Concierge Mode (the B2B product).** Branded `?host=<slug>`
+  surface a hotel hands guests via link/QR. Backend `hosts.json` +
+  `load/save_hosts` + `GET /api/hosts/<slug>` + admin CRUD; frontend
+  `HostContext.jsx` (mirror `SeasonContext` accent theming) + `ConciergeMode.jsx`
+  wrapping Today-Near-Me; `HostsManager.jsx` admin + zero-dep QR via
+  api.qrserver.com. Seed `demo-hotel-merano`.
+
+- **Phase 3 — Host analytics + SaaS packaging.** Per-host event counts (views,
+  picks opened, inquiries started) in HostsManager; pricing scaffold
+  (€29/mo or €99/season). Extend the existing Lemon Squeezy wiring for billing
+  later.
+
+Moat note: AV huts are already on hut-reservation.org — the durable edge is the
+CAI/private **email-phone long tail** (Phase 0's verified-contacts work, treated
+as an ongoing data effort) plus the "today" decision assistant.
