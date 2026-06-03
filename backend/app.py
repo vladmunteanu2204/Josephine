@@ -28,6 +28,8 @@ import media as media_module  # image upload / R2 delivery
 from weather_service import weather_service
 import dispersal
 import almanac
+import decision_engine
+from decision_engine import _season_status, _season_range_label, _MONTHS_ORDER  # noqa: F401
 from notifications import EMAIL_ENABLED, send_email, build_inquiry_text
 try:
     from replit.object_storage import Client as ObjectStorageClient
@@ -723,29 +725,8 @@ def _local_now(iso_str):
 
 _DISPERSAL_PENALTY = 3.0   # max score nudge for a hotspot at peak (gentle, not dominating)
 
-_MONTHS_ORDER = ['January', 'February', 'March', 'April', 'May', 'June',
-                 'July', 'August', 'September', 'October', 'November', 'December']
-
-
-def _season_status(current_month, best_season):
-    """Classify the current month vs a trail's best_season as
-    'in' / 'shoulder' (immediately adjacent) / 'out'. Shoulder months (e.g.
-    early October just after a Jun–Sep season) get no penalty — they're often
-    the quietest, finest windows."""
-    season = {_MONTHS_ORDER.index(m) for m in best_season if m in _MONTHS_ORDER}
-    if not season:
-        return 'in'
-    cur = _MONTHS_ORDER.index(current_month) if current_month in _MONTHS_ORDER else -1
-    if cur in season:
-        return 'in'
-    if any((abs(cur - s) == 1) or (abs(cur - s) == 11) for s in season):  # 11 = Dec/Jan wrap
-        return 'shoulder'
-    return 'out'
-
-
-def _season_range_label(best_season):
-    nums = sorted(_MONTHS_ORDER.index(m) for m in best_season if m in _MONTHS_ORDER)
-    return f"{_MONTHS_ORDER[nums[0]]}–{_MONTHS_ORDER[nums[-1]]}" if nums else ''
+# _MONTHS_ORDER, _season_status, _season_range_label moved to decision_engine.py
+# (imported above) as part of the Phase 1 scoring extraction.
 
 
 def _dispersal_alternative(hotspot, pick, ordered):
@@ -1085,200 +1066,25 @@ def get_recommendations():
         print(f"[recommend] loaded {len(trails)} trails "
               f"(source={'db' if DB_AVAILABLE else 'json'})")
 
-        # Hard distance filter — only applied when user specified a max
-        if max_distance_km:
-            trails = [t for t in trails if (t.get('distance_km') or 999) <= float(max_distance_km)]
-
-        scored_trails = []
-        for trail in trails:
-            score = 0
-            reasons = []
-            warnings = []
-
-            # Safe-defaulted core fields — production DB rows may have NULLs or
-            # missing keys, and a single KeyError/AttributeError here would 500
-            # the whole endpoint (surfacing as "mountain winds" on the client).
-            t_difficulty = (trail.get('difficulty') or 'medium')
-            try:
-                t_duration = float(trail.get('duration_hours') or 3)
-            except (TypeError, ValueError):
-                t_duration = 3.0
-
-            # ── Difficulty ──────────────────────────────────────────────
-            if difficulty_any:
-                pass   # no difficulty preference → leave the score unbiased
-            elif t_difficulty.lower() == difficulty.lower():
-                score += 4
-                reasons.append(t_difficulty)
-            elif (difficulty == 'medium' and t_difficulty == 'easy') or \
-                 (difficulty == 'hard'   and t_difficulty == 'medium'):
-                score += 1
-
-            # ── Duration ────────────────────────────────────────────────
-            duration_diff = abs(t_duration - duration_hours)
-            if duration_diff <= 0.5:
-                score += 3
-            elif duration_diff <= 1.5:
-                score += 2
-            elif duration_diff > 2.5:
-                score -= 1   # penalise large mismatches
-
-            # ── Interest / mood — interests + tags + partial keyword ────
-            trail_keywords = set(
-                [i.lower() for i in trail.get('interests', [])] +
-                [t.lower() for t in trail.get('tags', [])]
-            )
-            for interest in mood_interests:
-                interest_lower = interest.lower()
-                if interest_lower in trail_keywords:
-                    score += 3   # a chosen mood is a strong signal
-                    reasons.append(interest)
-                elif any(interest_lower.split()[0] in kw for kw in trail_keywords):
-                    score += 1
-                    reasons.append(interest)
-
-            # Loop type
-            if 'loop' in mood_interests and trail.get('trail_type', '').lower() == 'loop':
-                score += 2
-
-            # ── Dog-friendly ─────────────────────────────────────────────
-            # Non-dog-friendly trails are hard-filtered out below (with an honest
-            # "none found" message) rather than silently demoted — so we never
-            # recommend a dog-hostile trail to someone hiking with a dog.
-            if with_dog and trail.get('dog_friendly'):
-                score += 3
-                reasons.append("dog-friendly")
-
-            # ── Fix 3: Family-friendly ───────────────────────────────────
-            if family_friendly:
-                if trail.get('family_friendly'):
-                    score += 3
-                    reasons.append("family-friendly")
-                elif t_difficulty == 'hard':
-                    score -= 5    # hard trails are poor family choices
-
-            # ── Location ─────────────────────────────────────────────────
-            if start_area:
-                area_l = start_area.lower()
-                # Check region, name, access_info, trailhead_info, and description
-                # so village names like "Tirolo" match trails in "Merano & Surroundings"
-                # that mention Tirolo in their access or trailhead text.
-                search_fields = ' '.join([
-                    trail.get('region') or '',
-                    trail.get('name') or '',
-                    trail.get('access_info') or '',
-                    str((trail.get('trailhead_info') or {}).get('parking', '')),
-                    (trail.get('description') or '')[:200],  # first 200 chars of description
-                    str((trail.get('transport') or {}).get('car', '')),
-                ]).lower()
-                if area_l in search_fields:
-                    score += 6
-                    reasons.append(f"near {start_area}")
-                elif any(
-                    word in search_fields
-                    for word in area_l.split()
-                    if len(word) > 3 and word not in {
-                        'lago', 'lake', 'val', 'valle', 'tal', 'berg', 'alpe', 'alm',
-                        'pass', 'passo', 'wald', 'forst', 'monte', 'mount', 'peak',
-                        'nord', 'sud', 'west', 'east', 'alto', 'bassa', 'upper', 'lower',
-                    }
-                ):
-                    # Partial word match (e.g. "merano" in "Merano & Surroundings")
-                    score += 2
-
-            # ── Fix 2: Season awareness (shoulder-aware) ──────────────────
-            best_season = trail.get('best_season', [])
-            if best_season:
-                status = _season_status(current_month, best_season)
-                if status == 'in':
-                    score += 2   # boost in-season trails
-                elif status == 'out':
-                    score -= 2   # penalise genuinely out-of-season
-                    warnings.append(f"best visited {_season_range_label(best_season)}")
-                # 'shoulder' (month immediately before/after the season) → neutral:
-                # often the quietest, finest window — no penalty, no warning.
-            # Trails with no season set are year-round — no penalty
-
-            scored_trails.append({
-                'trail': trail,
-                'score': score,
-                'reasons': reasons,
-                'warnings': warnings,
-            })
-
-        # If a specific area was requested, hard-filter to only trails that
-        # actually mention that area — don't let generic high-scorers slip through.
-        if start_area:
-            # Generic geographic words that appear in many trail descriptions
-            # and must not be used as matching tokens on their own.
-            _GEO_STOPWORDS = {
-                'lago', 'lake', 'val', 'valle', 'tal', 'berg', 'alpe', 'alm',
-                'pass', 'passo', 'wald', 'forst', 'monte', 'mount', 'peak',
-                'nord', 'sud', 'west', 'east', 'alto', 'bassa', 'upper', 'lower',
-            }
-            # For multi-word areas (e.g. "Lago di Braies"), pick the most distinctive
-            # token — the longest word that isn't a generic geo word.
-            area_tokens = [w for w in start_area.lower().split() if len(w) > 3]
-            specific_tokens = [w for w in area_tokens if w not in _GEO_STOPWORDS] or area_tokens
-
-            area_matched = [
-                item for item in scored_trails
-                if f"near {start_area}" in item['reasons']
-                or any(
-                    word in ' '.join([
-                        item['trail'].get('region') or '',
-                        item['trail'].get('name') or '',
-                        item['trail'].get('access_info') or '',
-                        str((item['trail'].get('trailhead_info') or {}).get('parking', '')),
-                        (item['trail'].get('description') or '')[:200],
-                        str((item['trail'].get('transport') or {}).get('car', '')),
-                    ]).lower()
-                    for word in specific_tokens
-                )
-            ]
-            # If we found area-matched trails use them; otherwise try proximity:
-            # resolve the place to coordinates and keep the trails physically
-            # nearest to it (so "I'm in Naturno" returns Vinschgau/Merano trails,
-            # not region-wide top scorers in Val Gardena 50+ km away).
-            if area_matched:
-                scored_trails = area_matched
-            else:
-                origin = _resolve_area_coords(start_area)
-                NEAR_RADIUS_KM = 45.0
-                near = []
-                if origin:
-                    for item in scored_trails:
-                        ctr = _trail_centroid(item['trail'])
-                        if not ctr:
-                            continue
-                        dist = haversine(origin[0], origin[1], ctr[0], ctr[1])
-                        if dist <= NEAR_RADIUS_KM:
-                            # Proximity bonus (closer ranks higher) + honest reason.
-                            item['score'] += max(0.0, 6.0 - dist / 9.0)
-                            item['reasons'].append(f"near {start_area}")
-                            near.append(item)
-                if near:
-                    scored_trails = near
-                else:
-                    # Truly nothing close (or unknown place) → honest "not found".
-                    return jsonify({'results': [], 'area_not_found': True, 'area': start_area})
-
-        # Hiking with a dog → only ever return dog-friendly trails; if there are
-        # none (here / in this area), say so honestly instead of recommending a
-        # trail that turns the dog away.
-        if with_dog:
-            dog_ok = [it for it in scored_trails if it['trail'].get('dog_friendly')]
-            if dog_ok:
-                scored_trails = dog_ok
-            else:
-                return jsonify({'results': [], 'no_dog_friendly': True, 'area': start_area or ''})
-
-        # Daily jitter — stable within a day, rotates each morning
-        daily_rng = random.Random(datetime.now().strftime('%Y-%m-%d'))
-        for item in scored_trails:
-            item['score'] += daily_rng.uniform(0, 0.8)
-
-        scored_trails.sort(key=lambda x: x['score'], reverse=True)
+        # ── Score, reject and rank (Phase 1: decision_engine) ──────────────
+        ctx = {
+            'difficulty': difficulty, 'difficulty_any': difficulty_any,
+            'duration_hours': duration_hours, 'mood_interests': mood_interests,
+            'with_dog': with_dog, 'family_friendly': family_friendly,
+            'start_area': start_area, 'current_month': current_month,
+            'max_distance_km': max_distance_km,
+            'today_str': datetime.now().strftime('%Y-%m-%d'),
+        }
+        scored_trails, signal = decision_engine.rank_trails(
+            trails, ctx,
+            resolve_area_coords=_resolve_area_coords,
+            trail_centroid=_trail_centroid,
+            haversine=haversine,
+        )
+        if signal:
+            if signal['kind'] == 'area_not_found':
+                return jsonify({'results': [], 'area_not_found': True, 'area': signal['area']})
+            return jsonify({'results': [], 'no_dog_friendly': True, 'area': signal['area']})
         top_scored = scored_trails[:5]
 
         results = []
