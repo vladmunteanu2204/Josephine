@@ -20,6 +20,9 @@
   color: #fff;
   margin-bottom: 0.75rem;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }
 
 .settings-subtitle {
@@ -34,7 +37,10 @@
   padding: 1rem;
   border-radius: 12px;
   margin-bottom: 2rem;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
   backdrop-filter: blur(10px);
   animation: slideDown 0.3s ease;
 }
@@ -70,6 +76,9 @@
   font-weight: 600;
   color: #fff;
   margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .section-description {

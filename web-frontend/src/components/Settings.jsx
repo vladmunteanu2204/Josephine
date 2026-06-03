@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Settings as SettingsIcon, Globe, Ruler, Bell, User, Check } from 'lucide-react';
 import './Settings.css';
 
 function Settings({ onNavigate }) {
@@ -56,20 +56,20 @@ function Settings({ onNavigate }) {
         </button>
 
         <div className="settings-header">
-          <h1 className="settings-title">⚙️ {t('settings.title')}</h1>
+          <h1 className="settings-title"><SettingsIcon size={24} strokeWidth={1.75} aria-hidden="true" /> {t('settings.title')}</h1>
           <p className="settings-subtitle">{t('settings.subtitle')}</p>
         </div>
 
         {saved && (
           <div className="settings-success">
-            ✓ {t('settings.saved')}
+            <Check size={16} strokeWidth={2.5} aria-hidden="true" /> {t('settings.saved')}
           </div>
         )}
 
         {/* Language Settings */}
         <div className="settings-section">
           <div className="section-header">
-            <h2>🌍 {t('settings.language')}</h2>
+            <h2><Globe size={20} strokeWidth={1.75} aria-hidden="true" /> {t('settings.language')}</h2>
             <p className="section-description">{t('settings.languageDescription')}</p>
           </div>
 
@@ -83,7 +83,7 @@ function Settings({ onNavigate }) {
                 <div className="option-title">English</div>
                 <div className="option-subtitle">English (United States)</div>
               </div>
-              {settings.language === 'en' && <div className="check-mark">✓</div>}
+              {settings.language === 'en' && <div className="check-mark"><Check size={18} strokeWidth={2.5} aria-hidden="true" /></div>}
             </div>
 
             <div 
@@ -95,7 +95,7 @@ function Settings({ onNavigate }) {
                 <div className="option-title">Italiano</div>
                 <div className="option-subtitle">Italian</div>
               </div>
-              {settings.language === 'it' && <div className="check-mark">✓</div>}
+              {settings.language === 'it' && <div className="check-mark"><Check size={18} strokeWidth={2.5} aria-hidden="true" /></div>}
             </div>
 
             <div 
@@ -107,7 +107,7 @@ function Settings({ onNavigate }) {
                 <div className="option-title">Deutsch</div>
                 <div className="option-subtitle">German</div>
               </div>
-              {settings.language === 'de' && <div className="check-mark">✓</div>}
+              {settings.language === 'de' && <div className="check-mark"><Check size={18} strokeWidth={2.5} aria-hidden="true" /></div>}
             </div>
           </div>
         </div>
@@ -115,7 +115,7 @@ function Settings({ onNavigate }) {
         {/* Units Settings */}
         <div className="settings-section">
           <div className="section-header">
-            <h2>📏 {t('settings.units')}</h2>
+            <h2><Ruler size={20} strokeWidth={1.75} aria-hidden="true" /> {t('settings.units')}</h2>
             <p className="section-description">{t('settings.unitsDescription')}</p>
           </div>
 
@@ -128,7 +128,7 @@ function Settings({ onNavigate }) {
                 <div className="option-title">{t('settings.metric')}</div>
                 <div className="option-subtitle">km, meters, °C</div>
               </div>
-              {settings.units === 'metric' && <div className="check-mark">✓</div>}
+              {settings.units === 'metric' && <div className="check-mark"><Check size={18} strokeWidth={2.5} aria-hidden="true" /></div>}
             </div>
 
             <div 
@@ -139,7 +139,7 @@ function Settings({ onNavigate }) {
                 <div className="option-title">{t('settings.imperial')}</div>
                 <div className="option-subtitle">miles, feet, °F</div>
               </div>
-              {settings.units === 'imperial' && <div className="check-mark">✓</div>}
+              {settings.units === 'imperial' && <div className="check-mark"><Check size={18} strokeWidth={2.5} aria-hidden="true" /></div>}
             </div>
           </div>
         </div>
@@ -147,7 +147,7 @@ function Settings({ onNavigate }) {
         {/* Notifications Settings */}
         <div className="settings-section">
           <div className="section-header">
-            <h2>🔔 {t('settings.notifications')}</h2>
+            <h2><Bell size={20} strokeWidth={1.75} aria-hidden="true" /> {t('settings.notifications')}</h2>
             <p className="section-description">{t('settings.notificationsDescription')}</p>
           </div>
 
@@ -202,7 +202,7 @@ function Settings({ onNavigate }) {
         {/* Account Management */}
         <div className="settings-section">
           <div className="section-header">
-            <h2>👤 {t('settings.account')}</h2>
+            <h2><User size={20} strokeWidth={1.75} aria-hidden="true" /> {t('settings.account')}</h2>
             <p className="section-description">{t('settings.accountDescription')}</p>
           </div>
 
