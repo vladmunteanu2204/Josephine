@@ -2,6 +2,18 @@
 // Detects when a recommended trail is far from the user's stated start area
 // and suggests transportation context. Zero API cost — pure lookup + haversine.
 
+import i18n from '../i18n';
+
+// Localised lookup for the transport note (reads josephineChat.* with {{var}}
+// interpolation, falls back to the English string).
+function _t(key, fallback, vars) {
+  const full = `josephineChat.${key}`;
+  let v = i18n.t(full);
+  if (!v || v === full) v = fallback;
+  if (vars) for (const [k, val] of Object.entries(vars)) v = v.split(`{{${k}}}`).join(String(val));
+  return v;
+}
+
 // ── Known area name → [lat, lon] ─────────────────────────────────────────────
 // Covers the main towns/valleys a user might type as their starting point.
 // Alias pairs handle Italian/German bilingual names and common abbreviations.
@@ -303,23 +315,24 @@ export function buildTransportNote(warning, seed = 0) {
   const { distKm, driveMinutes, busLine, startAreaLabel, trailRegion } = warning;
 
   const driveHint = driveMinutes
-    ? `about ${driveMinutes} minutes by car`
+    ? _t('transportDriveMinutes', 'about {{min}} minutes by car', { min: driveMinutes })
     : distKm > 100
-      ? 'a good hour and a half by car'
+      ? _t('transportDriveLong', 'a good hour and a half by car')
       : distKm > 60
-        ? 'roughly an hour by car'
-        : 'about 40–50 minutes by car';
+        ? _t('transportDriveMed', 'roughly an hour by car')
+        : _t('transportDriveShort', 'about 40–50 minutes by car');
 
   const busHint = busLine
-    ? ` ${busLine} runs there too.`
+    ? _t('transportBusHint', ' {{bus}} runs there too.', { bus: busLine })
     : '';
 
   const regionLabel = trailRegion.replace(' & Surroundings', '');
+  const vars = { region: regionLabel, km: distKm, start: startAreaLabel, drive: driveHint, bus: busHint };
 
   const variants = [
-    `One thing worth knowing — ${regionLabel} is about ${distKm} km from ${startAreaLabel}, ${driveHint}.${busHint} Are you planning to drive, or would you like something a bit closer?`,
-    `Just flagging: this trail is in ${regionLabel}, around ${distKm} km from ${startAreaLabel} (${driveHint}).${busHint} Totally worth it — just factor in the travel.`,
-    `Heads up — ${regionLabel} is about ${distKm} km from ${startAreaLabel}, so plan for ${driveHint} each way.${busHint}`,
+    _t('transportNote1', 'One thing worth knowing — {{region}} is about {{km}} km from {{start}}, {{drive}}.{{bus}} Are you planning to drive, or would you like something a bit closer?', vars),
+    _t('transportNote2', 'Just flagging: this trail is in {{region}}, around {{km}} km from {{start}} ({{drive}}).{{bus}} Totally worth it — just factor in the travel.', vars),
+    _t('transportNote3', 'Heads up — {{region}} is about {{km}} km from {{start}}, so plan for {{drive}} each way.{{bus}}', vars),
   ];
 
   return variants[seed % variants.length];

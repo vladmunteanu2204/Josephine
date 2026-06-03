@@ -1230,6 +1230,14 @@
     "refDiffMed2": "Ci penso io — qualcosa di equilibrato, in arrivo.",
     "refDiffMed3": "Moderato va bene. Cerco ora.",
     "noTrailsNearArea": "Non ho ancora sentieri vicino a {{area}} nel mio database. Prova una valle o un paese vicino — oppure ti propongo qualcosa nella più ampia regione delle Dolomiti?",
-    "dogFindTrails": "Volentieri, porta con te il cane! Ti cerco sentieri adatti ai cani…"
+    "dogFindTrails": "Volentieri, porta con te il cane! Ti cerco sentieri adatti ai cani…",
+    "transportDriveMinutes": "circa {{min}} minuti in auto",
+    "transportDriveLong": "circa un'ora e mezza in auto",
+    "transportDriveMed": "all'incirca un'ora in auto",
+    "transportDriveShort": "circa 40–50 minuti in auto",
+    "transportBusHint": " Ci arriva anche {{bus}}.",
+    "transportNote1": "Una cosa utile da sapere — {{region}} è a circa {{km}} km da {{start}}, {{drive}}.{{bus}} Pensi di andare in auto, o preferiresti qualcosa di più vicino?",
+    "transportNote2": "Solo per segnalartelo: questo sentiero è in {{region}}, a circa {{km}} km da {{start}} ({{drive}}).{{bus}} Ne vale assolutamente la pena — tieni solo conto del viaggio.",
+    "transportNote3": "Attenzione — {{region}} è a circa {{km}} km da {{start}}, quindi metti in conto {{drive}} per ogni tratta.{{bus}}"
   }
 }

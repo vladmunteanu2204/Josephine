@@ -1230,6 +1230,14 @@
     "refDiffMed2": "Mach ich — etwas Ausgewogenes, kommt sofort.",
     "refDiffMed3": "Moderat passt. Ich suche jetzt.",
     "noTrailsNearArea": "Ich habe noch keine Wege in der Nähe von {{area}} in meiner Datenbank. Versuch ein nahes Tal oder Dorf — oder ich schlage dir etwas in der weiteren Dolomiten-Region vor?",
-    "dogFindTrails": "Sehr gerne, nimm deinen Hund mit! Ich suche dir hundefreundliche Wege…"
+    "dogFindTrails": "Sehr gerne, nimm deinen Hund mit! Ich suche dir hundefreundliche Wege…",
+    "transportDriveMinutes": "etwa {{min}} Minuten mit dem Auto",
+    "transportDriveLong": "gut anderthalb Stunden mit dem Auto",
+    "transportDriveMed": "rund eine Stunde mit dem Auto",
+    "transportDriveShort": "etwa 40–50 Minuten mit dem Auto",
+    "transportBusHint": " Dorthin fährt auch {{bus}}.",
+    "transportNote1": "Eine nützliche Info — {{region}} ist etwa {{km}} km von {{start}} entfernt, {{drive}}.{{bus}} Planst du mit dem Auto zu fahren, oder hättest du gern etwas Näheres?",
+    "transportNote2": "Nur als Hinweis: dieser Weg liegt in {{region}}, rund {{km}} km von {{start}} ({{drive}}).{{bus}} Lohnt sich absolut — rechne nur die Anfahrt mit ein.",
+    "transportNote3": "Achtung — {{region}} ist etwa {{km}} km von {{start}} entfernt, plane also {{drive}} pro Strecke ein.{{bus}}"
   }
 }
