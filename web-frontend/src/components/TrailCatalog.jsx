@@ -11,7 +11,7 @@ import {
 import { useToast } from '../contexts/ToastContext';
 import { useAuth } from '../contexts/AuthContext';
 import AuthPromptModal from './AuthPromptModal';
-import { Card, Chip, SegmentedControl } from './ui';
+import { Card, Chip, SegmentedControl, Sheet } from './ui';
 import { API_URL } from '../api';
 import './TrailCatalog.css';
 
@@ -343,10 +343,8 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
       </div>
 
       {/* Filters bottom sheet */}
-      {showFilters && (
-        <>
-          <div className="tc-sheet-backdrop" onClick={() => setShowFilters(false)} aria-hidden="true" />
-          <div className="tc-sheet" role="dialog" aria-modal="true" aria-label={t('catalog.filters')}>
+      <Sheet isOpen={showFilters} onClose={() => setShowFilters(false)} ariaLabel={t('catalog.filters')}>
+          <div className="tc-sheet">
             <div className="tc-sheet__handle" />
             <div className="tc-sheet__head">
               <h3>{t('catalog.filters')}</h3>
@@ -376,8 +374,7 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
               <button className="tc-sheet__done" onClick={() => setShowFilters(false)}>{t('catalog.done', 'Done')}</button>
             </div>
           </div>
-        </>
-      )}
+      </Sheet>
 
       <AuthPromptModal
         isOpen={showAuthPrompt}

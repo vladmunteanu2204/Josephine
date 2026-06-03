@@ -200,7 +200,8 @@
   animation: tcFade .2s ease;
 }
 .tc-sheet {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-modal);
+  /* --z-app-modal sits above the shared <Sheet> backdrop. */
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-app-modal, 10000);
   background: var(--bg-secondary);
   border-top: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
