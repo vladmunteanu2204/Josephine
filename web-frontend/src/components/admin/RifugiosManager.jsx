@@ -51,10 +51,7 @@ export default function RifugiosManager({ adminPassword }) {
 
   const publish = async (id, newStatus) => {
     try {
-      await axios.post(`/api/admin/rifugios/${id}/publish`,
-        { status: newStatus },
-        { headers: { 'X-Admin-Password': adminPassword } }
-      );
+      await axios.post(`/api/admin/rifugios/${id}/publish`, { status: newStatus });
       showToast(newStatus === 'published' ? 'Rifugio published' : 'Moved to draft');
       load();
     } catch (e) {
@@ -93,10 +90,10 @@ export default function RifugiosManager({ adminPassword }) {
         photos: photosInput.split('\n').map(s => s.trim()).filter(Boolean),
       };
       if (editing === 'new') {
-        await axios.post('/api/admin/rifugios', payload, { headers: { 'X-Admin-Password': adminPassword } });
+        await axios.post('/api/admin/rifugios', payload);
         showToast('Rifugio created');
       } else {
-        await axios.put(`/api/admin/rifugios/${editing}`, payload, { headers: { 'X-Admin-Password': adminPassword } });
+        await axios.put(`/api/admin/rifugios/${editing}`, payload);
         showToast('Rifugio updated');
       }
       setEditing(null);
@@ -111,7 +108,7 @@ export default function RifugiosManager({ adminPassword }) {
   const del = async (id) => {
     if (!confirm('Delete this rifugio? This cannot be undone.')) return;
     try {
-      await axios.delete(`/api/admin/rifugios/${id}`, { headers: { 'X-Admin-Password': adminPassword } });
+      await axios.delete(`/api/admin/rifugios/${id}`);
       showToast('Rifugio deleted');
       load();
     } catch (e) {

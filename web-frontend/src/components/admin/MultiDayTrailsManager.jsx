@@ -22,7 +22,7 @@ function MultiDayTrailsManager({ adminPassword }) {
     try {
       setLoading(true);
       const response = await axios.get(`${API_URL}/admin/multi-day-trails`, {
-        headers: { 'X-Admin-Password': adminPassword }
+        headers: {  }
       });
       setTrails(response.data.trails || []);
       setError(null);
@@ -88,12 +88,12 @@ function MultiDayTrailsManager({ adminPassword }) {
 
       if (isCreating) {
         await axios.post(`${API_URL}/admin/multi-day-trails`, trailToSave, {
-          headers: { 'X-Admin-Password': adminPassword }
+          headers: {  }
         });
         setSuccessMessage(t('admin.trailCreatedSuccess'));
       } else {
         await axios.put(`${API_URL}/admin/multi-day-trails/${editingTrail.id}`, trailToSave, {
-          headers: { 'X-Admin-Password': adminPassword }
+          headers: {  }
         });
         setSuccessMessage(t('admin.trailUpdatedSuccess'));
       }
@@ -114,7 +114,7 @@ function MultiDayTrailsManager({ adminPassword }) {
 
     try {
       await axios.delete(`${API_URL}/admin/multi-day-trails/${trailId}`, {
-        headers: { 'X-Admin-Password': adminPassword }
+        headers: {  }
       });
       setSuccessMessage(t('admin.trailDeletedSuccess'));
       await fetchTrails();

@@ -52,7 +52,7 @@ export default function Dashboard({ adminPassword, onNavigateToTrail }) {
     try {
       setLoading(true);
       const res = await axios.get('/api/admin/dashboard', {
-        headers: { 'X-Admin-Password': adminPassword }
+        headers: {  }
       });
       setData(res.data);
     } catch (e) {

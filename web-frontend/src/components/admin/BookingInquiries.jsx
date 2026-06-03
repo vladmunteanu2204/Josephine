@@ -49,7 +49,7 @@ export default function BookingInquiries({ adminPassword }) {
       if (filters.date_to)   params.date_to   = filters.date_to;
 
       const res = await axios.get('/api/admin/booking-inquiries', {
-        headers: { 'X-Admin-Password': adminPassword },
+        headers: {  },
         params,
       });
       setInquiries(res.data.inquiries || []);
@@ -68,7 +68,7 @@ export default function BookingInquiries({ adminPassword }) {
     try {
       await axios.put(`/api/admin/booking-inquiries/${inq.id}`,
         { status: next },
-        { headers: { 'X-Admin-Password': adminPassword } }
+        { headers: {  } }
       );
       showToast(`Marked as ${next}`);
       load();
@@ -83,7 +83,7 @@ export default function BookingInquiries({ adminPassword }) {
     try {
       await axios.put(`/api/admin/booking-inquiries/${selected.id}`,
         { admin_notes: notes },
-        { headers: { 'X-Admin-Password': adminPassword } }
+        { headers: {  } }
       );
       showToast('Notes saved');
       setSelected(prev => ({ ...prev, admin_notes: notes }));
@@ -99,7 +99,7 @@ export default function BookingInquiries({ adminPassword }) {
     if (!confirm('Delete this booking inquiry?')) return;
     try {
       await axios.delete(`/api/admin/booking-inquiries/${id}`, {
-        headers: { 'X-Admin-Password': adminPassword }
+        headers: {  }
       });
       showToast('Inquiry deleted');
       if (selected?.id === id) setSelected(null);

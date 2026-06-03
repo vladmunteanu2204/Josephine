@@ -16,7 +16,7 @@ function GamificationStats({ adminPassword }) {
     try {
       setLoading(true);
       const response = await axios.get('/api/admin/analytics/gamification', {
-        headers: { 'X-Admin-Password': adminPassword }
+        headers: {  }
       });
       setStats(response.data);
     } catch (error) {

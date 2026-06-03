@@ -17,7 +17,7 @@ function UserManagement({ adminPassword }) {
     try {
       setLoading(true);
       const response = await axios.get('/api/admin/analytics/users', {
-        headers: { 'X-Admin-Password': adminPassword }
+        headers: {  }
       });
       setUsers(response.data.users || []);
       setTotalUsers(response.data.total_users || 0);

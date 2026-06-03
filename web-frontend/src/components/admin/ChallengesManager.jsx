@@ -88,7 +88,7 @@ function ChallengesManager({ adminPassword }) {
     reader.onload = async (e) => {
       try {
         const gpxText = e.target.result;
-        const headers = { 'X-Admin-Password': adminPassword };
+        const headers = {  };
         const response = await axios.post('/api/admin/gpx/parse', { gpxContent: gpxText }, { headers });
         const data = response.data;
         
@@ -124,7 +124,7 @@ function ChallengesManager({ adminPassword }) {
 
   const handleSave = async () => {
     try {
-      const headers = { 'X-Admin-Password': adminPassword };
+      const headers = {  };
       if (editingChallenge) {
         await axios.put(`/api/admin/challenges/${editingChallenge}`, formData, { headers });
         alert('Challenge updated successfully!');
@@ -145,7 +145,7 @@ function ChallengesManager({ adminPassword }) {
     if (!confirm('Are you sure you want to delete this challenge?')) return;
     
     try {
-      const headers = { 'X-Admin-Password': adminPassword };
+      const headers = {  };
       await axios.delete(`/api/admin/challenges/${challengeId}`, { headers });
       alert('Challenge deleted successfully!');
       loadChallenges();

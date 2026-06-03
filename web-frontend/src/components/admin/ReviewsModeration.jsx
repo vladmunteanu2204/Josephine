@@ -48,7 +48,7 @@ function ReviewsModeration({ adminPassword }) {
     if (!confirm('Are you sure you want to delete this review?')) return;
 
     try {
-      const headers = { 'X-Admin-Password': adminPassword };
+      const headers = {  };
       await axios.delete(`/api/admin/reviews/${reviewId}`, {
         data: { trail_id: trailId },
         headers

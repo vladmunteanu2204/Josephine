@@ -11,6 +11,7 @@ import io
 import fcntl
 import hashlib
 import time
+import atexit
 import sqlite3
 import threading
 import jwt
@@ -944,6 +945,10 @@ def get_recommendations():
         payload = {'results': results}
         # Cache the serialised result (reuse _chat_cache dict, different key prefix)
         _chat_cache[rec_cache_key] = (json.dumps(payload), time.time())
+        # Bound the in-memory cache: drop oldest entries beyond the cap.
+        if len(_chat_cache) > _CHAT_CACHE_MAX:
+            for _k in sorted(_chat_cache, key=lambda k: _chat_cache[k][1])[:len(_chat_cache) - _CHAT_CACHE_MAX]:
+                _chat_cache.pop(_k, None)
         return jsonify(payload)
 
     except Exception as e:
@@ -1090,7 +1095,7 @@ def get_current_weather():
         lat = request.args.get('lat', type=float)
         lon = request.args.get('lon', type=float)
         
-        if not lat or not lon:
+        if lat is None or lon is None:
             return jsonify({'error': 'Latitude and longitude required'}), 400
         
         weather = weather_service.get_current_weather(lat, lon)
@@ -1106,7 +1111,7 @@ def get_weather_forecast():
         lat = request.args.get('lat', type=float)
         lon = request.args.get('lon', type=float)
         
-        if not lat or not lon:
+        if lat is None or lon is None:
             return jsonify({'error': 'Latitude and longitude required'}), 400
         
         forecast = weather_service.get_forecast(lat, lon)
@@ -1123,7 +1128,7 @@ def get_weather_suitability():
         lon = request.args.get('lon', type=float)
         difficulty = request.args.get('difficulty', 'moderate')
         
-        if not lat or not lon:
+        if lat is None or lon is None:
             return jsonify({'error': 'Latitude and longitude required'}), 400
         
         current_weather = weather_service.get_current_weather(lat, lon)
@@ -1702,6 +1707,7 @@ def save_user_analytics(analytics_data):
 
 # ── In-memory recommendation cache (keyed by SHA256 of params, TTL 5min) ─
 _chat_cache: dict = {}   # key → (serialised_json, timestamp)
+_CHAT_CACHE_MAX = 500    # cap size; prune oldest entries beyond this
 _rate_buckets: dict = {} # ip → [timestamp, ...]
 
 # ── Analytics write buffer — batch increments, flush every 30s ────────────
@@ -1760,6 +1766,10 @@ def _maybe_flush_analytics():
     if now - _analytics_last_flush[0] >= ANALYTICS_FLUSH_INTERVAL:
         _analytics_last_flush[0] = now
         threading.Thread(target=_flush_analytics_buffer, daemon=True).start()
+
+# Flush any buffered analytics on a clean shutdown so the last <30s of
+# increments aren't lost (previously they only flushed on the next request).
+atexit.register(_flush_analytics_buffer)
 
 @app.route('/api/analytics/trail/view', methods=['POST'])
 def track_trail_view():
@@ -3115,26 +3125,6 @@ def serve_media(filename):
 # ── Fix #4: SQLite-backed Josephine cache + rate limiter ─────────────────
 # Survives server restarts; thread-safe via check_same_thread=False + WAL mode.
 _CHAT_DB_PATH = os.path.join(BASE_DIR, 'backend', 'data', 'chat_cache.db')
-
-def _get_db():
-    """Return a thread-local SQLite connection."""
-    import threading
-    local = threading.local()
-    if not hasattr(local, 'conn'):
-        local.conn = sqlite3.connect(_CHAT_DB_PATH, check_same_thread=False)
-        local.conn.execute('PRAGMA journal_mode=WAL')
-        local.conn.execute('''CREATE TABLE IF NOT EXISTS chat_cache (
-            key TEXT PRIMARY KEY,
-            reply TEXT NOT NULL,
-            ts REAL NOT NULL
-        )''')
-        local.conn.execute('''CREATE TABLE IF NOT EXISTS rate_log (
-            ip TEXT NOT NULL,
-            ts REAL NOT NULL
-        )''')
-        local.conn.execute('CREATE INDEX IF NOT EXISTS idx_rate_ip ON rate_log(ip, ts)')
-        local.conn.commit()
-    return local.conn
 
 # Initialise on startup
 _db_conn = sqlite3.connect(_CHAT_DB_PATH, check_same_thread=False)

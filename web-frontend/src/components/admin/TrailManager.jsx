@@ -76,7 +76,7 @@ function TrailManager({ adminPassword }) {
     try {
       await axios.post(`/api/admin/trails/${trailId}/publish`,
         { status: newStatus },
-        { headers: { 'X-Admin-Password': adminPassword } }
+        { headers: {  } }
       );
       loadTrails();
     } catch (error) {
@@ -154,7 +154,7 @@ function TrailManager({ adminPassword }) {
     reader.onload = async (e) => {
       try {
         const gpxText = e.target.result;
-        const headers = { 'X-Admin-Password': adminPassword };
+        const headers = {  };
         const response = await axios.post('/api/admin/gpx/parse', { gpxContent: gpxText }, { headers });
         const data = response.data;
         
@@ -214,7 +214,7 @@ function TrailManager({ adminPassword }) {
       formDataUpload.append('type', fieldType);
       
       const headers = { 
-        'X-Admin-Password': adminPassword
+        
       };
       
       const response = await axios.post('/api/admin/upload/media', formDataUpload, { 
@@ -324,7 +324,7 @@ function TrailManager({ adminPassword }) {
           : undefined
       };
       
-      const headers = { 'X-Admin-Password': adminPassword };
+      const headers = {  };
       if (editingTrail) {
         await axios.put(`/api/admin/trails/${editingTrail}`, trailData, { headers });
         alert('Trail updated successfully!');
@@ -345,7 +345,7 @@ function TrailManager({ adminPassword }) {
     if (!confirm('Are you sure you want to delete this trail?')) return;
     
     try {
-      const headers = { 'X-Admin-Password': adminPassword };
+      const headers = {  };
       await axios.delete(`/api/admin/trails/${trailId}`, { headers });
       alert('Trail deleted successfully!');
       loadTrails();

@@ -18,7 +18,7 @@ function TrailAnalytics({ adminPassword }) {
     try {
       setLoading(true);
       const response = await axios.get('/api/admin/analytics/trails', {
-        headers: { 'X-Admin-Password': adminPassword }
+        headers: {  }
       });
       setAnalytics(response.data);
     } catch (error) {
