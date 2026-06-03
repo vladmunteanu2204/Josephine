@@ -858,20 +858,20 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         // reads as a bug.
         const introsByCount = {
           1: [
-            "I found one that fits beautifully — here it is. ✦",
-            "One pick stands out for what you're after. Take a look. ✦",
-            "Here's the one I'd choose for you today. ✦",
+            tj('introOne1', 'I found one that fits beautifully — here it is. ✦'),
+            tj('introOne2', "One pick stands out for what you're after. Take a look. ✦"),
+            tj('introOne3', "Here's the one I'd choose for you today. ✦"),
           ],
           2: [
-            "I found two lovely options for you. Take a look. ✦",
-            "Here are two trails I think you'll love. ✦",
-            "Two picks — both curated for today. Which speaks to you? ✦",
+            tj('introTwo1', 'I found two lovely options for you. Take a look. ✦'),
+            tj('introTwo2', "Here are two trails I think you'll love. ✦"),
+            tj('introTwo3', 'Two picks — both curated for today. Which speaks to you? ✦'),
           ],
           3: [
-            "I found three beautiful options for you. Each one fits what you're after. ✦",
-            "Here are three trails I think you'll love. Take a look. ✦",
-            "Three picks — all curated for today. Let me know which speaks to you. ✦",
-            "I've pulled three routes that match perfectly. Which feels right? ✦",
+            tj('introThree1', "I found three beautiful options for you. Each one fits what you're after. ✦"),
+            tj('introThree2', "Here are three trails I think you'll love. Take a look. ✦"),
+            tj('introThree3', 'Three picks — all curated for today. Let me know which speaks to you. ✦'),
+            tj('introThree4', "I've pulled three routes that match perfectly. Which feels right? ✦"),
           ],
         };
         const optionsIntros = introsByCount[results.length] || introsByCount[3];
@@ -1190,9 +1190,9 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
           appendJosephineMessage({
             type: 'text',
             text: ok
-              ? `Yes — ${selectedTrail.name} is marked dog-friendly, so your dog is welcome. Bring water and keep them on a leash near grazing pastures and any exposed sections.`
-              : `${selectedTrail.name} isn't marked dog-friendly — there may be exposed, protected or livestock areas where dogs aren't ideal. I'd play it safe. Want me to find a dog-friendly trail nearby instead?`,
-            chips: ok ? [t('chipStartOver')] : ['Find me a dog-friendly trail', t('chipStartOver')],
+              ? tj('dogYes', 'Yes — {{name}} is marked dog-friendly, so your dog is welcome. Bring water and keep them on a leash near grazing pastures and any exposed sections.', { name: selectedTrail.name })
+              : tj('dogNo', "{{name}} isn't marked dog-friendly — there may be exposed, protected or livestock areas where dogs aren't ideal. I'd play it safe. Want me to find a dog-friendly trail nearby instead?", { name: selectedTrail.name }),
+            chips: ok ? [t('chipStartOver')] : [tj('chipFindDogTrail', 'Find me a dog-friendly trail'), t('chipStartOver')],
           });
         } else {
           const d = {
@@ -1459,6 +1459,16 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         chips: null,
       });
       setTimeout(() => callRecommendAPI(d), 400);
+      return;
+    }
+
+    if (chip === tj('chipFindDogTrail', 'Find me a dog-friendly trail')) {
+      appendUserMessage(chip);
+      const d = { duration_hours: 3, difficulty: 'easy', interests: ['dog-friendly'],
+                  withDog: true, family_friendly: false, startArea: '' };
+      setPlanningData(d);
+      appendJosephineMessage({ type: 'text', text: tj('dogFindTrails', 'Happy to bring your dog along! Let me find dog-friendly trails for you…'), chips: null });
+      runConditionsThenOptions(d);
       return;
     }
 
