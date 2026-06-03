@@ -134,6 +134,9 @@
     "yourCommentPlaceholder": "Condividi la tua esperienza su questo sentiero...",
     "submitReview": "Invia Recensione",
     "submittingReview": "Invio in corso...",
+    "reviewFieldsRequired": "Compila tutti i campi obbligatori",
+    "reviewSubmitted": "Grazie per la tua recensione!",
+    "reviewError": "Invio della recensione non riuscito. Riprova.",
     "cancel": "Annulla",
     "helpful": "Utile",
     "noReviewsYet": "Nessuna recensione ancora. Sii il primo a condividere la tua esperienza!",
@@ -217,7 +220,9 @@
     "noResults": "Nessun sentiero corrisponde ai tuoi criteri. Prova a modificare le tue preferenze.",
     "saveTrail": "Salva Sentiero",
     "unsaveTrail": "Rimuovi dai salvati",
-    "failedToLoad": "Impossibile caricare le raccomandazioni. Riprova."
+    "failedToLoad": "Impossibile caricare le raccomandazioni. Riprova.",
+    "trailSaved": "Sentiero salvato!",
+    "trailUnsaved": "Sentiero rimosso dai salvati"
   },
   "auth": {
     "login": "Accedi",
