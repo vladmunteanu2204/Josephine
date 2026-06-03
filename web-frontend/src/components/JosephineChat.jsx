@@ -6,6 +6,7 @@ import { detectSeason, getSeasonConfig } from '../hooks/useSeason';
 import { checkDistanceFromGPS, checkDistanceWarning, buildTransportNote } from '../utils/geoAwareness';
 import { useAuth } from '../contexts/AuthContext';
 import AuthPromptModal from './AuthPromptModal';
+import DailyPlanCard from './DailyPlanCard';
 import './JosephineChat.css';
 
 const _seasonOverride = new URLSearchParams(window.location.search).get('season');
@@ -519,6 +520,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
   const [refining, setRefining]           = useState(false);
   const [awaitingRefinement, setAwaitingRefinement] = useState(null); // 'length' | 'difficulty' | null
   const [awaitingWiden, setAwaitingWiden] = useState(false); // offered to widen past an unknown area
+  const [awaitingMoodPrompt, setAwaitingMoodPrompt] = useState(false); // mood-first: next msg → a plan
   const [chatHistory, setChatHistory]     = useState([]);
   const [showMenu, setShowMenu]       = useState(false);
   const [copyFeedback, setCopyFeedback] = useState(false);
@@ -605,7 +607,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         from: 'josephine',
         type: 'text',
         text,
-        chips: [t('chipPlanMyDay'), t('chipSurpriseMe'), t('chipShowMap')],
+        chips: [tj('chipMoodPlan', 'Plan my perfect day ✦'), t('chipPlanMyDay'), t('chipSurpriseMe'), t('chipShowMap')],
       }]);
 
       // Living Almanac: if something fleeting is happening on the mountain right
@@ -674,6 +676,50 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       const res = await axios.get('/api/almanac', { params });
       return res.data?.moments || [];
     } catch { return []; }
+  };
+
+  /* ── Mood-first planning → the Daily Plan Card ───────────────────────── */
+  const requestPlan = async (prompt, extra = {}) => {
+    setTyping(true);
+    try {
+      const body = { prompt, lang, now: new Date().toISOString(), ...extra };
+      if (userLat != null && userLon != null) { body.lat = userLat; body.lon = userLon; }
+      const res = await axios.post('/api/josephine/plan', body);
+      const plan = res.data?.plan;
+      setTyping(false);
+      if (plan?.trail) {
+        setApiResults([plan.trail]);   // keeps follow-up Q&A grounded on the pick
+        appendJosephineMessage({ type: 'plan', plan, chips: null });
+      } else {
+        appendJosephineMessage({
+          type: 'text',
+          text: plan?.josephine_says || tj('windError', "The mountain winds are interfering with my signal — try again in a moment!"),
+          chips: [t('chipPlanMyDay'), t('chipStartOver')],
+        });
+      }
+    } catch {
+      setTyping(false);
+      appendJosephineMessage({ type: 'text', text: t('windError'), chips: [t('chipStartOver')] });
+    }
+  };
+
+  const handlePlanAlt = (a) => {
+    if (!a) return;
+    if (a.kind === 'tomorrow') {
+      appendJosephineMessage({
+        type: 'text',
+        text: tj('planTomorrowAck', 'Lovely — same place at sunrise tomorrow. You beat the crowds and catch the best light.'),
+        chips: [t('chipStartOver')],
+      });
+      return;
+    }
+    if (a.trail_id) {
+      setTyping(true);
+      axios.get(`/api/trails/${a.trail_id}`).then(res => {
+        setTyping(false);
+        appendJosephineMessage({ type: 'options', trails: [res.data], chips: [t('chipStartOver')] });
+      }).catch(() => setTyping(false));
+    }
   };
 
   /* ── Clear conversation ─────────────────────────────────────────────── */
@@ -1214,6 +1260,15 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       setAwaitingWiden(false); // said something else — let the offer lapse
     }
 
+    // ── Mood-first: "the day you want" → a Daily Plan Card ───────────────
+    if (awaitingMoodPrompt) {
+      setAwaitingMoodPrompt(false);
+      appendUserMessage(trimmed);
+      setInput('');
+      requestPlan(trimmed);
+      return;
+    }
+
     // ── "What's happening / in season right now?" → the Living Almanac ───
     if (/\bwhat'?s (happening|on|good|special|in season|blooming)\b|\banything (special|happening|good|going on)\b|\bthis week\b|\bin season\b|\bseasonal\b|\bwhat should i see\b|\bwhat'?s the season\b/i.test(tl)) {
       appendUserMessage(trimmed);
@@ -1396,7 +1451,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       appendJosephineMessage({ type: 'text', text: t('windError'), chips: [t('chipPlanMyDay'), t('chipSurpriseMe')] });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chatHistory, lang, t, awaitingRefinement, awaitingWiden, apiResults, planningData, planningStep, selectedTrail]);
+  }, [chatHistory, lang, t, awaitingRefinement, awaitingWiden, awaitingMoodPrompt, apiResults, planningData, planningStep, selectedTrail]);
 
   // Keep ref fresh so mic closure can call the latest version
   sendMsgRef.current = sendMessage;
@@ -1456,6 +1511,16 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       const bundle = moodByLabel[chip];
       setPlanningData(bundle);
       runConditionsThenOptions(bundle);
+      return;
+    }
+    if (chip === tj('chipMoodPlan', 'Plan my perfect day ✦')) {
+      appendUserMessage(chip);
+      setAwaitingMoodPrompt(true);
+      appendJosephineMessage({
+        type: 'text',
+        text: tj('moodPlanPrompt', "Tell me the day you want — your mood, how much time you have, who's with you. Try: “a peaceful walk and a good lunch, I'm a bit tired.”"),
+        chips: null,
+      });
       return;
     }
     if (chip === t('chipPlanMyDay')) { appendUserMessage(chip); startPlanningFlow(); return; }
@@ -1531,7 +1596,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         appendJosephineMessage({
           type: 'text',
           text: t('startOver', 'Let\'s start fresh. What kind of adventure are you after today?'),
-          chips: [t('chipPlanMyDay'), t('chipSurpriseMe'), t('chipShowMap')],
+          chips: [tj('chipMoodPlan', 'Plan my perfect day ✦'), t('chipPlanMyDay'), t('chipSurpriseMe'), t('chipShowMap')],
         });
       }, 400);
       return;
@@ -1762,6 +1827,18 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
                     {msg.validity && <span className="jc-almanac-tag">{msg.validity}</span>}
                     <p className="jc-bubble__text">{msg.text}</p>
                   </div>
+                )}
+
+                {/* Daily Plan Card — the composed plan output */}
+                {msg.type === 'plan' && msg.plan && (
+                  <DailyPlanCard
+                    plan={msg.plan}
+                    t={t}
+                    saved={savedIds.includes(msg.plan?.trail?.id)}
+                    onSave={(tr) => saveHike(tr)}
+                    onViewTrail={(tr) => (viewTrail ? viewTrail(tr) : showTrailDetail(tr))}
+                    onAlt={handlePlanAlt}
+                  />
                 )}
 
                 {/* Mood intro: text bubble + grid in one message (fix 16) */}
