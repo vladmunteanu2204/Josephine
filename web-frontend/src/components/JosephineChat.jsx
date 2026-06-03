@@ -539,6 +539,8 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
   const prevLangRef      = useRef(lang);
   const recognitionRef   = useRef(null);
   const sendMsgRef       = useRef(null); // keeps sendMessage fresh for mic closure
+  const lastAlmanacRef   = useRef(null); // the almanac moment currently offered
+  const almanacRestRef   = useRef([]);   // remaining moments for "what else?"
 
   /* ── Web Speech API ─────────────────────────────────────────────────── */
   const SpeechRecognitionAPI =
@@ -605,6 +607,14 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         text,
         chips: [t('chipPlanMyDay'), t('chipSurpriseMe'), t('chipShowMap')],
       }]);
+
+      // Living Almanac: if something fleeting is happening on the mountain right
+      // now, Josephine leads with it — the "told to you" soul moment.
+      const moments = await fetchAlmanac(lat, lon, 3);
+      if (moments.length) {
+        almanacRestRef.current = moments.slice(1);
+        after(() => showAlmanacMoment(moments[0]), 900);
+      }
     };
 
     if (typeof navigator !== 'undefined' && navigator.geolocation) {
@@ -637,6 +647,31 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
   };
   const appendUserMessage = (text) => {
     setMessages(prev => [...prev, { id: Date.now() + Math.random(), from: 'user', type: 'text', text, chips: null }]);
+  };
+
+  /* ── Living Almanac — fleeting local moments Josephine *tells* you ────── */
+  const buildAlmanacChips = (m) => {
+    const chips = [];
+    if (m?.cta?.interest) chips.push(tj('chipAlmanacPlan', 'Plan around it'));
+    if (almanacRestRef.current.length) chips.push(tj('chipAlmanacMore', 'What else?'));
+    return chips.length ? chips : null;
+  };
+  const showAlmanacMoment = (m) => {
+    lastAlmanacRef.current = m;
+    appendJosephineMessage({
+      type: 'almanac',
+      text: `${m.emoji ? m.emoji + ' ' : ''}${m.voice}`,
+      validity: m.validity,
+      chips: buildAlmanacChips(m),
+    });
+  };
+  const fetchAlmanac = async (lat, lon, limit = 3) => {
+    try {
+      const params = { now: new Date().toISOString(), lang, limit };
+      if (lat != null && lon != null) { params.lat = lat; params.lon = lon; }
+      const res = await axios.get('/api/almanac', { params });
+      return res.data?.moments || [];
+    } catch { return []; }
   };
 
   /* ── Clear conversation ─────────────────────────────────────────────── */
@@ -1177,6 +1212,26 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       setAwaitingWiden(false); // said something else — let the offer lapse
     }
 
+    // ── "What's happening / in season right now?" → the Living Almanac ───
+    if (/\bwhat'?s (happening|on|good|special|in season|blooming)\b|\banything (special|happening|good|going on)\b|\bthis week\b|\bin season\b|\bseasonal\b|\bwhat should i see\b|\bwhat'?s the season\b/i.test(tl)) {
+      appendUserMessage(trimmed);
+      setInput('');
+      setTyping(true);
+      const moments = await fetchAlmanac(userLat, userLon, 3);
+      setTyping(false);
+      if (moments.length) {
+        almanacRestRef.current = moments.slice(1);
+        showAlmanacMoment(moments[0]);
+      } else {
+        appendJosephineMessage({
+          type: 'text',
+          text: tj('almanacNothing', "Nothing especially fleeting on the mountain this exact moment — but I can still plan you a perfect day. Want me to?"),
+          chips: [t('chipPlanMyDay')],
+        });
+      }
+      return;
+    }
+
     // ── Detect "too long / too hard" typed as free text ─────────────────
     if (planningStep > 0 && /too long|too far|too many km|too much|troppo lung|troppo lontan|zu lang|zu weit/i.test(tl)) {
       setAwaitingRefinement('length');
@@ -1569,6 +1624,36 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       return;
     }
 
+    // ── Almanac chips ──────────────────────────────────────────────────────
+    if (chip === tj('chipAlmanacPlan', 'Plan around it')) {
+      appendUserMessage(chip);
+      const interest = lastAlmanacRef.current?.cta?.interest;
+      const d = { duration_hours: 3, difficulty: 'any', interests: interest ? [interest] : [],
+                  withDog: false, family_friendly: false, startArea: '' };
+      setPlanningData(d);
+      appendJosephineMessage({
+        type: 'text',
+        text: tj('almanacPlanAck', 'Wonderful — let me find something that fits the moment…'),
+        chips: null,
+      });
+      after(() => runConditionsThenOptions(d), 400);
+      return;
+    }
+    if (chip === tj('chipAlmanacMore', 'What else?')) {
+      appendUserMessage(chip);
+      const next = almanacRestRef.current.shift();
+      if (next) {
+        showAlmanacMoment(next);
+      } else {
+        appendJosephineMessage({
+          type: 'text',
+          text: tj('almanacNoMore', "That's the lot for this week. Want me to plan your day around one of these?"),
+          chips: [t('chipPlanMyDay')],
+        });
+      }
+      return;
+    }
+
     sendMessage(chip);
   };
 
@@ -1667,6 +1752,14 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
                 {/* Text bubble */}
                 {msg.type === 'text' && msg.text && (
                   <div className="jc-bubble"><p className="jc-bubble__text">{msg.text}</p></div>
+                )}
+
+                {/* Almanac moment — voiced, with an ephemerality tag */}
+                {msg.type === 'almanac' && msg.text && (
+                  <div className="jc-bubble jc-bubble--almanac">
+                    {msg.validity && <span className="jc-almanac-tag">{msg.validity}</span>}
+                    <p className="jc-bubble__text">{msg.text}</p>
+                  </div>
                 )}
 
                 {/* Mood intro: text bubble + grid in one message (fix 16) */}

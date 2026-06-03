@@ -335,6 +335,24 @@
   color: #f0ece6;
 }
 
+/* Living Almanac bubble — a touch warmer, with an ephemerality tag */
+.jc-bubble--almanac {
+  background: linear-gradient(135deg, rgba(212,160,90,0.14), rgba(212,160,90,0.05));
+  border: 1px solid rgba(212,160,90,0.28);
+}
+.jc-almanac-tag {
+  display: inline-block;
+  margin-bottom: 6px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #e8c79a;
+  background: rgba(212,160,90,0.18);
+}
+
 /* Typing indicator */
 .jc-bubble--typing {
   display: flex;
