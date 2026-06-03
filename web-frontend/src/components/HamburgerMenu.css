@@ -277,3 +277,13 @@
   width: 22px;
   text-align: center;
 }
+
+/* Data attribution (ODbL) — present and legible, but deliberately quiet. */
+.hamburger-attribution {
+  padding: 14px 20px 18px;
+  font-size: 10px;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  color: var(--text-muted, #9a9a9a);
+  opacity: 0.5;
+}

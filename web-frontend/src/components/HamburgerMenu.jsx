@@ -218,6 +218,12 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout, nav
               </div>
             </>
           )}
+
+          {/* Data attribution — ODbL requires crediting OpenStreetMap where its
+              data informs results (place lookup / proximity). Kept discreet. */}
+          <div className="hamburger-attribution" aria-label="Data attribution">
+            © OpenStreetMap contributors
+          </div>
         </nav>
       </div>
     </Sheet>

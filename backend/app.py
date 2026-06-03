@@ -16,8 +16,6 @@ import sqlite3
 import threading
 import unicodedata
 import difflib
-import urllib.parse
-import urllib.request
 import jwt
 from datetime import datetime, timedelta, timezone
 try:
@@ -888,9 +886,6 @@ _AREA_COORDS = {
 # stays for *areas* that aren't single settlements (valleys, passes, lakes).
 _PLACES_FILE = os.path.join(os.path.dirname(__file__), 'data', 'south_tyrol_places.json')
 _PLACES_CACHE = {'index': None, 'keys': None}
-# Bounding box of South Tyrol (lon_min, lat_min, lon_max, lat_max) for the live
-# geocode fallback — keep results inside the province.
-_ST_BBOX = (10.38, 46.20, 12.50, 47.10)
 _CONNECTIVES = (' in ', ' im ', ' an der ', ' an ', ' a ', ' bei ', ' presso ')
 # Leading lodging words stripped so "Hotel Küglerhof" / "Küglerhof" both match
 # "Hotel Der Küglerhof". Applied to POI names AND the query (normalized form).
@@ -905,30 +900,6 @@ def _strip_lodging(nn):
         if nn.startswith(pre):
             return nn[len(pre):].strip()
     return nn
-# Live geocoder is OPT-IN and provider-agnostic. The public OSM Nominatim
-# endpoint is NOT used by default: its usage policy forbids being silently
-# built into apps and discourages commercial reliance. To enable a fallback in
-# production, set GEOCODER_URL to a Nominatim-compatible /search endpoint you are
-# entitled to use (a self-hosted Nominatim, or a commercial provider such as
-# Geoapify / LocationIQ / Maptiler). GEOCODER_EMAIL is sent for identification.
-# When unset, unknown places simply fall back to the honest "widen" offer.
-_GEOCODER_URL = os.environ.get('GEOCODER_URL', '').strip()
-_GEOCODER_EMAIL = os.environ.get('GEOCODER_EMAIL', '').strip()
-_GEOCODER_KEY = os.environ.get('GEOCODER_KEY', '').strip()
-_GEOCODER_UA = os.environ.get(
-    'GEOCODER_USER_AGENT',
-    'Josephine/1.0 (South Tyrol hiking companion; set GEOCODER_EMAIL for contact)')
-# Well-known places OUTSIDE South Tyrol. A user who types one of these means
-# that city — never let the live geocoder snap to a coincidental in-region POI
-# (e.g. "Vienna" -> a "Hotel Vienna" in Val Badia, "Innsbruck" -> "Via Innsbruck").
-_NON_ST_PLACES = {
-    'vienna', 'wien', 'innsbruck', 'munich', 'munchen', 'münchen', 'salzburg',
-    'zurich', 'zürich', 'verona', 'venice', 'venezia', 'venedig', 'milan',
-    'milano', 'mailand', 'rome', 'roma', 'rom', 'trento', 'trient', 'trent',
-    'florence', 'firenze', 'naples', 'napoli', 'turin', 'torino', 'graz',
-    'klagenfurt', 'lienz', 'kufstein', 'garmisch', 'paris', 'london', 'berlin',
-    'prague', 'prag', 'budapest',
-}
 
 
 def _norm_place(s):
@@ -943,10 +914,6 @@ def _norm_place(s):
     s = ''.join(c for c in s if not unicodedata.combining(c))
     s = ''.join(c if (c.isalnum() or c.isspace()) else ' ' for c in s)
     return ' '.join(s.split())
-
-
-# Denylist compared in normalized form (München -> "muenchen", Zürich -> "zuerich").
-_NON_ST_NORM = {_norm_place(x) for x in _NON_ST_PLACES}
 
 
 def _place_index():
@@ -1031,71 +998,6 @@ def _resolve_area_coords(area):
     if m:
         return [idx[m[0]][0], idx[m[0]][1]]
     return None
-
-
-def _geocode_live(area):
-    """Opt-in last-resort geocode via a *configured* Nominatim-compatible
-    provider (GEOCODER_URL), bounded to South Tyrol and cached in SQLite.
-    Disabled by default — returns None unless GEOCODER_URL is set, so the public
-    OSM endpoint is never silently called. Never raises; never blocks for long."""
-    if not _GEOCODER_URL:
-        return None                                # disabled → graceful widen
-    if not area or not area.strip():
-        return None
-    key = _norm_place(area)
-    # A famous place outside South Tyrol → don't snap to a coincidental in-region POI.
-    if key in _NON_ST_NORM:
-        return None
-    try:
-        row = _db_conn.execute('SELECT lat, lon FROM geocode_cache WHERE q=?', (key,)).fetchone()
-        if row is not None:
-            return None if row[0] is None else [row[0], row[1]]
-    except Exception:  # noqa: BLE001
-        pass
-    coords = None
-    # Accept settlements AND named POIs (hotels, huts, castles, lakes) so a guest
-    # can say "I'm at Hotel Kuglerhof" — but reject linear features (a street
-    # named "Via Innsbruck" must NOT make the city of Innsbruck resolve).
-    _REJECT_CLASS = {'highway', 'railway', 'waterway', 'route', 'aerialway', 'power', 'barrier'}
-    try:
-        qp = {
-            'q': f'{area}, Südtirol, Italy', 'format': 'json', 'limit': 5,
-            'viewbox': '10.38,47.10,12.50,46.20', 'bounded': 1, 'countrycodes': 'it',
-            'addressdetails': 1,
-        }
-        if _GEOCODER_EMAIL:
-            qp['email'] = _GEOCODER_EMAIL          # Nominatim identification convention
-        if _GEOCODER_KEY:
-            qp['key'] = _GEOCODER_KEY              # commercial providers' API key
-        sep = '&' if '?' in _GEOCODER_URL else '?'
-        req = urllib.request.Request(
-            _GEOCODER_URL + sep + urllib.parse.urlencode(qp),
-            headers={'User-Agent': _GEOCODER_UA})
-        with urllib.request.urlopen(req, timeout=3) as r:
-            arr = json.loads(r.read().decode())
-        for hit in arr:
-            if hit.get('class') in _REJECT_CLASS:
-                continue
-            # Must actually be in the province of Bolzano (South Tyrol).
-            addr = hit.get('address', {}) or {}
-            blob = ' '.join(str(v).lower() for v in addr.values())
-            if not any(s in blob for s in ('it-bz', 'bolzano', 'südtirol', 'sudtirol', 'alto adige')):
-                continue
-            lat, lon = float(hit['lat']), float(hit['lon'])
-            if _ST_BBOX[1] <= lat <= _ST_BBOX[3] and _ST_BBOX[0] <= lon <= _ST_BBOX[2]:
-                coords = [round(lat, 5), round(lon, 5)]
-                break
-    except Exception:  # noqa: BLE001
-        pass
-    try:
-        with _db_lock:
-            _db_conn.execute(
-                'INSERT OR REPLACE INTO geocode_cache(q, lat, lon, ts) VALUES(?,?,?,?)',
-                (key, coords[0] if coords else None, coords[1] if coords else None, time.time()))
-            _db_conn.commit()
-    except Exception:  # noqa: BLE001
-        pass
-    return coords
 
 
 # Region centroid [lat, lon] — fallback location when a trail has no coordinate
@@ -1334,7 +1236,7 @@ def get_recommendations():
             if area_matched:
                 scored_trails = area_matched
             else:
-                origin = _resolve_area_coords(start_area) or _geocode_live(start_area)
+                origin = _resolve_area_coords(start_area)
                 NEAR_RADIUS_KM = 45.0
                 near = []
                 if origin:
@@ -3647,14 +3549,6 @@ _db_conn.execute('''CREATE TABLE IF NOT EXISTS rate_log (
     ts REAL NOT NULL
 )''')
 _db_conn.execute('CREATE INDEX IF NOT EXISTS idx_rate_ip ON rate_log(ip, ts)')
-# Cache for the live Nominatim geocode fallback (incl. negative results, so we
-# never hammer the API for a place that simply isn't in South Tyrol).
-_db_conn.execute('''CREATE TABLE IF NOT EXISTS geocode_cache (
-    q TEXT PRIMARY KEY,
-    lat REAL,
-    lon REAL,
-    ts REAL NOT NULL
-)''')
 _db_conn.commit()
 _db_lock = threading.Lock()
 

@@ -1,31 +1,22 @@
 # TODO — deferred setup
 
-## 11. Place resolution / geocoding (gazetteer + optional live fallback)
+## 11. Place resolution / geocoding (offline gazetteer)
 
 "I'm in <village>" / "I'm at <hotel>" → coordinates → proximity-ranked hikes.
 
-- **Offline gazetteer (always on, self-hosted, compliant):**
-  `backend/data/south_tyrol_places.json` — every South Tyrol settlement +
-  lodging/alpine-hut POI from OpenStreetMap (ODbL). Rebuild with
+- **Offline gazetteer (the only resolver — self-hosted, compliant, no runtime
+  network):** `backend/data/south_tyrol_places.json` — every South Tyrol
+  settlement + lodging/alpine-hut POI from OpenStreetMap (ODbL). Rebuild with
   `python3 backend/build_gazetteer.py` (one-time bulk extract from Overpass;
-  re-run to refresh). This covers ~all real places with zero runtime network.
-- **Attribution (REQUIRED before launch, ODbL):** display
-  "© OpenStreetMap contributors" where this data informs results (a credit
-  line in the chat/app about or footer is enough — small extraction, but
-  share-alike applies). Not yet surfaced in the UI — do this for launch.
-- **Live geocoder is OPT-IN and OFF by default.** The public
-  `nominatim.openstreetmap.org` endpoint is intentionally NOT used: its usage
-  policy forbids being silently built into apps and discourages commercial
-  reliance (donated servers, access can be withdrawn). To enable a fallback
-  in production set:
-      `GEOCODER_URL`   — a Nominatim-compatible /search endpoint you're
-                         entitled to use: a self-hosted Nominatim, OR a
-                         commercial provider (Geoapify / LocationIQ / Maptiler).
-      `GEOCODER_EMAIL` — contact, sent as Nominatim's `email` param.
-      `GEOCODER_KEY`   — API key (commercial providers), sent as `key`.
-      `GEOCODER_USER_AGENT` — optional override; include a real contact.
-  Results are cached in SQLite (incl. negatives). When unset, unknown places
-  fall back to the honest "widen" offer — no external call is made.
+  re-run to refresh). Covers ~all real places (DE/IT/Ladin names, umlaut-tolerant,
+  typo-tolerant). Unknown / out-of-region input → honest "widen" offer.
+- **Attribution (DONE):** "© OpenStreetMap contributors" shown discreetly at the
+  foot of the hamburger menu (`HamburgerMenu` + `.hamburger-attribution`).
+- **Live geocoder: REMOVED** (was an opt-in Nominatim fallback). Dropped to stay
+  cleanly within the OSM Nominatim usage policy (no silent embedding, commercial
+  reliance discouraged). If a fallback is ever wanted, re-add a provider-agnostic
+  `GEOCODER_URL` (self-hosted Nominatim or a commercial provider) — but the
+  offline gazetteer already covers villages + hotels, so it's likely unnecessary.
 - **B2B partners:** store each partner hotel's coordinates directly at
   onboarding (you'll have them) so the concierge never depends on geocoding.
 
