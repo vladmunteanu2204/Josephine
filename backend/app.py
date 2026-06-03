@@ -27,6 +27,7 @@ from functools import wraps
 import media as media_module  # image upload / R2 delivery
 from weather_service import weather_service
 import dispersal
+import almanac
 from notifications import EMAIL_ENABLED, send_email, build_inquiry_text
 try:
     from replit.object_storage import Client as ObjectStorageClient
@@ -1513,6 +1514,51 @@ def get_current_weather():
     
     except Exception as e:
         return _server_error(e)
+
+# Living Almanac — fleeting local moments, gated on date window + live weather.
+_ALMANAC_DEFAULT_CENTER = (46.5, 11.35)   # Bolzano-ish, for region-wide weather gating
+_almanac_wx_cache = {}                     # (lat1, lon1, 'YYYYMMDDHH') -> weather
+
+
+def _almanac_weather(lat, lon):
+    """Weather for a coordinate, cached per ~rounded-location per hour so the
+    almanac never hammers Open-Meteo. Returns None on failure (gated moments skip)."""
+    try:
+        key = (round(lat, 1), round(lon, 1), datetime.now().strftime('%Y%m%d%H'))
+        if key in _almanac_wx_cache:
+            return _almanac_wx_cache[key]
+        wx = weather_service.get_current_weather(lat, lon)
+        _almanac_wx_cache[key] = wx
+        return wx
+    except Exception:  # noqa: BLE001
+        return None
+
+
+@app.route('/api/almanac', methods=['GET'])
+def get_almanac():
+    """Moments live right now ('this week in the mountains'). Optional lat/lon or
+    area personalise ranking; weather (for gated moments) uses the given coord or
+    a region-wide default. Always degrades to [] — never errors the client."""
+    try:
+        now_dt = _local_now(request.args.get('now'))
+        lang = request.args.get('lang', 'en')
+        area = request.args.get('area') or None
+        lat = request.args.get('lat', type=float)
+        lon = request.args.get('lon', type=float)
+        try:
+            limit = min(max(int(request.args.get('limit', 3)), 1), 6)
+        except (TypeError, ValueError):
+            limit = 3
+        if lat is not None and lon is not None:
+            weather = _almanac_weather(lat, lon)
+        else:
+            weather = _almanac_weather(*_ALMANAC_DEFAULT_CENTER)
+        moments = almanac.active_moments(now_dt, weather, area, lang, limit)
+        return jsonify({'moments': moments})
+    except Exception as e:  # noqa: BLE001
+        print(f'[almanac] endpoint error: {e}')
+        return jsonify({'moments': []})
+
 
 @app.route('/api/weather/forecast', methods=['GET'])
 def get_weather_forecast():
@@ -4847,6 +4893,11 @@ try:
     dispersal.validate_hotspots([t.get('id') for t in load_complete_trails().get('trails', [])])
 except Exception as _e:
     print(f"[dispersal] startup validation skipped: {_e}")
+
+try:
+    almanac.validate_almanac()
+except Exception as _e:
+    print(f"[almanac] startup validation skipped: {_e}")
 
 
 if __name__ == '__main__':

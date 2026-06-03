@@ -1,0 +1,259 @@
+{
+  "_about": "Living Almanac — fleeting, local South Tyrol moments Josephine *tells* you. type: phenomenon (nature, often weather-gated) | event (cultural, date window) | condition (pure live weather). window MM-DD from/to (year-wrap aware). weather_gate: {max_cloud_pct, from_hour, recent_snow}. voice/share localized EN/IT/DE; {area} and {sunset} are interpolated. CTA seeds a recommendation by interest.",
+  "_owner_review": "Date windows are research-based but several shift by year/elevation — see each moment's _review. Owner to verify + add their own moments before launch (TODO §8c).",
+  "moments": [
+    {
+      "id": "lakes-turquoise",
+      "type": "phenomenon",
+      "emoji": "💎",
+      "window": { "from": "06-01", "to": "07-10" },
+      "areas": ["Lago di Anterselva", "Lago di Carezza", "Lago di Dobbiaco", "Lago di Braies"],
+      "weather_gate": null,
+      "weight": 7,
+      "cta": { "interest": "alpine lakes" },
+      "_review": "Peak turquoise tracks snowmelt (roughly June); shifts with the winter's snowpack.",
+      "voice": {
+        "en": "The mountain lakes are at their most vivid — fresh snowmelt has {area} glowing that impossible turquoise right now. Go early, though: the colour and the calm are best before the crowds.",
+        "it": "I laghi di montagna sono al massimo del colore — il disgelo recente fa risplendere {area} di quel turchese irreale proprio ora. Vai presto però: colore e quiete sono migliori prima della folla.",
+        "de": "Die Bergseen leuchten gerade am intensivsten — die frische Schneeschmelze lässt {area} jetzt in unwirklichem Türkis strahlen. Geh aber früh: Farbe und Ruhe sind am besten vor dem Andrang."
+      },
+      "share": {
+        "en": "The lakes are peak turquoise right now 💎 snowmelt season",
+        "it": "I laghi sono al picco del turchese ora 💎 stagione del disgelo",
+        "de": "Die Seen sind gerade am türkisesten 💎 Schneeschmelze"
+      }
+    },
+    {
+      "id": "wildflower-peak",
+      "type": "phenomenon",
+      "emoji": "🌸",
+      "window": { "from": "06-08", "to": "07-25" },
+      "areas": ["Alpe di Siusi", "Seiser Alm", "Val di Funes", "Passo delle Erbe"],
+      "weather_gate": null,
+      "weight": 8,
+      "cta": { "interest": "panoramic views" },
+      "_review": "Bloom peak ~mid-June to mid-July; varies with snowmelt and elevation.",
+      "voice": {
+        "en": "The high meadows are in full bloom — the alms are a sea of wildflowers right now, and {area} is glorious. It's a fleeting few weeks, so this is the time.",
+        "it": "I prati d'alta quota sono in piena fioritura — gli alpeggi sono un mare di fiori in questo momento, e {area} è splendida. Sono poche settimane fugaci, quindi è il momento.",
+        "de": "Die Hochweiden stehen in voller Blüte — die Almen sind gerade ein Meer aus Wildblumen, und {area} ist herrlich. Es sind nur wenige flüchtige Wochen, also jetzt."
+      },
+      "share": {
+        "en": "The alpine meadows are a sea of wildflowers right now 🌸",
+        "it": "I prati alpini sono un mare di fiori proprio ora 🌸",
+        "de": "Die Almwiesen sind gerade ein Meer aus Wildblumen 🌸"
+      }
+    },
+    {
+      "id": "enrosadira-tonight",
+      "type": "condition",
+      "emoji": "🌄",
+      "window": { "from": "01-01", "to": "12-31" },
+      "areas": [],
+      "weather_gate": { "max_cloud_pct": 35, "from_hour": 13 },
+      "weight": 10,
+      "cta": { "interest": "panoramic views" },
+      "_review": "Uses current cloud cover after 13:00 as a proxy for sunset clarity — honest 'likely', not guaranteed.",
+      "voice": {
+        "en": "Tonight could be one for the enrosadira — skies are clear enough that the rock should glow pink-gold at sunset (around {sunset}). Find a west-facing viewpoint and don't be late.",
+        "it": "Stasera potrebbe essere da enrosadira — il cielo è abbastanza limpido perché la roccia si accenda di rosa-oro al tramonto (verso le {sunset}). Trova un punto panoramico esposto a ovest e non fare tardi.",
+        "de": "Heute Abend könnte es Enrosadira geben — der Himmel ist klar genug, dass der Fels bei Sonnenuntergang (gegen {sunset}) rosa-golden glüht. Such dir einen nach Westen offenen Aussichtspunkt und sei nicht zu spät."
+      },
+      "share": {
+        "en": "Clear skies tonight — the Dolomites will glow pink at sunset 🌄",
+        "it": "Cielo sereno stasera — le Dolomiti si accenderanno di rosa al tramonto 🌄",
+        "de": "Klarer Himmel heute Abend — die Dolomiten glühen bei Sonnenuntergang rosa 🌄"
+      }
+    },
+    {
+      "id": "first-snow",
+      "type": "phenomenon",
+      "emoji": "❄️",
+      "window": { "from": "10-15", "to": "12-10" },
+      "areas": [],
+      "weather_gate": { "recent_snow": true },
+      "weight": 8,
+      "cta": null,
+      "_review": "Gated on current weather reporting snow; first dusting timing varies yearly.",
+      "voice": {
+        "en": "There's fresh snow on the high peaks — the first proper dusting of the season. The summits look dramatic right now, but check conditions before heading up and stick to lower trails unless you're equipped.",
+        "it": "C'è neve fresca sulle cime alte — la prima vera spolverata della stagione. Le vette sono spettacolari ora, ma controlla le condizioni prima di salire e resta sui sentieri bassi se non sei attrezzato.",
+        "de": "Auf den hohen Gipfeln liegt Neuschnee — der erste richtige Hauch der Saison. Die Gipfel wirken jetzt eindrucksvoll, aber prüf die Bedingungen vor dem Aufstieg und bleib auf tieferen Wegen, wenn du nicht ausgerüstet bist."
+      },
+      "share": {
+        "en": "First snow on the peaks ❄️ the high country just turned magic",
+        "it": "Prima neve sulle cime ❄️ l'alta montagna è diventata magica",
+        "de": "Erster Schnee auf den Gipfeln ❄️ die Höhen sind verzaubert"
+      }
+    },
+    {
+      "id": "almabtrieb",
+      "type": "event",
+      "emoji": "🐄",
+      "window": { "from": "09-12", "to": "09-30" },
+      "approximate": true,
+      "areas": ["Val d'Ultimo", "Val Sarentino", "Val Senales", "Val Pusteria"],
+      "weather_gate": null,
+      "weight": 7,
+      "cta": { "interest": "cultural routes" },
+      "_review": "Exact dates set per village each year — keep phrasing approximate.",
+      "voice": {
+        "en": "It's Almabtrieb season — the cattle come down from the summer pastures decked in flowers and bells, with village festivals to greet them. Dates vary by valley (usually a mid-to-late September Saturday) — ask your host which one's near you.",
+        "it": "È la stagione della transumanza (Almabtrieb) — le mucche scendono dagli alpeggi estivi adornate di fiori e campanacci, con feste di paese ad accoglierle. Le date variano per valle (di solito un sabato tra metà e fine settembre) — chiedi al tuo host quella più vicina.",
+        "de": "Almabtriebszeit — das Vieh kommt von den Sommeralmen herab, geschmückt mit Blumen und Glocken, begrüßt von Dorffesten. Die Termine variieren je nach Tal (meist ein Samstag Mitte bis Ende September) — frag deinen Gastgeber nach dem nächsten."
+      },
+      "share": {
+        "en": "Almabtrieb season 🐄 flower-crowned cattle and village feasts",
+        "it": "Stagione della transumanza 🐄 mucche infiorate e feste di paese",
+        "de": "Almabtriebszeit 🐄 blumengeschmücktes Vieh und Dorffeste"
+      }
+    },
+    {
+      "id": "grape-harvest",
+      "type": "event",
+      "emoji": "🍇",
+      "window": { "from": "09-15", "to": "10-15" },
+      "areas": ["Caldaro", "Termeno", "Bolzano", "Appiano"],
+      "weather_gate": null,
+      "weight": 6,
+      "cta": { "interest": "cultural routes" },
+      "_review": "Harvest timing shifts with the vintage; mid-Sept to mid-Oct is typical.",
+      "voice": {
+        "en": "It's harvest (Wimmen) on the wine road — the vineyards around {area} are heavy and golden, cellars busy, the Strada del Vino at its liveliest. A vineyard walk with a glass at the end is the move.",
+        "it": "È vendemmia (Wimmen) sulla Strada del Vino — i vigneti attorno a {area} sono carichi e dorati, le cantine in fermento, la Strada del Vino al massimo della vivacità. Una passeggiata tra i vigneti con un calice alla fine è la mossa giusta.",
+        "de": "Es ist Wimmzeit auf der Weinstraße — die Weinberge rund um {area} sind schwer und golden, die Keller im Trubel, die Weinstraße am lebendigsten. Eine Weinbergwanderung mit einem Glas zum Schluss ist genau richtig."
+      },
+      "share": {
+        "en": "Grape harvest on the wine road 🍇 vineyards golden and busy",
+        "it": "Vendemmia sulla Strada del Vino 🍇 vigneti dorati e indaffarati",
+        "de": "Weinlese auf der Weinstraße 🍇 goldene, geschäftige Weinberge"
+      }
+    },
+    {
+      "id": "chestnut-keschtn",
+      "type": "event",
+      "emoji": "🌰",
+      "window": { "from": "10-01", "to": "11-05" },
+      "areas": ["Valle Isarco", "Renon", "Tisens-Prissian", "Velturno"],
+      "weather_gate": null,
+      "weight": 6,
+      "cta": { "interest": "cultural routes" },
+      "_review": "Chestnut (Keschtn) season ~October; Keschtnweg is the classic.",
+      "voice": {
+        "en": "Chestnut season (Keschtn) is here — the Keschtnweg along the Eisacktal and Renon is at its best, lined with farms roasting the new harvest. A walk-and-eat afternoon.",
+        "it": "È la stagione delle castagne (Keschtn) — il Sentiero del Castagno lungo la Valle Isarco e il Renon è al meglio, costeggiato da masi che arrostiscono il nuovo raccolto. Un pomeriggio di cammino e assaggi.",
+        "de": "Keschtnzeit — der Keschtnweg entlang des Eisacktals und am Ritten ist jetzt am schönsten, gesäumt von Höfen, die die neue Ernte rösten. Ein Nachmittag zum Wandern und Naschen."
+      },
+      "share": {
+        "en": "Chestnut season 🌰 roasted Keschtn along the chestnut trail",
+        "it": "Stagione delle castagne 🌰 caldarroste lungo il Sentiero del Castagno",
+        "de": "Kastanienzeit 🌰 geröstete Keschtn am Kastanienweg"
+      }
+    },
+    {
+      "id": "larch-gold",
+      "type": "phenomenon",
+      "emoji": "🍂",
+      "window": { "from": "10-05", "to": "10-28" },
+      "areas": ["Val d'Ultimo", "Deutschnofen", "Val di Funes", "Vigiljoch"],
+      "weather_gate": null,
+      "weight": 9,
+      "cta": { "interest": "forests" },
+      "_review": "Larch peak shifts ±1 week by year and elevation (higher turns first). Verify each autumn.",
+      "voice": {
+        "en": "The larches are turning gold right now — that short, glowing week when whole hillsides burn amber. {area} is one of the best places to catch it, and you've maybe got a week before they drop.",
+        "it": "I larici stanno virando all'oro proprio ora — quella breve settimana luminosa in cui interi versanti si accendono d'ambra. {area} è uno dei posti migliori per coglierla, e hai forse una settimana prima che cadano.",
+        "de": "Die Lärchen färben sich gerade golden — diese kurze, leuchtende Woche, in der ganze Hänge bernsteinfarben glühen. {area} ist einer der besten Orte dafür, und du hast vielleicht eine Woche, bevor sie fallen."
+      },
+      "share": {
+        "en": "The larches are peaking THIS week in South Tyrol 🍂",
+        "it": "I larici sono al picco QUESTA settimana in Alto Adige 🍂",
+        "de": "Die Lärchen sind DIESE Woche am Höhepunkt in Südtirol 🍂"
+      }
+    },
+    {
+      "id": "toerggelen",
+      "type": "event",
+      "emoji": "🍷",
+      "window": { "from": "10-01", "to": "12-08" },
+      "areas": ["Valle Isarco", "Renon", "Bolzano", "Val d'Adige"],
+      "weather_gate": null,
+      "weight": 7,
+      "cta": { "interest": "cultural routes" },
+      "_review": "Törggelen runs roughly October to early December.",
+      "voice": {
+        "en": "Törggelen season is on — the autumn ritual of walking farm to farm for new wine (Nuie), roasted chestnuts, Speck and Schlutzkrapfen. Plan a half-day around it; it's the most South-Tyrolean thing you can do in autumn.",
+        "it": "È iniziato il Törggelen — il rito autunnale di andare di maso in maso per vino nuovo (Nuie), caldarroste, Speck e Schlutzkrapfen. Pianificaci mezza giornata; è la cosa più altoatesina che puoi fare in autunno.",
+        "de": "Törggelen-Zeit — das herbstliche Ritual, von Hof zu Hof zu wandern für neuen Wein (Nuie), gebratene Kastanien, Speck und Schlutzkrapfen. Plan einen halben Tag dafür ein; herbstlicher geht Südtirol nicht."
+      },
+      "share": {
+        "en": "Törggelen season 🍷 new wine, roasted chestnuts, farm feasts",
+        "it": "Stagione del Törggelen 🍷 vino nuovo, caldarroste, feste nei masi",
+        "de": "Törggelen-Zeit 🍷 neuer Wein, gebratene Kastanien, Hofjausen"
+      }
+    },
+    {
+      "id": "christmas-markets",
+      "type": "event",
+      "emoji": "🎄",
+      "window": { "from": "11-21", "to": "01-06" },
+      "areas": ["Bolzano", "Merano", "Bressanone", "Brunico"],
+      "weather_gate": null,
+      "weight": 9,
+      "cta": null,
+      "_review": "Markets open ~late November to early January; confirm exact opening dates yearly.",
+      "voice": {
+        "en": "The Christmas markets are open — Bolzano, Merano, Bressanone and Brunico glowing with lights, mulled wine and Zelten. Pair one with a snowy low walk for the perfect winter afternoon.",
+        "it": "I mercatini di Natale sono aperti — Bolzano, Merano, Bressanone e Brunico brillano di luci, vin brulé e Zelten. Abbinane uno a una camminata bassa nella neve per il pomeriggio invernale perfetto.",
+        "de": "Die Christkindlmärkte sind offen — Bozen, Meran, Brixen und Bruneck leuchten mit Lichtern, Glühwein und Zelten. Kombiniere einen mit einer verschneiten Talwanderung für den perfekten Winternachmittag."
+      },
+      "share": {
+        "en": "Christmas markets are open 🎄 lights, mulled wine, mountain magic",
+        "it": "Mercatini di Natale aperti 🎄 luci, vin brulé, magia di montagna",
+        "de": "Christkindlmärkte offen 🎄 Lichter, Glühwein, Bergzauber"
+      }
+    },
+    {
+      "id": "ski-touring",
+      "type": "phenomenon",
+      "emoji": "🎿",
+      "window": { "from": "12-20", "to": "03-31" },
+      "areas": [],
+      "weather_gate": null,
+      "weight": 6,
+      "cta": null,
+      "_review": "Winter ski-touring/snowshoe season; conditions depend on snowpack and avalanche risk.",
+      "voice": {
+        "en": "It's ski-touring and snowshoe season up high — the quiet, white version of these mountains. Check the avalanche bulletin first, and if you're new to it, go with a guide.",
+        "it": "È stagione di scialpinismo e ciaspole in quota — la versione silenziosa e bianca di queste montagne. Controlla prima il bollettino valanghe e, se sei alle prime armi, vai con una guida.",
+        "de": "Skitouren- und Schneeschuhzeit in der Höhe — die stille, weiße Version dieser Berge. Prüf zuerst den Lawinenbericht, und als Einsteiger geh mit einem Guide."
+      },
+      "share": {
+        "en": "Ski-touring season ❄️🎿 the mountains go quiet and white",
+        "it": "Stagione di scialpinismo ❄️🎿 le montagne si fanno bianche e silenziose",
+        "de": "Skitourenzeit ❄️🎿 die Berge werden weiß und still"
+      }
+    },
+    {
+      "id": "apple-blossom",
+      "type": "phenomenon",
+      "emoji": "🌼",
+      "window": { "from": "04-15", "to": "05-05" },
+      "areas": ["Val Venosta", "Merano", "Bassa Atesina"],
+      "weather_gate": null,
+      "weight": 8,
+      "cta": { "interest": "cultural routes" },
+      "_review": "Apple blossom ~mid-to-late April; shifts with spring temperatures.",
+      "voice": {
+        "en": "The valleys are in blossom — millions of apple trees turning the Merano and Venosta basins white and pink. A gentle valley walk or bike right now is pure spring; it only lasts a couple of weeks.",
+        "it": "Le valli sono in fiore — milioni di meli tingono di bianco e rosa le conche di Merano e della Val Venosta. Una camminata o una pedalata di fondovalle ora è pura primavera; dura solo un paio di settimane.",
+        "de": "Die Täler blühen — Millionen Apfelbäume färben das Meraner und Vinschger Becken weiß und rosa. Eine sanfte Talwanderung oder Radtour ist jetzt purer Frühling; es dauert nur ein paar Wochen."
+      },
+      "share": {
+        "en": "Apple blossom is out 🌼 the valleys are white and pink",
+        "it": "Fioritura dei meli 🌼 le valli sono bianche e rosa",
+        "de": "Apfelblüte 🌼 die Täler sind weiß und rosa"
+      }
+    }
+  ]
+}
