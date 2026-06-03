@@ -29,6 +29,7 @@ from weather_service import weather_service
 import dispersal
 import almanac
 import decision_engine
+import context_engine
 from decision_engine import _season_status, _season_range_label, _MONTHS_ORDER  # noqa: F401
 from notifications import EMAIL_ENABLED, send_email, build_inquiry_text
 try:
@@ -1370,6 +1371,52 @@ def get_almanac():
     except Exception as e:  # noqa: BLE001
         print(f'[almanac] endpoint error: {e}')
         return jsonify({'moments': []})
+
+
+@app.route('/api/josephine/plan', methods=['POST'])
+def josephine_plan():
+    """Phase 1 — the planning core. Mood-first prompt + context → ONE Daily Plan
+    Card (or an honest refusal). Composes context_engine → rank_trails →
+    compose_plan. Never 500s the client."""
+    try:
+        body = request.json or {}
+        context = context_engine.build_context(
+            body,
+            resolve_area_coords=_resolve_area_coords,
+            local_now=_local_now,
+            get_weather=_almanac_weather,
+        )
+        ranking_ctx = context_engine.to_ranking_ctx(context)
+        trails = load_complete_trails().get('trails', [])
+        ranked, signal = decision_engine.rank_trails(
+            trails, ranking_ctx,
+            resolve_area_coords=_resolve_area_coords,
+            trail_centroid=_trail_centroid,
+            haversine=haversine,
+        )
+        if signal:
+            area = signal.get('area') or 'that area'
+            if signal['kind'] == 'area_not_found':
+                msg = (f"I don't have trails right near {area} yet — want me to widen "
+                       f"the search across South Tyrol?")
+            else:
+                msg = ("I couldn't find a dog-friendly trail that fits here — I'd rather "
+                       "tell you than send you somewhere your dog isn't welcome.")
+            plan = decision_engine._refusal_plan(context, msg)
+            plan['signal'] = signal['kind']
+            return jsonify({'plan': plan})
+
+        plan = decision_engine.compose_plan(
+            context, ranked,
+            resolve_nearby_rifugios=_resolve_nearby_rifugios,
+            dispersal_mod=dispersal,
+        )
+        return jsonify({'plan': plan})
+    except Exception as e:  # noqa: BLE001
+        print(f"[josephine_plan] error: {e}")
+        lang = (request.get_json(silent=True) or {}).get('lang', 'en')
+        return jsonify({'plan': decision_engine._refusal_plan(
+            {'lang': lang}, "Something went sideways planning that — try again in a moment.")})
 
 
 @app.route('/api/weather/forecast', methods=['GET'])

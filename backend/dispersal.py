@@ -176,11 +176,15 @@ def decide(trail, hotspot, now, sunset=None, travel_min=0, duration_h=None, weat
     late_in_day = is_hotspot and in_peak_month and (now.hour >= end_h - 2)
 
     # Daylight: would we finish (travel + hike) before sunset (minus buffer)?
+    # Align sunset's clock time to `now`'s date — the weather snapshot may be a
+    # different calendar day than the requested `now`, and only the time matters.
     daylight_ok = True
     sunset_dt = _parse_iso(sunset)
     if sunset_dt and duration_h:
+        sunset_today = now.replace(hour=sunset_dt.hour, minute=sunset_dt.minute,
+                                   second=0, microsecond=0)
         finish = now + timedelta(minutes=travel_min or 0) + timedelta(hours=duration_h)
-        daylight_ok = finish <= (sunset_dt - timedelta(minutes=_DAYLIGHT_BUFFER_MIN))
+        daylight_ok = finish <= (sunset_today - timedelta(minutes=_DAYLIGHT_BUFFER_MIN))
 
     if not daylight_ok:
         reason = 'daylight_risk'
