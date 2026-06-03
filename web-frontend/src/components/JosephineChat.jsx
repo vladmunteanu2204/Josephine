@@ -166,13 +166,13 @@ function buildWeatherGreeting(w) {
     return tj('wgStorm', "Afternoon thunderstorms are forecast over the peaks today. The mountains are still worth it — but I'd plan a short morning window and be back in the valley before 13:00. Half-day itinerary?");
 
   if (/rain|shower|drizzle/.test(desc))
-    return tj('wgRain', "It's raining in the Dolomites today — that moody, cinematic kind of beautiful. Forest paths and rifugios are your friends. I know sheltered routes that are magical in the wet. Want one?");
+    return tj('wgRain', "It's raining in South Tyrol today — that moody, cinematic kind of beautiful. Forest paths and rifugios are your friends. I know sheltered routes that are magical in the wet. Want one?");
 
   if (/snow/.test(desc))
-    return tj('wgSnow', 'Fresh snow on the upper routes today ({{temp}}°C). Snowshoe trails and mountain huts are at their best — a completely different kind of Dolomites. Want me to find something?', { temp });
+    return tj('wgSnow', 'Fresh snow on the upper routes today ({{temp}}°C). Snowshoe trails and mountain huts are at their best — a completely different kind of mountain day. Want me to find something?', { temp });
 
   if (/fog|mist/.test(desc))
-    return tj('wgFog', "Mist is drifting through the valleys this morning — that rare atmospheric light that makes the Dolomites look like a painting. Perfect for a low-altitude walk. Shall I find one?");
+    return tj('wgFog', "Mist is drifting through the valleys this morning — that rare atmospheric light that makes the mountains look like a painting. Perfect for a low-altitude walk. Shall I find one?");
 
   if (wind > 45)
     return tj('wgWind', "Strong wind on the exposed ridges today — up to {{wind}} km/h. I'd steer you toward sheltered forest trails and valley paths rather than the high routes. Want a recommendation?", { wind });
@@ -180,12 +180,12 @@ function buildWeatherGreeting(w) {
   if (/clear|sun/.test(desc)) {
     if (temp > 27)
       return tj('wgClearHot', 'Blue skies today, but warm — {{temp}}°C in the valley. Worth starting early or heading to altitude for cooler air. I know some trails near water too. What sounds right?', { temp });
-    return tj('wgClear', 'Perfect conditions today — {{temp}}°C, clear skies, excellent visibility. The Dolomites are putting on a show. What kind of adventure are you after?', { temp });
+    return tj('wgClear', 'Perfect conditions today — {{temp}}°C, clear skies, excellent visibility. The mountains are putting on a show. What kind of adventure are you after?', { temp });
   }
 
   if (/overcast|cloud/.test(desc)) {
     if (/few|scattered|partly/.test(desc))
-      return tj('wgCloudPartly', 'Sun and cloud today, {{temp}}°C — classic Dolomites light. Not too hot, great for walking. What kind of adventure are you after?', { temp });
+      return tj('wgCloudPartly', 'Sun and cloud today, {{temp}}°C — classic alpine light. Not too hot, great for walking. What kind of adventure are you after?', { temp });
     return tj('wgOvercast', 'Overcast today — dramatic skies, quieter trails, beautiful diffused light. {{temp}}°C and no crowds. A great day to go somewhere new. What sounds right?', { temp });
   }
 
@@ -680,7 +680,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       variants = [
         tj('remarkRain1', "Grab a waterproof jacket — forest paths in the rain are stunning, you just need the right kit."),
         tj('remarkRain2', "It'll be moody and beautiful out there. Rain jacket, waterproof boots, and lean into it."),
-        tj('remarkRain3', "Pack a proper rain layer. The Dolomites have a whole other mood when it's wet."),
+        tj('remarkRain3', "Pack a proper rain layer. The mountains have a whole other mood when it's wet."),
       ];
     } else if (/fog|atmospheric|mist/i.test(condTitle)) {
       variants = [
@@ -700,7 +700,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       ];
     } else if (/perfect|clear/i.test(condTitle)) {
       variants = [
-        tj('remarkPerfect1', "Sunglasses and sunscreen — Dolomite limestone reflects more UV than it looks like it should."),
+        tj('remarkPerfect1', "Sunglasses and sunscreen — the high-altitude sun is stronger than it looks."),
         tj('remarkPerfect2', "Perfect day. Sunscreen, camera, and don't forget a light layer for the descent when it cools."),
         tj('remarkPerfect3', "Clear skies, strong sun at altitude. Sunglasses aren't optional up here."),
       ];
@@ -838,7 +838,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         after(() => {
           appendJosephineMessage({
             type: 'text',
-            text: tj('noTrailsNearArea', "I don't have any trails near {{area}} in my database yet. Try a nearby valley or village — or let me suggest something in the wider Dolomites region?", { area }),
+            text: tj('noTrailsNearArea', "I don't have any trails near {{area}} in my database yet. Try a nearby valley or village — or let me suggest something in the wider South Tyrol region?", { area }),
             chips: [tj('chipSuggestWider', 'Yes, suggest something'), t('chipStartOver')],
           });
         }, 350);
@@ -1373,7 +1373,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
     setPlanningData(d);
     appendJosephineMessage({
       type: 'text',
-      text: tj('widerRegionResp', 'Wonderful — let me pull a few of my favourites from across the Dolomites.'),
+      text: tj('widerRegionResp', 'Wonderful — let me pull a few of my favourites from across South Tyrol.'),
       chips: null,
     });
     after(() => callRecommendAPI(d), 400);
