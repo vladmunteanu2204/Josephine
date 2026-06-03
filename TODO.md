@@ -241,3 +241,61 @@ South-Tyrol-specific local intelligence, not map data.
 
 First thing to fund if only one: the overtourism dispersal feature + a
 tourism-board partnership.
+
+## 9. Crowd dispersal + temporal intelligence (spec)
+
+The flagship differentiator. Reframed from the discussion: it's a **temporal
+intelligence layer** on the recommendation engine, with overcrowded hotspots as
+the sharpest case. Philosophy: don't *deny* the famous spot — make the user feel
+they're **discovering a secret that's just as good or better**. Show abundance.
+
+### Decision A — full hotspot inventory + quality-matched alternatives
+- Curate **every** suffering hotspot in South Tyrol (not just the top 5):
+  Lago di Braies, Seiser Alm, Tre Cime/Lavaredo, Lago di Carezza, Seceda,
+  Alpe di Siusi, etc. — research + maintain the full list.
+- New data file `hotspots.json` — per hotspot: location, **peak window**
+  (hours/days it's mobbed), **access constraints** (car cap, road-closure hours,
+  "lot fills by ~09:00", shuttle info), and a **ranked list of alternatives**
+  matched by *experience* (turquoise lake → another turquoise lake; panoramic
+  ridge → another), each with a one-line "why it's just as good / better" hook
+  in Josephine's voice.
+- Curation IS the moat (same ops muscle as verified hut contacts).
+
+### Decision B — Josephine always checks the clock
+Core: the realistic answer to "I want to hike X" depends on **when** it's asked.
+Add a temporal layer to the recommend/chat flow using three inputs together —
+**current local time, sunset time, and the spot's peak/access window** — on top
+of the existing weather branching (`buildWeatherGreeting`/`buildWeatherRemark`).
+
+Scenarios to handle (gentle nudge, tempting toward firm):
+- **Today-vs-tomorrow detection** — late-day request for a far/long/hotspot pick
+  ⇒ infer they likely mean tomorrow: *"For Braies you want a morning — set it up
+  for tomorrow (beat the crowds + parking)? For today, here's something close."*
+- **Beat-the-crowds (positive firm)** — early morning + hotspot + clear ⇒
+  *"Go now — almost to yourself, and you'll beat the 9am parking."*
+- **Peak window** — midday + weekend + hotspot + sunny ⇒ *"Right now it'll be
+  heaving — quiet stunner for today, or Braies at sunrise tomorrow?"*
+- **Daylight/sunset safety** — if travel + hike duration won't finish before
+  dusk ⇒ suggest a shorter option today or move to tomorrow.
+- **Weekend multiplier** — bump crowd estimate Sat/Sun + holidays.
+- Compose with weather (storm → short morning window) already in place.
+
+Implementation notes: extend the engine with a `recommend()`-level time/crowd
+re-rank + a small `temporalNote` builder (mirror the existing keyed,
+interpolated, i18n'd `tj()` weather-note pattern — must be EN/IT/DE/Ladin).
+Sunset via a lightweight calc or the weather API. Reuse the trail `crowding`
+signal already returned by `/api/ai/recommend`.
+
+### Decision C — deferred (parked here, with §8 Level 2)
+- **Real-time crowd/parking/lift data** (Open Data Hub / NOI Techpark feeds,
+  webcams, lot occupancy) — integration effort, patchy coverage. Fast-follow.
+- **Tourism-board partnership** (IDM Südtirol / Tourismusverein) — the
+  overtourism angle is the door-opener; unlocks Level 2 data + credibility +
+  possible co-branding. Revisit when there's a reason to.
+
+### Phasing
+- **Level 0 (heuristic)** — clock + sunset + season + static `crowding` rules;
+  today-vs-tomorrow + alternatives. ~70% of the value, mostly engine tweaks.
+- **Level 1 (curated)** — `hotspots.json` with peak windows, access constraints,
+  ranked alternatives. High trust, admin data-entry, no integration.
+- **Level 2 (real-time)** — see Decision C. Deferred.
