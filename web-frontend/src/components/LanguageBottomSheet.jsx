@@ -1,5 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Check } from 'lucide-react';
+import { Sheet } from './ui';
 import './LanguageBottomSheet.css';
 
 const languages = [
@@ -11,30 +13,6 @@ const languages = [
 function LanguageBottomSheet({ isOpen, onClose }) {
   const { i18n, t } = useTranslation();
 
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
-
   const handleLanguageSelect = (langCode) => {
     i18n.changeLanguage(langCode);
     onClose();
@@ -43,23 +21,12 @@ function LanguageBottomSheet({ isOpen, onClose }) {
   const currentLanguage = languages.find(lang => i18n.language.startsWith(lang.code)) || languages[0];
 
   return (
-    <>
-      <div 
-        className="language-sheet-backdrop"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-      
-      <div 
-        className="language-sheet"
-        role="dialog"
-        aria-modal="true"
-        aria-label={t('language.selectLanguage')}
-      >
+    <Sheet isOpen={isOpen} onClose={onClose} ariaLabelledby="language-sheet-title">
+      <div className="language-sheet">
         <div className="language-sheet-handle"></div>
-        
+
         <div className="language-sheet-header">
-          <h2 className="language-sheet-title">{t('language.selectLanguage')}</h2>
+          <h2 className="language-sheet-title" id="language-sheet-title">{t('language.selectLanguage')}</h2>
         </div>
 
         <div className="language-sheet-grid">
@@ -74,13 +41,17 @@ function LanguageBottomSheet({ isOpen, onClose }) {
               >
                 <span className="language-option-flag">{lang.flag}</span>
                 <span className="language-option-label">{lang.label}</span>
-                {isActive && <span className="language-option-check">✓</span>}
+                {isActive && (
+                  <span className="language-option-check">
+                    <Check size={18} strokeWidth={2.5} />
+                  </span>
+                )}
               </button>
             );
           })}
         </div>
       </div>
-    </>
+    </Sheet>
   );
 }
 

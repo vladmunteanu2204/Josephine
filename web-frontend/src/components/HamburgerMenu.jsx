@@ -1,36 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { ENABLE_GAMIFICATION } from '../featureFlags';
+import { Sheet } from './ui';
 import './HamburgerMenu.css';
 
 function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout, navigateToRifugios }) {
   const { t } = useTranslation();
   const { currentUser } = useAuth();
-
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
 
   const svgIcons = {
     home: (
@@ -137,27 +115,16 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout, nav
   };
 
   return (
-    <>
-      <div 
-        className="hamburger-backdrop"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-      
-      <div 
-        className="hamburger-menu"
-        role="dialog"
-        aria-modal="true"
-        aria-label={t('menu.navigation')}
-      >
+    <Sheet isOpen={isOpen} onClose={onClose} ariaLabelledby="hamburger-title">
+      <div className="hamburger-menu">
         <div className="hamburger-header">
-          <h2 className="hamburger-title">{t('menu.navigation')}</h2>
-          <button 
+          <h2 className="hamburger-title" id="hamburger-title">{t('menu.navigation')}</h2>
+          <button
             className="hamburger-close"
             onClick={onClose}
             aria-label={t('common.close')}
           >
-            ✕
+            <X size={20} strokeWidth={2} />
           </button>
         </div>
 
@@ -253,7 +220,7 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout, nav
           )}
         </nav>
       </div>
-    </>
+    </Sheet>
   );
 }
 

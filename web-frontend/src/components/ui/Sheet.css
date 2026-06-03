@@ -1,0 +1,8 @@
+.ui-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-app-modal-backdrop, 9990);
+  background: rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
