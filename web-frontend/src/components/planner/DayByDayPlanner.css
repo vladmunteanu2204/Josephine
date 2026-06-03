@@ -108,7 +108,8 @@
   background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); animation: ddpFade .2s ease;
 }
 .ddp-sheet {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-modal);
+  /* --z-app-modal sits above the shared <Sheet> backdrop. */
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-app-modal, 10000);
   background: var(--bg-secondary); border-top: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   padding: 0 18px max(18px, env(safe-area-inset-bottom));

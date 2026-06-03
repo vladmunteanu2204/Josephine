@@ -9,6 +9,7 @@ import {
 import { trailImg } from '../../utils/trailImage';
 import EquipmentChecklist from '../EquipmentChecklist';
 import SafetyTips from '../SafetyTips';
+import { Modal, Sheet } from '../ui';
 import './DayByDayPlanner.css';
 
 import { API_URL } from '../../api';
@@ -233,10 +234,8 @@ export default function DayByDayPlanner({ initial, onSave, onBack }) {
       </div>
 
       {/* Trail picker bottom sheet */}
-      {showPicker && (
-        <>
-          <div className="ddp-sheet-backdrop" onClick={() => setShowPicker(false)} aria-hidden="true" />
-          <div className="ddp-sheet" role="dialog" aria-modal="true" aria-label={t('planner.addHike', 'Add a hike')}>
+      <Sheet isOpen={showPicker} onClose={() => setShowPicker(false)} ariaLabel={t('planner.addHike', 'Add a hike')}>
+          <div className="ddp-sheet">
             <div className="ddp-sheet__handle" />
             <div className="ddp-sheet__head">
               <h3>{t('planner.addHike', 'Add a hike')}</h3>
@@ -269,13 +268,11 @@ export default function DayByDayPlanner({ initial, onSave, onBack }) {
               })}
             </ul>
           </div>
-        </>
-      )}
+      </Sheet>
 
       {/* Export modal */}
-      {showExport && (
-        <div className="ddp-modal-overlay" onClick={() => setShowExport(false)}>
-          <div className="ddp-modal" onClick={e => e.stopPropagation()}>
+      <Modal isOpen={showExport} onClose={() => setShowExport(false)} ariaLabel={t('planner.exportItinerary', 'Export')}>
+          <div className="ddp-modal">
             <h3>{t('planner.exportItinerary', 'Export')}</h3>
             <textarea readOnly value={exportText} rows={14} />
             <div className="ddp-modal__actions">
@@ -283,8 +280,7 @@ export default function DayByDayPlanner({ initial, onSave, onBack }) {
               <button className="ddp-btn ddp-btn--ghost" onClick={() => setShowExport(false)}>{t('common.close', 'Close')}</button>
             </div>
           </div>
-        </div>
-      )}
+      </Modal>
     </div>
   );
 }
