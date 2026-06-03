@@ -223,6 +223,16 @@ def require_admin_auth(f):
         return jsonify({'error': 'Unauthorized - admin login required'}), 401
     return decorated_function
 
+
+def _server_error(e, code=500):
+    """Log the real exception server-side (with traceback) and return a generic
+    message to the client — never leak internals/stack details in the response
+    body. Call from `except` blocks: `return _server_error(e)`."""
+    import traceback
+    print(f"[error] {type(e).__name__}: {e}")
+    traceback.print_exc()
+    return jsonify({'error': 'Internal server error'}), code
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TRAILS_PATH   = os.path.join(BASE_DIR, 'data', 'trails.json')
 RIFUGIOS_PATH = os.path.join(BASE_DIR, 'backend', 'data', 'rifugios.json')
@@ -955,7 +965,7 @@ def get_recommendations():
         import traceback
         print(f"Error in recommendations: {str(e)}")
         traceback.print_exc()
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/trails/<trail_id>/reviews', methods=['GET'])
 def get_trail_reviews(trail_id):
@@ -974,7 +984,7 @@ def get_trail_reviews(trail_id):
         })
     except Exception as e:
         print(f"Error loading reviews: {str(e)}")
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/trails/<trail_id>/reviews', methods=['POST'])
 def add_trail_review(trail_id):
@@ -1008,7 +1018,7 @@ def add_trail_review(trail_id):
         }), 201
     except Exception as e:
         print(f"Error adding review: {str(e)}")
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/hikes/save', methods=['POST'])
 def save_hike():
@@ -1086,7 +1096,7 @@ def get_hikes():
         return jsonify({'hikes': mine, 'count': len(mine)})
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/weather/current', methods=['GET'])
 def get_current_weather():
@@ -1102,7 +1112,7 @@ def get_current_weather():
         return jsonify(weather)
     
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/weather/forecast', methods=['GET'])
 def get_weather_forecast():
@@ -1118,7 +1128,7 @@ def get_weather_forecast():
         return jsonify({'forecast': forecast})
     
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/weather/suitability', methods=['GET'])
 def get_weather_suitability():
@@ -1144,7 +1154,7 @@ def get_weather_suitability():
         })
     
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 # ===== ADMIN API ENDPOINTS =====
 
@@ -1170,7 +1180,7 @@ def create_trail():
 
         return jsonify({'success': True, 'trail': trail_data}), 201
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/trails/<trail_id>', methods=['PUT'])
 @require_admin_auth
@@ -1193,7 +1203,7 @@ def update_trail(trail_id):
 
         return jsonify({'success': True, 'trail': trail_data})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/trails/<trail_id>', methods=['DELETE'])
 @require_admin_auth
@@ -1214,7 +1224,7 @@ def delete_trail(trail_id):
 
         return jsonify({'success': True})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/trails/<trail_id>/publish', methods=['POST'])
 @require_admin_auth
@@ -1235,7 +1245,7 @@ def publish_trail(trail_id):
         save_trail(trail)   # mirror the status change to Postgres
         return jsonify({'success': True, 'status': new_status})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 
 @app.route('/api/admin/rifugios/<rifugio_id>/publish', methods=['POST'])
@@ -1256,7 +1266,7 @@ def publish_rifugio(rifugio_id):
         save_rifugio(rifugio)   # mirror the status change to Postgres
         return jsonify({'success': True, 'status': new_status})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 
 @app.route('/api/admin/gpx/parse', methods=['POST'])
@@ -1371,7 +1381,7 @@ def delete_review(review_id):
         _invalidate_cache(reviews_path)
         return jsonify({'success': True, 'remaining': len(trail_reviews)})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 # Challenges Management — file-backed persistence
 CHALLENGES_FILE = os.path.join(BASE_DIR, 'data', 'challenges.json')
@@ -1427,7 +1437,7 @@ def create_challenge():
         save_challenges(data)
         return jsonify({'success': True, 'challenge': challenge_data}), 201
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/challenges/<challenge_id>', methods=['PUT'])
 @require_admin_auth
@@ -1445,7 +1455,7 @@ def update_challenge(challenge_id):
         save_challenges(data)
         return jsonify({'success': True, 'challenge': challenge_data})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/challenges/<challenge_id>', methods=['DELETE'])
 @require_admin_auth
@@ -1461,7 +1471,7 @@ def delete_challenge(challenge_id):
         save_challenges(data)
         return jsonify({'success': True})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 # Hike Plans Management
 # DB mode stores one row per plan in the `plans` table (the app's string id lives
@@ -1541,7 +1551,7 @@ def get_user_plans():
         user_plans = [p for p in plans_data['plans'] if p.get('user_email') == user_email]
         return jsonify({'plans': user_plans})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/hike-plans', methods=['POST'])
 def save_hike_plan():
@@ -1564,7 +1574,7 @@ def save_hike_plan():
 
         return jsonify({'success': True, 'plan': plan_data}), 201
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/hike-plans/<plan_id>', methods=['PUT'])
 def update_hike_plan(plan_id):
@@ -1606,7 +1616,7 @@ def update_hike_plan(plan_id):
         _save_plans_json(plans_data)
         return jsonify({'success': True, 'plan': body})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/hike-plans/<plan_id>', methods=['DELETE'])
 def delete_hike_plan(plan_id):
@@ -1636,7 +1646,7 @@ def delete_hike_plan(plan_id):
         _save_plans_json(plans_data)
         return jsonify({'success': True})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/hike-plans', methods=['GET'])
 @require_admin_auth
@@ -1663,7 +1673,7 @@ def get_all_plans():
         
         return jsonify({'plans': plans})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 # User Analytics & Management
 def load_user_analytics():
@@ -2051,7 +2061,7 @@ def get_rifugio_nearby_trails(rifugio_id):
         ]
         return jsonify({'trails': result})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 
 @app.route('/api/rifugios/<rifugio_id>/reviews', methods=['GET'])
@@ -2065,7 +2075,7 @@ def get_rifugio_reviews(rifugio_id):
         })
         return jsonify({'reviews': entity_reviews, 'statistics': entity_stats})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 
 @app.route('/api/rifugios/<rifugio_id>/reviews', methods=['POST'])
@@ -2091,7 +2101,7 @@ def add_rifugio_review(rifugio_id):
         return jsonify({'success': True, 'review': new_review,
                         'message': 'Review submitted successfully'}), 201
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 
 @app.route('/api/rifugios', methods=['GET'])
@@ -2159,7 +2169,7 @@ def get_rifugios():
         resp.headers['Cache-Control'] = 'public, max-age=60'
         return resp
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/rifugios/<rifugio_id>', methods=['GET'])
 def get_rifugio_detail(rifugio_id):
@@ -2183,7 +2193,7 @@ def get_rifugio_detail(rifugio_id):
 
         return jsonify(rifugio)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 _booking_attempts: dict = {}            # ip → [timestamps]
 _booking_lock = threading.Lock()
@@ -2356,7 +2366,7 @@ def submit_booking_inquiry():
             'delivery': delivery,
         })
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/booking-inquiries', methods=['GET'])
 @require_admin_auth
@@ -2383,7 +2393,7 @@ def get_all_booking_inquiries():
         inquiries.sort(key=lambda x: x.get('created_at', ''), reverse=True)
         return jsonify({'inquiries': inquiries, 'total': len(inquiries)})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/booking-inquiries/<inquiry_id>', methods=['PUT'])
 @require_admin_auth
@@ -2416,7 +2426,7 @@ def update_booking_inquiry(inquiry_id):
         _save_booking_inquiries_json(inquiries)
         return jsonify({'success': True, 'inquiry': inquiries[idx]})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/booking-inquiries/<inquiry_id>', methods=['DELETE'])
 @require_admin_auth
@@ -2436,7 +2446,7 @@ def delete_booking_inquiry(inquiry_id):
         _save_booking_inquiries_json(inquiries)
         return jsonify({'success': True})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/dashboard', methods=['GET'])
 @require_admin_auth
@@ -2521,7 +2531,7 @@ def get_dashboard_stats():
         resp.headers['Cache-Control'] = 'private, max-age=30'
         return resp
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/trails/export', methods=['GET'])
 @require_admin_auth
@@ -2532,7 +2542,7 @@ def export_trails():
         return send_file(trails_path, mimetype='application/json',
                          as_attachment=True, download_name='trails.json')
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/rifugios', methods=['POST'])
 @require_admin_auth
@@ -2570,7 +2580,7 @@ def create_rifugio():
         
         return jsonify({'success': True, 'rifugio': rifugio})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/rifugios/<rifugio_id>', methods=['PUT'])
 @require_admin_auth
@@ -2592,7 +2602,7 @@ def update_rifugio(rifugio_id):
         
         return jsonify({'success': True, 'rifugio': rifugios[rifugio_index]})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/rifugios/<rifugio_id>', methods=['DELETE'])
 @require_admin_auth
@@ -2609,7 +2619,7 @@ def delete_rifugio(rifugio_id):
 
         return jsonify({'success': True})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/analytics/trails', methods=['GET'])
 @require_admin_auth
@@ -2664,7 +2674,7 @@ def get_trail_analytics():
             'total_completions': len(hikes_data['hikes'])
         })
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 def load_completed_hikes():
     """Load completed hikes from JSON file"""
@@ -2757,7 +2767,7 @@ def get_multi_day_trails():
         resp.headers['Cache-Control'] = 'public, max-age=300'
         return resp
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/multi-day-trails/<trail_id>', methods=['GET'])
 def get_multi_day_trail(trail_id):
@@ -2775,7 +2785,7 @@ def get_multi_day_trail(trail_id):
         
         return jsonify(trail)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/multi-day-trails', methods=['GET'])
 @require_admin_auth
@@ -2785,7 +2795,7 @@ def admin_get_all_multi_day_trails():
         data = load_multi_day_trails()
         return jsonify(data)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/multi-day-trails', methods=['POST'])
 @require_admin_auth
@@ -2820,7 +2830,7 @@ def admin_create_multi_day_trail():
         
         return jsonify(new_trail), 201
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/multi-day-trails/<trail_id>', methods=['PUT'])
 @require_admin_auth
@@ -2847,7 +2857,7 @@ def admin_update_multi_day_trail(trail_id):
         
         return jsonify(updated_trail)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/multi-day-trails/<trail_id>', methods=['DELETE'])
 @require_admin_auth
@@ -2866,7 +2876,7 @@ def admin_delete_multi_day_trail(trail_id):
         
         return jsonify({'message': 'Trail deleted successfully', 'trail': deleted_trail})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/analytics/users', methods=['GET'])
 @require_admin_auth
@@ -2912,7 +2922,7 @@ def get_user_analytics():
             'total_users': len(users_list)
         })
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/analytics/gamification', methods=['GET'])
 @require_admin_auth
@@ -2966,7 +2976,7 @@ def get_gamification_analytics():
             'total_elevation': round(total_elevation, 0)
         })
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return _server_error(e)
 
 @app.route('/api/admin/upload/media', methods=['POST'])
 @require_admin_auth
