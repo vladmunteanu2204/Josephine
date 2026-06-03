@@ -3549,6 +3549,20 @@ _db_conn.execute('''CREATE TABLE IF NOT EXISTS rate_log (
     ts REAL NOT NULL
 )''')
 _db_conn.execute('CREATE INDEX IF NOT EXISTS idx_rate_ip ON rate_log(ip, ts)')
+# Knowledge-gap log (Layer 2.5): questions the deterministic layers couldn't
+# answer (handled by the LLM, the no-key fallback, or errored) — aggregated by
+# normalized question so the admin can see what to promote into Layer 2.
+_db_conn.execute('''CREATE TABLE IF NOT EXISTS knowledge_gaps (
+    qnorm TEXT PRIMARY KEY,
+    question TEXT NOT NULL,
+    lang TEXT,
+    mode TEXT,
+    hits INTEGER NOT NULL DEFAULT 1,
+    first_seen REAL NOT NULL,
+    last_seen REAL NOT NULL,
+    sample_reply TEXT
+)''')
+_db_conn.execute('CREATE INDEX IF NOT EXISTS idx_gap_hits ON knowledge_gaps(hits)')
 _db_conn.commit()
 _db_lock = threading.Lock()
 
@@ -3591,6 +3605,38 @@ def _rate_allowed(ip: str) -> bool:
         _db_conn.execute('DELETE FROM rate_log WHERE ts<?', (hour,))
         _db_conn.commit()
     return True
+
+
+def _log_knowledge_gap(question: str, lang: str, mode: str, reply: str = ''):
+    """Record a question the deterministic layers (1 & 2) couldn't answer — i.e.
+    it reached the LLM, the no-key fallback, or errored. Aggregated by a
+    normalized form so the admin sees the most-asked gaps to promote into
+    Layer 2. Never raises — logging must never break a chat reply."""
+    try:
+        q = (question or '').strip()[:500]
+        if not q:
+            return
+        qn = ' '.join(''.join(c if (c.isalnum() or c.isspace()) else ' '
+                              for c in q.lower()).split())
+        if not qn:
+            return
+        now = time.time()
+        with _db_lock:
+            existing = _db_conn.execute(
+                'SELECT hits FROM knowledge_gaps WHERE qnorm=?', (qn,)).fetchone()
+            if existing:
+                _db_conn.execute(
+                    'UPDATE knowledge_gaps SET hits=hits+1, last_seen=?, lang=?, '
+                    'mode=?, sample_reply=? WHERE qnorm=?',
+                    (now, lang, mode, (reply or '')[:600], qn))
+            else:
+                _db_conn.execute(
+                    'INSERT INTO knowledge_gaps(qnorm, question, lang, mode, hits, '
+                    'first_seen, last_seen, sample_reply) VALUES(?,?,?,?,1,?,?,?)',
+                    (qn, q, lang, mode, now, now, (reply or '')[:600]))
+            _db_conn.commit()
+    except Exception as e:  # noqa: BLE001
+        print(f"[knowledge_gap] log failed: {e}")
 
 
 def _build_system_prompt() -> str:
@@ -4561,10 +4607,9 @@ def josephine_chat():
             ("That's a little outside my map, but I'm great with the practical stuff: seasons, access, difficulty, "
              "gear, water, cash, food and dogs. Want me to suggest a trail for today instead? Tell me your mood and your hours."),
         ])
-        return jsonify({
-            'reply': NO_KEY_REPLIES.get(lang, default_no_key),
-            'mode': 'no_key'
-        })
+        nk_reply = NO_KEY_REPLIES.get(lang, default_no_key)
+        _log_knowledge_gap(message, lang, 'no_key', nk_reply)
+        return jsonify({'reply': nk_reply, 'mode': 'no_key'})
 
     # Cache key includes language AND the on-screen trail context — otherwise
     # "is it dog-friendly?" asked while viewing different trails would collide
@@ -4573,11 +4618,13 @@ def josephine_chat():
     cache_key = f"{lang}:{ctx_sig}:{message}"
     cached = _cache_get(cache_key)
     if cached:
+        _log_knowledge_gap(message, lang, 'cached', cached)
         return jsonify({'reply': cached, 'mode': 'cached'})
 
     # Rate limit per IP
     ip = _client_ip()
     if not _rate_allowed(ip):
+        _log_knowledge_gap(message, lang, 'rate_limited', '')
         return jsonify({
             'reply': RATE_LIMIT_REPLIES.get(lang,
                 "I've been answering a lot of questions today — give me a few minutes to catch my breath! "
@@ -4615,14 +4662,58 @@ def josephine_chat():
         )
         reply = response.content[0].text
         _cache_set(cache_key, reply)
+        _log_knowledge_gap(message, lang, 'llm', reply)
         return jsonify({'reply': reply, 'mode': 'llm'})
 
     except Exception as e:
         print(f"Josephine LLM error: {e}")
+        _log_knowledge_gap(message, lang, 'error', '')
         return jsonify({
             'reply': "The mountain winds are interfering with my signal — try again in a moment!",
             'mode': 'error'
         })
+
+
+# ── Knowledge gaps (Layer 2.5) — admin review of unanswered questions ─────────
+@app.route('/api/admin/knowledge-gaps', methods=['GET'])
+@require_admin_auth
+def admin_knowledge_gaps():
+    """Top questions the deterministic layers couldn't answer, ranked by how
+    often they're asked — the queue of what to promote into Layer 2."""
+    try:
+        limit = min(max(int(request.args.get('limit', 200)), 1), 1000)
+    except (TypeError, ValueError):
+        limit = 200
+    rows = _db_conn.execute(
+        'SELECT qnorm, question, lang, mode, hits, first_seen, last_seen, sample_reply '
+        'FROM knowledge_gaps ORDER BY hits DESC, last_seen DESC LIMIT ?', (limit,)
+    ).fetchall()
+    gaps = [{
+        'id': r[0], 'question': r[1], 'lang': r[2], 'mode': r[3], 'hits': r[4],
+        'first_seen': r[5], 'last_seen': r[6], 'sample_reply': r[7],
+    } for r in rows]
+    totals = _db_conn.execute(
+        'SELECT COUNT(*), COALESCE(SUM(hits), 0) FROM knowledge_gaps').fetchone()
+    return jsonify({'gaps': gaps, 'distinct': totals[0], 'total_hits': totals[1]})
+
+
+@app.route('/api/admin/knowledge-gaps', methods=['DELETE'])
+@require_admin_auth
+def admin_knowledge_gaps_delete():
+    """Dismiss a single gap (?id=<qnorm>, e.g. after promoting it to Layer 2)
+    or clear them all (?all=1)."""
+    if request.args.get('all') == '1':
+        with _db_lock:
+            _db_conn.execute('DELETE FROM knowledge_gaps')
+            _db_conn.commit()
+        return jsonify({'ok': True, 'cleared': 'all'})
+    qn = request.args.get('id')
+    if qn:
+        with _db_lock:
+            _db_conn.execute('DELETE FROM knowledge_gaps WHERE qnorm=?', (qn,))
+            _db_conn.commit()
+        return jsonify({'ok': True, 'cleared': qn})
+    return jsonify({'error': 'specify id=<qnorm> or all=1'}), 400
 
 
 # ── Donations (Lemon Squeezy "buy me a coffee") ──────────────────────────────
