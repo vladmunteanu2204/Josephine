@@ -768,7 +768,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         setTimeout(() => {
           appendJosephineMessage({
             type: 'text',
-            text: `I don't have any trails near ${area} in my database yet. Try a nearby valley or village — or let me suggest something in the wider Dolomites region?`,
+            text: tj('noTrailsNearArea', "I don't have any trails near {{area}} in my database yet. Try a nearby valley or village — or let me suggest something in the wider Dolomites region?", { area }),
             chips: [t('chipPlanMyDay'), t('chipStartOver')],
           });
         }, 350);
@@ -826,7 +826,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
               appendJosephineMessage({
                 type: 'text',
                 text: buildTransportNote(distWarning, Date.now()),
-                chips: ['Yes, this works', 'Find something closer'],
+                chips: [tj('chipYesWorks', 'Yes, this works'), tj('chipFindCloser', 'Find something closer')],
               });
             }, 600);
           }
@@ -1032,9 +1032,9 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         const d = { ...planningData, max_distance_km: maxKm };
         setPlanningData(d);
         const acks = [
-          `Perfect — finding trails under ${maxKm} km for you.`,
-          `On it — I'll keep it under ${maxKm} km.`,
-          `Got it. Looking for something under ${maxKm} km now.`,
+          tj('refLenAck1', 'Perfect — finding trails under {{km}} km for you.', { km: maxKm }),
+          tj('refLenAck2', "On it — I'll keep it under {{km}} km.", { km: maxKm }),
+          tj('refLenAck3', 'Got it. Looking for something under {{km}} km now.', { km: maxKm }),
         ];
         appendJosephineMessage({ type: 'text', text: acks[Math.floor(Math.random() * acks.length)], chips: null });
         callRecommendAPI(d);
@@ -1045,9 +1045,11 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
     // ── Refinement follow-up: difficulty ────────────────────────────────
     if (awaitingRefinement === 'difficulty') {
       let newDifficulty = null;
-      if (/easy|gentle|relaxed|beginner|stroll|simple/i.test(tl)) newDifficulty = 'easy';
-      else if (/moderate|medium|normal|manageable/i.test(tl)) newDifficulty = 'medium';
-      else if (/any|whatever|don.t mind|surprise/i.test(tl)) newDifficulty = planningData.difficulty ?? 'medium';
+      // Keyword match across EN/IT/DE so the translated difficulty chips and
+      // free-typed answers all resolve.
+      if (/easy|gentle|relaxed|beginner|stroll|simple|facile|tranquill|leggera|principiant|leicht|gemütlich|einfach|anfänger/i.test(tl)) newDifficulty = 'easy';
+      else if (/moderate|medium|normal|manageable|moderat|media|gestibile|mittel|machbar/i.test(tl)) newDifficulty = 'medium';
+      else if (/any|whatever|don.t mind|surprise|qualsiasi|qualunque|non importa|sorprend|egal|beliebig|überrasch/i.test(tl)) newDifficulty = planningData.difficulty ?? 'medium';
       if (newDifficulty) {
         appendUserMessage(trimmed);
         setInput('');
@@ -1056,8 +1058,8 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         const d = { ...planningData, difficulty: newDifficulty, max_distance_km: undefined };
         setPlanningData(d);
         const acks = {
-          easy: ["Perfect — finding something easy and scenic.", "On it — a relaxed trail, coming up.", "Easy it is. Looking now."],
-          medium: ["Great — looking for a moderate route.", "On it — something balanced, coming up.", "Moderate works. Searching now."],
+          easy: [tj('refDiffEasy1', 'Perfect — finding something easy and scenic.'), tj('refDiffEasy2', 'On it — a relaxed trail, coming up.'), tj('refDiffEasy3', 'Easy it is. Looking now.')],
+          medium: [tj('refDiffMed1', 'Great — looking for a moderate route.'), tj('refDiffMed2', 'On it — something balanced, coming up.'), tj('refDiffMed3', 'Moderate works. Searching now.')],
         };
         const pool = acks[newDifficulty] || acks.medium;
         appendJosephineMessage({ type: 'text', text: pool[Math.floor(Math.random() * pool.length)], chips: null });
@@ -1067,27 +1069,27 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
     }
 
     // ── Detect "too long / too hard" typed as free text ─────────────────
-    if (planningStep > 0 && /too long|too far|too many km|too much/i.test(tl)) {
+    if (planningStep > 0 && /too long|too far|too many km|too much|troppo lung|troppo lontan|zu lang|zu weit/i.test(tl)) {
       setAwaitingRefinement('length');
       const refDist = apiResults[0]?.distance_km;
-      const hint = refDist ? ` The shortest I suggested was ${refDist} km.` : '';
+      const hint = refDist ? tj('refLenHint', ' The shortest I suggested was {{km}} km.', { km: refDist }) : '';
       appendUserMessage(trimmed);
       setInput('');
       appendJosephineMessage({
         type: 'text',
-        text: `How long would you like?${hint} Tell me a distance and I'll find it.`,
-        chips: ['Under 5 km', 'Under 8 km', 'Under 12 km'],
+        text: tj('refLenQShort', "How long would you like?{{hint}} Tell me a distance and I'll find it.", { hint }),
+        chips: [tj('chipUnder5', 'Under 5 km'), tj('chipUnder8', 'Under 8 km'), tj('chipUnder12', 'Under 12 km')],
       });
       return;
     }
-    if (planningStep > 0 && /too hard|too difficult|too steep|too challenging|too strenuous/i.test(tl)) {
+    if (planningStep > 0 && /too hard|too difficult|too steep|too challenging|too strenuous|troppo difficile|troppo ripido|zu schwer|zu steil|zu anstrengend/i.test(tl)) {
       setAwaitingRefinement('difficulty');
       appendUserMessage(trimmed);
       setInput('');
       appendJosephineMessage({
         type: 'text',
-        text: "What difficulty works for you today?",
-        chips: ['Easy walk', 'Moderate', 'Any level'],
+        text: tj('refDiffQShort', 'What difficulty works for you today?'),
+        chips: [tj('chipEasyWalk', 'Easy walk'), tj('chipModerate', 'Moderate'), tj('chipAnyLevel', 'Any level')],
       });
       return;
     }
@@ -1122,7 +1124,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
           setPlanningData(d);
           appendJosephineMessage({
             type: 'text',
-            text: "Happy to bring your dog along! Let me find dog-friendly trails for you…",
+            text: tj('dogFindTrails', 'Happy to bring your dog along! Let me find dog-friendly trails for you…'),
             chips: null,
           });
           runConditionsThenOptions(d);
@@ -1310,17 +1312,17 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       appendUserMessage(chip);
       setAwaitingRefinement('length');
       const refDist = apiResults[0]?.distance_km;
-      const hint = refDist ? ` The shortest I suggested was ${refDist} km.` : '';
+      const hint = refDist ? tj('refLenHint', ' The shortest I suggested was {{km}} km.', { km: refDist }) : '';
       const questions = [
-        `How long would you like?${hint} I can look for under 5 km, under 8 km — or tell me your preference.`,
-        `Good to know. What distance works for you?${hint} Pick below or just tell me.`,
-        `Noted. How far is comfortable for you?${hint} Give me a number and I'll find it.`,
+        tj('refLenQ1', 'How long would you like?{{hint}} I can look for under 5 km, under 8 km — or tell me your preference.', { hint }),
+        tj('refLenQ2', 'Good to know. What distance works for you?{{hint}} Pick below or just tell me.', { hint }),
+        tj('refLenQ3', "Noted. How far is comfortable for you?{{hint}} Give me a number and I'll find it.", { hint }),
       ];
       setTimeout(() => {
         appendJosephineMessage({
           type: 'text',
           text: questions[Math.floor(Math.random() * questions.length)],
-          chips: ['Under 5 km', 'Under 8 km', 'Under 12 km'],
+          chips: [tj('chipUnder5', 'Under 5 km'), tj('chipUnder8', 'Under 8 km'), tj('chipUnder12', 'Under 12 km')],
         });
       }, 400);
       return;
@@ -1329,15 +1331,15 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       appendUserMessage(chip);
       setAwaitingRefinement('difficulty');
       const questions = [
-        "How challenging would you like it? I can find something easy, moderate — or you tell me.",
-        "Understood. What difficulty works for you today?",
-        "Of course. What level are you comfortable with?",
+        tj('refDiffQ1', 'How challenging would you like it? I can find something easy, moderate — or you tell me.'),
+        tj('refDiffQ2', 'Understood. What difficulty works for you today?'),
+        tj('refDiffQ3', 'Of course. What level are you comfortable with?'),
       ];
       setTimeout(() => {
         appendJosephineMessage({
           type: 'text',
           text: questions[Math.floor(Math.random() * questions.length)],
-          chips: ['Easy walk', 'Moderate', 'Any level'],
+          chips: [tj('chipEasyWalk', 'Easy walk'), tj('chipModerate', 'Moderate'), tj('chipAnyLevel', 'Any level')],
         });
       }, 400);
       return;
@@ -1358,16 +1360,16 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
     if (chip === t('retryChip')) { appendUserMessage(chip); callRecommendAPI(planningData); return; }
 
     // ── Geographic awareness chips ─────────────────────────────────────────
-    if (chip === 'Yes, this works') {
+    if (chip === tj('chipYesWorks', 'Yes, this works')) {
       appendUserMessage(chip);
       appendJosephineMessage({
         type: 'text',
-        text: "Perfect — enjoy the journey there too. Let me know if you need any other info.",
+        text: tj('geoYesResp', 'Perfect — enjoy the journey there too. Let me know if you need any other info.'),
         chips: null,
       });
       return;
     }
-    if (chip === 'Find something closer') {
+    if (chip === tj('chipFindCloser', 'Find something closer')) {
       appendUserMessage(chip);
       // Re-search with the same params but drop startArea so the backend
       // returns trails from the wider region without a distance penalty
@@ -1375,7 +1377,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       setPlanningData(d);
       appendJosephineMessage({
         type: 'text',
-        text: "Of course — let me find something closer to you.",
+        text: tj('geoCloserResp', 'Of course — let me find something closer to you.'),
         chips: null,
       });
       setTimeout(() => callRecommendAPI(d), 400);
