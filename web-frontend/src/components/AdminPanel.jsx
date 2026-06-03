@@ -5,7 +5,7 @@ import { ENABLE_GAMIFICATION } from '../featureFlags';
 import axios from 'axios';
 import {
   LayoutDashboard, Route, Mountain, Hotel, ClipboardList, MessageSquare,
-  CalendarRange, Users, BarChart3, Trophy, Gamepad2,
+  CalendarRange, Users, BarChart3, Trophy, Gamepad2, Lightbulb,
 } from 'lucide-react';
 import Dashboard from './admin/Dashboard';
 import TrailManager from './admin/TrailManager';
@@ -18,6 +18,7 @@ import UserManagement from './UserManagement';
 import TrailAnalytics from './TrailAnalytics';
 import GamificationStats from './GamificationStats';
 import MultiDayTrailsManager from './admin/MultiDayTrailsManager';
+import KnowledgeGaps from './admin/KnowledgeGaps';
 import './AdminPanel.css';
 
 const ADMIN_EMAIL = 'vladmunteanu2204@gmail.com';
@@ -33,6 +34,7 @@ const TABS = [
   { id: 'plans',      label: 'User Plans',    Icon: CalendarRange },
   { id: 'users',      label: 'Users',         Icon: Users },
   { id: 'analytics',  label: 'Analytics',     Icon: BarChart3 },
+  { id: 'gaps',       label: 'Knowledge Gaps', Icon: Lightbulb },
   ...(ENABLE_GAMIFICATION ? [
     { id: 'challenges',  label: 'Challenges',   Icon: Trophy },
     { id: 'gamification',label: 'Gamification', Icon: Gamepad2 },
@@ -199,6 +201,7 @@ function AdminPanel({ onNavigate }) {
           {activeTab === 'plans'        && <UserPlansManager adminPassword={token} />}
           {activeTab === 'users'        && <UserManagement adminPassword={token} />}
           {activeTab === 'analytics'    && <TrailAnalytics adminPassword={token} />}
+          {activeTab === 'gaps'         && <KnowledgeGaps />}
           {ENABLE_GAMIFICATION && activeTab === 'challenges'   && <ChallengesManager adminPassword={token} />}
           {ENABLE_GAMIFICATION && activeTab === 'gamification' && <GamificationStats adminPassword={token} />}
         </div>
