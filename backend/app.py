@@ -14,6 +14,10 @@ import time
 import atexit
 import sqlite3
 import threading
+import unicodedata
+import difflib
+import urllib.parse
+import urllib.request
 import jwt
 from datetime import datetime, timedelta, timezone
 try:
@@ -879,19 +883,143 @@ _AREA_COORDS = {
 }
 
 
+# Full South Tyrol gazetteer (every comune/frazione/hamlet, OSM-sourced) lives
+# in data/south_tyrol_places.json — see build_gazetteer.py. _AREA_COORDS above
+# stays for *areas* that aren't single settlements (valleys, passes, lakes).
+_PLACES_FILE = os.path.join(os.path.dirname(__file__), 'data', 'south_tyrol_places.json')
+_PLACES_CACHE = {'index': None, 'keys': None}
+# Bounding box of South Tyrol (lon_min, lat_min, lon_max, lat_max) for the live
+# geocode fallback — keep results inside the province.
+_ST_BBOX = (10.38, 46.20, 12.50, 47.10)
+_CONNECTIVES = (' in ', ' im ', ' an der ', ' an ', ' a ', ' bei ', ' presso ')
+
+
+def _norm_place(s):
+    """Lowercase, strip diacritics & punctuation, collapse whitespace."""
+    if not s:
+        return ''
+    s = unicodedata.normalize('NFKD', s)
+    s = ''.join(c for c in s if not unicodedata.combining(c))
+    s = ''.join(c if (c.isalnum() or c.isspace()) else ' ' for c in s.lower())
+    return ' '.join(s.split())
+
+
+def _place_index():
+    """Lazily build {normalized name variant -> (lat, lon, rank)} + key list."""
+    if _PLACES_CACHE['index'] is not None:
+        return _PLACES_CACHE['index'], _PLACES_CACHE['keys']
+    idx = {}
+    try:
+        with open(_PLACES_FILE, encoding='utf-8') as f:
+            places = json.load(f).get('places', [])
+    except Exception as e:  # noqa: BLE001
+        print(f"[gazetteer] could not load places: {e}")
+        places = []
+    for p in places:
+        lat, lon, rk = p.get('lat'), p.get('lon'), p.get('rank', 1)
+        if lat is None or lon is None:
+            continue
+        variants = set()
+        for n in (p.get('names') or [p.get('name', '')]):
+            nn = _norm_place(n)
+            if nn:
+                variants.add(nn)
+                for sep in _CONNECTIVES:           # short form: "san leonardo"
+                    if sep in nn:
+                        variants.add(nn.split(sep)[0].strip())
+        for v in variants:
+            if len(v) < 3:
+                continue
+            if v not in idx or rk > idx[v][2]:     # bigger settlement wins ties
+                idx[v] = (lat, lon, rk)
+    # Curated entries are the canonical tourist meaning of a name (areas like
+    # "Val Gardena", and disambiguators like "Corvara" = Corvara in Badia, not a
+    # Passeier hamlet). They OVERRIDE gazetteer collisions (rank above city).
+    for k, co in _AREA_COORDS.items():
+        idx[_norm_place(k)] = (co[0], co[1], 5)
+    _PLACES_CACHE['index'] = idx
+    _PLACES_CACHE['keys'] = list(idx.keys())
+    print(f"[gazetteer] indexed {len(idx)} place aliases")
+    return idx, _PLACES_CACHE['keys']
+
+
 def _resolve_area_coords(area):
-    """[lat, lon] for a named place, or None. Exact first, then containment."""
+    """[lat, lon] for any South Tyrol place name (DE/IT/Ladin), or None.
+    Offline gazetteer: exact -> connective-stripped -> containment -> fuzzy."""
     if not area:
         return None
-    a = area.lower().strip()
-    if a in _AREA_COORDS:
-        return _AREA_COORDS[a]
-    # Longest key contained in the text wins (so 'val gardena' beats 'val').
-    best = None
-    for key, co in _AREA_COORDS.items():
-        if key in a and (best is None or len(key) > len(best[0])):
-            best = (key, co)
-    return best[1] if best else None
+    idx, keys = _place_index()
+    q = _norm_place(area)
+    if not q:
+        return None
+    if q in idx:                                   # 1. exact
+        return [idx[q][0], idx[q][1]]
+    for sep in _CONNECTIVES:                        # 2. "san leonardo in passiria"
+        if sep in q:
+            head = q.split(sep)[0].strip()
+            if head in idx:
+                return [idx[head][0], idx[head][1]]
+    best = None                                     # 3. place name inside the phrase
+    for k in keys:
+        if len(k) >= 4 and k in q and (best is None or len(k) > best[1]):
+            best = (k, len(k))
+    if best:
+        return [idx[best[0]][0], idx[best[0]][1]]
+    m = difflib.get_close_matches(q, keys, n=1, cutoff=0.86)  # 4. typo tolerance
+    if m:
+        return [idx[m[0]][0], idx[m[0]][1]]
+    return None
+
+
+def _geocode_live(area):
+    """Last-resort geocode via Nominatim, bounded to South Tyrol and cached in
+    SQLite. Returns [lat, lon] or None. Never raises; never blocks for long."""
+    if not area or not area.strip():
+        return None
+    key = _norm_place(area)
+    try:
+        row = _db_conn.execute('SELECT lat, lon FROM geocode_cache WHERE q=?', (key,)).fetchone()
+        if row is not None:
+            return None if row[0] is None else [row[0], row[1]]
+    except Exception:  # noqa: BLE001
+        pass
+    coords = None
+    try:
+        params = urllib.parse.urlencode({
+            'q': f'{area}, Südtirol, Italy', 'format': 'json', 'limit': 5,
+            'viewbox': '10.38,47.10,12.50,46.20', 'bounded': 1, 'countrycodes': 'it',
+            'featuretype': 'settlement', 'addressdetails': 1,
+        })
+        req = urllib.request.Request(
+            'https://nominatim.openstreetmap.org/search?' + params,
+            headers={'User-Agent': 'JosephineGazetteer/1.0 (South Tyrol hiking companion)'})
+        with urllib.request.urlopen(req, timeout=3) as r:
+            arr = json.loads(r.read().decode())
+        for hit in arr:
+            # Only real settlements (not streets/buildings) actually in the
+            # province of Bolzano — guards against "Via Innsbruck" in Bolzano
+            # matching the city of Innsbruck.
+            if hit.get('class') not in ('place', 'boundary'):
+                continue
+            addr = hit.get('address', {}) or {}
+            blob = ' '.join(str(v).lower() for v in addr.values())
+            if not any(s in blob for s in ('it-bz', 'bolzano', 'südtirol', 'sudtirol', 'alto adige')):
+                continue
+            lat, lon = float(hit['lat']), float(hit['lon'])
+            if _ST_BBOX[1] <= lat <= _ST_BBOX[3] and _ST_BBOX[0] <= lon <= _ST_BBOX[2]:
+                coords = [round(lat, 5), round(lon, 5)]
+                break
+    except Exception:  # noqa: BLE001
+        pass
+    try:
+        with _db_lock:
+            _db_conn.execute(
+                'INSERT OR REPLACE INTO geocode_cache(q, lat, lon, ts) VALUES(?,?,?,?)',
+                (key, coords[0] if coords else None, coords[1] if coords else None, time.time()))
+            _db_conn.commit()
+    except Exception:  # noqa: BLE001
+        pass
+    return coords
 
 
 # Region centroid [lat, lon] — fallback location when a trail has no coordinate
@@ -1130,7 +1258,7 @@ def get_recommendations():
             if area_matched:
                 scored_trails = area_matched
             else:
-                origin = _resolve_area_coords(start_area)
+                origin = _resolve_area_coords(start_area) or _geocode_live(start_area)
                 NEAR_RADIUS_KM = 45.0
                 near = []
                 if origin:
@@ -3443,6 +3571,14 @@ _db_conn.execute('''CREATE TABLE IF NOT EXISTS rate_log (
     ts REAL NOT NULL
 )''')
 _db_conn.execute('CREATE INDEX IF NOT EXISTS idx_rate_ip ON rate_log(ip, ts)')
+# Cache for the live Nominatim geocode fallback (incl. negative results, so we
+# never hammer the API for a place that simply isn't in South Tyrol).
+_db_conn.execute('''CREATE TABLE IF NOT EXISTS geocode_cache (
+    q TEXT PRIMARY KEY,
+    lat REAL,
+    lon REAL,
+    ts REAL NOT NULL
+)''')
 _db_conn.commit()
 _db_lock = threading.Lock()
 

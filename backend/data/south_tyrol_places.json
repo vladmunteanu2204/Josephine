@@ -1,0 +1,14082 @@
+{
+"_source": "OpenStreetMap via Overpass (area ISO3166-2=IT-BZ)",
+"_license": "ODbL — © OpenStreetMap contributors",
+"_generated": "2026-06-03T15:54:45Z",
+"count": 1254,
+"places": [
+{
+"name": "Bolzano - Bozen",
+"names": [
+"Bolzano - Bozen",
+"Bozen",
+"Bolzano",
+"Bulsan"
+],
+"lat": 46.49848,
+"lon": 11.35474,
+"place": "city",
+"rank": 4
+},
+{
+"name": "Bruneck - Brunico",
+"names": [
+"Bruneck - Brunico",
+"Bruneck",
+"Brunico"
+],
+"lat": 46.79632,
+"lon": 11.93551,
+"place": "town",
+"rank": 3
+},
+{
+"name": "Brixen - Bressanone",
+"names": [
+"Brixen - Bressanone",
+"Brixen",
+"Bressanone",
+"Porsenù - Persenon",
+"Brixen am Eisack"
+],
+"lat": 46.71641,
+"lon": 11.65779,
+"place": "town",
+"rank": 3
+},
+{
+"name": "Klausen - Chiusa",
+"names": [
+"Klausen - Chiusa",
+"Klausen",
+"Chiusa",
+"Tluses"
+],
+"lat": 46.63992,
+"lon": 11.56635,
+"place": "town",
+"rank": 3
+},
+{
+"name": "Merano - Meran",
+"names": [
+"Merano - Meran",
+"Meran",
+"Merano",
+"Maran"
+],
+"lat": 46.67135,
+"lon": 11.16463,
+"place": "town",
+"rank": 3
+},
+{
+"name": "Glurns - Glorenza",
+"names": [
+"Glurns - Glorenza",
+"Glurns",
+"Glorenza"
+],
+"lat": 46.67149,
+"lon": 10.55391,
+"place": "town",
+"rank": 3
+},
+{
+"name": "Laives - Leifers",
+"names": [
+"Laives - Leifers",
+"Leifers",
+"Laives"
+],
+"lat": 46.42282,
+"lon": 11.33477,
+"place": "town",
+"rank": 3
+},
+{
+"name": "Schlanders - Silandro",
+"names": [
+"Schlanders - Silandro",
+"Schlanders",
+"Silandro"
+],
+"lat": 46.62807,
+"lon": 10.77348,
+"place": "town",
+"rank": 3
+},
+{
+"name": "Innichen - San Candido",
+"names": [
+"Innichen - San Candido",
+"Innichen",
+"San Candido"
+],
+"lat": 46.73278,
+"lon": 12.282,
+"place": "town",
+"rank": 3
+},
+{
+"name": "Sterzing - Vipiteno",
+"names": [
+"Sterzing - Vipiteno",
+"Sterzing",
+"Vipiteno"
+],
+"lat": 46.89632,
+"lon": 11.43194,
+"place": "town",
+"rank": 3
+},
+{
+"name": "St. Zyprian - San Cipriano",
+"names": [
+"St. Zyprian - San Cipriano",
+"St. Zyprian",
+"San Cipriano"
+],
+"lat": 46.47159,
+"lon": 11.55712,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Kaltern an der Weinstraße - Caldaro sulla Strada del Vino",
+"names": [
+"Kaltern an der Weinstraße - Caldaro sulla Strada del Vino",
+"Kaltern an der Weinstraße",
+"Caldaro sulla Strada del Vino",
+"Ciudar"
+],
+"lat": 46.41347,
+"lon": 11.24691,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Bronzolo - Branzoll",
+"names": [
+"Bronzolo - Branzoll",
+"Branzoll",
+"Bronzolo"
+],
+"lat": 46.40463,
+"lon": 11.3198,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Brenner - Brennero",
+"names": [
+"Brenner - Brennero",
+"Brenner",
+"Brennero"
+],
+"lat": 47.00374,
+"lon": 11.5048,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Schmieden - Ferrara",
+"names": [
+"Schmieden - Ferrara",
+"Schmieden",
+"Ferrara"
+],
+"lat": 46.72035,
+"lon": 12.13288,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Barbian - Barbiano",
+"names": [
+"Barbian - Barbiano",
+"Barbian",
+"Barbiano"
+],
+"lat": 46.60358,
+"lon": 11.52001,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Badia - Abtei",
+"names": [
+"Badia - Abtei",
+"Abtei",
+"Badia"
+],
+"lat": 46.61012,
+"lon": 11.89349,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Hafling - Avelengo",
+"names": [
+"Hafling - Avelengo",
+"Hafling",
+"Avelengo"
+],
+"lat": 46.6438,
+"lon": 11.22445,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Altrei - Anterivo",
+"names": [
+"Altrei - Anterivo",
+"Altrei",
+"Anterivo"
+],
+"lat": 46.2777,
+"lon": 11.36674,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Andrian - Andriano",
+"names": [
+"Andrian - Andriano",
+"Andrian",
+"Andriano"
+],
+"lat": 46.51762,
+"lon": 11.23137,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Aldein - Aldino",
+"names": [
+"Aldein - Aldino",
+"Aldein",
+"Aldino"
+],
+"lat": 46.36868,
+"lon": 11.35432,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Franzensfeste - Fortezza",
+"names": [
+"Franzensfeste - Fortezza",
+"Franzensfeste",
+"Fortezza"
+],
+"lat": 46.78654,
+"lon": 11.61286,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Neumarkt - Egna",
+"names": [
+"Neumarkt - Egna",
+"Neumarkt",
+"Egna"
+],
+"lat": 46.31692,
+"lon": 11.27257,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Pfalzen - Falzes",
+"names": [
+"Pfalzen - Falzes",
+"Pfalzen",
+"Falzes"
+],
+"lat": 46.81198,
+"lon": 11.88401,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Graun im Vinschgau - Curon Venosta",
+"names": [
+"Graun im Vinschgau - Curon Venosta",
+"Graun im Vinschgau",
+"Curon Venosta"
+],
+"lat": 46.80866,
+"lon": 10.54144,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Toblach - Dobbiaco",
+"names": [
+"Toblach - Dobbiaco",
+"Toblach",
+"Dobbiaco"
+],
+"lat": 46.73552,
+"lon": 12.22297,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Kurtatsch an der Weinstraße - Cortaccia sulla Strada del Vino",
+"names": [
+"Kurtatsch an der Weinstraße - Cortaccia sulla Strada del Vino",
+"Kurtatsch an der Weinstraße",
+"Cortaccia sulla Strada del Vino"
+],
+"lat": 46.31347,
+"lon": 11.2235,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Kurtinig an der Weinstraße - Cortina sulla Strada del Vino",
+"names": [
+"Kurtinig an der Weinstraße - Cortina sulla Strada del Vino",
+"Kurtinig an der Weinstraße",
+"Cortina sulla Strada del Vino"
+],
+"lat": 46.2687,
+"lon": 11.22269,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Karneid - Cornedo all'Isarco",
+"names": [
+"Karneid - Cornedo all'Isarco",
+"Karneid",
+"Cornedo all'Isarco"
+],
+"lat": 46.49003,
+"lon": 11.4083,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Tscherms - Cermes",
+"names": [
+"Tscherms - Cermes",
+"Tscherms",
+"Cermes"
+],
+"lat": 46.63462,
+"lon": 11.14656,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Kiens - Chienes",
+"names": [
+"Kiens - Chienes",
+"Kiens",
+"Chienes"
+],
+"lat": 46.80863,
+"lon": 11.83984,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Kastelruth - Ciastel - Castelrotto",
+"names": [
+"Kastelruth - Ciastel - Castelrotto",
+"Kastelruth",
+"Castelrotto",
+"Ciastel"
+],
+"lat": 46.56784,
+"lon": 11.55969,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Sand in Taufers - Campo Tures",
+"names": [
+"Sand in Taufers - Campo Tures",
+"Sand in Taufers",
+"Campo Tures"
+],
+"lat": 46.91924,
+"lon": 11.95518,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Mölten - Meltina",
+"names": [
+"Mölten - Meltina",
+"Mölten",
+"Meltina"
+],
+"lat": 46.58639,
+"lon": 11.25616,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Naturns - Naturno",
+"names": [
+"Naturns - Naturno",
+"Naturns",
+"Naturno"
+],
+"lat": 46.64989,
+"lon": 11.0042,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Nals - Nalles",
+"names": [
+"Nals - Nalles",
+"Nals",
+"Nalles"
+],
+"lat": 46.54349,
+"lon": 11.20463,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Moos in Passeier - Moso in Passiria",
+"names": [
+"Moos in Passeier - Moso in Passiria",
+"Moos in Passeier",
+"Moso in Passiria"
+],
+"lat": 46.83183,
+"lon": 11.16729,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Montan an der Weinstraße - Montagna sulla Strada del Vino",
+"names": [
+"Montan an der Weinstraße - Montagna sulla Strada del Vino",
+"Montan an der Weinstraße",
+"Montagna sulla Strada del Vino"
+],
+"lat": 46.33084,
+"lon": 11.30463,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Auer - Ora",
+"names": [
+"Auer - Ora",
+"Auer",
+"Ora"
+],
+"lat": 46.34659,
+"lon": 11.29863,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Deutschnofen - Nova Ponente",
+"names": [
+"Deutschnofen - Nova Ponente",
+"Deutschnofen",
+"Nova Ponente"
+],
+"lat": 46.41399,
+"lon": 11.42518,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Welschnofen - Nova Levante",
+"names": [
+"Welschnofen - Nova Levante",
+"Welschnofen",
+"Nova Levante"
+],
+"lat": 46.43026,
+"lon": 11.53892,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Schabs - Sciaves",
+"names": [
+"Schabs - Sciaves",
+"Schabs",
+"Sciaves"
+],
+"lat": 46.76952,
+"lon": 11.66592,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Plaus",
+"names": [
+"Plaus"
+],
+"lat": 46.65658,
+"lon": 11.0415,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Percha - Perca",
+"names": [
+"Percha - Perca",
+"Percha",
+"Perca"
+],
+"lat": 46.79431,
+"lon": 11.98238,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Partschins - Parcines",
+"names": [
+"Partschins - Parcines",
+"Partschins",
+"Parcines"
+],
+"lat": 46.68385,
+"lon": 11.07352,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Urtijëi - St. Ulrich - Ortisei",
+"names": [
+"Urtijëi - St. Ulrich - Ortisei",
+"St. Ulrich",
+"Ortisei",
+"Urtijëi"
+],
+"lat": 46.57521,
+"lon": 11.67214,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Peter - San Pietro",
+"names": [
+"St. Peter - San Pietro",
+"St. Peter",
+"San Pietro"
+],
+"lat": 46.64286,
+"lon": 11.68138,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Gais",
+"names": [
+"Gais"
+],
+"lat": 46.83316,
+"lon": 11.94748,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Lajen - Laion",
+"names": [
+"Lajen - Laion",
+"Lajen",
+"Laion"
+],
+"lat": 46.60923,
+"lon": 11.56426,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Latsch - Laces",
+"names": [
+"Latsch - Laces",
+"Latsch",
+"Laces"
+],
+"lat": 46.61734,
+"lon": 10.85954,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Algund - Lagundo",
+"names": [
+"Algund - Lagundo",
+"Algund",
+"Lagundo"
+],
+"lat": 46.68252,
+"lon": 11.12307,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Laurein - Lauregno",
+"names": [
+"Laurein - Lauregno",
+"Laurein",
+"Lauregno",
+"Lauréin"
+],
+"lat": 46.45441,
+"lon": 11.06202,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Lüsen - Luson",
+"names": [
+"Lüsen - Luson",
+"Lüsen",
+"Luson"
+],
+"lat": 46.74647,
+"lon": 11.76108,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Laas - Lasa",
+"names": [
+"Laas - Lasa",
+"Laas",
+"Lasa"
+],
+"lat": 46.61661,
+"lon": 10.70016,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Al Plan de Mareo - St. Vigil in Enneberg - San Vigilio di Marebbe",
+"names": [
+"Al Plan de Mareo - St. Vigil in Enneberg - San Vigilio di Marebbe",
+"St. Vigil in Enneberg",
+"San Vigilio di Marebbe",
+"Al Plan de Mareo"
+],
+"lat": 46.698,
+"lon": 11.93123,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Marling - Marlengo",
+"names": [
+"Marling - Marlengo",
+"Marling",
+"Marlengo"
+],
+"lat": 46.65563,
+"lon": 11.14053,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Margreid an der Weinstraße - Magrè sulla Strada del Vino",
+"names": [
+"Margreid an der Weinstraße - Magrè sulla Strada del Vino",
+"Margreid an der Weinstraße",
+"Magrè sulla Strada del Vino"
+],
+"lat": 46.28739,
+"lon": 11.20985,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Mals - Malles Venosta",
+"names": [
+"Mals - Malles Venosta",
+"Mals",
+"Malles Venosta"
+],
+"lat": 46.68792,
+"lon": 10.54655,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Sankt Pankraz - San Pancrazio",
+"names": [
+"Sankt Pankraz - San Pancrazio",
+"St. Pankraz",
+"San Pancrazio"
+],
+"lat": 46.58651,
+"lon": 11.08636,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Martin in Passeier - San Martino in Passiria",
+"names": [
+"St. Martin in Passeier - San Martino in Passiria",
+"St. Martin in Passeier",
+"San Martino in Passiria"
+],
+"lat": 46.78394,
+"lon": 11.2268,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Santa Crestina - Santa Cristina - Sankt Christina",
+"names": [
+"Santa Crestina - Santa Cristina - Sankt Christina",
+"Sankt Christina in Gröden",
+"Santa Cristina Valgardena",
+"Santa Crestina Gherdëina"
+],
+"lat": 46.55907,
+"lon": 11.71549,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Mühlwald - Selva dei Molini",
+"names": [
+"Mühlwald - Selva dei Molini",
+"Mühlwald",
+"Selva dei Molini"
+],
+"lat": 46.89075,
+"lon": 11.85666,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Schenna - Scena",
+"names": [
+"Schenna - Scena",
+"Schenna",
+"Scena"
+],
+"lat": 46.68998,
+"lon": 11.18723,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Karthaus - Certosa di Senales",
+"names": [
+"Karthaus - Certosa di Senales",
+"Karthaus",
+"Certosa di Senales"
+],
+"lat": 46.70453,
+"lon": 10.91062,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Sëlva - Wolkenstein in Gröden - Selva di Val Gardena",
+"names": [
+"Sëlva - Wolkenstein in Gröden - Selva di Val Gardena",
+"Wolkenstein in Gröden",
+"Selva di Val Gardena",
+"Sëlva"
+],
+"lat": 46.55519,
+"lon": 11.7601,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Sexten - Sesto",
+"names": [
+"Sexten - Sesto",
+"Sexten",
+"Sesto"
+],
+"lat": 46.7019,
+"lon": 12.3504,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Schluderns - Sluderno",
+"names": [
+"Schluderns - Sluderno",
+"Schluderns",
+"Sluderno"
+],
+"lat": 46.66454,
+"lon": 10.58482,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Terlan - Terlano",
+"names": [
+"Terlan - Terlano",
+"Terlan",
+"Terlano"
+],
+"lat": 46.5293,
+"lon": 11.24868,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Terenten - Terento",
+"names": [
+"Terenten - Terento",
+"Terenten",
+"Terento"
+],
+"lat": 46.8288,
+"lon": 11.77602,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Tisens - Tesimo",
+"names": [
+"Tisens - Tesimo",
+"Tisens",
+"Tesimo"
+],
+"lat": 46.5639,
+"lon": 11.1695,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Tramin an der Weinstraße - Termeno sulla Strada del Vino",
+"names": [
+"Tramin an der Weinstraße - Termeno sulla Strada del Vino",
+"Tramin an der Weinstraße",
+"Termeno sulla Strada del Vino",
+"Tramin"
+],
+"lat": 46.34151,
+"lon": 11.24227,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Waidbruck - Ponte Gardena",
+"names": [
+"Waidbruck - Ponte Gardena",
+"Waidbruck",
+"Ponte Gardena"
+],
+"lat": 46.59826,
+"lon": 11.5319,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Burgstall - Postal",
+"names": [
+"Burgstall - Postal",
+"Burgstall",
+"Postal"
+],
+"lat": 46.60758,
+"lon": 11.19332,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Prad am Stilfser Joch - Prato allo Stelvio",
+"names": [
+"Prad am Stilfser Joch - Prato allo Stelvio",
+"Prad am Stilfser Joch",
+"Prato allo Stelvio"
+],
+"lat": 46.61709,
+"lon": 10.59166,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Prettau - Predoi",
+"names": [
+"Prettau - Predoi",
+"Prettau",
+"Predoi"
+],
+"lat": 47.04074,
+"lon": 12.10589,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Proveis - Proves",
+"names": [
+"Proveis - Proves",
+"Proveis",
+"Proves",
+"Proés"
+],
+"lat": 46.47743,
+"lon": 11.02244,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Ratschings - Racines",
+"names": [
+"Ratschings - Racines",
+"Ratschings",
+"Racines"
+],
+"lat": 46.88013,
+"lon": 11.37606,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Rodeneck - Rodengo",
+"names": [
+"Rodeneck - Rodengo",
+"Rodeneck",
+"Rodengo"
+],
+"lat": 46.78077,
+"lon": 11.68976,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Salorno sulla Strada del Vino - Salurn an der Weinstraße",
+"names": [
+"Salorno sulla Strada del Vino - Salurn an der Weinstraße",
+"Salurn an der Weinstraße",
+"Salorno sulla Strada del Vino",
+"Salorno"
+],
+"lat": 46.23961,
+"lon": 11.21107,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Jenesien - San Genesio Atesino",
+"names": [
+"Jenesien - San Genesio Atesino",
+"Jenesien",
+"San Genesio Atesino"
+],
+"lat": 46.53503,
+"lon": 11.33138,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Leonhard in Passeier - San Leonardo in Passiria",
+"names": [
+"St. Leonhard in Passeier - San Leonardo in Passiria",
+"St. Leonhard in Passeier",
+"San Leonardo in Passiria"
+],
+"lat": 46.81189,
+"lon": 11.24714,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Lorenzen - San Lorenzo di Sebato",
+"names": [
+"St. Lorenzen - San Lorenzo di Sebato",
+"St. Lorenzen",
+"San Lorenzo di Sebato"
+],
+"lat": 46.78326,
+"lon": 11.90237,
+"place": "village",
+"rank": 2
+},
+{
+"name": "San Martin de Tor - St. Martin in Thurn - San Martino in Badia",
+"names": [
+"San Martin de Tor - St. Martin in Thurn - San Martino in Badia",
+"St. Martin in Thurn",
+"San Martino in Badia",
+"San Martin de Tor"
+],
+"lat": 46.68199,
+"lon": 11.89835,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Feldthurns - Velturno",
+"names": [
+"Feldthurns - Velturno",
+"Feldthurns",
+"Velturno"
+],
+"lat": 46.66867,
+"lon": 11.59844,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Olang - Valdaora",
+"names": [
+"Olang - Valdaora",
+"Olang",
+"Valdaora"
+],
+"lat": 46.75983,
+"lon": 12.03099,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Wiesen - Prati",
+"names": [
+"Wiesen - Prati",
+"Wiesen",
+"Prati"
+],
+"lat": 46.89997,
+"lon": 11.4596,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Walburg - Santa Valburga",
+"names": [
+"St. Walburg - Santa Valburga",
+"St. Walburg",
+"Santa Valburga",
+"St. Walburg - Santa Valburga d'Ultimo"
+],
+"lat": 46.54858,
+"lon": 11.00421,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Vadena - Pfatten",
+"names": [
+"Vadena - Pfatten",
+"Pfatten",
+"Vadena"
+],
+"lat": 46.41399,
+"lon": 11.30508,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Truden im Naturpark - Trodena nel Parco Naturale",
+"names": [
+"Truden im Naturpark - Trodena nel Parco Naturale",
+"Truden im Naturpark",
+"Trodena nel Parco Naturale"
+],
+"lat": 46.32214,
+"lon": 11.34981,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Taufers im Münstertal - Tubre",
+"names": [
+"Taufers im Münstertal - Tubre",
+"Taufers im Münstertal",
+"Tubre",
+"Tuor te Val Müstair"
+],
+"lat": 46.64561,
+"lon": 10.46415,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Tiers - Tires",
+"names": [
+"Tiers - Tires",
+"Tiers",
+"Tires"
+],
+"lat": 46.46735,
+"lon": 11.52748,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Dorf Tirol - Tirolo",
+"names": [
+"Dorf Tirol - Tirolo",
+"Dorf Tirol",
+"Tirolo"
+],
+"lat": 46.6911,
+"lon": 11.15422,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Vöran - Verano",
+"names": [
+"Vöran - Verano",
+"Vöran",
+"Verano"
+],
+"lat": 46.60537,
+"lon": 11.22627,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Niederdorf - Villabassa",
+"names": [
+"Niederdorf - Villabassa",
+"Niederdorf",
+"Villabassa"
+],
+"lat": 46.7379,
+"lon": 12.16919,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Niedervintl - Vandoies di Sotto",
+"names": [
+"Niedervintl - Vandoies di Sotto",
+"Niedervintl",
+"Vandoies di Sotto"
+],
+"lat": 46.81518,
+"lon": 11.72078,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Vahrn - Varna",
+"names": [
+"Vahrn - Varna",
+"Vahrn",
+"Varna"
+],
+"lat": 46.74039,
+"lon": 11.63457,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Planeil - Planol",
+"names": [
+"Planeil - Planol",
+"Planeil",
+"Planol"
+],
+"lat": 46.72222,
+"lon": 10.57935,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Matsch - Mazia",
+"names": [
+"Matsch - Mazia",
+"Matsch",
+"Mazia"
+],
+"lat": 46.69411,
+"lon": 10.61715,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Laatsch - Laudes",
+"names": [
+"Laatsch - Laudes",
+"Laatsch",
+"Laudes"
+],
+"lat": 46.67982,
+"lon": 10.53335,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Schleis - Clusio",
+"names": [
+"Schleis - Clusio",
+"Schleis",
+"Clusio"
+],
+"lat": 46.69326,
+"lon": 10.52272,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Burgeis - Burgusio",
+"names": [
+"Burgeis - Burgusio",
+"Burgeis",
+"Burgusio"
+],
+"lat": 46.71021,
+"lon": 10.52837,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Tartsch - Tarces",
+"names": [
+"Tartsch - Tarces",
+"Tartsch",
+"Tarces"
+],
+"lat": 46.68153,
+"lon": 10.56019,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Valentin auf der Haide - San Valentino alla Muta",
+"names": [
+"St. Valentin auf der Haide - San Valentino alla Muta",
+"St. Valentin auf der Haide",
+"San Valentino alla Muta"
+],
+"lat": 46.76597,
+"lon": 10.53186,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Reschen - Resia",
+"names": [
+"Reschen - Resia",
+"Reschen",
+"Resia"
+],
+"lat": 46.82964,
+"lon": 10.51831,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Platt - Plata",
+"names": [
+"Platt - Plata",
+"Platt",
+"Plata"
+],
+"lat": 46.82257,
+"lon": 11.17773,
+"place": "village",
+"rank": 2
+},
+{
+"name": "San Ćiascian - St. Kassian - San Cassiano",
+"names": [
+"San Ćiascian - St. Kassian - San Cassiano",
+"St. Kassian",
+"San Cassiano",
+"San Ćiascian"
+],
+"lat": 46.57114,
+"lon": 11.93209,
+"place": "village",
+"rank": 2
+},
+{
+"name": "La Ila - Stern - La Villa",
+"names": [
+"La Ila - Stern - La Villa",
+"Stern",
+"La Villa",
+"La Ila"
+],
+"lat": 46.58175,
+"lon": 11.89703,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Lungiarü - Campill - Longiarù",
+"names": [
+"Lungiarü - Campill - Longiarù",
+"Campill",
+"Longiarù",
+"Lungiarü"
+],
+"lat": 46.64102,
+"lon": 11.86215,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Klobenstein - Collalbo",
+"names": [
+"Klobenstein - Collalbo",
+"Klobenstein",
+"Collalbo"
+],
+"lat": 46.54039,
+"lon": 11.45703,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Montal - Mantana",
+"names": [
+"Montal - Mantana",
+"Montal",
+"Mantana"
+],
+"lat": 46.77125,
+"lon": 11.85869,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Uttenheim - Villa Ottone",
+"names": [
+"Uttenheim - Villa Ottone",
+"Uttenheim",
+"Villa Ottone"
+],
+"lat": 46.86521,
+"lon": 11.94651,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Mühlen in Taufers - Molini di Tures",
+"names": [
+"Mühlen in Taufers - Molini di Tures",
+"Mühlen in Taufers",
+"Molini di Tures"
+],
+"lat": 46.89916,
+"lon": 11.94291,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Vellau - Velloi",
+"names": [
+"Vellau - Velloi",
+"Vellau",
+"Velloi"
+],
+"lat": 46.69555,
+"lon": 11.10981,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Trafoi",
+"names": [
+"Trafoi"
+],
+"lat": 46.55225,
+"lon": 10.51029,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Prissian - Prissiano",
+"names": [
+"Prissian - Prissiano",
+"Prissian",
+"Prissiano"
+],
+"lat": 46.55331,
+"lon": 11.17941,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Saltaus - Saltusio",
+"names": [
+"Saltaus - Saltusio",
+"Saltaus",
+"Saltusio"
+],
+"lat": 46.72976,
+"lon": 11.20049,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Sankt Andrä - Sant'Andrea in Monte",
+"names": [
+"Sankt Andrä - Sant'Andrea in Monte",
+"St. Andrä",
+"Sant'Andrea in Monte"
+],
+"lat": 46.69833,
+"lon": 11.67574,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Albeins - Albes",
+"names": [
+"Albeins - Albes",
+"Albeins",
+"Albes"
+],
+"lat": 46.67685,
+"lon": 11.63149,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Sarns - Sarnes",
+"names": [
+"Sarns - Sarnes",
+"Sarns",
+"Sarnes"
+],
+"lat": 46.68811,
+"lon": 11.64766,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Pflaurenz - Floronzo",
+"names": [
+"Pflaurenz - Floronzo",
+"Pflaurenz",
+"Floronzo"
+],
+"lat": 46.7821,
+"lon": 11.89103,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Schlinig - Slingia",
+"names": [
+"Schlinig - Slingia",
+"Schlinig",
+"Slingia"
+],
+"lat": 46.7062,
+"lon": 10.47324,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Calfosch - Kolfuschg - Colfosco",
+"names": [
+"Calfosch - Kolfuschg - Colfosco",
+"Kolfuschg",
+"Colfosco",
+"Calfosch"
+],
+"lat": 46.55438,
+"lon": 11.85485,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Antholz Mittertal - Anterselva di Mezzo",
+"names": [
+"Antholz Mittertal - Anterselva di Mezzo",
+"Antholz Mittertal",
+"Anterselva di Mezzo"
+],
+"lat": 46.85923,
+"lon": 12.09937,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Antholz Niedertal - Anterselva di Sotto",
+"names": [
+"Antholz Niedertal - Anterselva di Sotto",
+"Antholz Niedertal",
+"Anterselva di Sotto"
+],
+"lat": 46.83111,
+"lon": 12.08793,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Oberrasen - Rasun di Sopra",
+"names": [
+"Oberrasen - Rasun di Sopra",
+"Oberrasen",
+"Rasun di Sopra"
+],
+"lat": 46.78927,
+"lon": 12.05866,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Niederrasen - Rasun di Sotto",
+"names": [
+"Niederrasen - Rasun di Sotto",
+"Niederrasen",
+"Rasun di Sotto"
+],
+"lat": 46.78189,
+"lon": 12.04889,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Georgen - San Giorgio",
+"names": [
+"St. Georgen - San Giorgio",
+"St.Georgen",
+"San Giorgio"
+],
+"lat": 46.81585,
+"lon": 11.93369,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Lappach - Lappago",
+"names": [
+"Lappach - Lappago",
+"Lappach",
+"Lappago"
+],
+"lat": 46.91857,
+"lon": 11.80318,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Katharinaberg - Monte Santa Caterina",
+"names": [
+"Katharinaberg - Monte Santa Caterina",
+"Katharinaberg",
+"Monte Santa Caterina"
+],
+"lat": 46.689,
+"lon": 10.9342,
+"place": "village",
+"rank": 2
+},
+{
+"name": "San Lugano",
+"names": [
+"San Lugano"
+],
+"lat": 46.31207,
+"lon": 11.39382,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Tschars - Ciardes",
+"names": [
+"Tschars - Ciardes",
+"Tschars",
+"Ciardes"
+],
+"lat": 46.6387,
+"lon": 10.9387,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Tschengls - Cengles",
+"names": [
+"Tschengls - Cengles",
+"Tschengls",
+"Cengles"
+],
+"lat": 46.61325,
+"lon": 10.63601,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Aschbach - Riolagundo",
+"names": [
+"Aschbach - Riolagundo",
+"Aschbach",
+"Riolagundo"
+],
+"lat": 46.6433,
+"lon": 11.07296,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Kaltenbrunn - Fontanefredde",
+"names": [
+"Kaltenbrunn - Fontanefredde",
+"Kaltenbrunn",
+"Fontanefredde"
+],
+"lat": 46.33012,
+"lon": 11.37489,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Unterradein - Redagno di Sotto",
+"names": [
+"Unterradein - Redagno di Sotto",
+"Unterradein",
+"Redagno di Sotto"
+],
+"lat": 46.33683,
+"lon": 11.38537,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Oberradein - Redagno di Sopra",
+"names": [
+"Oberradein - Redagno di Sopra",
+"Oberradein",
+"Redagno di Sopra"
+],
+"lat": 46.34603,
+"lon": 11.39753,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Sankt Gertraud - Santa Gertrude",
+"names": [
+"Sankt Gertraud - Santa Gertrude",
+"St. Gertraud",
+"Santa Gertrude"
+],
+"lat": 46.48976,
+"lon": 10.87091,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Afing - Avigna",
+"names": [
+"Afing - Avigna",
+"Afing",
+"Avigna"
+],
+"lat": 46.56377,
+"lon": 11.35671,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Rabland - Rablà",
+"names": [
+"Rabland - Rablà",
+"Rabland",
+"Rablà"
+],
+"lat": 46.67288,
+"lon": 11.06174,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Wangen - Vanga",
+"names": [
+"Wangen - Vanga",
+"Wangen",
+"Vanga"
+],
+"lat": 46.5611,
+"lon": 11.38392,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Flaas - Valas",
+"names": [
+"Flaas - Valas",
+"Flaas",
+"Valas"
+],
+"lat": 46.58521,
+"lon": 11.29635,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Kurzras - Maso Corto",
+"names": [
+"Kurzras - Maso Corto",
+"Kurzras",
+"Maso Corto"
+],
+"lat": 46.75651,
+"lon": 10.78275,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Meransen - Maranza",
+"names": [
+"Meransen - Maranza",
+"Meransen",
+"Maranza"
+],
+"lat": 46.81335,
+"lon": 11.662,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Jakob - San Giacomo",
+"names": [
+"St. Jakob - San Giacomo",
+"St. Jakob",
+"San Giacomo"
+],
+"lat": 46.96902,
+"lon": 11.60274,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Stilfes - Stilves",
+"names": [
+"Stilfes - Stilves",
+"Stilfes",
+"Stilves"
+],
+"lat": 46.86688,
+"lon": 11.47889,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Teis - Tiso",
+"names": [
+"Teis - Tiso",
+"Teis",
+"Tiso"
+],
+"lat": 46.65273,
+"lon": 11.62042,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Magdalena - Santa Maddalena",
+"names": [
+"St. Magdalena - Santa Maddalena",
+"St. Magdalena",
+"Santa Maddalena"
+],
+"lat": 46.64146,
+"lon": 11.71533,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Söll - Sella",
+"names": [
+"Söll - Sella",
+"Söll (Tramin)",
+"Sella di Termeno"
+],
+"lat": 46.36008,
+"lon": 11.24236,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Durnholz - Valdurna",
+"names": [
+"Durnholz - Valdurna",
+"Durnholz",
+"Valdurna"
+],
+"lat": 46.73966,
+"lon": 11.43924,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Tabland - Tablà",
+"names": [
+"Tabland - Tablà",
+"Tabland",
+"Tablà"
+],
+"lat": 46.63502,
+"lon": 10.9747,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Pochi - Buchholz",
+"names": [
+"Pochi - Buchholz",
+"Buchholz",
+"Pochi"
+],
+"lat": 46.24747,
+"lon": 11.24313,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Steinhaus - Cadipietra",
+"names": [
+"Steinhaus - Cadipietra",
+"Steinhaus",
+"Cadipietra"
+],
+"lat": 46.99601,
+"lon": 11.98124,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Thuins - Tunes",
+"names": [
+"Thuins - Tunes",
+"Thuins",
+"Tunes"
+],
+"lat": 46.89063,
+"lon": 11.41624,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Karersee - Carezza",
+"names": [
+"Karersee - Carezza",
+"Karersee",
+"Carezza"
+],
+"lat": 46.41034,
+"lon": 11.58678,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Nordheim - Villa",
+"names": [
+"Nordheim - Villa",
+"Nordheim",
+"Villa"
+],
+"lat": 46.65788,
+"lon": 11.36031,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Mittertal - Val di Mezzo",
+"names": [
+"Mittertal - Val di Mezzo",
+"Mittertal",
+"Val di Mezzo"
+],
+"lat": 46.8547,
+"lon": 11.3861,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Oberbozen - Soprabolzano",
+"names": [
+"Oberbozen - Soprabolzano",
+"Oberbozen",
+"Soprabolzano"
+],
+"lat": 46.52955,
+"lon": 11.40635,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Gossensaß - Colle Isarco",
+"names": [
+"Gossensaß - Colle Isarco",
+"Gossensaß",
+"Colle Isarco"
+],
+"lat": 46.93802,
+"lon": 11.44402,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Girlan - Cornaiano",
+"names": [
+"Girlan - Cornaiano",
+"Girlan",
+"Cornaiano"
+],
+"lat": 46.46334,
+"lon": 11.28076,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Pauls - San Paolo",
+"names": [
+"St. Pauls - San Paolo",
+"St. Pauls",
+"San Paolo"
+],
+"lat": 46.47222,
+"lon": 11.26146,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Michael - San Michele",
+"names": [
+"St. Michael - San Michele",
+"St. Michael",
+"San Michele"
+],
+"lat": 46.45527,
+"lon": 11.25912,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Frangart - Frangarto",
+"names": [
+"Frangart - Frangarto",
+"Frangart",
+"Frangarto"
+],
+"lat": 46.47861,
+"lon": 11.2972,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Missian - Missiano",
+"names": [
+"Missian - Missiano",
+"Missian",
+"Missiano"
+],
+"lat": 46.48471,
+"lon": 11.25424,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Morter",
+"names": [
+"Morter"
+],
+"lat": 46.60633,
+"lon": 10.82225,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Goldrain - Coldrano",
+"names": [
+"Goldrain - Coldrano",
+"Goldrain",
+"Coldrano"
+],
+"lat": 46.62177,
+"lon": 10.82775,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Tarsch - Tarres",
+"names": [
+"Tarsch - Tarres",
+"Tarsch",
+"Tarres"
+],
+"lat": 46.60688,
+"lon": 10.87732,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Schlaneid - Salonetto",
+"names": [
+"Schlaneid - Salonetto",
+"Schlaneid",
+"Salonetto"
+],
+"lat": 46.57559,
+"lon": 11.23753,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Falzeben",
+"names": [
+"Falzeben"
+],
+"lat": 46.66576,
+"lon": 11.24117,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Oberolang - Valdaora di Sopra",
+"names": [
+"Oberolang - Valdaora di Sopra",
+"Oberolang",
+"Valdora di Sopra"
+],
+"lat": 46.75805,
+"lon": 12.03924,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Mitterolang - Valdaora di Mezzo",
+"names": [
+"Mitterolang - Valdaora di Mezzo",
+"Mitterolang",
+"Valdaora di Mezzo"
+],
+"lat": 46.76127,
+"lon": 12.02956,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Niederolang - Valdaora di Sotto",
+"names": [
+"Niederolang - Valdaora di Sotto",
+"Niederolang",
+"Valdaora di Sotto"
+],
+"lat": 46.76793,
+"lon": 12.01895,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Sankt Jakob - San Giacomo",
+"names": [
+"Sankt Jakob - San Giacomo",
+"Sankt Jakob",
+"San Giacomo"
+],
+"lat": 47.00952,
+"lon": 12.01254,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Viums - Fiumes",
+"names": [
+"Viums - Fiumes",
+"Viums",
+"Fiumes"
+],
+"lat": 46.76524,
+"lon": 11.68442,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Elvas",
+"names": [
+"Elvas"
+],
+"lat": 46.73237,
+"lon": 11.66639,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Göflan - Covelano",
+"names": [
+"Göflan - Covelano",
+"Göflan",
+"Covelano"
+],
+"lat": 46.62114,
+"lon": 10.7657,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Unser Frau - Madonna",
+"names": [
+"Unser Frau - Madonna",
+"Unser Frau",
+"Madonna"
+],
+"lat": 46.72231,
+"lon": 10.85966,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Tschirland - Cirlano",
+"names": [
+"Tschirland - Cirlano",
+"Tschirland",
+"Cirlano"
+],
+"lat": 46.64265,
+"lon": 10.98951,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Innerpflersch - Fleres di Dentro",
+"names": [
+"Innerpflersch - Fleres di Dentro",
+"Innerpflersch",
+"Fleres di Dentro"
+],
+"lat": 46.96332,
+"lon": 11.35365,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Allitz - Alliz",
+"names": [
+"Allitz - Alliz",
+"Allitz",
+"Alliz"
+],
+"lat": 46.63237,
+"lon": 10.72019,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Pfelders - Plan",
+"names": [
+"Pfelders - Plan",
+"Pfelders",
+"Plan"
+],
+"lat": 46.79528,
+"lon": 11.08951,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Neustift - Novacella",
+"names": [
+"Neustift - Novacella",
+"Neustift",
+"Novacella"
+],
+"lat": 46.74079,
+"lon": 11.65192,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Elzenbaum - Pruno",
+"names": [
+"Elzenbaum - Pruno",
+"Elzenbaum",
+"Pruno"
+],
+"lat": 46.87468,
+"lon": 11.4453,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Mauls - Mules",
+"names": [
+"Mauls - Mules",
+"Mauls",
+"Mules"
+],
+"lat": 46.85498,
+"lon": 11.52374,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Grasstein - Le Cave",
+"names": [
+"Grasstein - Le Cave",
+"Grasstein",
+"Le Cave"
+],
+"lat": 46.81968,
+"lon": 11.53518,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Mittewald - Mezzaselva",
+"names": [
+"Mittewald - Mezzaselva",
+"Mittewald",
+"Mezzaselva"
+],
+"lat": 46.80686,
+"lon": 11.57366,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Trens",
+"names": [
+"Trens"
+],
+"lat": 46.87614,
+"lon": 11.48561,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Gasteig - Casateia",
+"names": [
+"Gasteig - Casateia",
+"Gasteig",
+"Casateia"
+],
+"lat": 46.88239,
+"lon": 11.4056,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Anton - S. Antonio",
+"names": [
+"St. Anton - S. Antonio",
+"Außertal",
+"Val di fuori"
+],
+"lat": 46.86602,
+"lon": 11.40251,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Aicha - Aica",
+"names": [
+"Aicha - Aica",
+"Aicha",
+"Aica"
+],
+"lat": 46.77594,
+"lon": 11.64178,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Eyrs - Oris",
+"names": [
+"Eyrs - Oris",
+"Eyrs",
+"Oris"
+],
+"lat": 46.63025,
+"lon": 10.64634,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Rabenstein - Corvara in Passiria",
+"names": [
+"Rabenstein - Corvara in Passiria",
+"Rabenstein",
+"Corvara in Passiria"
+],
+"lat": 46.87054,
+"lon": 11.14958,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Klerant - Cleran",
+"names": [
+"Klerant - Cleran",
+"Klerant",
+"Cleran"
+],
+"lat": 46.68762,
+"lon": 11.66095,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Milland - Millan",
+"names": [
+"Milland - Millan",
+"Milland",
+"Millan"
+],
+"lat": 46.70645,
+"lon": 11.66184,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Gufidaun - Gudon",
+"names": [
+"Gufidaun - Gudon",
+"Gufidaun",
+"Gudon"
+],
+"lat": 46.64882,
+"lon": 11.60241,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Garn - Caerna",
+"names": [
+"Garn - Caerna",
+"Garn",
+"Caerna"
+],
+"lat": 46.66638,
+"lon": 11.57777,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Verdings - Verdignes",
+"names": [
+"Verdings - Verdignes",
+"Verdings",
+"Verdignes"
+],
+"lat": 46.65492,
+"lon": 11.57126,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Latzfons - Lazfons",
+"names": [
+"Latzfons - Lazfons",
+"Latzfons",
+"Lazfons"
+],
+"lat": 46.66919,
+"lon": 11.54975,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Albions",
+"names": [
+"Albions"
+],
+"lat": 46.62335,
+"lon": 11.56117,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Kollmann - Colma",
+"names": [
+"Kollmann - Colma",
+"Kollmann",
+"Colma"
+],
+"lat": 46.59082,
+"lon": 11.52472,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Mellaun - Meluno",
+"names": [
+"Mellaun - Meluno",
+"Mellaun",
+"Meluno"
+],
+"lat": 46.69336,
+"lon": 11.66894,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Georg - San Giorgio di Eores",
+"names": [
+"St. Georg - San Giorgio di Eores",
+"St. Georg",
+"San Giorgio di Eores"
+],
+"lat": 46.66795,
+"lon": 11.69275,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Corvara - Corvara in Badia",
+"names": [
+"Corvara - Corvara in Badia",
+"Corvara",
+"Corvara in Badia"
+],
+"lat": 46.54957,
+"lon": 11.87403,
+"place": "village",
+"rank": 2
+},
+{
+"name": "La Plì de Mareo - Enneberg - Pieve di Marebbe",
+"names": [
+"La Plì de Mareo - Enneberg - Pieve di Marebbe",
+"Enneberg Pfarre",
+"Pieve di Marebbe",
+"La Pli de Mareo"
+],
+"lat": 46.71884,
+"lon": 11.91948,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Rina - Welschellen",
+"names": [
+"Rina - Welschellen",
+"Welschellen",
+"Rina"
+],
+"lat": 46.7156,
+"lon": 11.87964,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Antermëia - Untermoi - Antermoia",
+"names": [
+"Antermëia - Untermoi - Antermoia",
+"Untermoj",
+"Antermoia",
+"Antermëia"
+],
+"lat": 46.69071,
+"lon": 11.85018,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Stefansdorf - Santo Stefano",
+"names": [
+"Stefansdorf - Santo Stefano",
+"Stefansdorf",
+"Santo Stefano"
+],
+"lat": 46.76958,
+"lon": 11.92305,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Reischach - Riscone",
+"names": [
+"Reischach - Riscone",
+"Reischach",
+"Riscone"
+],
+"lat": 46.77666,
+"lon": 11.95029,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Martin - San Martino",
+"names": [
+"St. Martin - San Martino",
+"St. Martin",
+"San Martino"
+],
+"lat": 46.77616,
+"lon": 11.89612,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Stuls - Stulles",
+"names": [
+"Stuls - Stulles",
+"Stuls",
+"Stulles"
+],
+"lat": 46.82844,
+"lon": 11.19668,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Obervintl - Vandoies di Sopra",
+"names": [
+"Obervintl - Vandoies di Sopra",
+"Obervintl",
+"Vandoies di Sopra"
+],
+"lat": 46.81314,
+"lon": 11.75525,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Sigmund - San Sigismondo",
+"names": [
+"St. Sigmund - San Sigismondo",
+"St. Sigmund",
+"San Sigismondo"
+],
+"lat": 46.81406,
+"lon": 11.80426,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Mühlen - Molini",
+"names": [
+"Mühlen - Molini",
+"Mühlen",
+"Molini"
+],
+"lat": 46.81787,
+"lon": 11.84796,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Issing - Issengo",
+"names": [
+"Issing - Issengo",
+"Issing",
+"Issengo"
+],
+"lat": 46.81608,
+"lon": 11.86255,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Ast",
+"names": [
+"Ast",
+"Lasta di Dentro"
+],
+"lat": 46.83146,
+"lon": 11.79471,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Vill - Villa",
+"names": [
+"Vill - Villa",
+"Vill",
+"Villa"
+],
+"lat": 46.77743,
+"lon": 11.6906,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Pauls - San Paolo",
+"names": [
+"St. Pauls - San Paolo",
+"St. Pauls",
+"San Paolo"
+],
+"lat": 46.78588,
+"lon": 11.67821,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Kematen - Caminata",
+"names": [
+"Kematen - Caminata",
+"Kematen",
+"Caminata"
+],
+"lat": 46.9589,
+"lon": 11.54354,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Ridnaun - Ridanna",
+"names": [
+"Ridnaun - Ridanna",
+"Ridnaun",
+"Ridanna"
+],
+"lat": 46.90993,
+"lon": 11.30559,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Pfunders - Fundres",
+"names": [
+"Pfunders - Fundres",
+"Pfunders",
+"Fundres"
+],
+"lat": 46.88733,
+"lon": 11.70871,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Mareit - Mareta",
+"names": [
+"Mareit - Mareta",
+"Mareit",
+"Mareta"
+],
+"lat": 46.89263,
+"lon": 11.35103,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Bichl - Colle",
+"names": [
+"Bichl - Colle",
+"Bichl",
+"Colle"
+],
+"lat": 46.86503,
+"lon": 11.31217,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Pardaun - Pratone",
+"names": [
+"Pardaun - Pratone",
+"Pardaun",
+"Pratone"
+],
+"lat": 46.88019,
+"lon": 11.36544,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Walten - Valtina",
+"names": [
+"Walten - Valtina",
+"Walten",
+"Valtina"
+],
+"lat": 46.82575,
+"lon": 11.28865,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Vals - Valles",
+"names": [
+"Vals - Valles",
+"Vals",
+"Valles"
+],
+"lat": 46.84241,
+"lon": 11.62712,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Weitental - Vallarga",
+"names": [
+"Weitental - Vallarga",
+"Weitental",
+"Vallarga"
+],
+"lat": 46.84319,
+"lon": 11.72693,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Weissenbach - Rio Bianco",
+"names": [
+"Weissenbach - Rio Bianco",
+"Weissenbach",
+"Rio Bianco"
+],
+"lat": 46.77049,
+"lon": 11.36808,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Pens - Pennes",
+"names": [
+"Pens - Pennes",
+"Pens",
+"Pennes"
+],
+"lat": 46.78069,
+"lon": 11.41509,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Schalders - Scaleres",
+"names": [
+"Schalders - Scaleres",
+"Schalders",
+"Scaleres"
+],
+"lat": 46.7397,
+"lon": 11.59653,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Stange - Stanghe",
+"names": [
+"Stange - Stanghe",
+"Stange",
+"Stanghe"
+],
+"lat": 46.88193,
+"lon": 11.37796,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Eggen - Ega",
+"names": [
+"Eggen - Ega",
+"Eggen",
+"Ega"
+],
+"lat": 46.40978,
+"lon": 11.50459,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Rein in Taufers - Riva di Tures",
+"names": [
+"Rein in Taufers - Riva di Tures",
+"Rein in Taufers",
+"Riva di Tures"
+],
+"lat": 46.94902,
+"lon": 12.06464,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Natz - Naz",
+"names": [
+"Natz - Naz",
+"Natz",
+"Naz"
+],
+"lat": 46.75252,
+"lon": 11.68062,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Antholz Obertal - Anterselva di Sopra",
+"names": [
+"Antholz Obertal - Anterselva di Sopra",
+"Antholz Obertal",
+"Anterselva di Sopra"
+],
+"lat": 46.87367,
+"lon": 12.12752,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Vilpian - Vilpiano",
+"names": [
+"Vilpian - Vilpiano",
+"Vilpian",
+"Vilpiano"
+],
+"lat": 46.55872,
+"lon": 11.22381,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Gargazon - Gargazzone",
+"names": [
+"Gargazon - Gargazzone",
+"Gargazon",
+"Gargazzone"
+],
+"lat": 46.58478,
+"lon": 11.20273,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Kortsch - Corzes",
+"names": [
+"Kortsch - Corzes",
+"Kortsch",
+"Corzes"
+],
+"lat": 46.63058,
+"lon": 10.75712,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Obergummer - San Valentino di Sopra",
+"names": [
+"Obergummer - San Valentino di Sopra",
+"Obergummer",
+"San Valentino di Sopra"
+],
+"lat": 46.44773,
+"lon": 11.47777,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Gummer - San Valentino in Campo",
+"names": [
+"Gummer - San Valentino in Campo",
+"Gummer",
+"San Valentino in Campo"
+],
+"lat": 46.43898,
+"lon": 11.47835,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Agums - Agumes",
+"names": [
+"Agums - Agumes",
+"Agums",
+"Agumes"
+],
+"lat": 46.62278,
+"lon": 10.58205,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Kastelbell - Castelbello",
+"names": [
+"Kastelbell - Castelbello",
+"Kastelbell",
+"Castelbello"
+],
+"lat": 46.62824,
+"lon": 10.90176,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Taisten - Tesido",
+"names": [
+"Taisten - Tesido",
+"Taisten",
+"Tesido"
+],
+"lat": 46.7678,
+"lon": 12.11328,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Unterplanken - Planca di sotto",
+"names": [
+"Unterplanken - Planca di sotto",
+"Unterplanken",
+"Planca di sotto"
+],
+"lat": 46.77191,
+"lon": 12.19265,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Tanas",
+"names": [
+"Tanas"
+],
+"lat": 46.6397,
+"lon": 10.66686,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Sulden - Solda",
+"names": [
+"Sulden - Solda",
+"Sulden",
+"Solda"
+],
+"lat": 46.52804,
+"lon": 10.58426,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Raas - Rasa",
+"names": [
+"Raas - Rasa",
+"Raas",
+"Rasa"
+],
+"lat": 46.74978,
+"lon": 11.66017,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Welsberg - Monguelfo",
+"names": [
+"Welsberg - Monguelfo",
+"Welsberg",
+"Monguelfo"
+],
+"lat": 46.7569,
+"lon": 12.10435,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Spinges - Spinga",
+"names": [
+"Spinges - Spinga",
+"Spinges",
+"Spinga"
+],
+"lat": 46.78829,
+"lon": 11.65291,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Atzwang - Campodazzo",
+"names": [
+"Atzwang - Campodazzo",
+"Atzwang",
+"Campodazzo"
+],
+"lat": 46.53415,
+"lon": 11.49208,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Riffian - Rifiano",
+"names": [
+"Riffian - Rifiano",
+"Riffian",
+"Rifiano"
+],
+"lat": 46.70364,
+"lon": 11.18144,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Kuens - Caines",
+"names": [
+"Kuens - Caines",
+"Kuens",
+"Caines"
+],
+"lat": 46.69948,
+"lon": 11.16949,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Magdalena - Santa Maddalena in Casies",
+"names": [
+"St. Magdalena - Santa Maddalena in Casies",
+"St. Magdalena",
+"Santa Maddalena in Casies"
+],
+"lat": 46.83469,
+"lon": 12.23909,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Pichl - Colle",
+"names": [
+"Pichl - Colle",
+"Pichl",
+"Colle"
+],
+"lat": 46.77801,
+"lon": 12.1909,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Martin - San Martino in Casies",
+"names": [
+"St. Martin - San Martino in Casies",
+"St. Martin",
+"San Martino in Casies"
+],
+"lat": 46.81202,
+"lon": 12.22865,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Unsere Liebe Frau im Walde - Senale",
+"names": [
+"Unsere Liebe Frau im Walde - Senale",
+"Unsere Liebe Frau im Walde",
+"Senale"
+],
+"lat": 46.51158,
+"lon": 11.10899,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Sinigo - Sinich",
+"names": [
+"Sinigo - Sinich",
+"Sinich",
+"Sinigo"
+],
+"lat": 46.64524,
+"lon": 11.18021,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Lengstein - Longostagno",
+"names": [
+"Lengstein - Longostagno",
+"Lengstein",
+"Longostagno"
+],
+"lat": 46.55504,
+"lon": 11.49207,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Mühlbach - Rio di Pusteria",
+"names": [
+"Mühlbach - Rio di Pusteria",
+"Mühlbach",
+"Rio di Pusteria"
+],
+"lat": 46.79595,
+"lon": 11.66683,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Reinswald - San Martino",
+"names": [
+"Reinswald - San Martino",
+"Reinswald",
+"San Martino"
+],
+"lat": 46.68873,
+"lon": 11.41671,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Sarnthein - Sarentino",
+"names": [
+"Sarnthein - Sarentino",
+"Sarnthein",
+"Sarentino"
+],
+"lat": 46.64299,
+"lon": 11.35662,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Astfeld - Campolasta",
+"names": [
+"Astfeld - Campolasta",
+"Astfeld",
+"Campolasta"
+],
+"lat": 46.66589,
+"lon": 11.36484,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Ahornach - Acereto",
+"names": [
+"Ahornach - Acereto",
+"Ahornach",
+"Acereto"
+],
+"lat": 46.92596,
+"lon": 11.97737,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Felix - San Felice",
+"names": [
+"St. Felix - San Felice",
+"St. Felix",
+"San Felice",
+"Caseid"
+],
+"lat": 46.49231,
+"lon": 11.13021,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Dörfl - Monteplair",
+"names": [
+"Dörfl - Monteplair",
+"Dörfl",
+"Monteplair"
+],
+"lat": 46.75742,
+"lon": 10.54477,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Rentsch - Rencio",
+"names": [
+"Rentsch - Rencio",
+"Rentsch",
+"Rencio",
+"Runc"
+],
+"lat": 46.49878,
+"lon": 11.3751,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Tarnell - Tarnello",
+"names": [
+"Tarnell - Tarnello",
+"Tarnell",
+"Tarnello"
+],
+"lat": 46.60443,
+"lon": 10.70815,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Stilfs Dorf - Stelvio Paese",
+"names": [
+"Stilfs Dorf - Stelvio Paese",
+"Stilfs Dorf",
+"Stelvio Paese"
+],
+"lat": 46.59806,
+"lon": 10.54582,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Blumau - Prato all'Isarco",
+"names": [
+"Blumau - Prato all'Isarco",
+"Blumau",
+"Prato all'Isarco"
+],
+"lat": 46.49524,
+"lon": 11.44747,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Völs am Schlern - Fiè allo Sciliar",
+"names": [
+"Völs am Schlern - Fiè allo Sciliar",
+"Völs am Schlern",
+"Fiè allo Sciliar"
+],
+"lat": 46.51777,
+"lon": 11.50278,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Seis am Schlern - Siusi allo Sciliar",
+"names": [
+"Seis am Schlern - Siusi allo Sciliar",
+"Seis am Schlern",
+"Siusi allo Sciliar",
+"Sëuc"
+],
+"lat": 46.54373,
+"lon": 11.56303,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Lana",
+"names": [
+"Lana"
+],
+"lat": 46.61602,
+"lon": 11.14486,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Nikolaus - San Nicolò",
+"names": [
+"St. Nikolaus - San Nicolò",
+"St. Nikolaus",
+"San Nicolò"
+],
+"lat": 46.41882,
+"lon": 11.23378,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Quellenhof - Sorgente",
+"names": [
+"Quellenhof - Sorgente",
+"Quellenhof",
+"Sorgente"
+],
+"lat": 46.74507,
+"lon": 11.20438,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Kardaun - Cardano",
+"names": [
+"Kardaun - Cardano",
+"Kardaun",
+"Cardano"
+],
+"lat": 46.49372,
+"lon": 11.39365,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Gifen - Chivo",
+"names": [
+"Gifen - Chivo",
+"Gifen",
+"Chivo"
+],
+"lat": 46.78411,
+"lon": 11.70002,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Nauders - San Benedetto",
+"names": [
+"Nauders - San Benedetto",
+"Nauders",
+"San Benedetto"
+],
+"lat": 46.78765,
+"lon": 11.69111,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Petersberg - Monte San Pietro",
+"names": [
+"Petersberg - Monte San Pietro",
+"Petersberg",
+"Monte San Pietro"
+],
+"lat": 46.39665,
+"lon": 11.38935,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Froi - Froia",
+"names": [
+"Froi - Froia",
+"Froi",
+"Froia"
+],
+"lat": 46.82671,
+"lon": 10.50761,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Stilfserbrücke - Ponte Stelvio",
+"names": [
+"Stilfserbrücke - Ponte Stelvio",
+"Stilfserbrücke",
+"Ponte Stelvio"
+],
+"lat": 46.59295,
+"lon": 10.5503,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Unterinn - Auna di Sotto",
+"names": [
+"Unterinn - Auna di Sotto",
+"Unterinn",
+"Auna di Sotto"
+],
+"lat": 46.51196,
+"lon": 11.44208,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Palmschoß - Plancios",
+"names": [
+"Palmschoß - Plancios",
+"Palmschoß",
+"Plancios"
+],
+"lat": 46.67567,
+"lon": 11.71345,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Kreuztal - Val Croce",
+"names": [
+"Kreuztal - Val Croce",
+"Kreuztal",
+"Val Croce"
+],
+"lat": 46.68314,
+"lon": 11.70874,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Verschneid - Frassineto",
+"names": [
+"Verschneid - Frassineto",
+"Verschneid",
+"Frassineto"
+],
+"lat": 46.56415,
+"lon": 11.26549,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Versein - Vallesina",
+"names": [
+"Versein - Vallesina",
+"Versein",
+"Vallesina"
+],
+"lat": 46.57303,
+"lon": 11.25652,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Breien - Briè",
+"names": [
+"Breien - Briè",
+"Breien",
+"Briè"
+],
+"lat": 46.47567,
+"lon": 11.49278,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Pineta - Steinmannwald",
+"names": [
+"Pineta - Steinmannwald",
+"Steinmannwald",
+"Pineta"
+],
+"lat": 46.43886,
+"lon": 11.34683,
+"place": "village",
+"rank": 2
+},
+{
+"name": "San Giacomo - St. Jakob",
+"names": [
+"San Giacomo - St. Jakob",
+"St. Jakob",
+"San Giacomo"
+],
+"lat": 46.4597,
+"lon": 11.3341,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Siebeneich - Settequerce",
+"names": [
+"Siebeneich - Settequerce",
+"Siebeneich",
+"Settequerce"
+],
+"lat": 46.51104,
+"lon": 11.2745,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Oberinn - Auna di Sopra",
+"names": [
+"Oberinn - Auna di Sopra",
+"Oberinn",
+"Auna di Sopra"
+],
+"lat": 46.56084,
+"lon": 11.41313,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Wahlen - Valle San Silvestro",
+"names": [
+"Wahlen - Valle San Silvestro",
+"Wahlen",
+"Valle San Silvestro"
+],
+"lat": 46.74594,
+"lon": 12.23375,
+"place": "village",
+"rank": 2
+},
+{
+"name": "La Costa - Seit",
+"names": [
+"La Costa - Seit",
+"Seit",
+"La Costa"
+],
+"lat": 46.45929,
+"lon": 11.35181,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Vernagt - Vernago",
+"names": [
+"Vernagt - Vernago",
+"Vernagt",
+"Vernago"
+],
+"lat": 46.73665,
+"lon": 10.84958,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Taufers - Tures",
+"names": [
+"Taufers - Tures",
+"Taufers",
+"Tures"
+],
+"lat": 46.91102,
+"lon": 11.94866,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Steinegg - Collepietra",
+"names": [
+"Steinegg - Collepietra",
+"Steinegg",
+"Collepietra"
+],
+"lat": 46.48589,
+"lon": 11.45528,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Kematen - Caminata di Tures",
+"names": [
+"Kematen - Caminata di Tures",
+"Kematen",
+"Caminata di Tires"
+],
+"lat": 46.9013,
+"lon": 11.95689,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Weißenbach - Riobianco",
+"names": [
+"Weißenbach - Riobianco",
+"Weißenbach",
+"Riobianco"
+],
+"lat": 46.94965,
+"lon": 11.87492,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Johann im Ahrntal - San Giovanni Valle Aurina",
+"names": [
+"St. Johann im Ahrntal - San Giovanni Valle Aurina",
+"St. Johann im Ahrntal",
+"San Giovanni Valle Aurina"
+],
+"lat": 46.97939,
+"lon": 11.9406,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Luttach - Lutago",
+"names": [
+"Luttach - Lutago",
+"Luttach",
+"Lutago"
+],
+"lat": 46.95106,
+"lon": 11.92122,
+"place": "village",
+"rank": 2
+},
+{
+"name": "La Val - Wengen - La Valle",
+"names": [
+"La Val - Wengen - La Valle",
+"Wengen",
+"La Valle",
+"La Val"
+],
+"lat": 46.65772,
+"lon": 11.92433,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Hafling Oberdorf - Avelengo di Sopra",
+"names": [
+"Hafling Oberdorf - Avelengo di Sopra",
+"Hafling Oberdorf",
+"Avelengo di Sopra"
+],
+"lat": 46.65436,
+"lon": 11.21991,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Moos - Moso",
+"names": [
+"Moos - Moso",
+"Moos",
+"Moso"
+],
+"lat": 46.68966,
+"lon": 12.36659,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Weisslahnbad - Lavina Bianca",
+"names": [
+"Weisslahnbad - Lavina Bianca",
+"Weisslahnbad",
+"Lavina Bianca"
+],
+"lat": 46.47675,
+"lon": 11.55692,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Kuppelwies - Pracupola",
+"names": [
+"Kuppelwies - Pracupola",
+"Kuppelwies",
+"Pracupola"
+],
+"lat": 46.53111,
+"lon": 10.95927,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Völlan - Foiana",
+"names": [
+"Völlan - Foiana",
+"Völlan",
+"Foiana"
+],
+"lat": 46.58896,
+"lon": 11.14713,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Onach - Onies",
+"names": [
+"Onach - Onies",
+"Onach",
+"Onies"
+],
+"lat": 46.74947,
+"lon": 11.86679,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Verdins",
+"names": [
+"Verdins"
+],
+"lat": 46.71266,
+"lon": 11.20536,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Nikolaus - San Nicolò",
+"names": [
+"St. Nikolaus - San Nicolò",
+"St. Nikolaus",
+"San Nicolò"
+],
+"lat": 46.51149,
+"lon": 10.92383,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Oberlappach - Lappago di Sopra",
+"names": [
+"Oberlappach - Lappago di Sopra",
+"Oberlappach",
+"Lappago di Sopra"
+],
+"lat": 46.92501,
+"lon": 11.79932,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Thal",
+"names": [
+"Thal",
+"Martell Dorf - Martello Paese"
+],
+"lat": 46.5656,
+"lon": 10.78302,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Villanders - Villandro",
+"names": [
+"Villanders - Villandro",
+"Villanders",
+"Villandro"
+],
+"lat": 46.63293,
+"lon": 11.5401,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Staben - Stava",
+"names": [
+"Staben - Stava",
+"Staben",
+"Stava"
+],
+"lat": 46.64576,
+"lon": 10.96643,
+"place": "village",
+"rank": 2
+},
+{
+"name": "St. Jakob - San Giacomo",
+"names": [
+"St. Jakob - San Giacomo",
+"St. Jakob",
+"San Giacomo"
+],
+"lat": 46.67222,
+"lon": 11.66818,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Außerpflersch - Fleres di Fuori",
+"names": [
+"Außerpflersch - Fleres di Fuori"
+],
+"lat": 46.94372,
+"lon": 11.41514,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Sand in Taufers - Campo Tures",
+"names": [
+"Sand in Taufers - Campo Tures",
+"Sand in Taufers",
+"Campo Tures"
+],
+"lat": 46.91924,
+"lon": 11.95518,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Telfes - Telves",
+"names": [
+"Telfes - Telves",
+"Telfes",
+"Telves"
+],
+"lat": 46.89296,
+"lon": 11.38569,
+"place": "village",
+"rank": 2
+},
+{
+"name": "Spondinig - Spondigna",
+"names": [
+"Spondinig - Spondigna",
+"Spondinig",
+"Spondigna"
+],
+"lat": 46.6336,
+"lon": 10.61294,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Winnebach - Prato alla Drava",
+"names": [
+"Winnebach - Prato alla Drava",
+"Winnebach",
+"Prato alla Drava"
+],
+"lat": 46.74071,
+"lon": 12.35975,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Costadedoi",
+"names": [
+"Costadedoi"
+],
+"lat": 46.57745,
+"lon": 11.92501,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Anví",
+"names": [
+"Anví"
+],
+"lat": 46.60247,
+"lon": 11.90395,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gomagoi",
+"names": [
+"Gomagoi"
+],
+"lat": 46.57624,
+"lon": 10.54097,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sankt Michael - San Michele",
+"names": [
+"Sankt Michael - San Michele",
+"Sankt Michael",
+"San Michele",
+"San Michiel"
+],
+"lat": 46.57841,
+"lon": 11.60199,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pinzon - Pinzano",
+"names": [
+"Pinzon - Pinzano",
+"Pinzon",
+"Pinzano"
+],
+"lat": 46.32081,
+"lon": 11.29279,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Entiklar - Niclara",
+"names": [
+"Entiklar - Niclara",
+"Entiklar",
+"Niclara"
+],
+"lat": 46.30006,
+"lon": 11.21274,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Penon - Penone",
+"names": [
+"Penon - Penone",
+"Penon",
+"Penone"
+],
+"lat": 46.30357,
+"lon": 11.20117,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Graun - Corona",
+"names": [
+"Graun - Corona",
+"Graun",
+"Corona"
+],
+"lat": 46.32369,
+"lon": 11.21547,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Lichtenberg - Montechiaro",
+"names": [
+"Lichtenberg - Montechiaro",
+"Lichtenberg",
+"Montechiaro"
+],
+"lat": 46.63646,
+"lon": 10.56833,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ried - Novale",
+"names": [
+"Ried - Novale",
+"Ried",
+"Novale"
+],
+"lat": 46.9299,
+"lon": 11.52333,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Alpreid",
+"names": [
+"Alpreid",
+"Alta Braida"
+],
+"lat": 46.60113,
+"lon": 11.10049,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plawenn - Piavenna",
+"names": [
+"Plawenn - Piavenna",
+"Plawenn",
+"Piavenna"
+],
+"lat": 46.74288,
+"lon": 10.56382,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Alsack - Alsago",
+"names": [
+"Alsack - Alsago",
+"Alsack",
+"Alsago"
+],
+"lat": 46.73,
+"lon": 10.55406,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ulten bei Mals - Ultimo",
+"names": [
+"Ulten bei Mals - Ultimo",
+"Ulten bei Mals",
+"Ultimo"
+],
+"lat": 46.72354,
+"lon": 10.55758,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Holen - Olmi",
+"names": [
+"Holen - Olmi",
+"Holen",
+"Olmi"
+],
+"lat": 46.34619,
+"lon": 11.35174,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Unterwielenbach - Vila di Sotto",
+"names": [
+"Unterwielenbach - Vila di Sotto",
+"Unterwielenbach",
+"Vila di Sotto"
+],
+"lat": 46.79167,
+"lon": 11.99411,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rungg - Ronchi",
+"names": [
+"Rungg - Ronchi",
+"Rungg",
+"Ronchi"
+],
+"lat": 46.32876,
+"lon": 11.23548,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Amaten - Ameto",
+"names": [
+"Amaten - Ameto",
+"Amaten",
+"Ameto"
+],
+"lat": 46.81402,
+"lon": 11.9625,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Birchabruck - Ponte Nova",
+"names": [
+"Birchabruck - Ponte Nova",
+"Birchabruck",
+"Ponte Nova"
+],
+"lat": 46.42606,
+"lon": 11.47914,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberplanitzing - Pianizza di Sopra",
+"names": [
+"Oberplanitzing - Pianizza di Sopra",
+"Oberplanitzing",
+"Pianizza di Sopra"
+],
+"lat": 46.43703,
+"lon": 11.24828,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Wolfsgruben - Costalovara",
+"names": [
+"Wolfsgruben - Costalovara",
+"Wolfsgruben",
+"Costalovara"
+],
+"lat": 46.52475,
+"lon": 11.4251,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Laag - Laghetti",
+"names": [
+"Laag - Laghetti",
+"Laag",
+"Laghetti"
+],
+"lat": 46.27228,
+"lon": 11.24021,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Vill - Villa",
+"names": [
+"Vill - Villa",
+"Vill",
+"Villa"
+],
+"lat": 46.32339,
+"lon": 11.27715,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Brennerbad - Terme di Brennero",
+"names": [
+"Brennerbad - Terme di Brennero",
+"Brennerbad",
+"Terme di Brennero"
+],
+"lat": 46.97949,
+"lon": 11.48592,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Peter - San Pietro",
+"names": [
+"St. Peter - San Pietro",
+"St. Peter",
+"San Pietro"
+],
+"lat": 46.60229,
+"lon": 11.61059,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Mazon - Mazzon",
+"names": [
+"Mazon - Mazzon",
+"Mazon",
+"Mazzon"
+],
+"lat": 46.31174,
+"lon": 11.27994,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Montiggl - Monticolo",
+"names": [
+"Montiggl - Monticolo",
+"Montiggl",
+"Monticolo"
+],
+"lat": 46.41773,
+"lon": 11.27713,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schreckbichl - Colterenzio",
+"names": [
+"Schreckbichl - Colterenzio",
+"Schreckbichl",
+"Colterenzio"
+],
+"lat": 46.45787,
+"lon": 11.2934,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Unterrain - Riva di Sotto",
+"names": [
+"Unterrain - Riva di Sotto",
+"Unterrain",
+"Riva di Sotto"
+],
+"lat": 46.4917,
+"lon": 11.25914,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Perdonig - Predonico",
+"names": [
+"Perdonig - Predonico",
+"Perdonig",
+"Predonico"
+],
+"lat": 46.49762,
+"lon": 11.22911,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gaid - Gaido",
+"names": [
+"Gaid - Gaido",
+"Gaid",
+"Gaido"
+],
+"lat": 46.51325,
+"lon": 11.21069,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Georgen - San Giorgio",
+"names": [
+"St. Georgen - San Giorgio",
+"St. Georgen",
+"San Giorgio"
+],
+"lat": 46.68374,
+"lon": 11.19793,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "In der Marche",
+"names": [
+"In der Marche"
+],
+"lat": 47.01954,
+"lon": 12.03857,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Micheln",
+"names": [
+"Micheln"
+],
+"lat": 46.47031,
+"lon": 11.04064,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gschnon - Casignano",
+"names": [
+"Gschnon - Casignano",
+"Gschnon",
+"Casignano"
+],
+"lat": 46.30321,
+"lon": 11.30897,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gassl - Casola",
+"names": [
+"Gassl - Casola",
+"Gassl",
+"Casola"
+],
+"lat": 46.74787,
+"lon": 12.01188,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Wielenberg - Montevila",
+"names": [
+"Wielenberg - Montevila",
+"Wielenberg",
+"Montevila"
+],
+"lat": 46.7968,
+"lon": 11.99468,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Mühlbach - Rio Molino",
+"names": [
+"Mühlbach - Rio Molino",
+"Mühlbach",
+"Rio Molino"
+],
+"lat": 46.75808,
+"lon": 12.02002,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Neunhäusern - Nove Case",
+"names": [
+"Neunhäusern - Nove Case",
+"Neunhäusern",
+"Nove Case"
+],
+"lat": 46.77462,
+"lon": 12.02183,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pemmern - Tre Vie",
+"names": [
+"Pemmern - Tre Vie",
+"Pemmern",
+"Tre Vie"
+],
+"lat": 46.57709,
+"lon": 11.44595,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Peter - San Pietro",
+"names": [
+"St. Peter - San Pietro",
+"St. Peter",
+"San Pietro"
+],
+"lat": 47.02263,
+"lon": 12.05774,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Flitt - Valletta",
+"names": [
+"Flitt - Valletta",
+"Flitt",
+"Valletta"
+],
+"lat": 46.74016,
+"lon": 11.77886,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schluderbach - Carbonin",
+"names": [
+"Schluderbach - Carbonin",
+"Schluderbach",
+"Carbonin"
+],
+"lat": 46.62046,
+"lon": 12.21769,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tamersc",
+"names": [
+"Tamersc",
+"Tamersch",
+"Tàmers"
+],
+"lat": 46.65548,
+"lon": 12.00888,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Guggal",
+"names": [
+"Guggal"
+],
+"lat": 46.2746,
+"lon": 11.37247,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Telfen - Lanzin",
+"names": [
+"Telfen - Lanzin",
+"Telfen",
+"Lanzin"
+],
+"lat": 46.55624,
+"lon": 11.55408,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Prösels - Prèsule",
+"names": [
+"Prösels - Prèsule",
+"Prösels",
+"Prèsule"
+],
+"lat": 46.50327,
+"lon": 11.49874,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ums - Umes",
+"names": [
+"Ums - Umes",
+"Ums",
+"Umes"
+],
+"lat": 46.50368,
+"lon": 11.51889,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Völser Aicha - Aica di Fiè",
+"names": [
+"Völser Aicha - Aica di Fiè",
+"Völser Aicha",
+"Aica di Fiè"
+],
+"lat": 46.49167,
+"lon": 11.48642,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Untertall",
+"names": [
+"Untertall"
+],
+"lat": 46.72672,
+"lon": 11.21593,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pichl",
+"names": [
+"Pichl"
+],
+"lat": 46.72859,
+"lon": 11.21637,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pircher",
+"names": [
+"Pircher",
+"alle Betulle"
+],
+"lat": 46.74208,
+"lon": 11.22142,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Obertall - Talle di sopra",
+"names": [
+"Obertall - Talle di sopra",
+"Obertall",
+"Talle di sopra"
+],
+"lat": 46.73474,
+"lon": 11.22199,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Prenn - Prene",
+"names": [
+"Prenn - Prene",
+"Prenn",
+"Prene"
+],
+"lat": 46.73611,
+"lon": 11.22716,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Videgg",
+"names": [
+"Videgg"
+],
+"lat": 46.71852,
+"lon": 11.25083,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tiosels",
+"names": [
+"Tiosels"
+],
+"lat": 46.56867,
+"lon": 11.57746,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Compatsch",
+"names": [
+"Compatsch",
+"Compaccio"
+],
+"lat": 46.54027,
+"lon": 11.61791,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rü",
+"names": [
+"Rü"
+],
+"lat": 46.57792,
+"lon": 11.93551,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Picedac",
+"names": [
+"Picedac"
+],
+"lat": 46.65595,
+"lon": 11.8988,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pescol",
+"names": [
+"Pescol"
+],
+"lat": 46.62453,
+"lon": 11.87645,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Weiern",
+"names": [
+"Weiern"
+],
+"lat": 46.87174,
+"lon": 11.46167,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberau - Pra di Sopra",
+"names": [
+"Oberau - Pra di Sopra",
+"Oberau",
+"Pra di Sopra"
+],
+"lat": 46.79716,
+"lon": 11.60348,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberried - Novale di Sopra",
+"names": [
+"Oberried - Novale di Sopra",
+"Oberried",
+"Novale di Sopra"
+],
+"lat": 46.92226,
+"lon": 11.45097,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Unterried - Novale di sotto",
+"names": [
+"Unterried - Novale di sotto",
+"Unterried",
+"Novale di sotto"
+],
+"lat": 46.9173,
+"lon": 11.44674,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Steckholz - Ceppaia",
+"names": [
+"Steckholz - Ceppaia",
+"Steckholz",
+"Ceppaia"
+],
+"lat": 46.92727,
+"lon": 11.44502,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Lurx - Lurches",
+"names": [
+"Lurx - Lurches",
+"Lurx",
+"Lurches"
+],
+"lat": 46.91418,
+"lon": 11.44261,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Flans - Flanes",
+"names": [
+"Flans - Flanes",
+"Flans",
+"Flanes"
+],
+"lat": 46.92134,
+"lon": 11.43625,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tschöfs - Ceves",
+"names": [
+"Tschöfs - Ceves",
+"Tschöfs",
+"Ceves"
+],
+"lat": 46.91055,
+"lon": 11.43065,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Maibad - Bagni di Maggio",
+"names": [
+"Maibad - Bagni di Maggio",
+"Maibad",
+"Bagni di Maggio"
+],
+"lat": 46.90396,
+"lon": 11.43063,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Raminges - Raminghes",
+"names": [
+"Raminges - Raminghes",
+"Raminges",
+"Raminghes"
+],
+"lat": 46.90388,
+"lon": 11.42177,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Flains - Flaines",
+"names": [
+"Flains - Flaines",
+"Flains",
+"Flaines"
+],
+"lat": 46.89843,
+"lon": 11.4436,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Valgenäun - Valgenauna",
+"names": [
+"Valgenäun - Valgenauna",
+"Valgenäun",
+"Valgenauna"
+],
+"lat": 46.86861,
+"lon": 11.50545,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pfulters - Fuldres",
+"names": [
+"Pfulters - Fuldres",
+"Pfulters",
+"Fuldres"
+],
+"lat": 46.85185,
+"lon": 11.50456,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Egg - Dosso",
+"names": [
+"Egg - Dosso",
+"Egg",
+"Dosso"
+],
+"lat": 46.84606,
+"lon": 11.48533,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Niederried - Novale Basso",
+"names": [
+"Niederried - Novale Basso",
+"Niederried",
+"Novale Basso"
+],
+"lat": 46.85421,
+"lon": 11.50114,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sachsenklemme - Sacco all'Isarco",
+"names": [
+"Sachsenklemme - Sacco all'Isarco",
+"Sachsenklemme",
+"Sacco all'Isarco"
+],
+"lat": 46.81536,
+"lon": 11.54402,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schmuders - Smudres",
+"names": [
+"Schmuders - Smudres",
+"Schmuders"
+],
+"lat": 46.9042,
+"lon": 11.44526,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gögl",
+"names": [
+"Gögl"
+],
+"lat": 46.91505,
+"lon": 11.4601,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Außerrust",
+"names": [
+"Außerrust"
+],
+"lat": 46.87613,
+"lon": 11.4315,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gupp",
+"names": [
+"Gupp"
+],
+"lat": 46.87071,
+"lon": 11.4345,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gospeneid - Caspineto",
+"names": [
+"Gospeneid - Caspineto",
+"Gospeneid",
+"Caspineto"
+],
+"lat": 46.86284,
+"lon": 11.4182,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Innerrust",
+"names": [
+"Innerrust"
+],
+"lat": 46.88051,
+"lon": 11.4207,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schaitach",
+"names": [
+"Schaitach"
+],
+"lat": 46.86851,
+"lon": 11.44876,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Partinges",
+"names": [
+"Partinges"
+],
+"lat": 46.87922,
+"lon": 11.49804,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Niederflans - Flanes di Sotto",
+"names": [
+"Niederflans - Flanes di Sotto",
+"Niederflans",
+"Flanes di Sotto"
+],
+"lat": 46.864,
+"lon": 11.52362,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Fleins - Lines",
+"names": [
+"Fleins - Lines",
+"Fleins",
+"Lines"
+],
+"lat": 46.85651,
+"lon": 11.53581,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ritzail - Rizzolo",
+"names": [
+"Ritzail - Rizzolo",
+"Ritzail",
+"Rizzolo"
+],
+"lat": 46.85356,
+"lon": 11.56101,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schweinsteig Hütte",
+"names": [
+"Schweinsteig Hütte"
+],
+"lat": 46.56415,
+"lon": 10.97437,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Juval - Juvale",
+"names": [
+"Juval - Juvale",
+"Juval",
+"Juvale"
+],
+"lat": 46.65145,
+"lon": 10.96727,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Neurateis",
+"names": [
+"Neurateis",
+"Rattisio Nuovo"
+],
+"lat": 46.68499,
+"lon": 10.93296,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tils - Tiles",
+"names": [
+"Tils - Tiles",
+"Tils",
+"Tiles"
+],
+"lat": 46.71121,
+"lon": 11.63153,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Spiluck - Spelonca",
+"names": [
+"Spiluck - Spelonca",
+"Spiluck",
+"Spelonca"
+],
+"lat": 46.75515,
+"lon": 11.61469,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Riemerbergl Alm",
+"names": [
+"Riemerbergl Alm"
+],
+"lat": 46.55309,
+"lon": 10.95595,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberaicha - Aica di Sopra",
+"names": [
+"Oberaicha - Aica di Sopra",
+"Oberaicha",
+"Aica di Sopra"
+],
+"lat": 46.49382,
+"lon": 11.48416,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pinzagen - Pinzago",
+"names": [
+"Pinzagen - Pinzago",
+"Pinzagen",
+"Pinzago"
+],
+"lat": 46.70682,
+"lon": 11.63914,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tschötsch - Scezze",
+"names": [
+"Tschötsch - Scezze",
+"Tschötsch",
+"Scezze"
+],
+"lat": 46.69189,
+"lon": 11.63197,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schnauders - Snodres",
+"names": [
+"Schnauders - Snodres",
+"Schnauders",
+"Snodres"
+],
+"lat": 46.6767,
+"lon": 11.5986,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schrambach - San Pietro Mezzomonte",
+"names": [
+"Schrambach - San Pietro Mezzomonte",
+"Schrambach",
+"San Pietro Mezzomonte"
+],
+"lat": 46.66872,
+"lon": 11.61179,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tanirz - Tarnuza",
+"names": [
+"Tanirz - Tarnuza",
+"Tanirz",
+"Tarnuza"
+],
+"lat": 46.60371,
+"lon": 11.59245,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Moardorf - Villa",
+"names": [
+"Moardorf - Villa",
+"Moardorf",
+"Villa"
+],
+"lat": 46.7046,
+"lon": 11.6773,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sauders - San Maurizio",
+"names": [
+"Sauders - San Maurizio",
+"Sauders",
+"San Maurizio"
+],
+"lat": 46.62259,
+"lon": 11.53415,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Nafen - Nave",
+"names": [
+"Nafen - Nave",
+"Nafen",
+"Nave"
+],
+"lat": 46.65229,
+"lon": 11.61181,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pairdorf - Perara",
+"names": [
+"Pairdorf - Perara",
+"Pairdorf",
+"Perara"
+],
+"lat": 46.6975,
+"lon": 11.6338,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Stilums - Stilumes",
+"names": [
+"Stilums - Stilumes",
+"Stilums",
+"Stilumes"
+],
+"lat": 46.68979,
+"lon": 11.60469,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberschnauders - Snodres di Sopra",
+"names": [
+"Oberschnauders - Snodres di Sopra",
+"Oberschnauders",
+"Snodres di Sopra"
+],
+"lat": 46.68193,
+"lon": 11.59758,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pedratz",
+"names": [
+"Pedratz"
+],
+"lat": 46.66211,
+"lon": 11.59284,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Niederkarnol - Cornale di sotto",
+"names": [
+"Niederkarnol - Cornale di sotto",
+"Niederkarnol",
+"Cornale di sotto"
+],
+"lat": 46.7106,
+"lon": 11.67594,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tötschling - Tecelinga",
+"names": [
+"Tötschling - Tecelinga",
+"Tötschling",
+"Tecelinga"
+],
+"lat": 46.69408,
+"lon": 11.623,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Mahr - La Mara",
+"names": [
+"Mahr - La Mara",
+"Mahr",
+"La Mara"
+],
+"lat": 46.69619,
+"lon": 11.64194,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Jakob - San Giacomo",
+"names": [
+"St. Jakob - San Giacomo",
+"St. Jakob",
+"San Giacomo"
+],
+"lat": 46.69269,
+"lon": 11.63919,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Hl. Kreuz - Santa Croce",
+"names": [
+"Hl. Kreuz - Santa Croce",
+"Hl. Kreuz",
+"Santa Croce"
+],
+"lat": 46.68376,
+"lon": 11.61753,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Freins - Fraina",
+"names": [
+"Freins - Fraina",
+"Freins",
+"Fraina"
+],
+"lat": 46.62992,
+"lon": 11.59196,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Stark",
+"names": [
+"Stark"
+],
+"lat": 46.64039,
+"lon": 11.57979,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Außerried - Novale di Fuori",
+"names": [
+"Außerried - Novale di Fuori",
+"Außerried",
+"Novale di Fuori"
+],
+"lat": 46.61157,
+"lon": 11.54212,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberried - Novale di sopra",
+"names": [
+"Oberried - Novale di sopra",
+"Oberried",
+"Novale di sopra"
+],
+"lat": 46.60153,
+"lon": 11.56337,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tschöfas - Ceves",
+"names": [
+"Tschöfas - Ceves",
+"Tschöfas",
+"Ceves"
+],
+"lat": 46.60919,
+"lon": 11.57904,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ritsch",
+"names": [
+"Ritsch"
+],
+"lat": 46.59812,
+"lon": 11.6174,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rabans",
+"names": [
+"Rabans"
+],
+"lat": 46.60066,
+"lon": 11.61892,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Peter im Tal - San Pietro in Valle",
+"names": [
+"St. Peter im Tal - San Pietro in Valle",
+"St. Peter im Tal",
+"San Pietro in Valle"
+],
+"lat": 46.59443,
+"lon": 11.61841,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pontives",
+"names": [
+"Pontives"
+],
+"lat": 46.58528,
+"lon": 11.63394,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Bula - Pufels - Bulla",
+"names": [
+"Bula - Pufels - Bulla",
+"Pufels",
+"Bulla",
+"Bula"
+],
+"lat": 46.56454,
+"lon": 11.63528,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sacun - St. Jakob - San Giacomo",
+"names": [
+"Sacun - St. Jakob - San Giacomo",
+"St. Jakob",
+"San Giacomo",
+"Sacun"
+],
+"lat": 46.57102,
+"lon": 11.6904,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Saltria",
+"names": [
+"Saltria"
+],
+"lat": 46.53205,
+"lon": 11.66935,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pra",
+"names": [
+"Pra"
+],
+"lat": 46.56989,
+"lon": 11.69483,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Soplajes - Soplases",
+"names": [
+"Soplajes - Soplases",
+"Soplajes",
+"Soplases"
+],
+"lat": 46.56146,
+"lon": 11.70662,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "La Poza",
+"names": [
+"La Poza"
+],
+"lat": 46.55916,
+"lon": 11.74257,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plesdinaz",
+"names": [
+"Plesdinaz"
+],
+"lat": 46.56202,
+"lon": 11.7252,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ruacia",
+"names": [
+"Ruacia"
+],
+"lat": 46.55757,
+"lon": 11.7288,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "La Sëlva",
+"names": [
+"La Sëlva"
+],
+"lat": 46.55618,
+"lon": 11.73954,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plan",
+"names": [
+"Plan"
+],
+"lat": 46.5455,
+"lon": 11.7702,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pescosta",
+"names": [
+"Pescosta"
+],
+"lat": 46.55538,
+"lon": 11.87009,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "La Poza - La Pozza",
+"names": [
+"La Poza - La Pozza",
+"La Pozza"
+],
+"lat": 46.55331,
+"lon": 11.84584,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rön",
+"names": [
+"Rön"
+],
+"lat": 46.5502,
+"lon": 11.84026,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pecëi",
+"names": [
+"Pecëi"
+],
+"lat": 46.55211,
+"lon": 11.84724,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Verda",
+"names": [
+"Verda"
+],
+"lat": 46.56904,
+"lon": 11.88834,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Funtanacia",
+"names": [
+"Funtanacia"
+],
+"lat": 46.5742,
+"lon": 11.89142,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Costa",
+"names": [
+"Costa"
+],
+"lat": 46.55472,
+"lon": 11.86161,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ruac",
+"names": [
+"Ruac"
+],
+"lat": 46.5555,
+"lon": 11.8579,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Surarù",
+"names": [
+"Surarù"
+],
+"lat": 46.55624,
+"lon": 11.85355,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Merscia",
+"names": [
+"Merscia"
+],
+"lat": 46.55492,
+"lon": 11.86593,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Segh",
+"names": [
+"Segh"
+],
+"lat": 46.55366,
+"lon": 11.86887,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sorá",
+"names": [
+"Sorá"
+],
+"lat": 46.55355,
+"lon": 11.85879,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "la flu",
+"names": [
+"la flu"
+],
+"lat": 46.54729,
+"lon": 11.8793,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plan",
+"names": [
+"Plan"
+],
+"lat": 46.5463,
+"lon": 11.88069,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plaza",
+"names": [
+"Plaza"
+],
+"lat": 46.54712,
+"lon": 11.88217,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Arlara",
+"names": [
+"Arlara"
+],
+"lat": 46.54416,
+"lon": 11.88387,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sciüz",
+"names": [
+"Sciüz"
+],
+"lat": 46.54525,
+"lon": 11.88367,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ruac",
+"names": [
+"Ruac"
+],
+"lat": 46.57692,
+"lon": 11.89362,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ciaminades",
+"names": [
+"Ciaminades"
+],
+"lat": 46.60404,
+"lon": 11.89377,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Surega",
+"names": [
+"Surega"
+],
+"lat": 46.56664,
+"lon": 11.9351,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plan",
+"names": [
+"Plan"
+],
+"lat": 46.5685,
+"lon": 11.94081,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sotcianins",
+"names": [
+"Sotcianins"
+],
+"lat": 46.58424,
+"lon": 11.91019,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Fisti",
+"names": [
+"Fisti",
+"Fistill"
+],
+"lat": 46.59195,
+"lon": 11.91316,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sotsas",
+"names": [
+"Sotsas"
+],
+"lat": 46.59156,
+"lon": 11.89584,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ninz",
+"names": [
+"Ninz"
+],
+"lat": 46.58651,
+"lon": 11.90129,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Maring",
+"names": [
+"Maring"
+],
+"lat": 46.57997,
+"lon": 11.89559,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Cianins",
+"names": [
+"Cianins"
+],
+"lat": 46.58661,
+"lon": 11.91326,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Craciurara",
+"names": [
+"Craciurara"
+],
+"lat": 46.58925,
+"lon": 11.91207,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Curjel",
+"names": [
+"Curjel"
+],
+"lat": 46.56781,
+"lon": 11.94528,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Dlira",
+"names": [
+"Dlira"
+],
+"lat": 46.56774,
+"lon": 11.9472,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tamors",
+"names": [
+"Tamors"
+],
+"lat": 46.57614,
+"lon": 11.93391,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Larjëi",
+"names": [
+"Larjëi"
+],
+"lat": 46.57726,
+"lon": 11.92946,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Salotta",
+"names": [
+"Salotta"
+],
+"lat": 46.56853,
+"lon": 11.9352,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Suracianins",
+"names": [
+"Suracianins"
+],
+"lat": 46.58787,
+"lon": 11.91813,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Soplá",
+"names": [
+"Soplá"
+],
+"lat": 46.57408,
+"lon": 11.93159,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rüdeferia",
+"names": [
+"Rüdeferia"
+],
+"lat": 46.58385,
+"lon": 11.92743,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ciampidel",
+"names": [
+"Ciampidel"
+],
+"lat": 46.5834,
+"lon": 11.91879,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Grones",
+"names": [
+"Grones"
+],
+"lat": 46.63693,
+"lon": 11.89333,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sompunt",
+"names": [
+"Sompunt"
+],
+"lat": 46.59593,
+"lon": 11.90039,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sotrú",
+"names": [
+"Sotrú"
+],
+"lat": 46.6007,
+"lon": 11.90812,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Paracia",
+"names": [
+"Paracia"
+],
+"lat": 46.59988,
+"lon": 11.89433,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Runch",
+"names": [
+"Runch"
+],
+"lat": 46.61138,
+"lon": 11.88857,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pransarores",
+"names": [
+"Pransarores"
+],
+"lat": 46.61071,
+"lon": 11.90494,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ciastel",
+"names": [
+"Ciastel"
+],
+"lat": 46.62335,
+"lon": 11.8986,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Curcela",
+"names": [
+"Curcela"
+],
+"lat": 46.63084,
+"lon": 11.89121,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Puntac",
+"names": [
+"Puntac"
+],
+"lat": 46.61589,
+"lon": 11.89283,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sotciastel",
+"names": [
+"Sotciastel"
+],
+"lat": 46.62252,
+"lon": 11.89512,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Col Cöce",
+"names": [
+"Col Cöce"
+],
+"lat": 46.62883,
+"lon": 11.87988,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Crafunara",
+"names": [
+"Crafunara"
+],
+"lat": 46.62859,
+"lon": 11.88405,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Val",
+"names": [
+"Val"
+],
+"lat": 46.62696,
+"lon": 11.87959,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Jusciara",
+"names": [
+"Jusciara"
+],
+"lat": 46.62216,
+"lon": 11.88221,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oies",
+"names": [
+"Oies"
+],
+"lat": 46.60393,
+"lon": 11.90823,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Frëinademez",
+"names": [
+"Frëinademez"
+],
+"lat": 46.60842,
+"lon": 11.90795,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Peslalz",
+"names": [
+"Peslalz"
+],
+"lat": 46.59329,
+"lon": 11.90577,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "La Rô",
+"names": [
+"La Rô"
+],
+"lat": 46.59608,
+"lon": 11.90332,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pescolderunch",
+"names": [
+"Pescolderunch"
+],
+"lat": 46.59312,
+"lon": 11.91525,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Larcenei",
+"names": [
+"Larcenei"
+],
+"lat": 46.59658,
+"lon": 11.91171,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Valgiarëi",
+"names": [
+"Valgiarëi"
+],
+"lat": 46.62447,
+"lon": 11.91042,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Andrac",
+"names": [
+"Andrac"
+],
+"lat": 46.61611,
+"lon": 11.91384,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Cialaruns",
+"names": [
+"Cialaruns"
+],
+"lat": 46.62097,
+"lon": 11.91093,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sotvalgiarëi",
+"names": [
+"Sotvalgiarëi"
+],
+"lat": 46.62528,
+"lon": 11.90603,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Colz",
+"names": [
+"Colz"
+],
+"lat": 46.61417,
+"lon": 11.89988,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Seres",
+"names": [
+"Seres"
+],
+"lat": 46.63643,
+"lon": 11.8489,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Freina",
+"names": [
+"Freina",
+"Frena"
+],
+"lat": 46.63569,
+"lon": 11.85524,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Arciara",
+"names": [
+"Arciara"
+],
+"lat": 46.63838,
+"lon": 11.90925,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Furnacia",
+"names": [
+"Furnacia"
+],
+"lat": 46.64189,
+"lon": 11.91538,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Villa Nöia",
+"names": [
+"Villa Nöia"
+],
+"lat": 46.58575,
+"lon": 11.90388,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plaön",
+"names": [
+"Plaön"
+],
+"lat": 46.58558,
+"lon": 11.89672,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plotten",
+"names": [
+"Plotten"
+],
+"lat": 46.58211,
+"lon": 11.8953,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Adan",
+"names": [
+"Adan"
+],
+"lat": 46.59442,
+"lon": 11.90445,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Aiarëi",
+"names": [
+"Aiarëi"
+],
+"lat": 46.64442,
+"lon": 11.89321,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Misci",
+"names": [
+"Misci"
+],
+"lat": 46.63522,
+"lon": 11.8444,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Lagusell",
+"names": [
+"Lagusell"
+],
+"lat": 46.65322,
+"lon": 11.86884,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ties",
+"names": [
+"Ties"
+],
+"lat": 46.65034,
+"lon": 11.87526,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Crostelles",
+"names": [
+"Crostelles"
+],
+"lat": 46.65157,
+"lon": 11.87693,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Costamilagn",
+"names": [
+"Costamilagn"
+],
+"lat": 46.64934,
+"lon": 11.89725,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plan",
+"names": [
+"Plan"
+],
+"lat": 46.65526,
+"lon": 11.87615,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Col",
+"names": [
+"Col"
+],
+"lat": 46.65025,
+"lon": 11.9151,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rumestluns",
+"names": [
+"Rumestluns"
+],
+"lat": 46.65064,
+"lon": 11.94395,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Frëines",
+"names": [
+"Frëines"
+],
+"lat": 46.65607,
+"lon": 11.94022,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Murin",
+"names": [
+"Murin"
+],
+"lat": 46.65519,
+"lon": 11.92299,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Lunz",
+"names": [
+"Lunz"
+],
+"lat": 46.65536,
+"lon": 11.92839,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plans",
+"names": [
+"Plans"
+],
+"lat": 46.65505,
+"lon": 11.93134,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pidrô",
+"names": [
+"Pidrô",
+"Pederoa"
+],
+"lat": 46.65475,
+"lon": 11.91022,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Crostels",
+"names": [
+"Crostels"
+],
+"lat": 46.64418,
+"lon": 11.93109,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Côz defora",
+"names": [
+"Côz defora"
+],
+"lat": 46.65316,
+"lon": 11.94748,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Côz daite",
+"names": [
+"Côz daite"
+],
+"lat": 46.65291,
+"lon": 11.95022,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Spëscia dessura",
+"names": [
+"Spëscia dessura"
+],
+"lat": 46.64945,
+"lon": 11.95458,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Spëscia dessot",
+"names": [
+"Spëscia dessot"
+],
+"lat": 46.64857,
+"lon": 11.95275,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Vigo",
+"names": [
+"Vigo"
+],
+"lat": 46.64722,
+"lon": 11.86258,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Bioch",
+"names": [
+"Bioch",
+"Biboc"
+],
+"lat": 46.65792,
+"lon": 11.88038,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Chesler",
+"names": [
+"Chesler",
+"Colles"
+],
+"lat": 46.66395,
+"lon": 11.88654,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Suví",
+"names": [
+"Suví"
+],
+"lat": 46.66375,
+"lon": 11.90461,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ciampló",
+"names": [
+"Ciampló"
+],
+"lat": 46.65617,
+"lon": 11.92023,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pramperch",
+"names": [
+"Pramperch"
+],
+"lat": 46.65677,
+"lon": 11.90642,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tru",
+"names": [
+"Tru"
+],
+"lat": 46.65882,
+"lon": 11.90303,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Cians",
+"names": [
+"Cians"
+],
+"lat": 46.66166,
+"lon": 11.92139,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tolpëi",
+"names": [
+"Tolpëi"
+],
+"lat": 46.66007,
+"lon": 11.93431,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Miribun",
+"names": [
+"Miribun"
+],
+"lat": 46.65792,
+"lon": 11.93551,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Funtanela",
+"names": [
+"Funtanela"
+],
+"lat": 46.65918,
+"lon": 11.94028,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ciampëi",
+"names": [
+"Ciampëi"
+],
+"lat": 46.66932,
+"lon": 11.91783,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pastrogn",
+"names": [
+"Pastrogn"
+],
+"lat": 46.66978,
+"lon": 11.90884,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Costa",
+"names": [
+"Costa"
+],
+"lat": 46.67434,
+"lon": 11.9098,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Runch",
+"names": [
+"Runch"
+],
+"lat": 46.66464,
+"lon": 11.9281,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Biei",
+"names": [
+"Biei"
+],
+"lat": 46.6656,
+"lon": 11.92607,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ciablun",
+"names": [
+"Ciablun"
+],
+"lat": 46.66295,
+"lon": 11.93003,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Col de Tiames",
+"names": [
+"Col de Tiames",
+"Col de Tlames"
+],
+"lat": 46.69614,
+"lon": 11.8783,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Miri",
+"names": [
+"Miri"
+],
+"lat": 46.68922,
+"lon": 11.87711,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Frena",
+"names": [
+"Frena"
+],
+"lat": 46.6886,
+"lon": 11.8733,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rü",
+"names": [
+"Rü",
+"Rio Gadera"
+],
+"lat": 46.69944,
+"lon": 11.85863,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Costalungia",
+"names": [
+"Costalungia",
+"Costalunga di sopra"
+],
+"lat": 46.70569,
+"lon": 11.87307,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Costalungia",
+"names": [
+"Costalungia",
+"Costalunga di sotto"
+],
+"lat": 46.70442,
+"lon": 11.87567,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plà",
+"names": [
+"Plà",
+"Plà desura"
+],
+"lat": 46.70382,
+"lon": 11.86479,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rie",
+"names": [
+"Rie",
+"Maso Rie",
+"Mesc Rie"
+],
+"lat": 46.7098,
+"lon": 11.87165,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Mesc Mariung",
+"names": [
+"Mesc Mariung",
+"Maso Mariung"
+],
+"lat": 46.70936,
+"lon": 11.87809,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Anvi",
+"names": [
+"Anvi"
+],
+"lat": 46.69503,
+"lon": 11.8973,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ciablun",
+"names": [
+"Ciablun",
+"Ciablung"
+],
+"lat": 46.69128,
+"lon": 11.89956,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Picolin - Pikolein - Piccolino",
+"names": [
+"Picolin - Pikolein - Piccolino",
+"Pikolein",
+"Piccolino",
+"Picolin"
+],
+"lat": 46.68919,
+"lon": 11.8951,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Prousc",
+"names": [
+"Prousc",
+"Pros"
+],
+"lat": 46.68797,
+"lon": 11.88318,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ciornadú",
+"names": [
+"Ciornadú"
+],
+"lat": 46.71714,
+"lon": 11.87739,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Preromang",
+"names": [
+"Preromang",
+"Preroman"
+],
+"lat": 46.67336,
+"lon": 11.90285,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ronciaducia",
+"names": [
+"Ronciaducia"
+],
+"lat": 46.67994,
+"lon": 11.90257,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rozo",
+"names": [
+"Rozo"
+],
+"lat": 46.66492,
+"lon": 11.88862,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pespac",
+"names": [
+"Pespac"
+],
+"lat": 46.66861,
+"lon": 11.89214,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tomes",
+"names": [
+"Tomes",
+"Maso Tomes"
+],
+"lat": 46.69611,
+"lon": 11.91841,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Restalt",
+"names": [
+"Restalt"
+],
+"lat": 46.67885,
+"lon": 11.89608,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Brüsces",
+"names": [
+"Brüsces",
+"Brusces"
+],
+"lat": 46.67788,
+"lon": 11.88761,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Col",
+"names": [
+"Col"
+],
+"lat": 46.67619,
+"lon": 11.88721,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sarjei",
+"names": [
+"Sarjei",
+"Sarsei"
+],
+"lat": 46.69855,
+"lon": 11.91734,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pedaga",
+"names": [
+"Pedaga",
+"Maso Pedaga"
+],
+"lat": 46.69766,
+"lon": 11.92148,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Torpei",
+"names": [
+"Torpei"
+],
+"lat": 46.70151,
+"lon": 11.94083,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pinei",
+"names": [
+"Pinei"
+],
+"lat": 46.7035,
+"lon": 11.93546,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ras",
+"names": [
+"Ras"
+],
+"lat": 46.70711,
+"lon": 11.92948,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gran Ju",
+"names": [
+"Gran Ju",
+"Giogo Grande"
+],
+"lat": 46.69842,
+"lon": 11.90385,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pic Ju",
+"names": [
+"Pic Ju",
+"Giogo Piccolo"
+],
+"lat": 46.69936,
+"lon": 11.89907,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Fles",
+"names": [
+"Fles"
+],
+"lat": 46.69423,
+"lon": 11.90231,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Runcac",
+"names": [
+"Runcac",
+"Runcaccio"
+],
+"lat": 46.69475,
+"lon": 11.9371,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pre",
+"names": [
+"Pre",
+"Maso Pre"
+],
+"lat": 46.71329,
+"lon": 11.93764,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Col Sora Curt",
+"names": [
+"Col Sora Curt"
+],
+"lat": 46.71629,
+"lon": 11.93163,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rara",
+"names": [
+"Rara"
+],
+"lat": 46.71452,
+"lon": 11.94437,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Soröa",
+"names": [
+"Soröa"
+],
+"lat": 46.71377,
+"lon": 11.93215,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Val dla Tor",
+"names": [
+"Val dla Tor"
+],
+"lat": 46.70933,
+"lon": 11.94037,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Clea",
+"names": [
+"Clea"
+],
+"lat": 46.71569,
+"lon": 11.94015,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Misci",
+"names": [
+"Misci"
+],
+"lat": 46.71484,
+"lon": 11.94732,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rü",
+"names": [
+"Rü"
+],
+"lat": 46.72087,
+"lon": 11.9391,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Les Ciases",
+"names": [
+"Les Ciases",
+"Les Ciase"
+],
+"lat": 46.72137,
+"lon": 11.94477,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Cianacei",
+"names": [
+"Cianacei",
+"Maso Cianacei"
+],
+"lat": 46.7098,
+"lon": 11.90608,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Brach",
+"names": [
+"Brach"
+],
+"lat": 46.71976,
+"lon": 11.90902,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ciaselles",
+"names": [
+"Ciaselles"
+],
+"lat": 46.72493,
+"lon": 11.9011,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plisa",
+"names": [
+"Plisa"
+],
+"lat": 46.72541,
+"lon": 11.8939,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Longega - Zwischenwasser",
+"names": [
+"Longega - Zwischenwasser",
+"Zwischenwasser",
+"Longega di sopra"
+],
+"lat": 46.7219,
+"lon": 11.8917,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Alnei",
+"names": [
+"Alnei"
+],
+"lat": 46.72234,
+"lon": 11.90125,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Blei",
+"names": [
+"Blei",
+"Biei"
+],
+"lat": 46.72493,
+"lon": 11.92458,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Costamesana",
+"names": [
+"Costamesana"
+],
+"lat": 46.72307,
+"lon": 11.93703,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Lovara",
+"names": [
+"Lovara"
+],
+"lat": 46.67423,
+"lon": 11.8999,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Grissian - Grissiano",
+"names": [
+"Grissian - Grissiano",
+"Grissian",
+"Grissiano"
+],
+"lat": 46.53828,
+"lon": 11.18062,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Taéla",
+"names": [
+"Taéla"
+],
+"lat": 46.65737,
+"lon": 11.92877,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rü",
+"names": [
+"Rü"
+],
+"lat": 46.65747,
+"lon": 11.93191,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Costa",
+"names": [
+"Costa"
+],
+"lat": 46.7104,
+"lon": 11.93109,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Parü",
+"names": [
+"Parü"
+],
+"lat": 46.71621,
+"lon": 11.93784,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Alfarëi",
+"names": [
+"Alfarëi"
+],
+"lat": 46.69496,
+"lon": 11.84748,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Colac",
+"names": [
+"Colac"
+],
+"lat": 46.69482,
+"lon": 11.85124,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "La Ciasota",
+"names": [
+"La Ciasota",
+"Malga Miri"
+],
+"lat": 46.67641,
+"lon": 11.84811,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Lahner",
+"names": [
+"Lahner",
+"Darlan"
+],
+"lat": 46.72379,
+"lon": 11.80019,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Golderer",
+"names": [
+"Golderer"
+],
+"lat": 46.72761,
+"lon": 11.77969,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gostner",
+"names": [
+"Gostner",
+"Costa"
+],
+"lat": 46.73044,
+"lon": 11.77686,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ortl",
+"names": [
+"Ortl",
+"Ortolo"
+],
+"lat": 46.73561,
+"lon": 11.7832,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Raggins",
+"names": [
+"Raggins"
+],
+"lat": 46.73415,
+"lon": 11.78565,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pescosta",
+"names": [
+"Pescosta"
+],
+"lat": 46.72767,
+"lon": 11.85925,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tintal",
+"names": [
+"Tintal",
+"Vallarga"
+],
+"lat": 46.73188,
+"lon": 11.86742,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Hinteronach - Onies di Dentro",
+"names": [
+"Hinteronach - Onies di Dentro",
+"Hinteronach",
+"Onies di Dentro"
+],
+"lat": 46.73874,
+"lon": 11.8621,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Frontü",
+"names": [
+"Frontü"
+],
+"lat": 46.72918,
+"lon": 11.90065,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Fordora",
+"names": [
+"Fordora"
+],
+"lat": 46.7282,
+"lon": 11.92926,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Frena",
+"names": [
+"Frena"
+],
+"lat": 46.73393,
+"lon": 11.93346,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rader",
+"names": [
+"Rader"
+],
+"lat": 46.73647,
+"lon": 11.76999,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Lè",
+"names": [
+"Lè"
+],
+"lat": 46.65666,
+"lon": 11.91215,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Unteronach - Onies di Sotto",
+"names": [
+"Unteronach - Onies di Sotto",
+"Unteronach",
+"Onies di sotto"
+],
+"lat": 46.74688,
+"lon": 11.86329,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pfaffenberg - Prades",
+"names": [
+"Pfaffenberg - Prades",
+"Pfaffenberg",
+"Prades"
+],
+"lat": 46.74554,
+"lon": 11.88381,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Reiperting - Riopratino",
+"names": [
+"Reiperting - Riopratino",
+"Reiperting",
+"Riopratino"
+],
+"lat": 46.77178,
+"lon": 11.94276,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Hurtmüller",
+"names": [
+"Hurtmüller"
+],
+"lat": 46.7762,
+"lon": 11.92051,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Auer",
+"names": [
+"Auer",
+"Rio Molini"
+],
+"lat": 46.77907,
+"lon": 11.90187,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ellen - Elle",
+"names": [
+"Ellen - Elle",
+"Ellen",
+"Elle"
+],
+"lat": 46.77671,
+"lon": 11.83587,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Bagni di Selva - Bad Ramwald",
+"names": [
+"Bagni di Selva - Bad Ramwald",
+"Bad Ramwald",
+"Bagni di Selva"
+],
+"lat": 46.76258,
+"lon": 11.84713,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Hörschwang - Costa d'Onies",
+"names": [
+"Hörschwang - Costa d'Onies",
+"Hörschwang",
+"Costa d'Onies"
+],
+"lat": 46.758,
+"lon": 11.84744,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Runggen - Ronchi",
+"names": [
+"Runggen - Ronchi",
+"Runggen",
+"Ronchi"
+],
+"lat": 46.77725,
+"lon": 11.87331,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Walchhorn",
+"names": [
+"Walchhorn",
+"Cornolatino"
+],
+"lat": 46.77603,
+"lon": 11.96809,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Maria Saalen - Sares",
+"names": [
+"Maria Saalen - Sares",
+"Maria Saalen",
+"Sares"
+],
+"lat": 46.76551,
+"lon": 11.86722,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberonach - Onies di Sopra",
+"names": [
+"Oberonach - Onies di Sopra",
+"Oberonach",
+"Onies di sopra"
+],
+"lat": 46.74789,
+"lon": 11.85892,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ehrenburg - Casteldarne",
+"names": [
+"Ehrenburg - Casteldarne",
+"Ehrenburg",
+"Casteldarne"
+],
+"lat": 46.7976,
+"lon": 11.83612,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gestl",
+"names": [
+"Gestl"
+],
+"lat": 46.80775,
+"lon": 11.83148,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Fassing - Fassine",
+"names": [
+"Fassing - Fassine",
+"Fassing",
+"Fassine"
+],
+"lat": 46.79149,
+"lon": 11.89658,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sonnenburg - Castelbadia",
+"names": [
+"Sonnenburg - Castelbadia",
+"Sonnenburg",
+"Castelbadia"
+],
+"lat": 46.78692,
+"lon": 11.88972,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Priel - Brolo",
+"names": [
+"Priel - Brolo",
+"Priel",
+"Brolo"
+],
+"lat": 46.81054,
+"lon": 11.72013,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sohlern - Solerno",
+"names": [
+"Sohlern - Solerno",
+"Sohlern",
+"Solerno"
+],
+"lat": 46.80785,
+"lon": 11.72874,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Dörfl - Villetta",
+"names": [
+"Dörfl - Villetta",
+"Dörfl",
+"Villetta"
+],
+"lat": 46.81172,
+"lon": 11.7652,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Margen - Marga",
+"names": [
+"Margen - Marga",
+"Margen",
+"Marga"
+],
+"lat": 46.83741,
+"lon": 11.75654,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kelder",
+"names": [
+"Kelder"
+],
+"lat": 46.80855,
+"lon": 11.81143,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pichlern - Colli in Pusteria",
+"names": [
+"Pichlern - Colli in Pusteria",
+"Pichlern",
+"Colli in Pusteria"
+],
+"lat": 46.82632,
+"lon": 11.80858,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Haselried",
+"names": [
+"Haselried"
+],
+"lat": 46.81864,
+"lon": 11.85687,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Hofern - Corti",
+"names": [
+"Hofern - Corti",
+"Hofern",
+"Corti"
+],
+"lat": 46.81967,
+"lon": 11.83821,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Moos - Palù",
+"names": [
+"Moos - Palù",
+"Moos",
+"Palù"
+],
+"lat": 46.82134,
+"lon": 11.83934,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ilstern - Ilistra",
+"names": [
+"Ilstern - Ilistra",
+"Ilstern",
+"Ilistra"
+],
+"lat": 46.80927,
+"lon": 11.79719,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Vorderdrittel",
+"names": [
+"Vorderdrittel",
+"Terzo di fuori"
+],
+"lat": 46.83906,
+"lon": 11.72949,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Außereggen",
+"names": [
+"Außereggen",
+"Prato"
+],
+"lat": 46.81752,
+"lon": 11.65816,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gruber - le Cave",
+"names": [
+"Gruber - le Cave",
+"Gruber",
+"le Cave"
+],
+"lat": 46.76498,
+"lon": 11.71878,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Haslach",
+"names": [
+"Haslach"
+],
+"lat": 46.81758,
+"lon": 11.70309,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Untersergs - Serga di sotto",
+"names": [
+"Untersergs - Serga di sotto",
+"Untersergs",
+"Serga di sotto"
+],
+"lat": 46.82391,
+"lon": 11.71086,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Mittereggen",
+"names": [
+"Mittereggen"
+],
+"lat": 46.82176,
+"lon": 11.66702,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Anichen - Anice",
+"names": [
+"Anichen - Anice",
+"Anichen",
+"Anice"
+],
+"lat": 46.95774,
+"lon": 11.36909,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ast - Asta",
+"names": [
+"Ast - Asta",
+"Ast",
+"Asta"
+],
+"lat": 46.95094,
+"lon": 11.39626,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gattern",
+"names": [
+"Gattern"
+],
+"lat": 46.94358,
+"lon": 11.4284,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kieserengern - Rene",
+"names": [
+"Kieserengern - Rene",
+"Kieserengern",
+"Rene"
+],
+"lat": 46.9467,
+"lon": 11.40386,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Vallming - Valminga",
+"names": [
+"Vallming - Valminga",
+"Vallming",
+"Valminga"
+],
+"lat": 46.94618,
+"lon": 11.41385,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Außergiggelberg - Moncucco di fuori",
+"names": [
+"Außergiggelberg - Moncucco di fuori",
+"Außergiggelberg",
+"Moncucco di fuori"
+],
+"lat": 46.95362,
+"lon": 11.44878,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Innergiggelberg - Moncucco di dentro",
+"names": [
+"Innergiggelberg - Moncucco di dentro",
+"Innergiggelberg",
+"Moncucco di dentro"
+],
+"lat": 46.94764,
+"lon": 11.44474,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Brunn - Fontana",
+"names": [
+"Brunn - Fontana",
+"Brunn",
+"Fontana"
+],
+"lat": 46.95461,
+"lon": 11.53748,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Grube - Fosse",
+"names": [
+"Grube - Fosse",
+"Grube",
+"Fosse"
+],
+"lat": 46.96194,
+"lon": 11.55876,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rain - Riva",
+"names": [
+"Rain - Riva",
+"Rain",
+"Riva"
+],
+"lat": 46.96276,
+"lon": 11.56661,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Fussendraß - Fossa Trues",
+"names": [
+"Fussendraß - Fossa Trues",
+"Fussendraß",
+"Fossa Trues"
+],
+"lat": 46.94871,
+"lon": 11.53978,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Platz - Piazza",
+"names": [
+"Platz - Piazza",
+"Platz",
+"Piazza"
+],
+"lat": 46.96516,
+"lon": 11.58192,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Knappen",
+"names": [
+"Knappen"
+],
+"lat": 46.96665,
+"lon": 11.59827,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pontigl - Ponticolo",
+"names": [
+"Pontigl - Ponticolo",
+"Pontigl",
+"Ponticolo"
+],
+"lat": 46.95371,
+"lon": 11.45632,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Hatzl",
+"names": [
+"Hatzl"
+],
+"lat": 46.9601,
+"lon": 11.54842,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Burgum - Borgone",
+"names": [
+"Burgum - Borgone",
+"Burgum",
+"Borgone"
+],
+"lat": 46.93633,
+"lon": 11.53204,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Wöhr - alla Diga",
+"names": [
+"Wöhr - alla Diga",
+"Wöhr",
+"alla Diga"
+],
+"lat": 46.92452,
+"lon": 11.52543,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Nock",
+"names": [
+"Nock",
+"Masi Nock"
+],
+"lat": 46.92371,
+"lon": 11.27456,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Maiern - Masseria",
+"names": [
+"Maiern - Masseria",
+"Maiern",
+"Masseria"
+],
+"lat": 46.92292,
+"lon": 11.28059,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gesennen",
+"names": [
+"Gesennen"
+],
+"lat": 46.92372,
+"lon": 11.28365,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Braunhöfe",
+"names": [
+"Braunhöfe"
+],
+"lat": 46.91981,
+"lon": 11.29474,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gesille",
+"names": [
+"Gesille"
+],
+"lat": 46.91936,
+"lon": 11.2994,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schlotte",
+"names": [
+"Schlotte",
+"Maso Schloten"
+],
+"lat": 46.91628,
+"lon": 11.30103,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kalchern",
+"names": [
+"Kalchern"
+],
+"lat": 46.9109,
+"lon": 11.29958,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Wieslehen",
+"names": [
+"Wieslehen",
+"Prati"
+],
+"lat": 46.91213,
+"lon": 11.31317,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Costa",
+"names": [
+"Costa"
+],
+"lat": 46.91313,
+"lon": 11.31765,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tulfer - Tulve",
+"names": [
+"Tulfer - Tulve",
+"Tulfer",
+"Tulve"
+],
+"lat": 46.90534,
+"lon": 11.50066,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Afens - Avenes",
+"names": [
+"Afens - Avenes",
+"Afens",
+"Avenes"
+],
+"lat": 46.91756,
+"lon": 11.51441,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Dun",
+"names": [
+"Dun"
+],
+"lat": 46.9143,
+"lon": 11.68871,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Entholz - Ento",
+"names": [
+"Entholz - Ento",
+"Entholz",
+"Ento"
+],
+"lat": 46.89903,
+"lon": 11.31332,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Knappen",
+"names": [
+"Knappen"
+],
+"lat": 46.9004,
+"lon": 11.31587,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Brischer",
+"names": [
+"Brischer",
+"Maso rischer"
+],
+"lat": 46.89709,
+"lon": 11.32294,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gasse",
+"names": [
+"Gasse"
+],
+"lat": 46.90382,
+"lon": 11.3169,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kerschbaum",
+"names": [
+"Kerschbaum"
+],
+"lat": 46.89521,
+"lon": 11.33507,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Remlau",
+"names": [
+"Remlau"
+],
+"lat": 46.89077,
+"lon": 11.36105,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Silberplatte",
+"names": [
+"Silberplatte"
+],
+"lat": 46.89722,
+"lon": 11.34849,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Untertelfes - Telves di sotto",
+"names": [
+"Untertelfes - Telves di sotto",
+"Untertelfes",
+"Telves di sotto"
+],
+"lat": 46.89391,
+"lon": 11.38292,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Obertelfes - Telves di sopra",
+"names": [
+"Obertelfes - Telves di sopra",
+"Obertelfes",
+"Telves di sopra"
+],
+"lat": 46.89325,
+"lon": 11.39023,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Vil - Villa",
+"names": [
+"Vil - Villa",
+"Vil",
+"Villa"
+],
+"lat": 46.88904,
+"lon": 11.42292,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Saltnuss - Salto",
+"names": [
+"Saltnuss - Salto",
+"Saltnuss",
+"Salto"
+],
+"lat": 46.87732,
+"lon": 11.15852,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Flading - Vallettina",
+"names": [
+"Flading - Vallettina",
+"Flading",
+"Vallettina"
+],
+"lat": 46.86852,
+"lon": 11.25216,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rair",
+"names": [
+"Rair"
+],
+"lat": 46.86992,
+"lon": 11.15622,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Eller - Alnedo",
+"names": [
+"Eller - Alnedo",
+"Eller",
+"Alnedo"
+],
+"lat": 46.86873,
+"lon": 11.32826,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sega",
+"names": [
+"Sega"
+],
+"lat": 46.86816,
+"lon": 11.33051,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Jaufensteg - Pontegiovo",
+"names": [
+"Jaufensteg - Pontegiovo",
+"Jaufensteg",
+"Pontegiovo"
+],
+"lat": 46.87516,
+"lon": 11.3579,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plank",
+"names": [
+"Plank"
+],
+"lat": 46.85561,
+"lon": 11.38354,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Platz",
+"names": [
+"Platz",
+"Plaz"
+],
+"lat": 46.884,
+"lon": 11.35759,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Burghof - Burco",
+"names": [
+"Burghof - Burco",
+"Burghof",
+"Burco"
+],
+"lat": 46.87528,
+"lon": 11.37294,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schönau - Belprato",
+"names": [
+"Schönau - Belprato",
+"Schönau",
+"Belprato"
+],
+"lat": 46.88089,
+"lon": 11.38528,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Bockenhof",
+"names": [
+"Bockenhof"
+],
+"lat": 46.87995,
+"lon": 11.39235,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kalch - Calice",
+"names": [
+"Kalch - Calice",
+"Kalch",
+"Calice"
+],
+"lat": 46.86806,
+"lon": 11.36505,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gschließ",
+"names": [
+"Gschließ",
+"Gschliess"
+],
+"lat": 46.88497,
+"lon": 11.48038,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plank",
+"names": [
+"Plank"
+],
+"lat": 46.85476,
+"lon": 11.55625,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Huntsdorf",
+"names": [
+"Huntsdorf",
+"Terzo di Fuori"
+],
+"lat": 46.85106,
+"lon": 11.72852,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schaldern",
+"names": [
+"Schaldern",
+"Le Laste"
+],
+"lat": 46.8783,
+"lon": 11.72079,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Hahnebaum - Al Gallo",
+"names": [
+"Hahnebaum - Al Gallo",
+"Hahnebaum",
+"Al Gallo"
+],
+"lat": 46.8472,
+"lon": 11.16542,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Cava di pietra",
+"names": [
+"Cava di pietra"
+],
+"lat": 46.84567,
+"lon": 11.1687,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schlattach - Slatago",
+"names": [
+"Schlattach - Slatago",
+"Schlattach",
+"Slatago"
+],
+"lat": 46.82644,
+"lon": 11.22775,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gomion",
+"names": [
+"Gomion"
+],
+"lat": 46.81903,
+"lon": 11.22748,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Höfen",
+"names": [
+"Höfen",
+"Masi"
+],
+"lat": 46.8234,
+"lon": 11.22067,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gufl",
+"names": [
+"Gufl",
+"Covolo"
+],
+"lat": 46.82945,
+"lon": 11.21952,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ganderberg",
+"names": [
+"Ganderberg",
+"Monteganda di sotto"
+],
+"lat": 46.85319,
+"lon": 11.16688,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ganderberg",
+"names": [
+"Ganderberg",
+"Monteganda di sopra"
+],
+"lat": 46.85242,
+"lon": 11.17156,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Glaiten - Le Coste",
+"names": [
+"Glaiten - Le Coste",
+"Glaiten",
+"le Coste"
+],
+"lat": 46.82472,
+"lon": 11.24402,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Obertal",
+"names": [
+"Obertal"
+],
+"lat": 46.85068,
+"lon": 11.36689,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schluppes - Casalupa",
+"names": [
+"Schluppes - Casalupa",
+"Schluppes",
+"Casalupa"
+],
+"lat": 46.84949,
+"lon": 11.35401,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kaltenbrunn",
+"names": [
+"Kaltenbrunn"
+],
+"lat": 46.84817,
+"lon": 11.38571,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Genauenhöfe - Masi d'Ora",
+"names": [
+"Genauenhöfe - Masi d'Ora",
+"Genauenhöfe",
+"Masi d'Ora"
+],
+"lat": 46.83648,
+"lon": 11.52806,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Angerer",
+"names": [
+"Angerer"
+],
+"lat": 46.84579,
+"lon": 11.62949,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Obersergs - Serga di sopra",
+"names": [
+"Obersergs - Serga di sopra",
+"Obersergs",
+"Serga di sopra"
+],
+"lat": 46.82665,
+"lon": 11.68627,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tassach",
+"names": [
+"Tassach",
+"Dase"
+],
+"lat": 46.82004,
+"lon": 11.174,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kratzegg",
+"names": [
+"Kratzegg"
+],
+"lat": 46.8056,
+"lon": 11.18519,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ulfas",
+"names": [
+"Ulfas"
+],
+"lat": 46.81306,
+"lon": 11.18653,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Weger",
+"names": [
+"Weger",
+"Strada"
+],
+"lat": 46.81338,
+"lon": 11.20526,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Prünsterhöfe",
+"names": [
+"Prünsterhöfe",
+"Prünsterhöfe 21-A"
+],
+"lat": 46.79397,
+"lon": 11.22259,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Windegg",
+"names": [
+"Windegg"
+],
+"lat": 46.79091,
+"lon": 11.23833,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sieben Schupfen",
+"names": [
+"Sieben Schupfen",
+"Setto Capanne"
+],
+"lat": 46.78145,
+"lon": 11.3821,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberwiedner",
+"names": [
+"Oberwiedner"
+],
+"lat": 46.78228,
+"lon": 11.41173,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gruber",
+"names": [
+"Gruber",
+"i Fossi"
+],
+"lat": 46.7818,
+"lon": 11.40659,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Asten - Laste",
+"names": [
+"Asten - Laste",
+"Asten",
+"Laste"
+],
+"lat": 46.79353,
+"lon": 11.44021,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Eder",
+"names": [
+"Eder"
+],
+"lat": 46.78636,
+"lon": 11.42681,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kern",
+"names": [
+"Kern",
+"Quaire"
+],
+"lat": 46.7852,
+"lon": 11.42108,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Posch",
+"names": [
+"Posch",
+"Bosco"
+],
+"lat": 46.78156,
+"lon": 11.42624,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Seeber - il Lago",
+"names": [
+"Seeber - il Lago",
+"Bach",
+"il Lago"
+],
+"lat": 46.76665,
+"lon": 11.19377,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Neuhaus - Ponte Clava",
+"names": [
+"Neuhaus - Ponte Clava",
+"Neuhaus",
+"Ponte Clava"
+],
+"lat": 46.76945,
+"lon": 11.21529,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Bucher",
+"names": [
+"Bucher",
+"ai Faggi"
+],
+"lat": 46.76984,
+"lon": 11.22309,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Prantach - Prantago",
+"names": [
+"Prantach - Prantago",
+"Prantach",
+"Prantago"
+],
+"lat": 46.7769,
+"lon": 11.23831,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Keller",
+"names": [
+"Keller",
+"la Cella"
+],
+"lat": 46.77317,
+"lon": 11.22995,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Haseneben",
+"names": [
+"Haseneben",
+"Piandilepre"
+],
+"lat": 46.77058,
+"lon": 11.2277,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Wink Höfe",
+"names": [
+"Wink Höfe",
+"Cantone"
+],
+"lat": 46.7768,
+"lon": 11.35982,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Koatlack",
+"names": [
+"Koatlack"
+],
+"lat": 46.76905,
+"lon": 11.37548,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Johann - San Giovanni",
+"names": [
+"St. Johann - San Giovanni",
+"St. Johann",
+"San Giovanni"
+],
+"lat": 46.77527,
+"lon": 11.38362,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Streiter",
+"names": [
+"Streiter"
+],
+"lat": 46.77214,
+"lon": 11.37782,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Außerpens - Pennes di Fuori",
+"names": [
+"Außerpens - Pennes di Fuori",
+"Außerpens",
+"Pennes di Fuori"
+],
+"lat": 46.77582,
+"lon": 11.39289,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Maurer",
+"names": [
+"Maurer",
+"Muraro"
+],
+"lat": 46.78009,
+"lon": 11.40089,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Reifen",
+"names": [
+"Reifen"
+],
+"lat": 46.77877,
+"lon": 11.41967,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sixen",
+"names": [
+"Sixen",
+"Six"
+],
+"lat": 46.75608,
+"lon": 11.21131,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Straube",
+"names": [
+"Straube",
+"Staube",
+"Strohmaier"
+],
+"lat": 46.75683,
+"lon": 11.22771,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kofl - Còvolo",
+"names": [
+"Kofl - Còvolo",
+"Kofl",
+"Còvolo"
+],
+"lat": 46.75687,
+"lon": 11.22388,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Prenn",
+"names": [
+"Prenn",
+"Brenn"
+],
+"lat": 46.73675,
+"lon": 11.43187,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Niedristhof",
+"names": [
+"Niedristhof",
+"Capella Niedrist",
+"Niedersthof"
+],
+"lat": 46.75447,
+"lon": 11.70026,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tall - Talle",
+"names": [
+"Tall - Talle",
+"Tall",
+"Talle"
+],
+"lat": 46.73975,
+"lon": 11.22692,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schweinsteg - Passo",
+"names": [
+"Schweinsteg - Passo",
+"Schweinsteg",
+"Passo"
+],
+"lat": 46.73908,
+"lon": 11.21031,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Stofner Gruben",
+"names": [
+"Stofner Gruben"
+],
+"lat": 46.74176,
+"lon": 11.33067,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Glauben-Säge",
+"names": [
+"Glauben-Säge",
+"Colbano Sega"
+],
+"lat": 46.80997,
+"lon": 11.21057,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Auer",
+"names": [
+"Auer"
+],
+"lat": 46.80858,
+"lon": 11.23984,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Bach",
+"names": [
+"Bach"
+],
+"lat": 46.82618,
+"lon": 11.30757,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Vetzan - Vezzano",
+"names": [
+"Vetzan - Vezzano",
+"Vetzan",
+"Vezzano"
+],
+"lat": 46.62544,
+"lon": 10.81612,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Herrenkohlern - Colle dei Signori",
+"names": [
+"Herrenkohlern - Colle dei Signori",
+"Herrenkohlern",
+"Colle dei Signori"
+],
+"lat": 46.47574,
+"lon": 11.38085,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Bauernkohlern - Colle dei Contadini",
+"names": [
+"Bauernkohlern - Colle dei Contadini",
+"Bauernkohlern",
+"Colle dei Contadini",
+"Kohlern"
+],
+"lat": 46.47693,
+"lon": 11.36948,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Masl",
+"names": [
+"Masl"
+],
+"lat": 46.83475,
+"lon": 11.6284,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Mühlbach - Rio Molino",
+"names": [
+"Mühlbach - Rio Molino",
+"Mühlbach",
+"Rio Molino"
+],
+"lat": 46.8478,
+"lon": 11.98152,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Veit - San Vito",
+"names": [
+"St. Veit - San Vito",
+"St. Veit",
+"San Vito"
+],
+"lat": 46.71545,
+"lon": 12.10337,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Durnwald - Durna In Selve",
+"names": [
+"Durnwald - Durna In Selve",
+"Durnwald",
+"Durna In Selve"
+],
+"lat": 46.76844,
+"lon": 12.179,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Nasen - Nessano",
+"names": [
+"Nasen - Nessano",
+"Nasen",
+"Nessano"
+],
+"lat": 46.78747,
+"lon": 12.00565,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Platten - Plata",
+"names": [
+"Platten - Plata",
+"Platten",
+"Plata"
+],
+"lat": 46.80132,
+"lon": 12.00322,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sandbichl",
+"names": [
+"Sandbichl"
+],
+"lat": 46.54939,
+"lon": 11.17663,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pichl",
+"names": [
+"Pichl"
+],
+"lat": 46.28145,
+"lon": 11.3682,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Cauria - Gfrill",
+"names": [
+"Cauria - Gfrill",
+"Gfrill",
+"Cauria"
+],
+"lat": 46.27196,
+"lon": 11.28328,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Eben - Pramarino",
+"names": [
+"Eben - Pramarino",
+"Eben",
+"Pramarino"
+],
+"lat": 46.27639,
+"lon": 11.35981,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Untervierschach - Versciaco di Sotto",
+"names": [
+"Untervierschach - Versciaco di Sotto",
+"Untervierschach",
+"Versciaco di Sotto"
+],
+"lat": 46.73484,
+"lon": 12.33608,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pein - Pino",
+"names": [
+"Pein - Pino",
+"Pein",
+"Pino"
+],
+"lat": 46.82564,
+"lon": 11.75831,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Finele",
+"names": [
+"Finele"
+],
+"lat": 46.69562,
+"lon": 11.1684,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Untersirmian - Sirmiano di Sotto",
+"names": [
+"Untersirmian - Sirmiano di Sotto",
+"Untersirmian",
+"Sirmiano di Sotto"
+],
+"lat": 46.53825,
+"lon": 11.19392,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Endereggen",
+"names": [
+"Endereggen"
+],
+"lat": 46.82423,
+"lon": 11.67201,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pedross - Pedrossi",
+"names": [
+"Pedross - Pedrossi",
+"Pedross",
+"Pedrossi"
+],
+"lat": 46.81364,
+"lon": 10.57959,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gschwell",
+"names": [
+"Gschwell"
+],
+"lat": 46.83512,
+"lon": 10.62149,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Grub",
+"names": [
+"Grub"
+],
+"lat": 46.83723,
+"lon": 10.63389,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Birti",
+"names": [
+"Birti"
+],
+"lat": 46.40672,
+"lon": 11.29845,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Platten - Plata",
+"names": [
+"Platten - Plata",
+"Platten",
+"Plata"
+],
+"lat": 46.82956,
+"lon": 11.87494,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Lupwald",
+"names": [
+"Lupwald",
+"Oberpfalzen",
+"Falzes di Sopra"
+],
+"lat": 46.81895,
+"lon": 11.88123,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Preindl - Praterie",
+"names": [
+"Preindl - Praterie",
+"Preindl",
+"Praterie"
+],
+"lat": 46.80388,
+"lon": 12.21858,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schindelholz - Scandole",
+"names": [
+"Schindelholz - Scandole",
+"Schindelholz",
+"Scandole"
+],
+"lat": 46.77743,
+"lon": 12.15819,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Außerpichl - Colle di fuori",
+"names": [
+"Außerpichl - Colle di fuori",
+"Außerpichl",
+"Colle di fuori"
+],
+"lat": 46.77531,
+"lon": 12.18017,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Innerpichl - Colle di dentro",
+"names": [
+"Innerpichl - Colle di dentro",
+"Innerpichl",
+"Colle di dentro"
+],
+"lat": 46.78225,
+"lon": 12.19802,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberpichl - Colle di sopra",
+"names": [
+"Oberpichl - Colle di sopra",
+"Oberpichl",
+"Colle di sopra"
+],
+"lat": 46.78316,
+"lon": 12.19128,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberplanken - Planca di sopra",
+"names": [
+"Oberplanken - Planca di sopra",
+"Oberplanken",
+"Planca di sopra"
+],
+"lat": 46.79185,
+"lon": 12.20727,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Unterpreindl",
+"names": [
+"Unterpreindl"
+],
+"lat": 46.80313,
+"lon": 12.21469,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Wiesen - Prati di Tesido",
+"names": [
+"Wiesen - Prati di Tesido",
+"Wiesen",
+"Prati di Tesido"
+],
+"lat": 46.76882,
+"lon": 12.13568,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Aufhofen - Villa Santa Caterina",
+"names": [
+"Aufhofen - Villa Santa Caterina",
+"Aufhofen",
+"Villa Santa Caterina"
+],
+"lat": 46.8147,
+"lon": 11.94686,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kalditsch - Doladizza",
+"names": [
+"Kalditsch - Doladizza",
+"Kalditsch",
+"Doladizza"
+],
+"lat": 46.33961,
+"lon": 11.31779,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Glen - Gleno di Sotto",
+"names": [
+"Glen - Gleno di Sotto",
+"Glen",
+"Gleno di Sotto"
+],
+"lat": 46.3181,
+"lon": 11.29968,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Jakob - San Giacomo",
+"names": [
+"St. Jakob - San Giacomo",
+"St. Jakob",
+"San Giacomo"
+],
+"lat": 46.64505,
+"lon": 11.66528,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pardell - Pradello",
+"names": [
+"Pardell - Pradello",
+"Pardell",
+"Pradello"
+],
+"lat": 46.63739,
+"lon": 11.65037,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Valentin - San Valentino",
+"names": [
+"St. Valentin - San Valentino",
+"St. Valentin",
+"San Valentino"
+],
+"lat": 46.63954,
+"lon": 11.6666,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Coll - Colle",
+"names": [
+"Coll - Colle",
+"Coll",
+"Colle"
+],
+"lat": 46.64894,
+"lon": 11.69984,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Altenburg - Castelvecchio",
+"names": [
+"Altenburg - Castelvecchio",
+"Altenburg",
+"Castelvecchio"
+],
+"lat": 46.37737,
+"lon": 11.23887,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Josef am See - San Giuseppe al Lago",
+"names": [
+"St. Josef am See - San Giuseppe al Lago",
+"St. Josef am See",
+"San Giuseppe al Lago",
+"St. Josef am See - S. Giuseppe al Lago"
+],
+"lat": 46.38283,
+"lon": 11.24957,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Campi al Lago - Klughammer",
+"names": [
+"Campi al Lago - Klughammer",
+"Klughammer",
+"Campi al Lago"
+],
+"lat": 46.3835,
+"lon": 11.26972,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Annaheim",
+"names": [
+"Annaheim"
+],
+"lat": 46.70148,
+"lon": 11.17434,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Niederhollenze",
+"names": [
+"Niederhollenze"
+],
+"lat": 47.01497,
+"lon": 12.02374,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Veit - S. Vito",
+"names": [
+"St. Veit - S. Vito",
+"St. Veit",
+"San Vito"
+],
+"lat": 46.48377,
+"lon": 11.40538,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Anton - Sant'Antonio",
+"names": [
+"St. Anton - Sant'Antonio",
+"St. Anton",
+"Sant'Antonio"
+],
+"lat": 46.52337,
+"lon": 11.50777,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Lengmoos - Longomoso",
+"names": [
+"Lengmoos - Longomoso",
+"Lengmoos",
+"Longomoso"
+],
+"lat": 46.54284,
+"lon": 11.46775,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Deutschen - Santa Trinità",
+"names": [
+"Deutschen - Santa Trinità",
+"Deutschen",
+"Santa Trinità"
+],
+"lat": 46.52223,
+"lon": 11.4849,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Siffian - Siffiano",
+"names": [
+"Siffian - Siffiano",
+"Siffian",
+"Siffiano"
+],
+"lat": 46.53133,
+"lon": 11.466,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Weber Im Moos",
+"names": [
+"Weber Im Moos"
+],
+"lat": 46.52769,
+"lon": 11.44994,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Konstantin - San Costantino",
+"names": [
+"St. Konstantin - San Costantino",
+"St. Konstantin",
+"San Costantino"
+],
+"lat": 46.5361,
+"lon": 11.51997,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Mittelberg - Monte di Mezzo",
+"names": [
+"Mittelberg - Monte di Mezzo",
+"Mittelberg",
+"Monte di Mezzo"
+],
+"lat": 46.55556,
+"lon": 11.47832,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Runggallen",
+"names": [
+"Runggallen",
+"Runggalm"
+],
+"lat": 46.67286,
+"lon": 11.53098,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Aberstückl - Sonvigo",
+"names": [
+"Aberstückl - Sonvigo",
+"Aberstückl",
+"Sonvigo"
+],
+"lat": 46.72737,
+"lon": 11.33267,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Hl. Kreuz - Santa Croce",
+"names": [
+"Hl. Kreuz - Santa Croce",
+"Hl. Kreuz",
+"Santa Croce"
+],
+"lat": 46.78631,
+"lon": 11.912,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Lothen - Campolino",
+"names": [
+"Lothen - Campolino",
+"Lothen",
+"Campolino"
+],
+"lat": 46.79199,
+"lon": 11.88672,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Moos - Palu",
+"names": [
+"Moos - Palu",
+"Moos",
+"Palu"
+],
+"lat": 46.76841,
+"lon": 11.89349,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Unterplatten - Laste Basse",
+"names": [
+"Unterplatten - Laste Basse",
+"Unterplatten",
+"Laste Basse",
+"ad Platte"
+],
+"lat": 46.498,
+"lon": 11.41957,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Bundschen - Ponticino",
+"names": [
+"Bundschen - Ponticino",
+"Bundschen",
+"Ponticino"
+],
+"lat": 46.61425,
+"lon": 11.37412,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Lalega",
+"names": [
+"Lalega"
+],
+"lat": 46.55701,
+"lon": 11.87157,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Arche",
+"names": [
+"Arche"
+],
+"lat": 46.94772,
+"lon": 12.07265,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Eppach",
+"names": [
+"Eppach"
+],
+"lat": 46.943,
+"lon": 12.08773,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberpojen",
+"names": [
+"Oberpojen"
+],
+"lat": 46.94036,
+"lon": 11.951,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Winkel - Cantuccio",
+"names": [
+"Winkel - Cantuccio",
+"Winkel",
+"Cantuccio"
+],
+"lat": 46.91542,
+"lon": 11.96906,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Matzlaun",
+"names": [
+"Matzlaun"
+],
+"lat": 46.48781,
+"lon": 11.03139,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kofl - Valorz",
+"names": [
+"Kofl - Valorz",
+"Kofl",
+"Valorz"
+],
+"lat": 46.45852,
+"lon": 11.03851,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schmieden - Frari",
+"names": [
+"Schmieden - Frari",
+"Schmieden",
+"Frari"
+],
+"lat": 46.45007,
+"lon": 11.04944,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tonna - Sinablana",
+"names": [
+"Tonna - Sinablana",
+"Tonna",
+"Sinablana"
+],
+"lat": 46.47364,
+"lon": 11.0373,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Eggern",
+"names": [
+"Eggern"
+],
+"lat": 46.45734,
+"lon": 11.07075,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Jerbern",
+"names": [
+"Jerbern"
+],
+"lat": 46.46135,
+"lon": 11.06853,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Klamm",
+"names": [
+"Klamm"
+],
+"lat": 46.4947,
+"lon": 11.13834,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Malgasott",
+"names": [
+"Malgasott"
+],
+"lat": 46.50299,
+"lon": 11.12056,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gori",
+"names": [
+"Gori"
+],
+"lat": 46.4974,
+"lon": 11.12404,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Häuserl",
+"names": [
+"Häuserl"
+],
+"lat": 46.50088,
+"lon": 11.12464,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Platzers - Plazzoles",
+"names": [
+"Platzers - Plazzoles",
+"Platzers",
+"Plazzoles"
+],
+"lat": 46.55662,
+"lon": 11.12056,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberfennberg - Favogna di Sopra",
+"names": [
+"Oberfennberg - Favogna di Sopra",
+"Oberfennberg",
+"Favogna di Sopra"
+],
+"lat": 46.28025,
+"lon": 11.17477,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Lindenhof - Bosconetto",
+"names": [
+"Lindenhof - Bosconetto",
+"Lindenhof",
+"Bosconetto"
+],
+"lat": 46.26977,
+"lon": 11.1941,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pichler Höfe - Nosellari",
+"names": [
+"Pichler Höfe - Nosellari",
+"Pichler Höfe",
+"Nosellari"
+],
+"lat": 46.26439,
+"lon": 11.18556,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pichl - Colle",
+"names": [
+"Pichl - Colle",
+"Pichl",
+"Colle"
+],
+"lat": 46.27012,
+"lon": 11.19156,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Fennhals - Sant'Anna",
+"names": [
+"Fennhals - Sant'Anna",
+"Fennhals",
+"Sant'Anna"
+],
+"lat": 46.29808,
+"lon": 11.18858,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Melag - Melago",
+"names": [
+"Melag - Melago",
+"Melag",
+"Melago"
+],
+"lat": 46.83715,
+"lon": 10.65535,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pratzen",
+"names": [
+"Pratzen"
+],
+"lat": 46.83663,
+"lon": 10.62908,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kappl - Cappella",
+"names": [
+"Kappl - Cappella",
+"Kappl",
+"Cappella"
+],
+"lat": 46.8397,
+"lon": 10.64156,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pazin",
+"names": [
+"Pazin"
+],
+"lat": 46.83122,
+"lon": 10.61289,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Wies - Maso del Prato",
+"names": [
+"Wies - Maso del Prato",
+"Wies",
+"Maso del Prato"
+],
+"lat": 46.83888,
+"lon": 10.6476,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Lorett",
+"names": [
+"Lorett"
+],
+"lat": 46.81576,
+"lon": 10.57998,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Spin",
+"names": [
+"Spin"
+],
+"lat": 46.79464,
+"lon": 10.52358,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Prämajur",
+"names": [
+"Prämajur"
+],
+"lat": 46.70157,
+"lon": 10.50743,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Signat - Signato",
+"names": [
+"Signat - Signato",
+"Signat",
+"Signato"
+],
+"lat": 46.50862,
+"lon": 11.39824,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Justina - S. Giustina",
+"names": [
+"St. Justina - S. Giustina",
+"St. Justina",
+"Santa Giustina"
+],
+"lat": 46.49877,
+"lon": 11.38605,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Bozner Leitach - Costa",
+"names": [
+"Bozner Leitach - Costa",
+"Bozner Leitach",
+"Costa Bolzano"
+],
+"lat": 46.49621,
+"lon": 11.40279,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kampill - Campiglio",
+"names": [
+"Kampill - Campiglio",
+"Kampill",
+"Campiglio",
+"Eisack"
+],
+"lat": 46.49205,
+"lon": 11.37293,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kampenn - Campegno",
+"names": [
+"Kampenn - Campegno",
+"Kampenn",
+"Campegno"
+],
+"lat": 46.48773,
+"lon": 11.38495,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Peter - San Pietro",
+"names": [
+"St. Peter - San Pietro",
+"St. Peter",
+"San Pietro",
+"St. Peter auf Karnol"
+],
+"lat": 46.51207,
+"lon": 11.35543,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Obertels - Tels di Sopra",
+"names": [
+"Obertels - Tels di Sopra",
+"Obertels",
+"Tels di Sopra"
+],
+"lat": 46.64273,
+"lon": 10.63511,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Faller",
+"names": [
+"Faller"
+],
+"lat": 46.63039,
+"lon": 10.71619,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberplatz",
+"names": [
+"Oberplatz"
+],
+"lat": 46.60437,
+"lon": 10.70992,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Parnetz",
+"names": [
+"Parnetz"
+],
+"lat": 46.60947,
+"lon": 10.66858,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Außersulden - Solda di Fuori",
+"names": [
+"Außersulden - Solda di Fuori",
+"Außersulden",
+"Solda di Fuori"
+],
+"lat": 46.56304,
+"lon": 10.56157,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Faslarhöfe - Fossalara",
+"names": [
+"Faslarhöfe - Fossalara",
+"Faslarhöfe",
+"Fossalara"
+],
+"lat": 46.60129,
+"lon": 10.543,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Larcher",
+"names": [
+"Larcher"
+],
+"lat": 46.75293,
+"lon": 11.2219,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Außertrafoi - Trafoi di Fuori",
+"names": [
+"Außertrafoi - Trafoi di Fuori",
+"Außertrafoi",
+"Trafoi di Fuori"
+],
+"lat": 46.55834,
+"lon": 10.51483,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Antlas",
+"names": [
+"Antlas"
+],
+"lat": 46.54217,
+"lon": 11.49447,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Luns - Lunes",
+"names": [
+"Luns - Lunes",
+"Luns",
+"Lunes"
+],
+"lat": 46.79602,
+"lon": 11.96942,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rotwand - Pietra Rossa",
+"names": [
+"Rotwand - Pietra Rossa",
+"Rotwand",
+"Pietra Rossa"
+],
+"lat": 46.57625,
+"lon": 11.51023,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gissmann - Madonnina",
+"names": [
+"Gissmann - Madonnina",
+"Gissmann",
+"Madonnina",
+"Güsmann"
+],
+"lat": 46.59757,
+"lon": 11.42042,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tann",
+"names": [
+"Tann"
+],
+"lat": 46.56941,
+"lon": 11.45127,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Köbl",
+"names": [
+"Köbl"
+],
+"lat": 46.55921,
+"lon": 11.48093,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kaseracker",
+"names": [
+"Kaseracker"
+],
+"lat": 46.53325,
+"lon": 11.42182,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Eschenbach",
+"names": [
+"Eschenbach"
+],
+"lat": 46.5078,
+"lon": 11.43001,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Siffianer Leitach - Coste di Siffiano",
+"names": [
+"Siffianer Leitach - Coste di Siffiano",
+"Siffianer Leitach",
+"Coste di Siffiano"
+],
+"lat": 46.52652,
+"lon": 11.47396,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Untersirmian - Sirmiano di Sotto",
+"names": [
+"Untersirmian - Sirmiano di Sotto",
+"Untersirmian",
+"Sirmiano di Sotto"
+],
+"lat": 46.53659,
+"lon": 11.19256,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Obersirmian - Sirmiano di Sopra",
+"names": [
+"Obersirmian - Sirmiano di Sopra",
+"Obersirmian"
+],
+"lat": 46.52779,
+"lon": 11.18812,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kematen - Caminata",
+"names": [
+"Kematen - Caminata",
+"Kematen",
+"Caminata",
+"Kemat"
+],
+"lat": 46.54558,
+"lon": 11.44508,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Höldboden",
+"names": [
+"Höldboden"
+],
+"lat": 46.53657,
+"lon": 11.42344,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Moarhäusl - Casetta Mora",
+"names": [
+"Moarhäusl - Casetta Mora",
+"Moarhäusl",
+"Casetta Mora"
+],
+"lat": 46.55782,
+"lon": 11.36879,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Windlahn - Lana al Vento",
+"names": [
+"Windlahn - Lana al Vento",
+"Windlahn",
+"Lana al Vento"
+],
+"lat": 46.61893,
+"lon": 11.40707,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kienberg",
+"names": [
+"Kienberg"
+],
+"lat": 46.627,
+"lon": 11.38167,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Putzen",
+"names": [
+"Putzen"
+],
+"lat": 46.62592,
+"lon": 11.34038,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Steg",
+"names": [
+"Steg",
+"Wohnsiedlung Steg"
+],
+"lat": 46.63063,
+"lon": 11.36137,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Steet - Stetto",
+"names": [
+"Steet - Stetto",
+"Steet",
+"Stetto"
+],
+"lat": 46.63408,
+"lon": 11.36048,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Zinkhöfe",
+"names": [
+"Zinkhöfe"
+],
+"lat": 46.65995,
+"lon": 11.36577,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rungg - Ronco",
+"names": [
+"Rungg - Ronco",
+"Rungg",
+"Ronco"
+],
+"lat": 46.74585,
+"lon": 11.77378,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Buacha",
+"names": [
+"Buacha"
+],
+"lat": 46.46789,
+"lon": 11.02668,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Obervöls - Fiè di Sopra",
+"names": [
+"Obervöls - Fiè di Sopra",
+"Obervöls",
+"Fiè di Sopra"
+],
+"lat": 46.5162,
+"lon": 11.50689,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Untervöls - Fiè di Sotto",
+"names": [
+"Untervöls - Fiè di Sotto",
+"Untervöls",
+"Fiè di Sotto"
+],
+"lat": 46.51189,
+"lon": 11.50502,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Unteraicha - Aica di Sotto",
+"names": [
+"Unteraicha - Aica di Sotto",
+"Unteraicha",
+"Aica di Sotto"
+],
+"lat": 46.49782,
+"lon": 11.46666,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Kathrein - Santa Caterina",
+"names": [
+"St. Kathrein - Santa Caterina",
+"St. Kathrein",
+"Santa Caterina"
+],
+"lat": 46.47975,
+"lon": 11.49857,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Hinterreinswald - San Martino di Dentro",
+"names": [
+"Hinterreinswald - San Martino di Dentro",
+"Hinterreinswald",
+"San Martino di Dentro"
+],
+"lat": 46.70784,
+"lon": 11.41604,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Feldwies",
+"names": [
+"Feldwies"
+],
+"lat": 46.73786,
+"lon": 11.48718,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tomberg - Montefontana",
+"names": [
+"Tomberg - Montefontana",
+"Tomberg",
+"Montefontana"
+],
+"lat": 46.62152,
+"lon": 10.95083,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberglaning - Cologna di Sopra",
+"names": [
+"Oberglaning - Cologna di Sopra",
+"Oberglaning",
+"Cologna di Sopra"
+],
+"lat": 46.52403,
+"lon": 11.29766,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Mitterdorf - Caldaro di Mezzo",
+"names": [
+"Mitterdorf - Caldaro di Mezzo",
+"Mitterdorf",
+"Caldaro di Mezzo"
+],
+"lat": 46.41511,
+"lon": 11.23867,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Anton - Sant'Antonio",
+"names": [
+"St. Anton - Sant'Antonio",
+"St. Anton",
+"Sant'Antonio"
+],
+"lat": 46.41082,
+"lon": 11.23336,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Dicktl",
+"names": [
+"Dicktl"
+],
+"lat": 46.77833,
+"lon": 11.40184,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Astnerhöfe",
+"names": [
+"Astnerhöfe"
+],
+"lat": 46.79599,
+"lon": 11.44586,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Anton - S. Antonio",
+"names": [
+"St. Anton - S. Antonio",
+"St. Anton",
+"Sant' Antonio"
+],
+"lat": 46.51204,
+"lon": 11.35184,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Georgen - San Giorgio",
+"names": [
+"St. Georgen - San Giorgio",
+"St. Georgen",
+"San Giorgio"
+],
+"lat": 46.51794,
+"lon": 11.34334,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Unterglaning - Cologna di Sotto",
+"names": [
+"Unterglaning - Cologna di Sotto",
+"Unterglaning",
+"Cologna di Sotto"
+],
+"lat": 46.5132,
+"lon": 11.31097,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Larchegg",
+"names": [
+"Larchegg"
+],
+"lat": 46.56632,
+"lon": 11.3625,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ahnerberg - Montano",
+"names": [
+"Ahnerberg - Montano",
+"Ahnerberg",
+"Montano"
+],
+"lat": 46.79696,
+"lon": 11.70591,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Fröllerberg - Monte Frella",
+"names": [
+"Fröllerberg - Monte Frella",
+"Fröllerberg",
+"Monte Frella"
+],
+"lat": 46.78746,
+"lon": 11.71786,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Spisses - Spissa",
+"names": [
+"Spisses - Spissa",
+"Spisses",
+"Spissa"
+],
+"lat": 46.77512,
+"lon": 11.70714,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Flitz - Valluzza",
+"names": [
+"Flitz - Valluzza",
+"Flitz",
+"Valluzza"
+],
+"lat": 46.62475,
+"lon": 11.66237,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Grones",
+"names": [
+"Grones"
+],
+"lat": 46.64097,
+"lon": 11.85719,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Grube - Fossa",
+"names": [
+"Grube - Fossa",
+"Grube",
+"Fossa"
+],
+"lat": 46.34261,
+"lon": 11.40113,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rauth - Novale",
+"names": [
+"Rauth - Novale",
+"Rauth",
+"Novale"
+],
+"lat": 46.38721,
+"lon": 11.49605,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Stadtl",
+"names": [
+"Stadtl"
+],
+"lat": 46.40386,
+"lon": 11.51104,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Platten - Laste",
+"names": [
+"Platten - Laste",
+"Platten",
+"Laste"
+],
+"lat": 46.41824,
+"lon": 11.46116,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schernag",
+"names": [
+"Schernag"
+],
+"lat": 46.54506,
+"lon": 11.20042,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Zeppichl",
+"names": [
+"Zeppichl"
+],
+"lat": 46.7927,
+"lon": 11.08069,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Puntweil",
+"names": [
+"Puntweil"
+],
+"lat": 46.63538,
+"lon": 10.46141,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Raut",
+"names": [
+"Raut"
+],
+"lat": 46.77296,
+"lon": 11.6579,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Söles",
+"names": [
+"Söles"
+],
+"lat": 46.65754,
+"lon": 10.56062,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Padöll - Campitello",
+"names": [
+"Padöll - Campitello",
+"Padöll",
+"Campitello"
+],
+"lat": 46.75881,
+"lon": 10.52712,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plagött",
+"names": [
+"Plagött"
+],
+"lat": 46.7617,
+"lon": 10.52399,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Außerkaschon - Casone di fuori",
+"names": [
+"Außerkaschon - Casone di fuori",
+"Außerkaschon",
+"Casone di fuori"
+],
+"lat": 46.77186,
+"lon": 10.52736,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Innerkaschon - Casone di dentro",
+"names": [
+"Innerkaschon - Casone di dentro",
+"Innerkaschon",
+"Casone di dentro"
+],
+"lat": 46.77507,
+"lon": 10.52642,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Untere Tartscher Alm",
+"names": [
+"Untere Tartscher Alm"
+],
+"lat": 46.54456,
+"lon": 10.49903,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberbach",
+"names": [
+"Oberbach"
+],
+"lat": 46.76878,
+"lon": 11.19837,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gandlin",
+"names": [
+"Gandlin"
+],
+"lat": 46.63175,
+"lon": 10.54422,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kampidell - Campidello",
+"names": [
+"Kampidell - Campidello",
+"Kampidell",
+"Campidello"
+],
+"lat": 46.60294,
+"lon": 11.30325,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Buchen - i Faggi",
+"names": [
+"Buchen - i Faggi",
+"Buchen",
+"i Faggi"
+],
+"lat": 46.56083,
+"lon": 11.07574,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Helena - Sant'Elena",
+"names": [
+"St. Helena - Sant'Elena",
+"St. Helena",
+"Sant'Elena"
+],
+"lat": 46.57982,
+"lon": 11.05717,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sankt Moritz - San Maurizio",
+"names": [
+"Sankt Moritz - San Maurizio",
+"Sankt Moritz",
+"San Maurizio"
+],
+"lat": 46.53614,
+"lon": 10.94843,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gand - Ganda",
+"names": [
+"Gand - Ganda",
+"Gand",
+"Ganda"
+],
+"lat": 46.44656,
+"lon": 11.25616,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pittertschöll",
+"names": [
+"Pittertschöll"
+],
+"lat": 46.67352,
+"lon": 11.64177,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Nitz",
+"names": [
+"Nitz"
+],
+"lat": 46.66411,
+"lon": 11.68155,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberafers - Eores di Sopra",
+"names": [
+"Oberafers - Eores di Sopra",
+"Oberafers",
+"Eores di Sopra"
+],
+"lat": 46.67089,
+"lon": 11.69542,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberkarnol - Cornale di Sopra",
+"names": [
+"Oberkarnol - Cornale di Sopra",
+"Oberkarnol",
+"Cornale di Sopra"
+],
+"lat": 46.71361,
+"lon": 11.68283,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Nogglburger",
+"names": [
+"Nogglburger"
+],
+"lat": 46.70709,
+"lon": 11.67945,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Haberer Höfe",
+"names": [
+"Haberer Höfe"
+],
+"lat": 46.83842,
+"lon": 12.24883,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Dörfl",
+"names": [
+"Dörfl"
+],
+"lat": 46.83652,
+"lon": 12.2459,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Binter Höfe",
+"names": [
+"Binter Höfe"
+],
+"lat": 46.84108,
+"lon": 12.25009,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Huiben",
+"names": [
+"Huiben"
+],
+"lat": 46.84135,
+"lon": 12.23924,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gröffler Wiesile",
+"names": [
+"Gröffler Wiesile"
+],
+"lat": 46.83424,
+"lon": 12.1813,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kapairealm",
+"names": [
+"Kapairealm"
+],
+"lat": 46.84126,
+"lon": 12.18267,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Steinegg",
+"names": [
+"Steinegg"
+],
+"lat": 46.80067,
+"lon": 12.20919,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kargruben - Fossaquaira",
+"names": [
+"Kargruben - Fossaquaira",
+"Kargruben",
+"Fossaquaira"
+],
+"lat": 46.80602,
+"lon": 12.21161,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ausserhütten",
+"names": [
+"Ausserhütten"
+],
+"lat": 46.81031,
+"lon": 12.24712,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schenke",
+"names": [
+"Schenke"
+],
+"lat": 46.79415,
+"lon": 12.20872,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schacke",
+"names": [
+"Schacke"
+],
+"lat": 46.79516,
+"lon": 12.20764,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kohler Höfe",
+"names": [
+"Kohler Höfe"
+],
+"lat": 46.77738,
+"lon": 12.20216,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Hölzl",
+"names": [
+"Hölzl"
+],
+"lat": 46.77535,
+"lon": 12.14772,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Riebisen",
+"names": [
+"Riebisen"
+],
+"lat": 46.81847,
+"lon": 12.23088,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Selbenbach",
+"names": [
+"Selbenbach"
+],
+"lat": 46.81568,
+"lon": 12.23197,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tagusens - Tagusa",
+"names": [
+"Tagusens - Tagusa",
+"Tagusens",
+"Tagusa"
+],
+"lat": 46.59137,
+"lon": 11.55381,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ennewasser - Transacqua",
+"names": [
+"Ennewasser - Transacqua",
+"Ennewasser",
+"Transacqua"
+],
+"lat": 46.56333,
+"lon": 10.78879,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gand - Ganda",
+"names": [
+"Gand - Ganda",
+"Gand",
+"Ganda"
+],
+"lat": 46.55431,
+"lon": 10.7802,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gluder",
+"names": [
+"Gluder"
+],
+"lat": 46.55884,
+"lon": 10.78429,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ennetal",
+"names": [
+"Ennetal"
+],
+"lat": 46.56325,
+"lon": 10.77524,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Meiern",
+"names": [
+"Meiern"
+],
+"lat": 46.56442,
+"lon": 10.78178,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sonnenberg - Montesole",
+"names": [
+"Sonnenberg - Montesole",
+"Sonnenberg",
+"Montesole"
+],
+"lat": 46.57457,
+"lon": 10.78668,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Piglon - Piccolongo",
+"names": [
+"Piglon - Piccolongo",
+"Piglon",
+"Piccolongo"
+],
+"lat": 46.36129,
+"lon": 11.2879,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Riol",
+"names": [
+"Riol"
+],
+"lat": 46.78333,
+"lon": 11.5939,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pitscheid - Pezzéi",
+"names": [
+"Pitscheid - Pezzéi",
+"Pitscheid",
+"Pezzéi"
+],
+"lat": 46.45982,
+"lon": 11.5265,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pardell - Pradello",
+"names": [
+"Pardell - Pradello",
+"Pardell",
+"Pradello"
+],
+"lat": 46.65097,
+"lon": 11.57012,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Klaus - Chiusa",
+"names": [
+"Klaus - Chiusa",
+"Klaus",
+"Chiusa"
+],
+"lat": 46.52027,
+"lon": 11.2593,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Mover - Mairhof",
+"names": [
+"Mover - Mairhof",
+"Mairhof",
+"Mover"
+],
+"lat": 46.42291,
+"lon": 11.30671,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Cervo - Hirschen",
+"names": [
+"Cervo - Hirschen",
+"Hirschen",
+"Cervo"
+],
+"lat": 46.43455,
+"lon": 11.32065,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Masetta - Wachsbleiche",
+"names": [
+"Masetta - Wachsbleiche",
+"Wachsbleiche",
+"Masetta"
+],
+"lat": 46.41884,
+"lon": 11.3036,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Dorf - Paese",
+"names": [
+"Dorf - Paese",
+"Dorf",
+"Paese"
+],
+"lat": 46.68729,
+"lon": 11.12869,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Durach",
+"names": [
+"Durach"
+],
+"lat": 46.89315,
+"lon": 11.34219,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ilmach - Olmeto",
+"names": [
+"Ilmach - Olmeto",
+"Ilmach",
+"Olmeto"
+],
+"lat": 46.86799,
+"lon": 11.15395,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Saubach - San Ingenuino",
+"names": [
+"Saubach - San Ingenuino",
+"Saubach",
+"San Ingenuino"
+],
+"lat": 46.58814,
+"lon": 11.51124,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Bichl - Colle",
+"names": [
+"Bichl - Colle",
+"Bichl",
+"Colle"
+],
+"lat": 46.874,
+"lon": 11.14957,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gfeis - Gaveis",
+"names": [
+"Gfeis - Gaveis",
+"Gfeis",
+"Gaveis"
+],
+"lat": 46.71501,
+"lon": 11.17006,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Vernuer - Vernurio",
+"names": [
+"Vernuer - Vernurio",
+"Vernuer",
+"Vernurio"
+],
+"lat": 46.72349,
+"lon": 11.17783,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Aufkirchen - Santa Maria",
+"names": [
+"Aufkirchen - Santa Maria",
+"Aufkirchen",
+"Santa Maria"
+],
+"lat": 46.74395,
+"lon": 12.20395,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ratsberg - Monterota",
+"names": [
+"Ratsberg - Monterota",
+"Ratsberg",
+"Monterota"
+],
+"lat": 46.74734,
+"lon": 12.2177,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Mellaten - Mellate",
+"names": [
+"Mellaten - Mellate",
+"Mellaten",
+"Mellate"
+],
+"lat": 46.74899,
+"lon": 12.19634,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Magdalena - S. Maddalena",
+"names": [
+"St. Magdalena - S. Maddalena",
+"St. Magdalena",
+"Santa Maddalena",
+"Prazöll, Placedell"
+],
+"lat": 46.50266,
+"lon": 11.37222,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Nobls",
+"names": [
+"Nobls",
+"Nobls - Montoppio"
+],
+"lat": 46.54398,
+"lon": 11.28823,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Montigl - Monticolo",
+"names": [
+"Montigl - Monticolo",
+"Montigl",
+"Monticolo"
+],
+"lat": 46.52818,
+"lon": 11.2681,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Obervierschach - Versciaco di Sopra",
+"names": [
+"Obervierschach - Versciaco di Sopra",
+"Obervierschach",
+"Versciaco di Sopra"
+],
+"lat": 46.73027,
+"lon": 12.32647,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tumlhof",
+"names": [
+"Tumlhof"
+],
+"lat": 46.70538,
+"lon": 10.91957,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Galsaun - Colsano",
+"names": [
+"Galsaun - Colsano",
+"Galsaun",
+"Colsano"
+],
+"lat": 46.6319,
+"lon": 10.91548,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Alt Rateis - Rattisio Vecchio",
+"names": [
+"Alt Rateis - Rattisio Vecchio",
+"Alt Rateis",
+"Rattisio Vecchio"
+],
+"lat": 46.67169,
+"lon": 10.94336,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Saxalb",
+"names": [
+"Saxalb"
+],
+"lat": 46.67995,
+"lon": 10.9296,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Raindlhöfe",
+"names": [
+"Raindlhöfe"
+],
+"lat": 46.71368,
+"lon": 10.88302,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Muthöfe - Masi della Muta",
+"names": [
+"Muthöfe - Masi della Muta",
+"Muthöfe",
+"Masi della Muta"
+],
+"lat": 46.70413,
+"lon": 11.13584,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Talplatt",
+"names": [
+"Talplatt"
+],
+"lat": 46.71358,
+"lon": 10.92875,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Neuwies - Pratonuovo",
+"names": [
+"Neuwies - Pratonuovo",
+"Neuwies",
+"Pratonuovo"
+],
+"lat": 46.54505,
+"lon": 10.50757,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Zösen - Cesa",
+"names": [
+"Zösen - Cesa",
+"Zösen",
+"Cesa"
+],
+"lat": 46.92178,
+"lon": 11.78465,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ponte d'Adige - Sigmundskron",
+"names": [
+"Ponte d'Adige - Sigmundskron",
+"Sigmundskron",
+"Ponte d'Adige"
+],
+"lat": 46.48532,
+"lon": 11.29971,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tschiffnon - Gioviniano",
+"names": [
+"Tschiffnon - Gioviniano",
+"Tschiffnon",
+"Gioviniano"
+],
+"lat": 46.67352,
+"lon": 11.60677,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Fischleintal - Val Fiscalina",
+"names": [
+"Fischleintal - Val Fiscalina",
+"Fischleintal",
+"Val Fiscalina"
+],
+"lat": 46.66621,
+"lon": 12.35374,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Breitbach - Rio Largo",
+"names": [
+"Breitbach - Rio Largo",
+"Breitbach",
+"Rio Largo"
+],
+"lat": 46.3046,
+"lon": 11.22076,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Obereggen - San Floriano d'Ega",
+"names": [
+"Obereggen - San Floriano d'Ega",
+"Obereggen",
+"San Floriano d'Ega"
+],
+"lat": 46.385,
+"lon": 11.52597,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Monte - Gmund",
+"names": [
+"Monte - Gmund",
+"Gmund",
+"Monte"
+],
+"lat": 46.35605,
+"lon": 11.27976,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Mühlen - Molini",
+"names": [
+"Mühlen - Molini",
+"Mühlen",
+"Molini"
+],
+"lat": 46.31142,
+"lon": 11.32675,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberglen - Gleno di Sopra",
+"names": [
+"Oberglen - Gleno di Sopra",
+"Oberglen",
+"Gleno di Sopra"
+],
+"lat": 46.31523,
+"lon": 11.30349,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gereuth - Caredo",
+"names": [
+"Gereuth - Caredo",
+"Gereuth",
+"Caredo"
+],
+"lat": 46.70671,
+"lon": 11.61676,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Martin im Kofel - San Martino al Monte",
+"names": [
+"St. Martin im Kofel - San Martino al Monte",
+"St. Martin im Kofel",
+"San Martino al Monte"
+],
+"lat": 46.63821,
+"lon": 10.85468,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Unterplanitzing - Pianizza di Sotto",
+"names": [
+"Unterplanitzing - Pianizza di Sotto",
+"Unterplanitzing",
+"Pianizza di Sotto"
+],
+"lat": 46.42945,
+"lon": 11.25365,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rojen - Roia",
+"names": [
+"Rojen - Roia",
+"Rojen",
+"Roia"
+],
+"lat": 46.80517,
+"lon": 10.47708,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Mittelstrich",
+"names": [
+"Mittelstrich"
+],
+"lat": 46.46627,
+"lon": 11.54032,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Freiberg - Montefranco",
+"names": [
+"Freiberg - Montefranco",
+"Freiberg",
+"Montefranco"
+],
+"lat": 46.61185,
+"lon": 10.91266,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Himmelfahrt - L'Assunta",
+"names": [
+"Himmelfahrt - L'Assunta",
+"Himmelfahrt",
+"L'Assunta"
+],
+"lat": 46.52384,
+"lon": 11.39087,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Halbweg - Mezzavia",
+"names": [
+"Halbweg - Mezzavia",
+"Halbweg",
+"Mezzavia Sarentino"
+],
+"lat": 46.5753,
+"lon": 11.37597,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Unterkreuth - Novale di sotto",
+"names": [
+"Unterkreuth - Novale di sotto",
+"Unterkreuth",
+"Novale di sotto"
+],
+"lat": 46.53471,
+"lon": 11.24222,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Aschl - Eschio",
+"names": [
+"Aschl - Eschio",
+"Aschl",
+"Eschio"
+],
+"lat": 46.61168,
+"lon": 11.25473,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Trumsberg - Montetrumes",
+"names": [
+"Trumsberg - Montetrumes",
+"Trumsberg",
+"Montetrumes"
+],
+"lat": 46.64317,
+"lon": 10.90201,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Petersiedlung - San Pietro",
+"names": [
+"St. Petersiedlung - San Pietro",
+"St. Petersiedlung",
+"San Pietro"
+],
+"lat": 46.53179,
+"lon": 11.24335,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Winkl",
+"names": [
+"Winkl"
+],
+"lat": 46.53602,
+"lon": 11.25543,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberkreuth - Novale di sopra",
+"names": [
+"Oberkreuth - Novale di sopra",
+"Oberkreuth",
+"Novale di sopra"
+],
+"lat": 46.53936,
+"lon": 11.2463,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Unterhilb",
+"names": [
+"Unterhilb"
+],
+"lat": 46.6516,
+"lon": 11.03512,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rifair - Rivaira",
+"names": [
+"Rifair - Rivaira",
+"Rifair",
+"Rivaira"
+],
+"lat": 46.64878,
+"lon": 10.47962,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Virgl - Virgolo",
+"names": [
+"Virgl - Virgolo",
+"Virgl",
+"Virgolo"
+],
+"lat": 46.49006,
+"lon": 11.35436,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pröslerried - Novale di Presule",
+"names": [
+"Pröslerried - Novale di Presule",
+"Pröslerried",
+"Novale di Presule"
+],
+"lat": 46.5042,
+"lon": 11.47027,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Peterbühel",
+"names": [
+"Peterbühel"
+],
+"lat": 46.51502,
+"lon": 11.49812,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gemaier",
+"names": [
+"Gemaier"
+],
+"lat": 46.46686,
+"lon": 11.54798,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Töll - Tel",
+"names": [
+"Töll - Tel",
+"Töll",
+"Tel"
+],
+"lat": 46.67943,
+"lon": 11.08745,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Unter Vertigen",
+"names": [
+"Unter Vertigen"
+],
+"lat": 46.68253,
+"lon": 11.08971,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ampfertal",
+"names": [
+"Ampfertal"
+],
+"lat": 46.84407,
+"lon": 12.23889,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Untertesselberg - Montassilone di sotto",
+"names": [
+"Untertesselberg - Montassilone di sotto",
+"Untertesselberg",
+"Montassilone di sotto",
+"Tesselberg"
+],
+"lat": 46.82898,
+"lon": 11.98661,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Egelsbach - Masi di Monte Peloso",
+"names": [
+"Egelsbach - Masi di Monte Peloso",
+"Egelsbach",
+"Masi di Monte Peloso"
+],
+"lat": 46.8774,
+"lon": 11.96683,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberklapfer",
+"names": [
+"Oberklapfer"
+],
+"lat": 46.8728,
+"lon": 11.96246,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Unterklapfer",
+"names": [
+"Unterklapfer"
+],
+"lat": 46.87155,
+"lon": 11.96097,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kahle",
+"names": [
+"Kahle",
+"Calva"
+],
+"lat": 46.87009,
+"lon": 11.97796,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Edenlechen",
+"names": [
+"Edenlechen"
+],
+"lat": 46.86778,
+"lon": 11.96482,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Untere Tschenglser Alm - Malga di Cengles di Sotto",
+"names": [
+"Untere Tschenglser Alm - Malga di Cengles di Sotto",
+"Untere Tschenglser Alm",
+"Malga di Cengles di Sotto"
+],
+"lat": 46.59356,
+"lon": 10.64351,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Obere Tschenglser Alm - Malga di Cengles di Sopra",
+"names": [
+"Obere Tschenglser Alm - Malga di Cengles di Sopra",
+"Obere Tschenglser Alm",
+"Malga di Cengles di Sopra"
+],
+"lat": 46.58214,
+"lon": 10.6355,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Obere Laaser Alm - Malga Lasa di Sopra",
+"names": [
+"Obere Laaser Alm - Malga Lasa di Sopra",
+"Obere Laaser Alm",
+"Malga Lasa di Sopra"
+],
+"lat": 46.57105,
+"lon": 10.68019,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Untere Laaser Alm",
+"names": [
+"Untere Laaser Alm"
+],
+"lat": 46.56629,
+"lon": 10.68453,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Steinwandhof",
+"names": [
+"Steinwandhof"
+],
+"lat": 46.57943,
+"lon": 10.79819,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Latscher Alm - Malga di Laces",
+"names": [
+"Latscher Alm - Malga di Laces",
+"Latscher Alm",
+"Malga di Laces"
+],
+"lat": 46.57809,
+"lon": 10.87633,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tarscher Alm - Malga di Tarres",
+"names": [
+"Tarscher Alm - Malga di Tarres",
+"Tarscher Alm",
+"Malga di Tarres"
+],
+"lat": 46.58084,
+"lon": 10.88835,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Patsch - Paces",
+"names": [
+"Patsch - Paces"
+],
+"lat": 46.63763,
+"lon": 10.81344,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Edenhof - Corte deserta",
+"names": [
+"Edenhof - Corte deserta",
+"Edenhof",
+"Corte deserta"
+],
+"lat": 46.81277,
+"lon": 11.98547,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Bichler",
+"names": [
+"Bichler"
+],
+"lat": 46.8398,
+"lon": 11.97937,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Oswald - San Osvaldo",
+"names": [
+"St. Oswald - San Osvaldo",
+"St. Oswald",
+"San Osvaldo"
+],
+"lat": 46.55729,
+"lon": 11.52134,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberplars - Plars di Sopra",
+"names": [
+"Oberplars - Plars di Sopra",
+"Oberplars",
+"Plars di Sopra"
+],
+"lat": 46.68677,
+"lon": 11.10172,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tisens - Tisana",
+"names": [
+"Tisens - Tisana",
+"Tisens",
+"Tisana"
+],
+"lat": 46.57264,
+"lon": 11.54821,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Runcadic - Runggaditsch - Roncadizza",
+"names": [
+"Runcadic - Runggaditsch - Roncadizza",
+"Runggaditsch",
+"Roncadizza",
+"Runcadic"
+],
+"lat": 46.57401,
+"lon": 11.64481,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kasern - Casere",
+"names": [
+"Kasern - Casere",
+"Kasern",
+"Casere"
+],
+"lat": 47.05001,
+"lon": 12.12646,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Berg - Monte",
+"names": [
+"Berg - Monte",
+"Berg",
+"Monte"
+],
+"lat": 46.46866,
+"lon": 11.24763,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Unterried - Novale di Sotto",
+"names": [
+"Unterried - Novale di Sotto",
+"Unterried",
+"Novale di Sotto"
+],
+"lat": 46.60086,
+"lon": 11.53547,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ried",
+"names": [
+"Ried"
+],
+"lat": 46.659,
+"lon": 11.05496,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Latschinig - Lacinigo",
+"names": [
+"Latschinig - Lacinigo",
+"Latschinig",
+"Lacinigo"
+],
+"lat": 46.61929,
+"lon": 10.90315,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Marein - Maragno",
+"names": [
+"Marein - Maragno",
+"Marein",
+"Maragno"
+],
+"lat": 46.62582,
+"lon": 10.90198,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Forst - Foresta",
+"names": [
+"Forst - Foresta",
+"Forst",
+"Foresta"
+],
+"lat": 46.67819,
+"lon": 11.11262,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Daunëi",
+"names": [
+"Daunëi"
+],
+"lat": 46.56203,
+"lon": 11.7534,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Mudler",
+"names": [
+"Mudler"
+],
+"lat": 46.78279,
+"lon": 12.08415,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Unterrauter",
+"names": [
+"Unterrauter"
+],
+"lat": 46.82726,
+"lon": 12.09576,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberrauter",
+"names": [
+"Oberrauter"
+],
+"lat": 46.82646,
+"lon": 12.09663,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Siesl",
+"names": [
+"Siesl"
+],
+"lat": 46.84522,
+"lon": 12.09636,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Noessler",
+"names": [
+"Noessler"
+],
+"lat": 46.84502,
+"lon": 12.09969,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rieder",
+"names": [
+"Rieder"
+],
+"lat": 46.85759,
+"lon": 12.10204,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Mooshöhe - Costa del Colle",
+"names": [
+"Mooshöhe - Costa del Colle",
+"Mooshöhe",
+"Costa del Colle"
+],
+"lat": 46.8525,
+"lon": 12.09612,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Untolonza",
+"names": [
+"Untolonza"
+],
+"lat": 46.7717,
+"lon": 12.13185,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberhaus",
+"names": [
+"Oberhaus"
+],
+"lat": 46.78091,
+"lon": 12.11313,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Salcher",
+"names": [
+"Salcher"
+],
+"lat": 46.77882,
+"lon": 11.93273,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Grosskaneider",
+"names": [
+"Grosskaneider"
+],
+"lat": 46.7411,
+"lon": 11.76766,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Mitterplars - Plars di Mezzo",
+"names": [
+"Mitterplars - Plars di Mezzo",
+"Mitterplars",
+"Plars di Mezzo"
+],
+"lat": 46.68467,
+"lon": 11.1135,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Stifter Alm",
+"names": [
+"Stifter Alm"
+],
+"lat": 46.94043,
+"lon": 11.84324,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Reicheggalm",
+"names": [
+"Reicheggalm"
+],
+"lat": 46.94088,
+"lon": 11.84831,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberstein",
+"names": [
+"Oberstein"
+],
+"lat": 46.95194,
+"lon": 11.93271,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Klammer",
+"names": [
+"Klammer"
+],
+"lat": 46.8592,
+"lon": 12.09475,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Wiesemann",
+"names": [
+"Wiesemann"
+],
+"lat": 46.84506,
+"lon": 12.08696,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gravetsch",
+"names": [
+"Gravetsch"
+],
+"lat": 46.64152,
+"lon": 11.5453,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gisse",
+"names": [
+"Gisse"
+],
+"lat": 46.96599,
+"lon": 11.92402,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schlossoir",
+"names": [
+"Schlossoir"
+],
+"lat": 46.65073,
+"lon": 10.47761,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Al Pinter",
+"names": [
+"Al Pinter"
+],
+"lat": 46.71852,
+"lon": 11.87829,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Guln - Gola",
+"names": [
+"Guln - Gola",
+"Guln",
+"Gola"
+],
+"lat": 46.6653,
+"lon": 11.58922,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Aich - Aica",
+"names": [
+"Aich - Aica",
+"Aich",
+"Aica"
+],
+"lat": 46.6872,
+"lon": 11.1692,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Zenoberg - Monte S. Zeno",
+"names": [
+"Zenoberg - Monte S. Zeno",
+"Zenoberg - Tirol",
+"Monte S. Zeno - Tirolo"
+],
+"lat": 46.67449,
+"lon": 11.17048,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gfrill - Caprile",
+"names": [
+"Gfrill - Caprile",
+"Gfrill",
+"Caprile"
+],
+"lat": 46.55047,
+"lon": 11.1423,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Urban",
+"names": [
+"Urban"
+],
+"lat": 46.49937,
+"lon": 11.10281,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Obere",
+"names": [
+"Obere"
+],
+"lat": 46.50754,
+"lon": 11.10591,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Untere",
+"names": [
+"Untere"
+],
+"lat": 46.49766,
+"lon": 11.11702,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kofler",
+"names": [
+"Kofler"
+],
+"lat": 46.48714,
+"lon": 11.13534,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ried",
+"names": [
+"Ried"
+],
+"lat": 46.56822,
+"lon": 10.78416,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Flura",
+"names": [
+"Flura"
+],
+"lat": 46.56902,
+"lon": 10.78519,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberdorf",
+"names": [
+"Oberdorf"
+],
+"lat": 46.5658,
+"lon": 10.78113,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Premstal",
+"names": [
+"Premstal"
+],
+"lat": 46.56082,
+"lon": 10.77259,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Mairulrich",
+"names": [
+"Mairulrich"
+],
+"lat": 46.55932,
+"lon": 10.77984,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Obkirch",
+"names": [
+"Obkirch"
+],
+"lat": 46.56319,
+"lon": 10.77875,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Waldhof",
+"names": [
+"Waldhof"
+],
+"lat": 46.56195,
+"lon": 10.78183,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Reiter",
+"names": [
+"Reiter"
+],
+"lat": 46.56311,
+"lon": 10.78287,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Mittern",
+"names": [
+"Mittern"
+],
+"lat": 46.4711,
+"lon": 11.03739,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pertmern",
+"names": [
+"Pertmern"
+],
+"lat": 46.44988,
+"lon": 11.06792,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Außern",
+"names": [
+"Außern"
+],
+"lat": 46.4504,
+"lon": 11.06845,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Salten",
+"names": [
+"Salten"
+],
+"lat": 46.68743,
+"lon": 11.0633,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ochsenfelder Alm",
+"names": [
+"Ochsenfelder Alm"
+],
+"lat": 46.84798,
+"lon": 12.1568,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Walder",
+"names": [
+"Walder"
+],
+"lat": 46.75261,
+"lon": 12.34522,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tischler",
+"names": [
+"Tischler"
+],
+"lat": 46.73078,
+"lon": 12.30647,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Wiesthaler",
+"names": [
+"Wiesthaler"
+],
+"lat": 46.73143,
+"lon": 12.31049,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Klein Marer",
+"names": [
+"Klein Marer"
+],
+"lat": 46.73313,
+"lon": 12.31591,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sagstatt",
+"names": [
+"Sagstatt"
+],
+"lat": 46.82469,
+"lon": 11.29892,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Riedelsberg - Montenovale",
+"names": [
+"Riedelsberg - Montenovale",
+"Riedelsberg",
+"Montenovale"
+],
+"lat": 46.64098,
+"lon": 11.3822,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pawigl - Pavicolo",
+"names": [
+"Pawigl - Pavicolo",
+"Pawigl",
+"Pavicolo"
+],
+"lat": 46.62126,
+"lon": 11.1074,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Vigil - San Vigilio",
+"names": [
+"St. Vigil - San Vigilio",
+"St. Vigil",
+"San Vigilio"
+],
+"lat": 46.54175,
+"lon": 11.54148,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Kathrein - Santa Caterina",
+"names": [
+"St. Kathrein - Santa Caterina",
+"St Kathrein",
+"Santa Caterina"
+],
+"lat": 46.6475,
+"lon": 11.20842,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Obergampen",
+"names": [
+"Obergampen"
+],
+"lat": 46.47559,
+"lon": 11.01962,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Untergampen",
+"names": [
+"Untergampen"
+],
+"lat": 46.4747,
+"lon": 11.02234,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Neuhaus - Casanova",
+"names": [
+"Neuhaus - Casanova",
+"Neuhaus",
+"Casanova"
+],
+"lat": 46.48683,
+"lon": 11.02715,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tal",
+"names": [
+"Tal"
+],
+"lat": 46.48356,
+"lon": 11.01944,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Nöder",
+"names": [
+"Nöder"
+],
+"lat": 46.48478,
+"lon": 11.03382,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Maierhöfe - Masi Maieri",
+"names": [
+"Maierhöfe - Masi Maieri",
+"Maierhöfe",
+"Masi Maier"
+],
+"lat": 46.48427,
+"lon": 11.02554,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Caneve - Keller",
+"names": [
+"Caneve - Keller",
+"Keller",
+"Caneve"
+],
+"lat": 46.41085,
+"lon": 11.30247,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Col Bedoi",
+"names": [
+"Col Bedoi"
+],
+"lat": 46.56445,
+"lon": 11.95117,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Armentarola",
+"names": [
+"Armentarola"
+],
+"lat": 46.56119,
+"lon": 11.95413,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sciaré",
+"names": [
+"Sciaré",
+"Saré"
+],
+"lat": 46.55329,
+"lon": 11.96846,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ju",
+"names": [
+"Ju"
+],
+"lat": 46.65002,
+"lon": 11.94649,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gnates",
+"names": [
+"Gnates"
+],
+"lat": 46.65815,
+"lon": 11.92055,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Costa de Murin",
+"names": [
+"Costa de Murin"
+],
+"lat": 46.58208,
+"lon": 11.92359,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Altin",
+"names": [
+"Altin"
+],
+"lat": 46.58375,
+"lon": 11.90671,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "La Crusc",
+"names": [
+"La Crusc"
+],
+"lat": 46.61439,
+"lon": 11.93859,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Col",
+"names": [
+"Col"
+],
+"lat": 46.54741,
+"lon": 11.88002,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Burjé",
+"names": [
+"Burjé"
+],
+"lat": 46.54746,
+"lon": 11.87201,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Guntschna - Guncina",
+"names": [
+"Guntschna - Guncina",
+"Guntschna",
+"Guncina"
+],
+"lat": 46.50935,
+"lon": 11.33331,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Obernieschen",
+"names": [
+"Obernieschen"
+],
+"lat": 46.5482,
+"lon": 11.00202,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Fachhaus",
+"names": [
+"Fachhaus"
+],
+"lat": 46.54998,
+"lon": 11.00856,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "La Vila",
+"names": [
+"La Vila"
+],
+"lat": 46.55925,
+"lon": 11.76345,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plan de Gralba",
+"names": [
+"Plan de Gralba"
+],
+"lat": 46.53305,
+"lon": 11.7722,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plan da Tieja",
+"names": [
+"Plan da Tieja"
+],
+"lat": 46.56085,
+"lon": 11.73221,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Larciunëi",
+"names": [
+"Larciunëi"
+],
+"lat": 46.55941,
+"lon": 11.76131,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plazola",
+"names": [
+"Plazola"
+],
+"lat": 46.55918,
+"lon": 11.76039,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Frëina",
+"names": [
+"Frëina"
+],
+"lat": 46.55179,
+"lon": 11.76153,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Dorives",
+"names": [
+"Dorives"
+],
+"lat": 46.55829,
+"lon": 11.73355,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Innerpalmschoß - Plancios di Dentro",
+"names": [
+"Innerpalmschoß - Plancios di Dentro",
+"Innerpalmschoß",
+"Plancios di Dentro"
+],
+"lat": 46.67748,
+"lon": 11.73927,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Moos",
+"names": [
+"Moos"
+],
+"lat": 46.40184,
+"lon": 11.45408,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Stenk",
+"names": [
+"Stenk",
+"Località Stenk"
+],
+"lat": 46.4168,
+"lon": 11.48955,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Untergasser",
+"names": [
+"Untergasser"
+],
+"lat": 46.89425,
+"lon": 11.70471,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Obergasser",
+"names": [
+"Obergasser"
+],
+"lat": 46.89493,
+"lon": 11.70498,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Bad Egart",
+"names": [
+"Bad Egart"
+],
+"lat": 46.67215,
+"lon": 11.08122,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Piciulëi",
+"names": [
+"Piciulëi"
+],
+"lat": 46.55699,
+"lon": 11.74655,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Burdengëia",
+"names": [
+"Burdengëia"
+],
+"lat": 46.56056,
+"lon": 11.75734,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Runcac",
+"names": [
+"Runcac"
+],
+"lat": 46.55975,
+"lon": 11.73084,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Valentin - S. Valentino",
+"names": [
+"St. Valentin - S. Valentino",
+"St. Valentin",
+"S. Valentino"
+],
+"lat": 46.55311,
+"lon": 11.57144,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Brugg-Höfe",
+"names": [
+"Brugg-Höfe"
+],
+"lat": 46.61578,
+"lon": 10.73687,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ried",
+"names": [
+"Ried"
+],
+"lat": 46.91329,
+"lon": 11.29639,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Col d'Anví",
+"names": [
+"Col d'Anví"
+],
+"lat": 46.62079,
+"lon": 11.90605,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Fussé",
+"names": [
+"Fussé"
+],
+"lat": 46.61451,
+"lon": 11.90174,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Dreikirchen - Tre Chiese",
+"names": [
+"Dreikirchen - Tre Chiese",
+"Dreikirchen",
+"Tre Chiese"
+],
+"lat": 46.61788,
+"lon": 11.51051,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Baslan",
+"names": [
+"Baslan"
+],
+"lat": 46.6393,
+"lon": 11.14216,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Unterpojen - Poja di sotto",
+"names": [
+"Unterpojen - Poja di sotto",
+"Unterpojen",
+"Poja di sotto"
+],
+"lat": 46.93353,
+"lon": 11.94656,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Hinterafers - Eores di Dentro",
+"names": [
+"Hinterafers - Eores di Dentro",
+"Hinterafers",
+"Eores di Dentro"
+],
+"lat": 46.67145,
+"lon": 11.72938,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Agratsberg - Acereto",
+"names": [
+"Agratsberg - Acereto",
+"Agratsberg",
+"Acereto"
+],
+"lat": 46.68836,
+"lon": 11.38897,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gebracksberg - Campodironco",
+"names": [
+"Gebracksberg - Campodironco",
+"Gebracksberg",
+"Campodironco"
+],
+"lat": 46.70616,
+"lon": 11.34369,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Auen - Prati",
+"names": [
+"Auen - Prati",
+"Auen",
+"Prati"
+],
+"lat": 46.64903,
+"lon": 11.3362,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Afingsbrugg",
+"names": [
+"Afingsbrugg"
+],
+"lat": 46.57759,
+"lon": 11.3765,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Essenberg - Montessa",
+"names": [
+"Essenberg - Montessa",
+"Essenberg",
+"Montessa"
+],
+"lat": 46.69063,
+"lon": 11.34627,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Bergwerk",
+"names": [
+"Bergwerk"
+],
+"lat": 46.74498,
+"lon": 11.35608,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Glern",
+"names": [
+"Glern"
+],
+"lat": 46.66291,
+"lon": 11.35548,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kandelsberg - Campitello",
+"names": [
+"Kandelsberg - Campitello",
+"Kandelsberg",
+"Campitello"
+],
+"lat": 46.68428,
+"lon": 11.35966,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Muls",
+"names": [
+"Muls"
+],
+"lat": 46.74937,
+"lon": 11.3575,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Vormeswald",
+"names": [
+"Vormeswald"
+],
+"lat": 46.59932,
+"lon": 11.36942,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Rungg - Ronco",
+"names": [
+"Rungg - Ronco",
+"Rungg",
+"Ronco"
+],
+"lat": 46.6442,
+"lon": 11.34837,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Trienbach",
+"names": [
+"Trienbach"
+],
+"lat": 46.67653,
+"lon": 11.38944,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Stein",
+"names": [
+"Stein"
+],
+"lat": 46.56989,
+"lon": 10.79758,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pederù - Pederü",
+"names": [
+"Pederù - Pederü",
+"Pederü",
+"Pederù"
+],
+"lat": 46.6389,
+"lon": 12.0404,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberer Burgfrieden - Castelliere di Sopra",
+"names": [
+"Oberer Burgfrieden - Castelliere di Sopra",
+"Oberer Burgfrieden",
+"Castelliere di Sopra"
+],
+"lat": 46.71952,
+"lon": 11.64498,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Christl",
+"names": [
+"Christl"
+],
+"lat": 46.498,
+"lon": 11.12561,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Neuhaus",
+"names": [
+"Neuhaus"
+],
+"lat": 46.49667,
+"lon": 11.12493,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ciamaor",
+"names": [
+"Ciamaor",
+"Cjamaur"
+],
+"lat": 46.68761,
+"lon": 11.94993,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Vorstadt",
+"names": [
+"Vorstadt"
+],
+"lat": 46.59591,
+"lon": 11.16532,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Cestun",
+"names": [
+"Cestun"
+],
+"lat": 46.65621,
+"lon": 11.91521,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Freienfeld - Campo di Trens",
+"names": [
+"Freienfeld - Campo di Trens",
+"Freienfeld",
+"Campo di Trens"
+],
+"lat": 46.87146,
+"lon": 11.48352,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pichlerhütte - Malga del Colle",
+"names": [
+"Pichlerhütte - Malga del Colle",
+"Pichlerhütte",
+"Malga del Colle"
+],
+"lat": 46.84421,
+"lon": 11.6786,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Naraun - Narano",
+"names": [
+"Naraun - Narano",
+"Naraun",
+"Narano"
+],
+"lat": 46.57497,
+"lon": 11.16165,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Longnui",
+"names": [
+"Longnui"
+],
+"lat": 46.56758,
+"lon": 11.16708,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberplatten - Laste Alte",
+"names": [
+"Oberplatten - Laste Alte",
+"Oberplatten",
+"Laste Alte"
+],
+"lat": 46.50292,
+"lon": 11.41938,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gasters",
+"names": [
+"Gasters"
+],
+"lat": 46.52071,
+"lon": 11.45215,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Lichtenstern - Stella",
+"names": [
+"Lichtenstern - Stella",
+"Lichtenstern",
+"Stella"
+],
+"lat": 46.53138,
+"lon": 11.43409,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Handwerkerzone - Zona Artigianale",
+"names": [
+"Handwerkerzone - Zona Artigianale",
+"Handwerkerzone",
+"Zona Artigianale"
+],
+"lat": 46.53076,
+"lon": 11.44596,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gebrack",
+"names": [
+"Gebrack"
+],
+"lat": 46.5483,
+"lon": 11.42484,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pilshöfe - Masi Pilsera",
+"names": [
+"Pilshöfe - Masi Pilsera",
+"Pilshöfe",
+"Masi Pilsera"
+],
+"lat": 46.49683,
+"lon": 10.84863,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Geiselsberg - Sorafurcia",
+"names": [
+"Geiselsberg - Sorafurcia",
+"Geiselsberg",
+"Sorafurcia"
+],
+"lat": 46.74728,
+"lon": 12.00174,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberwielenbach - Vila di Sopra",
+"names": [
+"Oberwielenbach - Vila di Sopra",
+"Oberwielenbach",
+"Vila di Sopra"
+],
+"lat": 46.81544,
+"lon": 12.00096,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Greinwalden - Grimaldo",
+"names": [
+"Greinwalden - Grimaldo",
+"Greinwalden",
+"Grimaldo"
+],
+"lat": 46.81153,
+"lon": 11.90663,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Burgstall",
+"names": [
+"Burgstall"
+],
+"lat": 46.36293,
+"lon": 11.33598,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Berger",
+"names": [
+"Berger"
+],
+"lat": 46.39889,
+"lon": 11.35616,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kaserhof - Maso Casera",
+"names": [
+"Kaserhof - Maso Casera",
+"Kaserhof",
+"Maso Casera"
+],
+"lat": 46.40497,
+"lon": 11.35554,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kapron",
+"names": [
+"Kapron"
+],
+"lat": 46.81715,
+"lon": 10.58732,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Alfarëi",
+"names": [
+"Alfarëi"
+],
+"lat": 46.61721,
+"lon": 11.90756,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ruac",
+"names": [
+"Ruac"
+],
+"lat": 46.6173,
+"lon": 11.90639,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Großeich",
+"names": [
+"Großeich",
+"Großaich"
+],
+"lat": 46.53845,
+"lon": 11.48148,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sieß",
+"names": [
+"Sieß",
+"Siess",
+"Süeß"
+],
+"lat": 46.56934,
+"lon": 11.46147,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gstral",
+"names": [
+"Gstral"
+],
+"lat": 46.53469,
+"lon": 11.40692,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sand",
+"names": [
+"Sand"
+],
+"lat": 46.51957,
+"lon": 11.35289,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sill",
+"names": [
+"Sill",
+"Burgfrieden"
+],
+"lat": 46.5257,
+"lon": 11.37007,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Grünwald - Selva Verde",
+"names": [
+"Grünwald - Selva Verde",
+"Grünwald",
+"Selva Verde"
+],
+"lat": 46.59,
+"lon": 11.42868,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Baiern",
+"names": [
+"Baiern"
+],
+"lat": 46.56621,
+"lon": 11.4959,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Im Schatten",
+"names": [
+"Im Schatten"
+],
+"lat": 46.56769,
+"lon": 11.39895,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Burger - Borghetto",
+"names": [
+"Burger - Borghetto",
+"Burger",
+"Borghetto"
+],
+"lat": 46.72299,
+"lon": 11.64132,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Anton - S. Antonio",
+"names": [
+"St. Anton - S. Antonio"
+],
+"lat": 46.96492,
+"lon": 11.34601,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Unterreinswald - Boscoriva",
+"names": [
+"Unterreinswald - Boscoriva",
+"Unterreinswald",
+"Boscoriva"
+],
+"lat": 46.69614,
+"lon": 11.40937,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gentersberg - Monteganda",
+"names": [
+"Gentersberg - Monteganda",
+"Gentersberg",
+"Monteganda"
+],
+"lat": 46.67603,
+"lon": 11.37529,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Am Moosfeld - Campo Palù",
+"names": [
+"Am Moosfeld - Campo Palù",
+"Am Moosfeld",
+"Campo Palù"
+],
+"lat": 46.89534,
+"lon": 11.44546,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Bad Moos - Bagni di Moso",
+"names": [
+"Bad Moos - Bagni di Moso",
+"Bad Moos",
+"Bagni di Moso"
+],
+"lat": 46.68087,
+"lon": 12.36406,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Stafflach",
+"names": [
+"Stafflach",
+"Stafl"
+],
+"lat": 46.53716,
+"lon": 11.47243,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Stofls",
+"names": [
+"Stofls",
+"Stavels"
+],
+"lat": 46.62684,
+"lon": 11.52206,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Kranebitt",
+"names": [
+"Kranebitt"
+],
+"lat": 46.62909,
+"lon": 11.5332,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Aschbach",
+"names": [
+"Aschbach"
+],
+"lat": 46.82888,
+"lon": 11.83313,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Aufelder",
+"names": [
+"Aufelder"
+],
+"lat": 46.81251,
+"lon": 11.74834,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Salcherhof - Maso Salcher",
+"names": [
+"Salcherhof - Maso Salcher",
+"Salcherhof",
+"Maso Salcher"
+],
+"lat": 46.26174,
+"lon": 11.17726,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "al Buso",
+"names": [
+"al Buso"
+],
+"lat": 46.28489,
+"lon": 11.1717,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "i Dossi",
+"names": [
+"i Dossi"
+],
+"lat": 46.28865,
+"lon": 11.17383,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Niederwangen",
+"names": [
+"Niederwangen",
+"Vanga Bassa"
+],
+"lat": 46.57955,
+"lon": 11.38427,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Michlreis - Vigo Michele",
+"names": [
+"Michlreis - Vigo Michele",
+"Michlreis",
+"Vigo Michele"
+],
+"lat": 46.93216,
+"lon": 11.9269,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Martin - San Martino",
+"names": [
+"St. Martin - San Martino",
+"St. Martin",
+"San Martino"
+],
+"lat": 46.97548,
+"lon": 11.93238,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pittertschol",
+"names": [
+"Pittertschol"
+],
+"lat": 46.5256,
+"lon": 11.3406,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gschleier",
+"names": [
+"Gschleier"
+],
+"lat": 46.5807,
+"lon": 11.24039,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Runggen",
+"names": [
+"Runggen"
+],
+"lat": 46.67995,
+"lon": 11.54191,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Peter",
+"names": [
+"St. Peter"
+],
+"lat": 46.67737,
+"lon": 11.53805,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sagschmöl",
+"names": [
+"Sagschmöl"
+],
+"lat": 46.67164,
+"lon": 11.51763,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "St. Valentin - S. Valentino",
+"names": [
+"St. Valentin - S. Valentino",
+"St. Valentin",
+"S. Valentino"
+],
+"lat": 46.63948,
+"lon": 11.55391,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Egg - Costa",
+"names": [
+"Egg - Costa",
+"Egg",
+"Costa"
+],
+"lat": 46.64873,
+"lon": 10.84032,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Vorra - Fora",
+"names": [
+"Vorra - Fora",
+"Vorra",
+"Fora"
+],
+"lat": 46.64645,
+"lon": 10.8378,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Altschluderbach - Carbonin Vecchia",
+"names": [
+"Altschluderbach - Carbonin Vecchia",
+"Altschluderbach",
+"Carbonin Vecchia"
+],
+"lat": 46.72775,
+"lon": 12.20126,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Untrum",
+"names": [
+"Untrum"
+],
+"lat": 46.65951,
+"lon": 11.60043,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Abfalterboden",
+"names": [
+"Abfalterboden"
+],
+"lat": 46.89562,
+"lon": 11.86321,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Dick",
+"names": [
+"Dick"
+],
+"lat": 46.62121,
+"lon": 11.37639,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ratzes",
+"names": [
+"Ratzes",
+"Razes"
+],
+"lat": 46.54276,
+"lon": 11.58049,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Furggl",
+"names": [
+"Furggl"
+],
+"lat": 46.71635,
+"lon": 11.68198,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Weckerler",
+"names": [
+"Weckerler"
+],
+"lat": 46.83059,
+"lon": 12.24119,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Neunhäusern - Nove Case",
+"names": [
+"Neunhäusern - Nove Case",
+"Neunhäusern",
+"Nove Case"
+],
+"lat": 46.73837,
+"lon": 12.19635,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Gratsch - Grazze",
+"names": [
+"Gratsch - Grazze",
+"Gratsch",
+"Grazze"
+],
+"lat": 46.73089,
+"lon": 12.20469,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Anderter",
+"names": [
+"Anderter"
+],
+"lat": 46.70972,
+"lon": 12.33147,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Waldheim",
+"names": [
+"Waldheim"
+],
+"lat": 46.6933,
+"lon": 12.35661,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Säge",
+"names": [
+"Säge"
+],
+"lat": 46.71487,
+"lon": 12.22161,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Plung",
+"names": [
+"Plung"
+],
+"lat": 46.71778,
+"lon": 12.14279,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Sankt Florian - San Floriano",
+"names": [
+"Sankt Florian - San Floriano"
+],
+"lat": 46.28459,
+"lon": 11.24146,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Säge",
+"names": [
+"Säge"
+],
+"lat": 46.7204,
+"lon": 12.13865,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Ried",
+"names": [
+"Ried"
+],
+"lat": 46.75419,
+"lon": 12.09663,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Oberhaus",
+"names": [
+"Oberhaus"
+],
+"lat": 46.71206,
+"lon": 12.09769,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Turismuszone Antholz Obertal - Zona Turistica Anterselva Alta",
+"names": [
+"Turismuszone Antholz Obertal - Zona Turistica Anterselva Alta",
+"Turismuszone Antholz Obertal",
+"Zona Turistica Anterselva Alta"
+],
+"lat": 46.87943,
+"lon": 12.1419,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Henzing",
+"names": [
+"Henzing"
+],
+"lat": 46.77148,
+"lon": 12.17086,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Bloßenberg",
+"names": [
+"Bloßenberg"
+],
+"lat": 46.98467,
+"lon": 11.93415,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Dörfl II",
+"names": [
+"Dörfl II"
+],
+"lat": 46.86722,
+"lon": 12.11212,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Im Stoana",
+"names": [
+"Im Stoana"
+],
+"lat": 47.01661,
+"lon": 12.02887,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Handwerkerzone Rasen - Zona artigianale Rasun",
+"names": [
+"Handwerkerzone Rasen - Zona artigianale Rasun",
+"Handwerkerzone Rasen",
+"Zona artigianale Rasun"
+],
+"lat": 46.7715,
+"lon": 12.03904,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Staudacher",
+"names": [
+"Staudacher",
+"Arbusti"
+],
+"lat": 46.87021,
+"lon": 12.11663,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Brunnberg",
+"names": [
+"Brunnberg"
+],
+"lat": 46.96489,
+"lon": 11.91572,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Drittelsand",
+"names": [
+"Drittelsand"
+],
+"lat": 46.9322,
+"lon": 11.93735,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Aschbach",
+"names": [
+"Aschbach"
+],
+"lat": 46.79364,
+"lon": 12.0169,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Innertal",
+"names": [
+"Innertal"
+],
+"lat": 46.94651,
+"lon": 11.85902,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Am Wollbach",
+"names": [
+"Am Wollbach"
+],
+"lat": 47.00446,
+"lon": 12.00225,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Steger Aue",
+"names": [
+"Steger Aue"
+],
+"lat": 46.98663,
+"lon": 11.95351,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Mairkirchl - Masseria della Chiesa",
+"names": [
+"Mairkirchl - Masseria della Chiesa",
+"Mairkirchl",
+"Masseria della Chiesa"
+],
+"lat": 46.89163,
+"lon": 11.88333,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Innermühlwald",
+"names": [
+"Innermühlwald"
+],
+"lat": 46.89401,
+"lon": 11.83557,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Graben",
+"names": [
+"Graben"
+],
+"lat": 46.8934,
+"lon": 11.84856,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Unterlappach - Lapago di Sotto",
+"names": [
+"Unterlappach - Lapago di Sotto",
+"Unterlappach",
+"Lappago di Sotto"
+],
+"lat": 46.90349,
+"lon": 11.81441,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Litschbach - Liccio",
+"names": [
+"Litschbach - Liccio",
+"Litschbach",
+"Liccio"
+],
+"lat": 46.78685,
+"lon": 11.99785,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Lanebach",
+"names": [
+"Lanebach"
+],
+"lat": 46.86084,
+"lon": 11.93247,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Schießstand",
+"names": [
+"Schießstand"
+],
+"lat": 46.81285,
+"lon": 12.00392,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Pieterstein",
+"names": [
+"Pieterstein"
+],
+"lat": 46.90105,
+"lon": 11.90821,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Reisenschuh",
+"names": [
+"Reisenschuh"
+],
+"lat": 46.95206,
+"lon": 11.38829,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Moos - Palù",
+"names": [
+"Moos - Palù",
+"Moos",
+"Palù"
+],
+"lat": 46.9012,
+"lon": 11.45128,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Tiss",
+"names": [
+"Tiss"
+],
+"lat": 46.62292,
+"lon": 10.83614,
+"place": "hamlet",
+"rank": 1
+},
+{
+"name": "Talatsch - Talaccio",
+"names": [
+"Talatsch - Talaccio",
+"Talatsch",
+"Talaccio"
+],
+"lat": 46.64628,
+"lon": 10.77141,
+"place": "hamlet",
+"rank": 1
+}
+]
+}
