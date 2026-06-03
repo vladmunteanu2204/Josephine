@@ -626,8 +626,14 @@ def health_check():
 @app.route('/api/trails', methods=['GET'])
 def get_trails():
     """Get all trails with optional filtering"""
-    trails = load_complete_trails()
-    
+    try:
+        trails = load_complete_trails()
+    except Exception as e:  # noqa: BLE001
+        # The homepage's first call hits this — never let a transient load
+        # failure 500 the landing page; degrade to an empty, cacheable list.
+        print(f"[trails] load failed, serving empty list: {e}")
+        return jsonify({'trails': [], 'count': 0, 'total': 0}), 200
+
     difficulty = request.args.get('difficulty')
     duration_max = request.args.get('duration_max', type=float)
     interest = request.args.get('interest')

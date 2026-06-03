@@ -116,11 +116,11 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
     const load = async () => {
       try {
         const [trailsRes, multiDayRes, rifugiosRes] = await Promise.all([
-          axios.get(`${API_URL}/trails`),
+          axios.get(`${API_URL}/trails`).catch(() => null),
           axios.get(`${API_URL}/multi-day-trails`).catch(() => null),
           axios.get(`${API_URL}/rifugios`).catch(() => null),
         ]);
-        if (trailsRes.data.trails?.length > 0) {
+        if (trailsRes?.data?.trails?.length > 0) {
           const top = trailsRes.data.trails
             .sort((a, b) => (b.rating || 0) - (a.rating || 0))
             .slice(0, 5);
@@ -143,7 +143,9 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
           if (arr.length > 0) setMultiDayTrail(arr[0]);
         }
       } catch (e) {
-        console.error('Home data load error:', e);
+        // Non-fatal: the page still renders its static content. A warning (not
+        // an error) avoids alarming noise when the backend is briefly waking up.
+        console.warn('Home data partial load:', e?.message || e);
       }
     };
     load();
