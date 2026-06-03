@@ -12,7 +12,6 @@ import Footer from './components/Footer';
 import BottomNav from './components/BottomNav';
 
 // Route views — lazy-loaded on first visit
-const SmartRecommendations = lazy(() => import('./components/SmartRecommendations'));
 const TrailCatalog         = lazy(() => import('./components/TrailCatalog'));
 const TrailDetail          = lazy(() => import('./components/TrailDetail'));
 const Profile              = lazy(() => import('./components/Profile'));
@@ -229,9 +228,6 @@ function App() {
             />
           )}
 
-          {currentView === 'recommendations' && (
-            <SmartRecommendations viewTrail={viewTrail} onBack={goBack} />
-          )}
 
           {currentView === 'catalog' && (
             <TrailCatalog viewTrail={viewTrail} initialTags={catalogInitialTags} onTagsConsumed={() => setCatalogInitialTags([])} onShowLogin={() => setShowLoginModal(true)} />
@@ -315,7 +311,9 @@ function App() {
             <MultiDayTrailDetail trailId={selectedMultiDayTrail} onNavigate={navigate} />
           )}
 
-          {currentView === 'josephine' && (
+          {/* JosephineChat is the single recommendation surface; the legacy
+              'recommendations' hash is aliased to it so old links still work. */}
+          {(currentView === 'josephine' || currentView === 'recommendations') && (
             <JosephineChat onBack={goBack} setCurrentView={setCurrentView} viewTrail={viewTrail} onShowLogin={() => setShowLoginModal(true)} />
           )}
 
@@ -331,12 +329,12 @@ function App() {
 
         {/* The marketing footer (incl. its "Plan my day with Josephine" CTA) is
             redundant while the user is already in the chat — hide it there. */}
-        {currentView !== 'josephine' && <Footer setCurrentView={setCurrentView} />}
+        {currentView !== 'josephine' && currentView !== 'recommendations' && <Footer setCurrentView={setCurrentView} />}
 
         <BottomNav
           currentView={currentView}
           setCurrentView={setCurrentView}
-          onJosephineOpen={() => setCurrentView('recommendations')}
+          onJosephineOpen={() => setCurrentView('josephine')}
           onShowLogin={() => setShowLoginModal(true)}
         />
 

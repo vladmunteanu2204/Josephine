@@ -58,7 +58,7 @@ function JosephineWidget({ setCurrentView }) {
           </div>
 
           <div className="jph-widget__responses">
-            <button className="jph-widget__btn jph-widget__btn--primary" onClick={() => go('recommendations')}>
+            <button className="jph-widget__btn jph-widget__btn--primary" onClick={() => go('josephine')}>
               Yes, surprise me
             </button>
             <button className="jph-widget__btn jph-widget__btn--ghost" onClick={() => go('planner')}>

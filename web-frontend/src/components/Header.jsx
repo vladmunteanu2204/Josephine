@@ -72,7 +72,7 @@ function Header({ currentView, setCurrentView, showLoginModal, setShowLoginModal
       case 'admin':          setCurrentView('admin');           break;
       case 'settings':       setCurrentView('settings');        break;
       case 'home':           setCurrentView('home');            break;
-      case 'recommendations':setCurrentView('recommendations'); break;
+      case 'recommendations':setCurrentView('josephine');        break;
       case 'catalog':        setCurrentView('catalog');         break;
       case 'rifugios':       setCurrentView('rifugios');        break;
       case 'multiday-trails':setCurrentView('multiday-trails'); break;
