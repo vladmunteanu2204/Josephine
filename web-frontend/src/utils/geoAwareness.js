@@ -32,6 +32,24 @@ const AREA_COORDS = {
   'schenna':           [46.685, 11.170],
   'rablà':             [46.660, 11.080],
   'rabland':           [46.660, 11.080],
+  'parcines':          [46.685, 11.073],
+  'partschins':        [46.685, 11.073],
+
+  // Val Passiria / Passeiertal
+  'val passiria':      [46.800, 11.240],
+  'passeiertal':       [46.800, 11.240],
+  'passiria':          [46.800, 11.240],
+  'passeier':          [46.800, 11.240],
+  'san leonardo in passiria': [46.812, 11.245],
+  'st. leonhard in passeier': [46.812, 11.245],
+  'san leonardo':      [46.812, 11.245],
+  'st. leonhard':      [46.812, 11.245],
+  'san martino in passiria':  [46.784, 11.226],
+  'st. martin in passeier':   [46.784, 11.226],
+  'saltusio':          [46.749, 11.207],
+  'saltaus':           [46.749, 11.207],
+  'moso in passiria':  [46.844, 11.291],
+  'moos in passeier':  [46.844, 11.291],
 
   // Bolzano area
   'bolzano':           [46.498, 11.354],
@@ -48,10 +66,29 @@ const AREA_COORDS = {
   // Bressanone / Brixen
   'bressanone':        [46.716, 11.656],
   'brixen':            [46.716, 11.656],
+  'chiusa':            [46.640, 11.566],
+  'klausen':           [46.640, 11.566],
+  'funes':             [46.642, 11.685],
+  'villnöß':           [46.642, 11.685],
+  'val di funes':      [46.642, 11.685],
+  'santa maddalena':   [46.642, 11.685],
 
   // Vipiteno / Sterzing
   'vipiteno':          [46.893, 11.433],
   'sterzing':          [46.893, 11.433],
+
+  // Southern Bolzano / Bassa Atesina + Sciliar
+  'laives':            [46.428, 11.339],
+  'leifers':           [46.428, 11.339],
+  'egna':              [46.317, 11.273],
+  'neumarkt':          [46.317, 11.273],
+  'termeno':           [46.343, 11.243],
+  'tramin':            [46.343, 11.243],
+  'castelrotto':       [46.567, 11.558],
+  'kastelruth':        [46.567, 11.558],
+  'fiè allo sciliar':  [46.516, 11.527],
+  'völs am schlern':   [46.516, 11.527],
+  'fiè':               [46.516, 11.527],
 
   // Val Gardena
   'ortisei':           [46.575, 11.671],
