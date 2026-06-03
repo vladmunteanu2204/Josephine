@@ -6,7 +6,7 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.95);
   backdrop-filter: blur(10px);
-  z-index: 99999;
+  z-index: var(--z-celebration);
   display: flex;
   align-items: center;
   justify-content: center;

@@ -5,7 +5,7 @@
 .bk-page { display: flex; flex-direction: column; gap: 20px; position: relative; }
 
 .bk-toast {
-  position: fixed; top: 80px; right: 24px; z-index: 9999;
+  position: fixed; top: 80px; right: 24px; z-index: var(--z-overlay);
   padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 500;
   box-shadow: 0 8px 24px rgba(0,0,0,0.4);
   animation: bk-slide-in 0.25s ease;

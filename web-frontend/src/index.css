@@ -31,16 +31,20 @@
   /* Layout & Z-Index System */
   --safe-top: env(safe-area-inset-top, 0px);
   --header-h: 64px;
+  /* Z-index ladder — single source of truth (numerically ordered). Component
+     CSS should reference these tokens, not raw magic numbers. */
   --z-navbar: 1000;
   --z-dropdown: 3000;
-  --z-modal-backdrop: 3900;
-  --z-modal: 4000;
-  /* App-wide modal tier — sits above page chrome, the Josephine widget and the
-     bottom-sheet overlays. Used by the shared <Modal> primitive (ui/Modal). */
-  --z-app-modal-backdrop: 9990;
-  --z-app-modal: 10000;
-  --z-toast: 100000;
-  --z-fullscreen: 999999;   /* immersive takeovers (active hike, splash) */
+  --z-modal-backdrop: 3900;       /* legacy bottom-sheet backdrops */
+  --z-modal: 4000;                /* legacy bottom-sheet panels */
+  --z-app-modal-backdrop: 9990;   /* shared <Modal>/<Sheet> backdrop */
+  --z-grain: 9998;                /* body film-grain texture overlay */
+  --z-overlay: 9999;              /* misc full-screen overlays (auth, lightbox, admin toasts) */
+  --z-app-modal: 10000;           /* shared <Modal>/<Sheet> content */
+  --z-immersive: 20000;           /* active-hike chrome, above app modals */
+  --z-celebration: 99999;         /* post-hike celebration takeover */
+  --z-toast: 100000;              /* toasts — above everything interactive */
+  --z-fullscreen: 999999;         /* splash / active-hike map takeover */
 
   /* ── UI design system (Phase 0) ─────────────────────────────────────────
      Standardized primitives so screens stop hand-rolling sizes/colours.
@@ -95,7 +99,7 @@ body::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)' opacity='0.5'/%3E%3C/svg%3E");
   opacity: 0.025;
   pointer-events: none;
-  z-index: 9998;
+  z-index: var(--z-grain);
   mix-blend-mode: screen;
 }
 
