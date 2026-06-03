@@ -31,7 +31,7 @@ class WeatherService:
             ),
             'daily': (
                 'weather_code,temperature_2m_max,temperature_2m_min,'
-                'precipitation_probability_max,wind_speed_10m_max'
+                'precipitation_probability_max,wind_speed_10m_max,sunrise,sunset'
             ),
             'wind_speed_unit': 'kmh',
             'timezone': 'auto',
@@ -46,6 +46,10 @@ class WeatherService:
             data = self._fetch(lat, lon)
             c = data['current']
             code = c.get('weather_code', 0)
+            # Today's sun times (daily arrays are day-indexed; index 0 = today).
+            daily = data.get('daily', {}) or {}
+            sunrise = (daily.get('sunrise') or [None])[0]
+            sunset = (daily.get('sunset') or [None])[0]
             return {
                 'temperature': round(c['temperature_2m']),
                 'feels_like': round(c['apparent_temperature']),
@@ -57,6 +61,8 @@ class WeatherService:
                 'icon': '01d' if code == 0 else '02d',
                 'clouds': round(c.get('cloud_cover', 0)),
                 'visibility': round(c.get('visibility', 10000) / 1000, 1),
+                'sunrise': sunrise,   # ISO local, e.g. "2026-06-03T05:24" (or None)
+                'sunset': sunset,     # ISO local, e.g. "2026-06-03T21:02" (or None)
                 'timestamp': datetime.now().isoformat(),
             }
         except Exception as e:
@@ -126,11 +132,13 @@ class WeatherService:
         return {'score': score, 'recommendation': 'excellent' if score >= 80 else 'fair' if score >= 60 else 'poor', 'suitable': score >= 60}
 
     def _get_mock_weather(self):
+        today = datetime.now().strftime('%Y-%m-%d')
         return {
             'temperature': 15, 'feels_like': 13, 'humidity': 65,
             'pressure': 1013, 'wind_speed': 12, 'wind_direction': 180,
             'description': 'partly cloudy', 'icon': '02d',
             'clouds': 40, 'visibility': 10,
+            'sunrise': f'{today}T05:30', 'sunset': f'{today}T20:45',
             'timestamp': datetime.now().isoformat(),
             'mock': True,
         }

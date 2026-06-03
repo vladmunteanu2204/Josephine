@@ -19,6 +19,7 @@ from datetime import datetime, timedelta
 from functools import wraps
 import media as media_module  # image upload / R2 delivery
 from weather_service import weather_service
+import dispersal
 from notifications import EMAIL_ENABLED, send_email, build_inquiry_text
 try:
     from replit.object_storage import Client as ObjectStorageClient
@@ -669,6 +670,85 @@ def generate_trail():
         'message': 'Route generation is retired. Please use /api/ai/recommend for personalised trail suggestions.'
     }), 410
 
+_DISPERSAL_PENALTY = 6.0   # max score points subtracted from a hotspot at peak
+
+
+def _dispersal_alternative(hotspot, pick, ordered):
+    """Pick a quieter, quality-matched alternative for a crowded hotspot.
+    Curated (hotspots.json, must be a published trail) first; else the best
+    lower-crowding non-hotspot already in the result set. Returns a compact
+    trail summary (+ localized `why`) or None."""
+    trails_by_id = {t.get('id'): t for t in load_complete_trails().get('trails', [])}
+    hotspots = dispersal.load_hotspots()
+    crowd_rank = {'low': 0, 'medium': 1, 'high': 2}
+
+    def summary(t, why):
+        return {
+            'id': t.get('id'), 'name': t.get('name', ''), 'region': t.get('region', ''),
+            'difficulty': t.get('difficulty'), 'distance_km': t.get('distance_km'),
+            'duration_hours': t.get('duration_hours'),
+            'thumbnail': t.get('thumbnail') or t.get('wallpaper') or t.get('image_url') or '',
+            'why': why or {},
+        }
+
+    for a in hotspot.get('alternatives', []):
+        t = trails_by_id.get(a.get('trail_id'))
+        if t and t.get('status', 'published') == 'published' and t.get('id') != pick.get('id'):
+            return summary(t, a.get('why', {}))
+
+    pick_tags = {x.lower() for x in (pick.get('tags') or [])}
+    pick_crowd = crowd_rank.get(str((pick.get('crowding') or {}).get('level', 'high')).lower(), 2)
+    for r in ordered:
+        if r.get('id') == pick.get('id') or dispersal.match_hotspot(r, hotspots):
+            continue
+        r_crowd = crowd_rank.get(str((r.get('crowding') or {}).get('level', 'medium')).lower(), 1)
+        if r_crowd < pick_crowd and (not pick_tags or pick_tags & {x.lower() for x in (r.get('tags') or [])}):
+            return summary(r, {})
+    return None
+
+
+def _apply_dispersal(results, now_dt, weather):
+    """Re-rank crowded hotspots down at peak, then annotate the top pick with a
+    dispersal signal + a quieter alternative. Never raises; always strips the
+    internal `score` field before returning."""
+    try:
+        if not results:
+            return results
+        hotspots = dispersal.load_hotspots()
+
+        ranked = []
+        for idx, r in enumerate(results):
+            h = dispersal.match_hotspot(r, hotspots)
+            penalty = 0.0
+            if h:
+                sig = dispersal.decide(r, h, now_dt, weather=weather)
+                if sig['peak_now']:
+                    penalty = _DISPERSAL_PENALTY * sig['pressure']
+            ranked.append(((r.get('score') or 0) - penalty, idx, r))
+        ranked.sort(key=lambda t: (-t[0], t[1]))   # adjusted score desc, stable
+        ordered = [r for _, _, r in ranked]
+
+        pick = ordered[0]
+        h = dispersal.match_hotspot(pick, hotspots)
+        if h:
+            sig = dispersal.decide(
+                pick, h, now_dt, sunset=(weather or {}).get('sunset'),
+                duration_h=pick.get('duration_hours'), weather=weather)
+            if sig['reason_code'] != 'none':
+                if sig.get('show_alternative'):
+                    sig['suggested_alternative'] = _dispersal_alternative(h, pick, ordered)
+                pick['dispersal'] = sig
+
+        for r in ordered:
+            r.pop('score', None)
+        return ordered
+    except Exception as e:
+        print(f"[dispersal] decoration skipped: {e}")
+        for r in results:
+            r.pop('score', None)
+        return results
+
+
 @app.route('/api/ai/recommend', methods=['POST'])
 @app.route('/api/recommendations', methods=['POST'])
 def get_recommendations():
@@ -693,6 +773,12 @@ def get_recommendations():
         max_distance_km = data.get('max_distance_km')
         mood_interests  = [i for i in interests if i != 'dog-friendly']
 
+        # Dispersal/temporal inputs (optional). `now` = client local ISO; weather
+        # = the {description, sunset} the client already fetched. Both degrade
+        # gracefully when absent (server time, no daylight/fair-weather signal).
+        now_dt = dispersal._parse_iso(data.get('now')) or datetime.now()
+        weather_ctx = data.get('weather') if isinstance(data.get('weather'), dict) else None
+
         # Cache recommendations by params — stable within the same calendar day
         today_str = datetime.now().strftime('%Y-%m-%d')
         rec_cache_key = hashlib.sha256(
@@ -701,7 +787,10 @@ def get_recommendations():
         if rec_cache_key in _chat_cache:
             cached_entry = _chat_cache[rec_cache_key]
             if time.time() - cached_entry[1] < 300:   # 5-min TTL
-                return jsonify(json.loads(cached_entry[0]))
+                # Base scoring is cached; dispersal is applied live (depends on
+                # the current time / weather, which the cache key doesn't cover).
+                base = json.loads(cached_entry[0]).get('results', [])
+                return jsonify({'results': _apply_dispersal(base, now_dt, weather_ctx)})
 
         # Fix 2: current month for season awareness
         current_month = datetime.now().strftime('%B')   # e.g. "June"
@@ -921,6 +1010,7 @@ def get_recommendations():
             results.append({
                 'id':               trail.get('id'),
                 'name':             trail.get('name', ''),
+                'score':            round(item['score'], 3),   # used by the dispersal re-rank
                 'distance_km':      trail.get('distance_km'),
                 'duration_hours':   trail.get('duration_hours'),
                 'elevation_gain_m': trail.get('elevation_gain_m'),
@@ -952,14 +1042,14 @@ def get_recommendations():
                 'weather_notes':     trail.get('weather_notes', ''),
             })
 
-        payload = {'results': results}
-        # Cache the serialised result (reuse _chat_cache dict, different key prefix)
-        _chat_cache[rec_cache_key] = (json.dumps(payload), time.time())
+        # Cache the BASE scored results (param-keyed); dispersal is layered on
+        # afterwards so it always reflects the live time/weather.
+        _chat_cache[rec_cache_key] = (json.dumps({'results': results}), time.time())
         # Bound the in-memory cache: drop oldest entries beyond the cap.
         if len(_chat_cache) > _CHAT_CACHE_MAX:
             for _k in sorted(_chat_cache, key=lambda k: _chat_cache[k][1])[:len(_chat_cache) - _CHAT_CACHE_MAX]:
                 _chat_cache.pop(_k, None)
-        return jsonify(payload)
+        return jsonify({'results': _apply_dispersal(results, now_dt, weather_ctx)})
 
     except Exception as e:
         import traceback

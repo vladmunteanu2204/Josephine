@@ -1,0 +1,125 @@
+{
+  "_comment": "Overcrowded South Tyrol hotspots for the dispersal engine. Matching priority: match.trail_ids (exact) → match.name_keywords (substring on trail name/region, lowercased) → coordinates within match.radius_km. peak.hours are local [startHour, endHour]. access_note is a localized snippet surfaced when the hotspot is busy now. alternatives must reference REAL published trail ids that are NOT themselves a hotspot.",
+  "hotspots": [
+    {
+      "id": "lago-di-braies",
+      "name": "Lago di Braies",
+      "coordinates": { "lat": 46.6946, "lng": 12.0855 },
+      "match": { "trail_ids": ["lago-di-braies-circuit"], "name_keywords": ["braies", "pragser"], "radius_km": 4 },
+      "peak": { "months": ["June", "July", "August", "September"], "hours": [9, 16], "weekend_multiplier": 1.5 },
+      "access": { "car_ban_hours": [9, 16], "season": ["2026-07-01", "2026-09-15"], "parking_fills_by": "09:00", "reservation_required": true, "shuttle": "Bus 442/439 (advance booking)", "fee_eur": null },
+      "access_note": {
+        "en": "in summer cars are turned away 9:00–16:00 and the lot fills by 9am — the 442/439 shuttle needs advance booking",
+        "it": "d'estate le auto vengono bloccate dalle 9:00 alle 16:00 e il parcheggio è pieno entro le 9 — la navetta 442/439 va prenotata in anticipo",
+        "de": "im Sommer werden Autos von 9:00–16:00 abgewiesen und der Parkplatz ist um 9 Uhr voll — der Shuttle 442/439 muss vorab gebucht werden"
+      },
+      "alternatives": [
+        { "trail_id": "sarntaler-alm-lake-plateau", "why": { "en": "Just as turquoise, on a quiet high plateau barely anyone knows", "it": "Altrettanto turchese, su un altopiano tranquillo che quasi nessuno conosce", "de": "Genauso türkis, auf einem stillen Hochplateau, das kaum jemand kennt" } },
+        { "trail_id": "passo-furcia-lake-circuit", "why": { "en": "A string of alpine lakes with a fraction of the crowds", "it": "Una serie di laghi alpini con una frazione della folla", "de": "Eine Kette von Bergseen mit einem Bruchteil der Menge" } },
+        { "trail_id": "reschenhöhe-lake-walk", "why": { "en": "Wide open lake walk, peaceful even in August", "it": "Camminata sul lago ampia e tranquilla anche in agosto", "de": "Weite, ruhige Seewanderung selbst im August" } }
+      ]
+    },
+    {
+      "id": "seceda",
+      "name": "Seceda",
+      "coordinates": { "lat": 46.606, "lng": 11.692 },
+      "match": { "trail_ids": ["seceda-ridge-loop", "seceda-ridge-wild-descent"], "name_keywords": ["seceda"], "radius_km": 4 },
+      "peak": { "months": ["June", "July", "August", "September", "October"], "hours": [10, 15], "weekend_multiplier": 1.5 },
+      "access": { "car_ban_hours": null, "season": ["2026-06-01", "2026-10-31"], "parking_fills_by": null, "reservation_required": true, "shuttle": "Cable car timeslot (pre-book online)", "fee_eur": 5 },
+      "access_note": {
+        "en": "from 2026 there's a €5 ridge fee and the cable car needs a pre-booked time slot",
+        "it": "dal 2026 c'è un pedaggio di 5 € sulla cresta e la funivia richiede una fascia oraria prenotata",
+        "de": "ab 2026 gibt es eine 5-€-Kammgebühr und die Seilbahn braucht ein vorab gebuchtes Zeitfenster"
+      },
+      "alternatives": [
+        { "trail_id": "odle-fanes-traverse", "why": { "en": "The same jagged Odle peaks, without the cable-car queue", "it": "Le stesse guglie delle Odle, senza la coda della funivia", "de": "Dieselben zackigen Geisler-Gipfel, ohne die Seilbahn-Schlange" } },
+        { "trail_id": "sassongher-sasso-lungo-ridge", "why": { "en": "A wilder ridge with 360° Dolomite views and real quiet", "it": "Una cresta più selvaggia con vista a 360° sulle Dolomiti e vera quiete", "de": "Ein wilderer Grat mit 360°-Dolomitenblick und echter Ruhe" } }
+      ]
+    },
+    {
+      "id": "tre-cime-lavaredo",
+      "name": "Tre Cime di Lavaredo",
+      "coordinates": { "lat": 46.618, "lng": 12.305 },
+      "match": { "trail_ids": [], "name_keywords": ["tre cime", "lavaredo", "drei zinnen"], "radius_km": 5 },
+      "peak": { "months": ["June", "July", "August", "September"], "hours": [9, 16], "weekend_multiplier": 1.4 },
+      "access": { "car_ban_hours": null, "season": ["2026-05-25", "2026-10-20"], "parking_fills_by": "09:30", "reservation_required": true, "shuttle": "Misurina shuttle (pre-book); toll road ~€40 / 12h", "fee_eur": 40 },
+      "access_note": {
+        "en": "the toll road needs an online reservation (~€40 for a 12-hour slot) and fills early on clear days",
+        "it": "la strada a pedaggio richiede una prenotazione online (~40 € per una fascia di 12 ore) e si riempie presto nelle giornate limpide",
+        "de": "die Mautstraße braucht eine Online-Reservierung (~40 € für 12 Stunden) und ist an klaren Tagen früh voll"
+      },
+      "alternatives": [
+        { "trail_id": "passo-giau-alpine-circuit", "why": { "en": "Postcard Dolomite spires and alpine lakes, far calmer", "it": "Guglie dolomitiche da cartolina e laghi alpini, molto più tranquillo", "de": "Postkarten-Dolomitentürme und Bergseen, viel ruhiger" } },
+        { "trail_id": "odle-fanes-traverse", "why": { "en": "Dramatic peaks and high meadows without the car queue", "it": "Cime spettacolari e alti prati senza la coda delle auto", "de": "Dramatische Gipfel und Hochwiesen ohne Autoschlange" } }
+      ]
+    },
+    {
+      "id": "seiser-alm",
+      "name": "Seiser Alm / Alpe di Siusi",
+      "coordinates": { "lat": 46.545, "lng": 11.617 },
+      "match": { "trail_ids": [], "name_keywords": ["seiser alm", "alpe di siusi", "compatsch", "siusi"], "radius_km": 5 },
+      "peak": { "months": ["June", "July", "August", "September"], "hours": [9, 17], "weekend_multiplier": 1.4 },
+      "access": { "car_ban_hours": [9, 17], "season": ["2026-05-01", "2026-11-01"], "parking_fills_by": "09:00", "reservation_required": false, "shuttle": "Seiser Alm cable car or shuttle bus", "fee_eur": null },
+      "access_note": {
+        "en": "the plateau road is closed to cars 9:00–17:00 — come by cable car, or drive up before 9am",
+        "it": "la strada dell'altopiano è chiusa alle auto dalle 9:00 alle 17:00 — sali in funivia o guida su prima delle 9",
+        "de": "die Plateaustraße ist von 9:00–17:00 für Autos gesperrt — komm mit der Seilbahn oder fahr vor 9 Uhr hoch"
+      },
+      "alternatives": [
+        { "trail_id": "bolzano-gummer-joch-loop", "why": { "en": "Rolling alpine meadows and big views, genuinely quiet", "it": "Dolci prati alpini e grandi panorami, davvero tranquillo", "de": "Sanfte Almwiesen und weite Ausblicke, wirklich ruhig" } },
+        { "trail_id": "odle-fanes-traverse", "why": { "en": "High-meadow traverse beneath the Odle peaks", "it": "Traversata in quota sotto le cime delle Odle", "de": "Hochwiesen-Traverse unter den Geisler-Gipfeln" } }
+      ]
+    },
+    {
+      "id": "passo-gardena",
+      "name": "Passo Gardena",
+      "coordinates": { "lat": 46.557, "lng": 11.797 },
+      "match": { "trail_ids": ["passo-gardena-langkofel"], "name_keywords": [], "radius_km": 3 },
+      "peak": { "months": ["June", "July", "August", "September"], "hours": [10, 16], "weekend_multiplier": 1.4 },
+      "access": { "car_ban_hours": null, "season": ["2026-09-01", "2026-10-31"], "parking_fills_by": null, "reservation_required": false, "shuttle": "SAD 471 / Sellaronda bus", "fee_eur": null },
+      "access_note": {
+        "en": "from Sept 2026 the pass closes to through-traffic (locals/hotel guests only) — the Sellaronda bus is the easy way up",
+        "it": "da settembre 2026 il passo chiude al transito (solo residenti/ospiti degli hotel) — il bus Sellaronda è il modo più semplice per salire",
+        "de": "ab September 2026 ist der Pass für den Durchgangsverkehr gesperrt (nur Einheimische/Hotelgäste) — der Sellaronda-Bus ist der einfache Weg hinauf"
+      },
+      "alternatives": [
+        { "trail_id": "passo-gardena-forest-meander", "why": { "en": "Same trailhead, a hushed forest loop most people skip", "it": "Stessa partenza, un anello boschivo silenzioso che molti saltano", "de": "Gleicher Ausgangspunkt, eine stille Waldrunde, die die meisten auslassen" } },
+        { "trail_id": "odle-fanes-traverse", "why": { "en": "A bigger ridge day with the same Dolomite drama, quieter", "it": "Una giornata di cresta più ampia con lo stesso spettacolo dolomitico, più tranquilla", "de": "Ein größerer Grat-Tag mit demselben Dolomiten-Drama, ruhiger" } }
+      ]
+    },
+    {
+      "id": "val-di-funes",
+      "name": "Val di Funes (Santa Maddalena)",
+      "coordinates": { "lat": 46.638, "lng": 11.713 },
+      "match": { "trail_ids": ["val_di_funes"], "name_keywords": ["funes", "villnöss", "maddalena"], "radius_km": 4 },
+      "peak": { "months": ["June", "July", "August", "September", "October"], "hours": [10, 16], "weekend_multiplier": 1.5 },
+      "access": { "car_ban_hours": null, "season": ["2026-05-01", "2026-11-15"], "parking_fills_by": null, "reservation_required": true, "shuttle": "Bus 330 (hourly from Santa Maddalena)", "fee_eur": null },
+      "access_note": {
+        "en": "the famous church viewpoint is barriered to cars — park in the village and walk, or take the hourly Bus 330",
+        "it": "il famoso punto panoramico sulla chiesa è chiuso alle auto — parcheggia in paese e cammina, o prendi il bus 330 ogni ora",
+        "de": "der berühmte Kirchen-Aussichtspunkt ist für Autos gesperrt — parke im Dorf und geh zu Fuß, oder nimm den stündlichen Bus 330"
+      },
+      "alternatives": [
+        { "trail_id": "odle-fanes-traverse", "why": { "en": "Right under the same Odle peaks — but a real trail, not a photo stop", "it": "Proprio sotto le stesse cime delle Odle — ma un vero sentiero, non una sosta fotografica", "de": "Direkt unter denselben Geisler-Gipfeln — aber ein echter Weg, kein Fotostopp" } },
+        { "trail_id": "hochmuth_tirolo", "why": { "en": "Storybook farm meadows and valley views, hardly busy", "it": "Prati di malga da fiaba e viste sulla valle, quasi mai affollati", "de": "Märchenhafte Hofwiesen und Talblicke, kaum besucht" } }
+      ]
+    },
+    {
+      "id": "lago-di-carezza",
+      "name": "Lago di Carezza",
+      "coordinates": { "lat": 46.412, "lng": 11.577 },
+      "match": { "trail_ids": [], "name_keywords": ["carezza", "karersee"], "radius_km": 3 },
+      "peak": { "months": ["June", "July", "August", "September", "October"], "hours": [10, 16], "weekend_multiplier": 1.5 },
+      "access": { "car_ban_hours": null, "season": ["2026-05-01", "2026-11-01"], "parking_fills_by": "10:00", "reservation_required": false, "shuttle": "Paid lot + underpass; SAD 180", "fee_eur": null },
+      "access_note": {
+        "en": "it's a 10-minute photo lap that draws coaches by mid-morning — the paid lot fills by 10am",
+        "it": "è un giro fotografico di 10 minuti che richiama i pullman entro metà mattina — il parcheggio a pagamento è pieno entro le 10",
+        "de": "es ist eine 10-minütige Foto-Runde, die ab dem späten Vormittag Reisebusse anzieht — der gebührenpflichtige Parkplatz ist um 10 Uhr voll"
+      },
+      "alternatives": [
+        { "trail_id": "sarntaler-alm-lake-plateau", "why": { "en": "A real lake hike you can have to yourself, not a roadside stop", "it": "Una vera escursione al lago tutta per te, non una sosta sulla strada", "de": "Eine echte Seewanderung für dich allein, kein Halt am Straßenrand" } },
+        { "trail_id": "bolzano-gummer-joch-loop", "why": { "en": "Quiet alpine loop nearby with Latemar views", "it": "Tranquillo anello alpino lì vicino con vista sul Latemar", "de": "Ruhige Almrunde in der Nähe mit Latemar-Blick" } }
+      ]
+    }
+  ]
+}

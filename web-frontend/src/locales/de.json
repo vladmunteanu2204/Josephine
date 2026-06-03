@@ -1238,6 +1238,17 @@
     "transportBusHint": " Dorthin fährt auch {{bus}}.",
     "transportNote1": "Eine nützliche Info — {{region}} ist etwa {{km}} km von {{start}} entfernt, {{drive}}.{{bus}} Planst du mit dem Auto zu fahren, oder hättest du gern etwas Näheres?",
     "transportNote2": "Nur als Hinweis: dieser Weg liegt in {{region}}, rund {{km}} km von {{start}} ({{drive}}).{{bus}} Lohnt sich absolut — rechne nur die Anfahrt mit ein.",
-    "transportNote3": "Achtung — {{region}} ist etwa {{km}} km von {{start}} entfernt, plane also {{drive}} pro Strecke ein.{{bus}}"
+    "transportNote3": "Achtung — {{region}} ist etwa {{km}} km von {{start}} entfernt, plane also {{drive}} pro Strecke ein.{{bus}}",
+    "dispBeatCrowds": "Geh jetzt — du hast {{place}} fast für dich allein, bevor die Menge kommt.{{access}}",
+    "dispPeakToday": "{{place}} ist gerade am vollsten{{access}}. Ehrlich? {{alt}} ist genauso schön und heute viel ruhiger — lieber das, oder {{place}} morgen bei Sonnenaufgang?",
+    "dispPlanTomorrow": "Es ist {{time}} — für {{place}} willst du den Morgen, um Menge und Parkplatz zu umgehen.{{access}} Soll ich es für morgen einplanen, oder nimmst du jetzt {{alt}}?",
+    "dispDaylightRisk": "Das ist eine {{hours}}h-Tour und es ist schon {{time}} — du würdest im Dunkeln ankommen. {{alt}} ist heute die sicherere Wahl, oder mach {{place}} morgen in Ruhe.",
+    "dispAltIntro": "Hier ist sie — ich bin sicher, du bist froh, stattdessen hierher zu gehen. ✦",
+    "dispAltError": "Hmm, die konnte ich nicht laden — möchtest du neu anfangen?",
+    "dispPlanTomorrowAck": "Wunderbar — {{place}} morgen früh. Der Menge entgehen, das beste Licht, alles andere bleibt gleich.",
+    "dispGoAnywayAck": "Wie du möchtest{{place}}. Geh so früh wie möglich los und genieße jeden Moment.",
+    "chipShowAlternative": "Zeig mir die ruhigere Option",
+    "chipPlanTomorrow": "Für morgen planen",
+    "chipGoAnyway": "Trotzdem hin"
   }
 }

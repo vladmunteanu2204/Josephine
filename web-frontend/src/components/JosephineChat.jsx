@@ -22,6 +22,9 @@ let userLat = WX_LAT, userLon = WX_LON;
 // True only once we have the user's REAL position (not the Dolomites
 // fallback) — so "X km away" is only shown when it's actually meaningful.
 let userLocated = false;
+// Last weather payload (description + sunset) — passed to the recommend engine
+// so the dispersal layer can factor fair weather + daylight.
+let lastWeather = null;
 
 /* Module-level i18n helper for Josephine's hand-written copy. Reads
    josephineChat.<key> from the active locale, falls back to the English string
@@ -188,6 +191,49 @@ function buildWeatherGreeting(w) {
 
   const tempPart = temp > 0 ? `${temp}°C, ` : '';
   return tj('wgDefault', 'The weather is looking good for a mountain day. {{tempPart}}what kind of adventure are you after?', { tempPart });
+}
+
+/* ── Crowd dispersal note — voices the backend `dispersal` signal ────────
+   Returns { text, chips } or null. The hotspot stays the pick; we lead with a
+   quieter, quality-matched alternative ("discovered a secret"), nudge timing,
+   and surface the access reality. Mirrors buildWeatherGreeting's branch model. */
+function buildDispersalNote(d, pick, alt) {
+  if (!d || d.reason_code === 'none') return null;
+  const lang = (i18nInstance.language || 'en').slice(0, 2);
+  const place = d.hotspot_name || pick?.name || 'there';
+  const access = d.access_note ? ` (${d.access_note[lang] || d.access_note.en || ''})` : '';
+  const now = new Date();
+  const time = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+  const altWhy = alt ? (alt.why?.[lang] || alt.why?.en || '') : '';
+  const altPhrase = alt ? (altWhy ? `${alt.name} — ${altWhy}` : alt.name) : '';
+
+  const altChip = alt ? [tj('chipShowAlternative', 'Show me the quieter option')] : [];
+  const decideChips = [...altChip, tj('chipPlanTomorrow', 'Plan it for tomorrow'), tj('chipGoAnyway', 'Go anyway')];
+
+  switch (d.reason_code) {
+    case 'beat_crowds':
+      return {
+        text: tj('dispBeatCrowds', "Go now — you'll have {{place}} almost to yourself before the crowds arrive.{{access}}", { place, access }),
+        chips: null,
+      };
+    case 'peak_today':
+      return {
+        text: tj('dispPeakToday', "{{place}} is at its busiest right now{{access}}. Honestly? {{alt}} is just as beautiful and far quieter today — want that instead, or catch {{place}} at sunrise tomorrow?", { place, access, alt: altPhrase }),
+        chips: decideChips,
+      };
+    case 'plan_tomorrow':
+      return {
+        text: tj('dispPlanTomorrow', "It's {{time}} — for {{place}} you really want a morning to beat the crowds and the parking.{{access}} Shall I line it up for tomorrow, or take {{alt}} now instead?", { time, place, access, alt: altPhrase }),
+        chips: decideChips,
+      };
+    case 'daylight_risk':
+      return {
+        text: tj('dispDaylightRisk', "That's a {{hours}}h route and it's already {{time}} — you'd be finishing in the dark. {{alt}} is a safer call for today, or do {{place}} fresh tomorrow.", { hours: pick?.duration_hours, time, place, alt: altPhrase }),
+        chips: decideChips,
+      };
+    default:
+      return null;
+  }
 }
 
 /* ── Trail preference session ────────────────────────────────────────── */
@@ -725,6 +771,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
     let conditions;
     try {
       const w = await axios.get('/api/weather/current', { params: { lat: userLat, lon: userLon } });
+      lastWeather = w.data;
       conditions = buildConditions(w.data);
     } catch {
       conditions = buildConditions(null);
@@ -760,6 +807,9 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         family_friendly: data.family_friendly ?? false,
         start_area: data.startArea ?? '',
         ...(data.max_distance_km ? { max_distance_km: data.max_distance_km } : {}),
+        // Temporal/crowd-dispersal inputs (degrade gracefully server-side).
+        now: new Date().toISOString(),
+        ...(lastWeather ? { weather: { description: lastWeather.description, sunset: lastWeather.sunset } } : {}),
       });
       // Backend signals no trails near the requested area
       if (response.data.area_not_found) {
@@ -821,7 +871,17 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
             type: 'options', trails: results,
             chips: [t('chipTooLong'), t('chipTooHard'), t('chipStartOver')],
           });
-          if (distWarning) {
+          // Crowd-dispersal note takes priority over the generic distance note
+          // (its access_note already covers the "how to get there" for hotspots)
+          // — never stack both.
+          const disp = first.dispersal
+            ? buildDispersalNote(first.dispersal, first, first.dispersal.suggested_alternative)
+            : null;
+          if (disp) {
+            setTimeout(() => {
+              appendJosephineMessage({ type: 'text', text: disp.text, chips: disp.chips });
+            }, 600);
+          } else if (distWarning) {
             setTimeout(() => {
               appendJosephineMessage({
                 type: 'text',
@@ -1381,6 +1441,45 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         chips: null,
       });
       setTimeout(() => callRecommendAPI(d), 400);
+      return;
+    }
+
+    // ── Crowd-dispersal chips ──────────────────────────────────────────────
+    if (chip === tj('chipShowAlternative', 'Show me the quieter option')) {
+      appendUserMessage(chip);
+      const altId = apiResults[0]?.dispersal?.suggested_alternative?.id;
+      if (!altId) return;
+      setTyping(true);
+      // Fetch the full trail so the card + View details behave like any other pick.
+      axios.get(`/api/trails/${altId}`).then(res => {
+        setTyping(false);
+        const full = res.data;
+        appendJosephineMessage({ type: 'text', text: tj('dispAltIntro', "Here it is — I think you'll be glad you went here instead. ✦"), chips: null });
+        appendJosephineMessage({ type: 'options', trails: [full], chips: [t('chipStartOver')] });
+      }).catch(() => {
+        setTyping(false);
+        appendJosephineMessage({ type: 'text', text: tj('dispAltError', "Hmm, I couldn't pull that one up — want to start over?"), chips: [t('chipStartOver')] });
+      });
+      return;
+    }
+    if (chip === tj('chipPlanTomorrow', 'Plan it for tomorrow')) {
+      appendUserMessage(chip);
+      const place = apiResults[0]?.dispersal?.hotspot_name || '';
+      appendJosephineMessage({
+        type: 'text',
+        text: tj('dispPlanTomorrowAck', "Lovely — {{place}} at sunrise tomorrow. Beat the crowds, catch the best light, everything else stays the same.", { place }),
+        chips: [t('chipStartOver')],
+      });
+      return;
+    }
+    if (chip === tj('chipGoAnyway', 'Go anyway')) {
+      appendUserMessage(chip);
+      const place = apiResults[0]?.dispersal?.hotspot_name || '';
+      appendJosephineMessage({
+        type: 'text',
+        text: tj('dispGoAnywayAck', "You got it{{place}}. Go as early as you can, and enjoy every minute.", { place: place ? ` — ${place}` : '' }),
+        chips: null,
+      });
       return;
     }
 
