@@ -295,6 +295,56 @@ Three pillars, in bet order:
 What NOT to do: don't bolt on more utility when it feels flat — soul is depth.
 One character with memory + one living almanac + one postcard beats ten tabs.
 
+## 8c. Living Almanac — build spec ("this week in the mountains")
+
+Curated engine of fleeting, real, local moments Josephine *tells* you, gated on
+live conditions so it's never wrong. Rides existing weather service (+ sunset),
+seasons, dispersal, gazetteer, Europe/Rome time, and the trilingual-data pattern.
+
+**Locked decisions:**
+- **Surface = inside the chat** (lead message + slim Almanac card, in her voice —
+  "told to you", not a dashboard) **+ push notifications once notification infra
+  exists** (see notifications.py; the morning "the larches are peaking this week,
+  go before 8" nudge is the killer use). No Home banner for v1.
+- **Curation = collaborative.** Claude drafts the seed moments (flagging any date
+  it's unsure of); the owner reviews them AND contributes their own moments.
+
+**⚠️ OWNER ACTION (you owe Claude this):** hand over a vetted/extra list of
+"moments" — fleeting South Tyrol phenomena & events with rough date windows
+(and which valleys), e.g. larch gold, enrosadira, Almabtrieb, Törggelen,
+apple blossom, first snow, wildflower peak, Christmas markets, chestnut season.
+Claude will draft ~15 to start; review them + add yours before launch (the
+never-fabricate rule makes accuracy of dates/places essential).
+
+**Principles:** ephemeral > evergreen ("tonight" / "~6 days left"); told, not
+displayed; never fabricated (only show a moment when its date-window + live-
+weather gate passes; year-varying events phrased approximately).
+
+**Architecture (full plan delivered in chat):**
+- `backend/data/almanac.json` — moments: id, type (phenomenon/event/condition),
+  window (MM-DD from/to, year-wrap aware), optional elevation band + areas
+  (gazetteer), weather_gate, weight, localized `voice` + `share` (EN/IT/DE in
+  the data file like hotspots' `why`), optional `cta` (area/interest).
+- `backend/almanac.py` — `_in_window`, `_days_left`, `_weather_ok` (reuse
+  weather_service: enrosadira⇒clear sky at sunset, first-snow⇒recent snow),
+  `active_moments(now, weather, area, lang)` ranked by weight + ephemerality +
+  weather-satisfied + area proximity. Guarded.
+- `app.py` — `load_almanac()` near `load_hotspots`; `GET /api/almanac`
+  (now/lat/lon/area/lang/limit; day-bucket cache like dispersal; short bucket
+  for weather-gated); intent route ("what's happening / in season / this week").
+- `JosephineChat.jsx` — lead with one moment on open; Almanac card; chips
+  (plan-around-it → seeds recommend; more moments; share = postcard hook).
+- Locales: only short validity-label `tj` keys ("tonight", "{n} days left").
+
+**Phasing:** P1 = json + engine + API + chat surfacing + enrosadira/first-snow
+gates. P2 = location-personalised ranking, elevation-aware larch, share→postcard,
+push notifications. P3 = real event feeds (market/Almabtrieb dates), admin
+curation UI, webcam/first-snow auto-detection.
+
+**Verify:** active_moments at seeded dates (Oct⇒larch, Jun⇒wildflowers,
+Dec⇒markets), clear vs cloudy ⇒ enrosadira on/off, year-wrap window, EN/IT/DE
+parity; API localized; build green; ast parse.
+
 ## 9. Crowd dispersal + temporal intelligence (spec)
 
 The flagship differentiator. Reframed from the discussion: it's a **temporal
