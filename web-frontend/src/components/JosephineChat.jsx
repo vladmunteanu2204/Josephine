@@ -23,6 +23,18 @@ let userLat = WX_LAT, userLon = WX_LON;
 // fallback) — so "X km away" is only shown when it's actually meaningful.
 let userLocated = false;
 
+/* Module-level i18n helper for Josephine's hand-written copy. Reads
+   josephineChat.<key> from the active locale, falls back to the English string
+   when a key is missing, and does {{var}} interpolation (the namespaced
+   useTranslation in this file has no interpolation of its own). */
+function tj(key, fallback, vars) {
+  const full = `josephineChat.${key}`;
+  let v = i18nInstance.t(full);
+  if (!v || v === full) v = fallback ?? key;
+  if (vars) for (const [k, val] of Object.entries(vars)) v = v.split(`{{${k}}}`).join(String(val));
+  return v;
+}
+
 /* ── Distance helpers (for "X km away" on recommended trails) ─────────── */
 function haversineKm(lat1, lon1, lat2, lon2) {
   const R = 6371, toRad = d => (d * Math.PI) / 180;
@@ -68,29 +80,29 @@ function answerAboutTrail(trail, tl) {
 
   // Distance / length (must mention km / distance / far / length)
   if (/\b(how far|how many km|what'?s the distance|distance|how long is it in km|length)\b/i.test(tl)) {
-    return has(trail.distance_km) ? { text: `${name} is ${trail.distance_km} km.` } : null;
+    return has(trail.distance_km) ? { text: tj('qaDistance', '{{name}} is {{km}} km.', { name, km: trail.distance_km }) } : null;
   }
   // Duration / time
   if (/\b(how long|how many hours|how much time|how long does it take|duration|take to (do|hike|walk|complete))\b/i.test(tl)) {
-    return has(trail.duration_hours) ? { text: `${name} takes around ${trail.duration_hours}h at a steady pace.` } : null;
+    return has(trail.duration_hours) ? { text: tj('qaDuration', '{{name}} takes around {{h}}h at a steady pace.', { name, h: trail.duration_hours }) } : null;
   }
   // Elevation / climb
   if (/\b(elevation|ascent|vertical|height gain|how much (up|climb|climbing))\b/i.test(tl)) {
-    return has(trail.elevation_gain_m) ? { text: `${name} climbs about ${trail.elevation_gain_m} m.` } : null;
+    return has(trail.elevation_gain_m) ? { text: tj('qaElevation', '{{name}} climbs about {{m}} m.', { name, m: trail.elevation_gain_m }) } : null;
   }
   // Difficulty
   if (/\b(how hard|how difficult|is it hard|is it easy|is it tough|is it steep|difficulty|how challenging)\b/i.test(tl)) {
     if (!has(trail.difficulty)) return null;
     const d = String(trail.difficulty).toLowerCase();
-    const extra = d === 'easy' ? 'Suitable for most people.'
-      : d === 'hard' ? 'Best for fit, experienced hikers — good footwear matters.'
-      : 'A moderate effort — steady fitness and proper shoes recommended.';
-    return { text: `${name} is rated ${trail.difficulty}. ${extra}` };
+    const extra = d === 'easy' ? tj('qaDiffEasy', 'Suitable for most people.')
+      : d === 'hard' ? tj('qaDiffHard', 'Best for fit, experienced hikers — good footwear matters.')
+      : tj('qaDiffModerate', 'A moderate effort — steady fitness and proper shoes recommended.');
+    return { text: tj('qaDifficulty', '{{name}} is rated {{difficulty}}. {{extra}}', { name, difficulty: trail.difficulty, extra }) };
   }
   // Season / when's it open
   if (/\b(when.*(best|to go)|best (time|season|month)|in season|what season|when (is it )?open|is it open)\b/i.test(tl)) {
     const s = _seasonRange(trail.best_season);
-    return s ? { text: `${name} is best ${s}.` } : null;
+    return s ? { text: tj('qaSeason', '{{name}} is best {{season}}.', { name, season: s }) } : null;
   }
   // Getting there / transport / parking
   if (/\b(how (do|to)( i)? (get|reach)|getting there|by bus|by car|parking|how to reach|drive there|public transport)\b/i.test(tl)) {
@@ -98,20 +110,20 @@ function answerAboutTrail(trail, tl) {
     const bus = trail.transport?.bus;
     const parking = trail.trailhead_info?.parking;
     const parts = [];
-    if (bus) parts.push(`By bus: ${bus}`);
-    if (car) parts.push(`By car: ${car}`);
-    if (!parts.length && parking) parts.push(`Parking: ${parking}`);
-    return parts.length ? { text: `Getting to ${name} — ${parts.join(' · ')}` } : null;
+    if (bus) parts.push(tj('qaByBus', 'By bus: {{bus}}', { bus }));
+    if (car) parts.push(tj('qaByCar', 'By car: {{car}}', { car }));
+    if (!parts.length && parking) parts.push(tj('qaParking', 'Parking: {{parking}}', { parking }));
+    return parts.length ? { text: tj('qaGettingTo', 'Getting to {{name}} — {{parts}}', { name, parts: parts.join(' · ') }) } : null;
   }
   // Food / rifugio nearby
   if (/\b(eat|food|lunch|coffee|drink|refreshment|rifugio|hut|malga|somewhere to (eat|stop))\b/i.test(tl)) {
     const rifs = Array.isArray(trail.nearby_rifugios) ? trail.nearby_rifugios.map(r => r?.name).filter(Boolean) : [];
-    return rifs.length ? { text: `Near ${name} you've got ${rifs.slice(0, 3).join(', ')} for a bite or a rest.` } : null;
+    return rifs.length ? { text: tj('qaFood', "Near {{name}} you've got {{rifs}} for a bite or a rest.", { name, rifs: rifs.slice(0, 3).join(', ') }) } : null;
   }
   // Family / kids
   if (/\b(family|kids|children|child|toddler|stroller|pushchair)\b/i.test(tl)) {
-    if (trail.family_friendly === true)  return { text: `Yes — ${name} is family-friendly.` };
-    if (trail.family_friendly === false) return { text: `${name} isn't marked family-friendly — probably better for older kids or adults.` };
+    if (trail.family_friendly === true)  return { text: tj('qaFamilyYes', 'Yes — {{name}} is family-friendly.', { name }) };
+    if (trail.family_friendly === false) return { text: tj('qaFamilyNo', "{{name}} isn't marked family-friendly — probably better for older kids or adults.", { name }) };
     return null;
   }
   // Open it / show on map
@@ -148,33 +160,34 @@ function buildWeatherGreeting(w) {
   const wind = w?.wind_speed ?? 0;
 
   if (/thunder|storm/.test(desc))
-    return "Afternoon thunderstorms are forecast over the peaks today. The mountains are still worth it — but I'd plan a short morning window and be back in the valley before 13:00. Half-day itinerary?";
+    return tj('wgStorm', "Afternoon thunderstorms are forecast over the peaks today. The mountains are still worth it — but I'd plan a short morning window and be back in the valley before 13:00. Half-day itinerary?");
 
   if (/rain|shower|drizzle/.test(desc))
-    return "It's raining in the Dolomites today — that moody, cinematic kind of beautiful. Forest paths and rifugios are your friends. I know sheltered routes that are magical in the wet. Want one?";
+    return tj('wgRain', "It's raining in the Dolomites today — that moody, cinematic kind of beautiful. Forest paths and rifugios are your friends. I know sheltered routes that are magical in the wet. Want one?");
 
   if (/snow/.test(desc))
-    return `Fresh snow on the upper routes today (${temp}°C). Snowshoe trails and mountain huts are at their best — a completely different kind of Dolomites. Want me to find something?`;
+    return tj('wgSnow', 'Fresh snow on the upper routes today ({{temp}}°C). Snowshoe trails and mountain huts are at their best — a completely different kind of Dolomites. Want me to find something?', { temp });
 
   if (/fog|mist/.test(desc))
-    return "Mist is drifting through the valleys this morning — that rare atmospheric light that makes the Dolomites look like a painting. Perfect for a low-altitude walk. Shall I find one?";
+    return tj('wgFog', "Mist is drifting through the valleys this morning — that rare atmospheric light that makes the Dolomites look like a painting. Perfect for a low-altitude walk. Shall I find one?");
 
   if (wind > 45)
-    return `Strong wind on the exposed ridges today — up to ${wind} km/h. I'd steer you toward sheltered forest trails and valley paths rather than the high routes. Want a recommendation?`;
+    return tj('wgWind', "Strong wind on the exposed ridges today — up to {{wind}} km/h. I'd steer you toward sheltered forest trails and valley paths rather than the high routes. Want a recommendation?", { wind });
 
   if (/clear|sun/.test(desc)) {
     if (temp > 27)
-      return `Blue skies today, but warm — ${temp}°C in the valley. Worth starting early or heading to altitude for cooler air. I know some trails near water too. What sounds right?`;
-    return `Perfect conditions today — ${temp}°C, clear skies, excellent visibility. The Dolomites are putting on a show. What kind of adventure are you after?`;
+      return tj('wgClearHot', 'Blue skies today, but warm — {{temp}}°C in the valley. Worth starting early or heading to altitude for cooler air. I know some trails near water too. What sounds right?', { temp });
+    return tj('wgClear', 'Perfect conditions today — {{temp}}°C, clear skies, excellent visibility. The Dolomites are putting on a show. What kind of adventure are you after?', { temp });
   }
 
   if (/overcast|cloud/.test(desc)) {
     if (/few|scattered|partly/.test(desc))
-      return `Sun and cloud today, ${temp}°C — classic Dolomites light. Not too hot, great for walking. What kind of adventure are you after?`;
-    return `Overcast today — dramatic skies, quieter trails, beautiful diffused light. ${temp}°C and no crowds. A great day to go somewhere new. What sounds right?`;
+      return tj('wgCloudPartly', 'Sun and cloud today, {{temp}}°C — classic Dolomites light. Not too hot, great for walking. What kind of adventure are you after?', { temp });
+    return tj('wgOvercast', 'Overcast today — dramatic skies, quieter trails, beautiful diffused light. {{temp}}°C and no crowds. A great day to go somewhere new. What sounds right?', { temp });
   }
 
-  return `The weather is looking good for a mountain day. ${temp > 0 ? temp + '°C, ' : ''}what kind of adventure are you after?`;
+  const tempPart = temp > 0 ? `${temp}°C, ` : '';
+  return tj('wgDefault', 'The weather is looking good for a mountain day. {{tempPart}}what kind of adventure are you after?', { tempPart });
 }
 
 /* ── Trail preference session ────────────────────────────────────────── */
@@ -594,43 +607,43 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
     let variants;
     if (/storm|morning window/i.test(condTitle)) {
       variants = [
-        "Waterproof jacket on, early start, off the ridge before noon. Those afternoon clouds aren't negotiating.",
-        "Pack a rain shell and move early. Once those storms build over the peaks, they mean it.",
-        "Get moving before 09:00. Rain layer on top, and keep an eye on the south sky.",
+        tj('remarkStorm1', "Waterproof jacket on, early start, off the ridge before noon. Those afternoon clouds aren't negotiating."),
+        tj('remarkStorm2', "Pack a rain shell and move early. Once those storms build over the peaks, they mean it."),
+        tj('remarkStorm3', "Get moving before 09:00. Rain layer on top, and keep an eye on the south sky."),
       ];
     } else if (/rain|waterproof/i.test(condTitle)) {
       variants = [
-        "Grab a waterproof jacket — forest paths in the rain are stunning, you just need the right kit.",
-        "It'll be moody and beautiful out there. Rain jacket, waterproof boots, and lean into it.",
-        "Pack a proper rain layer. The Dolomites have a whole other mood when it's wet.",
+        tj('remarkRain1', "Grab a waterproof jacket — forest paths in the rain are stunning, you just need the right kit."),
+        tj('remarkRain2', "It'll be moody and beautiful out there. Rain jacket, waterproof boots, and lean into it."),
+        tj('remarkRain3', "Pack a proper rain layer. The Dolomites have a whole other mood when it's wet."),
       ];
     } else if (/fog|atmospheric|mist/i.test(condTitle)) {
       variants = [
-        "Misty conditions — stick to marked paths and enjoy that rare light.",
-        "The fog gives the valleys a completely different personality. Low routes, good footing, no rush.",
+        tj('remarkFog1', "Misty conditions — stick to marked paths and enjoy that rare light."),
+        tj('remarkFog2', "The fog gives the valleys a completely different personality. Low routes, good footing, no rush."),
       ];
     } else if (temp > 27 || /heat/i.test(condTitle)) {
       variants = [
-        `${temp}°C today — sunscreen, sunglasses, and at least 2 litres of water before you set off.`,
-        "It's hot. Sunglasses, sunscreen, full water bottle. Start early or head straight to altitude.",
-        "Serious mountain sun today. Factor 50 above 2000m — the rock reflects more UV than you'd expect.",
+        tj('remarkHeat1', '{{temp}}°C today — sunscreen, sunglasses, and at least 2 litres of water before you set off.', { temp }),
+        tj('remarkHeat2', "It's hot. Sunglasses, sunscreen, full water bottle. Start early or head straight to altitude."),
+        tj('remarkHeat3', "Serious mountain sun today. Factor 50 above 2000m — the rock reflects more UV than you'd expect."),
       ];
     } else if (wind && wind > 30) {
       variants = [
-        `Wind up to ${wind} km/h on the exposed sections — a windproof shell makes a real difference up high.`,
-        `${wind} km/h on the ridges. Windproof layer on top and you're set.`,
+        tj('remarkWind1', 'Wind up to {{wind}} km/h on the exposed sections — a windproof shell makes a real difference up high.', { wind }),
+        tj('remarkWind2', "{{wind}} km/h on the ridges. Windproof layer on top and you're set.", { wind }),
       ];
     } else if (/perfect|clear/i.test(condTitle)) {
       variants = [
-        "Sunglasses and sunscreen — Dolomite limestone reflects more UV than it looks like it should.",
-        "Perfect day. Sunscreen, camera, and don't forget a light layer for the descent when it cools.",
-        "Clear skies, strong sun at altitude. Sunglasses aren't optional up here.",
+        tj('remarkPerfect1', "Sunglasses and sunscreen — Dolomite limestone reflects more UV than it looks like it should."),
+        tj('remarkPerfect2', "Perfect day. Sunscreen, camera, and don't forget a light layer for the descent when it cools."),
+        tj('remarkPerfect3', "Clear skies, strong sun at altitude. Sunglasses aren't optional up here."),
       ];
     } else {
       variants = [
-        "Light jacket in the pack — temperature drops fast when cloud rolls over the peaks.",
-        "Lovely hiking weather. A thin layer in your bag and you're good to go.",
-        "No weather drama today. Pack light and enjoy it.",
+        tj('remarkDefault1', "Light jacket in the pack — temperature drops fast when cloud rolls over the peaks."),
+        tj('remarkDefault2', "Lovely hiking weather. A thin layer in your bag and you're good to go."),
+        tj('remarkDefault3', "No weather drama today. Pack light and enjoy it."),
       ];
     }
 
@@ -1131,12 +1144,12 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       // Describe the trail factually — never claim the user requested
       // parameters they didn't actually choose.
       const bits = [];
-      if (top.difficulty)      bits.push(`a ${top.difficulty} route`);
-      if (top.duration_hours)  bits.push(`around ${top.duration_hours}h`);
+      if (top.difficulty)      bits.push(tj('whyBitDifficulty', 'a {{difficulty}} route', { difficulty: top.difficulty }));
+      if (top.duration_hours)  bits.push(tj('whyBitDuration', 'around {{h}}h', { h: top.duration_hours }));
       if (top.distance_km)     bits.push(`${top.distance_km} km`);
-      const factual = bits.length ? `It's ${bits.join(', ')}.` : '';
+      const factual = bits.length ? tj('whyFactual', "It's {{bits}}.", { bits: bits.join(', ') }) : '';
       const note = (top.josephine_note || '').trim();
-      const text = [`${top.name} is my pick for today.`, factual, note].filter(Boolean).join(' ');
+      const text = [tj('whyPick', '{{name}} is my pick for today.', { name: top.name }), factual, note].filter(Boolean).join(' ');
       setTimeout(() => {
         setTyping(false);
         appendJosephineMessage({ type: 'text', text, chips: null });
