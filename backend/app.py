@@ -3797,7 +3797,8 @@ def structured_answer(question: str, lang: str = 'en'):
     general-knowledge + weather-gear intents lives in josephine_answers.py;
     EN falls back automatically when a locale is missing.
     """
-    from josephine_answers import answer as _ans
+    from josephine_answers import (answer as _ans, loc_month, loc_months,
+                                    loc_enum, day_word)
     q = question.lower()
 
     # -- Intent keyword sets --
@@ -3996,84 +3997,83 @@ def structured_answer(question: str, lang: str = 'en'):
                     end_d    = dt.strptime(end,   '%Y-%m-%d').date()
                     if today_d < start_d:
                         days = (start_d - today_d).days
-                        status = f"currently closed — it opens in {days} day{'s' if days != 1 else ''}, on {start}"
+                        return _ans('openRifFuture', lang, q, name=name, days=days,
+                                    dayWord=day_word(days, lang), start=start)
                     elif today_d > end_d:
-                        status = f"closed for the season (was open until {end})"
+                        return _ans('openRifPast', lang, q, name=name, end=end)
                     else:
-                        status = f"open right now until {end}"
+                        return _ans('openRifNow', lang, q, name=name, end=end)
                 except Exception:
-                    status = f"open from {start} to {end}"
-                return (f"{name} is {status}. "
-                        f"If you're planning ahead, I'd book well in advance — the good rifugios fill up fast.")
+                    return _ans('openRifRange', lang, q, name=name, start=start, end=end)
             else:
                 rtype = entity.get('type', 'rifugio')
                 if rtype == 'bivacco':
-                    return f"{name} is a bivacco — it stays open year-round, no reservation needed."
-                return f"I don't have specific season dates for {name} yet. Check their website or contact them directly."
+                    return _ans('openRifBivacco', lang, q, name=name)
+                return _ans('openRifNoDates', lang, q, name=name)
         else:  # trail
             best_season = entity.get('best_season', [])
             if best_season:
-                season_str = ', '.join(best_season)
+                season_str = loc_months(best_season, lang)
                 current = datetime.now().strftime('%B')
-                in_season = current in best_season
-                state = "you're in the right window" if in_season else f"right now ({current}) is outside the ideal window"
-                return (f"The best time for {name} is {season_str} — {state}. "
-                        f"Outside that period the path can be snowy or access roads closed.")
-            return f"I don't have season restrictions for {name} — it should be walkable most of the year, conditions permitting."
+                if current in best_season:
+                    return _ans('openTrailIn', lang, q, name=name, seasons=season_str)
+                return _ans('openTrailOut', lang, q, name=name, seasons=season_str,
+                            month=loc_month(current, lang))
+            return _ans('openTrailNoData', lang, q, name=name)
 
     # ACCESS / DIRECTIONS
     if has(ACCESS_KW):
         access = entity.get('access_info', '')
         if access:
-            return f"To reach {name}: {access}"
-        return (f"I don't have turn-by-turn directions for {name} in my notes yet. "
-                f"I'd suggest checking the trail map in the app or a recent GPS track on Komoot.")
+            return _ans('accessInfo', lang, q, name=name, access=access)
+        return _ans('accessNone', lang, q, name=name)
 
     # TECHNICAL / DANGER
     if has(TECH_KW):
         if entity_type == 'trail':
             dd = entity.get('difficulty_details', {})
-            tech     = dd.get('technical', entity.get('difficulty', 'unknown'))
+            diff     = entity.get('difficulty', 'unknown')
+            tech     = dd.get('technical', diff)
             exposure = dd.get('exposure',  'unknown')
             fitness  = dd.get('fitness',   'unknown')
-            diff     = entity.get('difficulty', 'unknown')
-            return (f"{name} is rated {diff} overall. "
-                    f"Technically it's {tech}, with {exposure} exposure and {fitness} fitness demand. "
-                    f"{'It is well within reach for most hikers.' if diff == 'easy' else 'Make sure your footwear has good grip.' if diff == 'medium' else 'I recommend it only for confident, experienced hikers.'}")
+            tkey = ('techTrailEasy' if diff == 'easy'
+                    else 'techTrailMedium' if diff == 'medium'
+                    else 'techTrailHard')
+            return _ans(tkey, lang, q, name=name,
+                        diff=loc_enum(diff, lang), tech=loc_enum(tech, lang),
+                        exposure=loc_enum(exposure, lang), fitness=loc_enum(fitness, lang))
         else:
-            return (f"{name} is a rifugio — the approach difficulty depends on which trail you take to reach it. "
-                    f"Check the access info and pick a route that matches your level.")
+            return _ans('techRifugio', lang, q, name=name)
 
     # DOG-FRIENDLY
     if has(DOG_KW):
         if entity_type == 'trail':
             dog_ok = entity.get('dog_friendly')
             if dog_ok is True:
-                return f"Good news — {name} is dog-friendly! Keep your dog on a lead near the farms and wildlife areas."
+                return _ans('dogTrailYes', lang, q, name=name)
             elif dog_ok is False:
-                return f"{name} doesn't allow dogs, unfortunately. Wildlife protection rules in this area restrict it."
-            return f"I don't have confirmed dog-friendly info for {name} — check with the local forestry office to be sure."
+                return _ans('dogTrailNo', lang, q, name=name)
+            return _ans('dogTrailUnknown', lang, q, name=name)
         else:  # rifugio
             dogs_ok = entity.get('facilities', {}).get('dogs')
             if dogs_ok is True:
-                return f"{name} welcomes dogs — just mention it when you book so they can prepare."
+                return _ans('dogRifYes', lang, q, name=name)
             elif dogs_ok is False:
-                return f"{name} doesn't accept dogs, I'm afraid. If you're hiking with your dog, I can suggest an alternative."
-            return f"I'm not sure whether {name} accepts dogs — give them a call to confirm before you arrive."
+                return _ans('dogRifNo', lang, q, name=name)
+            return _ans('dogRifUnknown', lang, q, name=name)
 
     # FAMILY / KIDS
     if has(FAMILY_KW):
         if entity_type == 'trail':
             fam = entity.get('family_friendly')
-            diff = entity.get('difficulty', '')
+            diff = loc_enum(entity.get('difficulty', ''), lang)
             if fam is True:
-                return (f"{name} is family-friendly — great choice for a day out with kids. "
-                        f"It's rated {diff}, so even younger hikers should manage well.")
+                return _ans('famTrailYes', lang, q, name=name, diff=diff)
             elif fam is False:
-                return (f"{name} isn't really suitable for young children — "
-                        f"the terrain is {diff} and can be challenging for little legs.")
-            return f"I don't have family-suitability info for {name} specifically — the {entity.get('difficulty','unknown')} rating gives you a rough idea."
-        return f"{name} should be fine for families — rifugios are used to all ages. Call ahead to check facilities for kids."
+                return _ans('famTrailNo', lang, q, name=name, diff=diff)
+            return _ans('famTrailUnknown', lang, q, name=name,
+                        diff=loc_enum(entity.get('difficulty', 'unknown'), lang))
+        return _ans('famRifugio', lang, q, name=name)
 
     # PRICES / STAY
     if has(PRICE_KW):
@@ -4081,14 +4081,14 @@ def structured_answer(question: str, lang: str = 'en'):
             prices = entity.get('prices', {})
             beds   = entity.get('facilities', {}).get('beds', 0)
             parts  = []
-            if prices.get('overnight'): parts.append(f"overnight €{prices['overnight']}")
-            if prices.get('half_board'): parts.append(f"half board €{prices['half_board']}")
-            if prices.get('breakfast'): parts.append(f"breakfast €{prices['breakfast']}")
-            if prices.get('dinner'):    parts.append(f"dinner €{prices['dinner']}")
-            price_str = ', '.join(parts) if parts else 'pricing not in my notes'
-            beds_str  = f" They have {beds} beds, so book early." if beds else ""
-            return f"{name}: {price_str}.{beds_str} Contact them directly to confirm availability."
-        return f"Prices for trails are free to walk — you're asking about the wrong kind of spend! Did you mean a rifugio nearby?"
+            if prices.get('overnight'):  parts.append(_ans('priceOvernight', lang, q, v=prices['overnight']))
+            if prices.get('half_board'): parts.append(_ans('priceHalfBoard', lang, q, v=prices['half_board']))
+            if prices.get('breakfast'):  parts.append(_ans('priceBreakfast', lang, q, v=prices['breakfast']))
+            if prices.get('dinner'):     parts.append(_ans('priceDinner', lang, q, v=prices['dinner']))
+            price_str = ', '.join(parts) if parts else _ans('priceNone', lang, q)
+            beds_str  = _ans('priceBeds', lang, q, beds=beds) if beds else ""
+            return _ans('priceRifugio', lang, q, name=name, prices=price_str, beds=beds_str)
+        return _ans('priceTrail', lang, q)
 
     # TRANSPORT / BUS / PARKING
     if has(TRANSPORT_KW):
@@ -4096,30 +4096,26 @@ def structured_answer(question: str, lang: str = 'en'):
         if transport:
             parts = []
             if transport.get('bus'):
-                parts.append(f"By bus: {transport['bus']}")
+                parts.append(_ans('transportBus', lang, q, v=transport['bus']))
             if transport.get('car'):
-                parts.append(f"By car: {transport['car']}")
+                parts.append(_ans('transportCar', lang, q, v=transport['car']))
             if parts:
-                return f"Getting to {name} — {' | '.join(parts)}"
+                return _ans('transportInfo', lang, q, name=name, parts=' | '.join(parts))
         access = entity.get('access_info', '')
         if access:
-            return f"To reach {name}: {access}"
-        return (f"I don't have transport details for {name} in my notes yet. "
-                f"Check the trail map in the app or search 'sad.it' for bus timetables in South Tyrol.")
+            return _ans('accessInfo', lang, q, name=name, access=access)
+        return _ans('transportNone', lang, q, name=name)
 
     # CROWDING
     if has(CROWD_KW):
         crowding = entity.get('crowding', {})
         if crowding:
-            level = crowding.get('level', 'unknown')
-            peak  = ', '.join(crowding.get('peak_months', [])) if crowding.get('peak_months') else 'summer'
+            level = loc_enum(crowding.get('level', 'unknown'), lang)
+            peak  = loc_months(crowding.get('peak_months', []), lang) if crowding.get('peak_months') else loc_months(['summer'], lang)
             tip   = crowding.get('quiet_tip', '')
-            reply = f"{name} typically sees {level} visitor numbers, with the busiest period in {peak}."
-            if tip:
-                reply += f" My tip: {tip}"
-            return reply
-        return (f"I don't have crowd information for {name} in my data. "
-                f"Generally, South Tyrol trails are busiest in July and August — weekday mornings are always quieter.")
+            tip_str = _ans('crowdTip', lang, q, tip=tip) if tip else ""
+            return _ans('crowdInfo', lang, q, name=name, level=level, peak=peak, tip=tip_str)
+        return _ans('crowdNone', lang, q, name=name)
 
     # RECOVERY ROUTING (hut-to-hut adventure exits)
     if has(RECOVERY_KW):
@@ -4155,19 +4151,20 @@ def structured_answer(question: str, lang: str = 'en'):
 
             if stage and stage.get('exit_routes'):
                 exit_r = stage['exit_routes'][0]
-                reply = (f"No problem — for {best_adv['name']}, Stage {stage.get('stage_number', '?')}: "
-                         f"{exit_r.get('description', '')} "
-                         f"Transport: {exit_r.get('transport', 'check local transport')}.")
                 rejoining = exit_r.get('rejoining_options', [])
                 if rejoining:
-                    reply += " To get back on trail, you have two options: "
-                    reply += " OR ".join(f"({i+1}) {o.get('how','')}" for i, o in enumerate(rejoining[:2]))
-                return reply
+                    _or = {'it': ' OPPURE ', 'de': ' ODER '}.get((lang or 'en')[:2], ' OR ')
+                    options = _or.join(f"({i+1}) {o.get('how','')}" for i, o in enumerate(rejoining[:2]))
+                    rejoin_str = _ans('recoveryRejoin', lang, q, options=options)
+                else:
+                    rejoin_str = ""
+                return _ans('recoveryStage', lang, q,
+                            adv=best_adv['name'], stage=stage.get('stage_number', '?'),
+                            desc=exit_r.get('description', ''),
+                            transport=exit_r.get('transport', 'check local transport'),
+                            rejoin=rejoin_str)
 
-        return (f"For emergency exits and recovery routing on a multi-day adventure, "
-                f"the key rule is: follow any red-white-red marked path downhill to the nearest valley. "
-                f"Then call mountain rescue (118) or SAD transport (sad.it). "
-                f"Tell me which specific adventure and day you're on and I'll give you precise options.")
+        return _ans('recoveryGeneric', lang, q)
 
     # Entity matched but intent unclear → let Layer 3 handle
     return None
@@ -4220,7 +4217,8 @@ def josephine_chat():
         entity_type, entity = _fuzzy_match_entity(message)
         tip = _get_entity_tip(entity_type, entity)
         if tip:
-            structured = structured + f" — and one thing I always mention: {tip}"
+            from josephine_answers import answer as _ans
+            structured = structured + _ans('tipConnector', lang, message, tip=tip)
         return jsonify({'reply': structured, 'mode': 'structured'})
 
     # ── Layer 3: Claude Haiku (paid, with cache + rate limit) ──────────

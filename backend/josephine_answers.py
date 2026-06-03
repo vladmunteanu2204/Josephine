@@ -40,6 +40,68 @@ def answer(key, lang='en', q='', **variables):
     return text
 
 
+# ── Localizers for data fragments injected into entity-templated answers ─────
+# Months and difficulty/level enums come from the data in English; these map the
+# known values to IT/DE. Unknown values pass through unchanged (never fabricate).
+_MONTHS = {
+    'January':   {'it': 'gennaio',   'de': 'Januar'},
+    'February':  {'it': 'febbraio',  'de': 'Februar'},
+    'March':     {'it': 'marzo',     'de': 'März'},
+    'April':     {'it': 'aprile',    'de': 'April'},
+    'May':       {'it': 'maggio',    'de': 'Mai'},
+    'June':      {'it': 'giugno',    'de': 'Juni'},
+    'July':      {'it': 'luglio',    'de': 'Juli'},
+    'August':    {'it': 'agosto',    'de': 'August'},
+    'September': {'it': 'settembre', 'de': 'September'},
+    'October':   {'it': 'ottobre',   'de': 'Oktober'},
+    'November':  {'it': 'novembre',  'de': 'November'},
+    'December':  {'it': 'dicembre',  'de': 'Dezember'},
+}
+_ENUM = {
+    'easy':       {'it': 'facile',      'de': 'leicht'},
+    'moderate':   {'it': 'moderata',    'de': 'mäßig'},
+    'medium':     {'it': 'media',       'de': 'mittel'},
+    'hard':       {'it': 'difficile',   'de': 'schwer'},
+    'difficult':  {'it': 'difficile',   'de': 'schwierig'},
+    'challenging':{'it': 'impegnativa', 'de': 'anspruchsvoll'},
+    'expert':     {'it': 'per esperti', 'de': 'für Experten'},
+    'low':        {'it': 'bassa',       'de': 'niedrig'},
+    'high':       {'it': 'alta',        'de': 'hoch'},
+    'unknown':    {'it': 'non nota',    'de': 'non nota'},
+}
+
+
+def loc_month(name, lang):
+    lg = (lang or 'en')[:2]
+    if lg in ('it', 'de'):
+        return _MONTHS.get(name, {}).get(lg, name)
+    return name
+
+
+def loc_months(names, lang):
+    return ', '.join(loc_month(n, lang) for n in (names or []))
+
+
+def loc_enum(word, lang):
+    if not word:
+        return word
+    lg = (lang or 'en')[:2]
+    if lg in ('it', 'de'):
+        m = _ENUM.get(str(word).strip().lower())
+        if m:
+            return m.get(lg, word)
+    return word
+
+
+def day_word(n, lang):
+    lg = (lang or 'en')[:2]
+    if lg == 'it':
+        return 'giorno' if n == 1 else 'giorni'
+    if lg == 'de':
+        return 'Tag' if n == 1 else 'Tage'
+    return 'day' if n == 1 else 'days'
+
+
 ANSWERS = {
     # ── Weather-gear (SAFETY) ────────────────────────────────────────────────
     'wxGearRain': {
@@ -272,5 +334,237 @@ ANSWERS = {
             "Hallo! Bereit für einen Bergtag? Nenn mir deine Stimmung und deine freien Stunden, und ich plane etwas Passendes.",
             "Grüß Gott! Ich gehöre ganz dir — möchtest du eine Wegempfehlung, eine Hütte oder einfach etwas lokales Wissen?",
         ],
+    },
+
+    # ══ ENTITY-TEMPLATED (Batch 2) ═══════════════════════════════════════════
+    # Data fragments ({access}, {desc}, prices, etc.) come from the dataset and
+    # stay as-is; only the scaffolding is localized. Numbers/€/dates kept exact.
+
+    # ── Opening / season — rifugio ──────────────────────────────────────────
+    'openRifFuture': {
+        'en': ["{name} is currently closed — it opens in {days} {dayWord}, on {start}. If you're planning ahead, I'd book well in advance — the good rifugios fill up fast."],
+        'it': ["{name} è attualmente chiuso — apre tra {days} {dayWord}, il {start}. Se stai pianificando in anticipo, prenoterei con largo anticipo — i rifugi buoni si riempiono in fretta."],
+        'de': ["{name} ist derzeit geschlossen — öffnet in {days} {dayWord}, am {start}. Wenn du vorausplanst, würde ich rechtzeitig buchen — die guten Hütten sind schnell voll."],
+    },
+    'openRifPast': {
+        'en': ["{name} is closed for the season (was open until {end}). If you're planning ahead, I'd book well in advance — the good rifugios fill up fast."],
+        'it': ["{name} è chiuso per la stagione (era aperto fino al {end}). Se stai pianificando in anticipo, prenoterei con largo anticipo — i rifugi buoni si riempiono in fretta."],
+        'de': ["{name} ist für die Saison geschlossen (war bis {end} offen). Wenn du vorausplanst, würde ich rechtzeitig buchen — die guten Hütten sind schnell voll."],
+    },
+    'openRifNow': {
+        'en': ["{name} is open right now until {end}. If you're planning ahead, I'd book well in advance — the good rifugios fill up fast."],
+        'it': ["{name} è aperto proprio ora fino al {end}. Se stai pianificando in anticipo, prenoterei con largo anticipo — i rifugi buoni si riempiono in fretta."],
+        'de': ["{name} ist gerade jetzt bis {end} geöffnet. Wenn du vorausplanst, würde ich rechtzeitig buchen — die guten Hütten sind schnell voll."],
+    },
+    'openRifRange': {
+        'en': ["{name} is open from {start} to {end}. If you're planning ahead, I'd book well in advance — the good rifugios fill up fast."],
+        'it': ["{name} è aperto dal {start} al {end}. Se stai pianificando in anticipo, prenoterei con largo anticipo — i rifugi buoni si riempiono in fretta."],
+        'de': ["{name} ist von {start} bis {end} geöffnet. Wenn du vorausplanst, würde ich rechtzeitig buchen — die guten Hütten sind schnell voll."],
+    },
+    'openRifBivacco': {
+        'en': ["{name} is a bivacco — it stays open year-round, no reservation needed."],
+        'it': ["{name} è un bivacco — resta aperto tutto l'anno, senza prenotazione."],
+        'de': ["{name} ist ein Biwak — es ist das ganze Jahr offen, keine Reservierung nötig."],
+    },
+    'openRifNoDates': {
+        'en': ["I don't have specific season dates for {name} yet. Check their website or contact them directly."],
+        'it': ["Non ho ancora le date precise di stagione per {name}. Controlla il sito o contattali direttamente."],
+        'de': ["Ich habe noch keine genauen Saisondaten für {name}. Schau auf der Website nach oder kontaktiere sie direkt."],
+    },
+
+    # ── Opening / season — trail ────────────────────────────────────────────
+    'openTrailIn': {
+        'en': ["The best time for {name} is {seasons} — you're in the right window. Outside that period the path can be snowy or access roads closed."],
+        'it': ["Il periodo migliore per {name} è {seasons} — sei nella finestra giusta. Fuori da quel periodo il sentiero può essere innevato o le strade d'accesso chiuse."],
+        'de': ["Die beste Zeit für {name} ist {seasons} — du bist im richtigen Zeitfenster. Außerhalb dieser Zeit kann der Weg verschneit oder die Zufahrtsstraßen gesperrt sein."],
+    },
+    'openTrailOut': {
+        'en': ["The best time for {name} is {seasons} — right now ({month}) is outside the ideal window. Outside that period the path can be snowy or access roads closed."],
+        'it': ["Il periodo migliore per {name} è {seasons} — proprio ora ({month}) sei fuori dalla finestra ideale. Fuori da quel periodo il sentiero può essere innevato o le strade d'accesso chiuse."],
+        'de': ["Die beste Zeit für {name} ist {seasons} — gerade jetzt ({month}) bist du außerhalb des idealen Zeitfensters. Außerhalb dieser Zeit kann der Weg verschneit oder die Zufahrtsstraßen gesperrt sein."],
+    },
+    'openTrailNoData': {
+        'en': ["I don't have season restrictions for {name} — it should be walkable most of the year, conditions permitting."],
+        'it': ["Non ho restrizioni stagionali per {name} — dovrebbe essere percorribile quasi tutto l'anno, condizioni permettendo."],
+        'de': ["Ich habe keine Saisonbeschränkungen für {name} — er sollte fast das ganze Jahr begehbar sein, sofern es die Bedingungen zulassen."],
+    },
+
+    # ── Access / directions ─────────────────────────────────────────────────
+    'accessInfo': {
+        'en': ["To reach {name}: {access}"],
+        'it': ["Per raggiungere {name}: {access}"],
+        'de': ["So erreichst du {name}: {access}"],
+    },
+    'accessNone': {
+        'en': ["I don't have turn-by-turn directions for {name} in my notes yet. I'd suggest checking the trail map in the app or a recent GPS track on Komoot."],
+        'it': ["Non ho ancora indicazioni passo-passo per {name} nei miei appunti. Ti suggerisco di controllare la mappa del sentiero nell'app o una traccia GPS recente su Komoot."],
+        'de': ["Ich habe noch keine Schritt-für-Schritt-Wegbeschreibung für {name} in meinen Notizen. Ich würde die Wegkarte in der App oder einen aktuellen GPS-Track auf Komoot prüfen."],
+    },
+
+    # ── Technical / danger ──────────────────────────────────────────────────
+    'techTrailEasy': {
+        'en': ["{name} is rated {diff} overall. Technically it's {tech}, with {exposure} exposure and {fitness} fitness demand. It is well within reach for most hikers."],
+        'it': ["{name} è classificato {diff} nel complesso. Tecnicamente è {tech}, con esposizione {exposure} e richiesta fisica {fitness}. È ampiamente alla portata della maggior parte degli escursionisti."],
+        'de': ["{name} ist insgesamt als {diff} eingestuft. Technisch ist er {tech}, mit {exposure} Exponiertheit und {fitness} Konditionsanforderung. Er ist für die meisten Wanderer gut machbar."],
+    },
+    'techTrailMedium': {
+        'en': ["{name} is rated {diff} overall. Technically it's {tech}, with {exposure} exposure and {fitness} fitness demand. Make sure your footwear has good grip."],
+        'it': ["{name} è classificato {diff} nel complesso. Tecnicamente è {tech}, con esposizione {exposure} e richiesta fisica {fitness}. Assicurati che le calzature abbiano una buona aderenza."],
+        'de': ["{name} ist insgesamt als {diff} eingestuft. Technisch ist er {tech}, mit {exposure} Exponiertheit und {fitness} Konditionsanforderung. Achte auf Schuhe mit gutem Grip."],
+    },
+    'techTrailHard': {
+        'en': ["{name} is rated {diff} overall. Technically it's {tech}, with {exposure} exposure and {fitness} fitness demand. I recommend it only for confident, experienced hikers."],
+        'it': ["{name} è classificato {diff} nel complesso. Tecnicamente è {tech}, con esposizione {exposure} e richiesta fisica {fitness}. Lo consiglio solo a escursionisti sicuri ed esperti."],
+        'de': ["{name} ist insgesamt als {diff} eingestuft. Technisch ist er {tech}, mit {exposure} Exponiertheit und {fitness} Konditionsanforderung. Ich empfehle ihn nur sicheren, erfahrenen Wanderern."],
+    },
+    'techRifugio': {
+        'en': ["{name} is a rifugio — the approach difficulty depends on which trail you take to reach it. Check the access info and pick a route that matches your level."],
+        'it': ["{name} è un rifugio — la difficoltà dell'avvicinamento dipende dal sentiero che scegli per arrivarci. Controlla le info di accesso e scegli un percorso adatto al tuo livello."],
+        'de': ["{name} ist eine Hütte — die Schwierigkeit des Zustiegs hängt davon ab, welchen Weg du nimmst. Prüf die Zugangsinfos und wähl eine Route, die zu deinem Niveau passt."],
+    },
+
+    # ── Dog-friendly ────────────────────────────────────────────────────────
+    'dogTrailYes': {
+        'en': ["Good news — {name} is dog-friendly! Keep your dog on a lead near the farms and wildlife areas."],
+        'it': ["Buone notizie — {name} ammette i cani! Tieni il cane al guinzaglio vicino alle malghe e alle zone faunistiche."],
+        'de': ["Gute Nachricht — auf {name} sind Hunde erlaubt! Halte deinen Hund in der Nähe der Almen und Wildschutzgebiete an der Leine."],
+    },
+    'dogTrailNo': {
+        'en': ["{name} doesn't allow dogs, unfortunately. Wildlife protection rules in this area restrict it."],
+        'it': ["{name} purtroppo non ammette i cani. Le norme di protezione della fauna in questa zona lo vietano."],
+        'de': ["Auf {name} sind Hunde leider nicht erlaubt. Wildschutzregeln in diesem Gebiet schränken das ein."],
+    },
+    'dogTrailUnknown': {
+        'en': ["I don't have confirmed dog-friendly info for {name} — check with the local forestry office to be sure."],
+        'it': ["Non ho informazioni confermate sull'ammissione dei cani per {name} — per sicurezza chiedi all'ufficio forestale locale."],
+        'de': ["Ich habe für {name} keine bestätigte Hunde-Info — frag zur Sicherheit beim örtlichen Forstamt nach."],
+    },
+    'dogRifYes': {
+        'en': ["{name} welcomes dogs — just mention it when you book so they can prepare."],
+        'it': ["{name} accoglie i cani — segnalalo al momento della prenotazione così possono prepararsi."],
+        'de': ["{name} heißt Hunde willkommen — erwähne es bei der Buchung, damit man sich vorbereiten kann."],
+    },
+    'dogRifNo': {
+        'en': ["{name} doesn't accept dogs, I'm afraid. If you're hiking with your dog, I can suggest an alternative."],
+        'it': ["{name} non accetta cani, mi dispiace. Se cammini con il tuo cane, posso suggerirti un'alternativa."],
+        'de': ["{name} nimmt leider keine Hunde. Wenn du mit deinem Hund unterwegs bist, kann ich dir eine Alternative vorschlagen."],
+    },
+    'dogRifUnknown': {
+        'en': ["I'm not sure whether {name} accepts dogs — give them a call to confirm before you arrive."],
+        'it': ["Non sono sicura se {name} accetti i cani — chiamali per conferma prima di arrivare."],
+        'de': ["Ich bin nicht sicher, ob {name} Hunde akzeptiert — ruf vor der Anreise zur Bestätigung an."],
+    },
+
+    # ── Family / kids ───────────────────────────────────────────────────────
+    'famTrailYes': {
+        'en': ["{name} is family-friendly — great choice for a day out with kids. It's rated {diff}, so even younger hikers should manage well."],
+        'it': ["{name} è adatto alle famiglie — un'ottima scelta per una giornata con i bambini. È classificato {diff}, quindi anche i piccoli escursionisti dovrebbero cavarsela bene."],
+        'de': ["{name} ist familienfreundlich — eine tolle Wahl für einen Tag mit Kindern. Er ist als {diff} eingestuft, also kommen auch jüngere Wanderer gut zurecht."],
+    },
+    'famTrailNo': {
+        'en': ["{name} isn't really suitable for young children — the terrain is {diff} and can be challenging for little legs."],
+        'it': ["{name} non è proprio adatto ai bambini piccoli — il terreno è {diff} e può essere impegnativo per le gambe corte."],
+        'de': ["{name} ist für kleine Kinder nicht wirklich geeignet — das Gelände ist {diff} und kann für kurze Beine anstrengend sein."],
+    },
+    'famTrailUnknown': {
+        'en': ["I don't have family-suitability info for {name} specifically — the {diff} rating gives you a rough idea."],
+        'it': ["Non ho informazioni specifiche sull'idoneità alle famiglie per {name} — la classificazione {diff} ti dà un'idea di massima."],
+        'de': ["Ich habe für {name} keine spezifische Familien-Eignung — die Einstufung {diff} gibt dir einen groben Anhaltspunkt."],
+    },
+    'famRifugio': {
+        'en': ["{name} should be fine for families — rifugios are used to all ages. Call ahead to check facilities for kids."],
+        'it': ["{name} dovrebbe andar bene per le famiglie — i rifugi sono abituati a tutte le età. Chiama prima per verificare i servizi per i bambini."],
+        'de': ["{name} sollte für Familien passen — Hütten sind alle Altersgruppen gewohnt. Ruf vorher an, um die Einrichtungen für Kinder zu prüfen."],
+    },
+
+    # ── Prices / stay ───────────────────────────────────────────────────────
+    'priceRifugio': {
+        'en': ["{name}: {prices}.{beds} Contact them directly to confirm availability."],
+        'it': ["{name}: {prices}.{beds} Contattali direttamente per confermare la disponibilità."],
+        'de': ["{name}: {prices}.{beds} Kontaktiere sie direkt, um die Verfügbarkeit zu bestätigen."],
+    },
+    'priceBeds': {
+        'en': [" They have {beds} beds, so book early."],
+        'it': [" Hanno {beds} posti letto, quindi prenota presto."],
+        'de': [" Sie haben {beds} Betten, also buche früh."],
+    },
+    'priceNone': {
+        'en': ["pricing not in my notes"],
+        'it': ["prezzi non presenti nei miei appunti"],
+        'de': ["Preise nicht in meinen Notizen"],
+    },
+    'priceOvernight': {
+        'en': ["overnight €{v}"], 'it': ["pernottamento €{v}"], 'de': ["Übernachtung €{v}"],
+    },
+    'priceHalfBoard': {
+        'en': ["half board €{v}"], 'it': ["mezza pensione €{v}"], 'de': ["Halbpension €{v}"],
+    },
+    'priceBreakfast': {
+        'en': ["breakfast €{v}"], 'it': ["colazione €{v}"], 'de': ["Frühstück €{v}"],
+    },
+    'priceDinner': {
+        'en': ["dinner €{v}"], 'it': ["cena €{v}"], 'de': ["Abendessen €{v}"],
+    },
+    'priceTrail': {
+        'en': ["Prices for trails are free to walk — you're asking about the wrong kind of spend! Did you mean a rifugio nearby?"],
+        'it': ["Camminare sui sentieri è gratis — stai chiedendo del tipo di spesa sbagliato! Forse intendevi un rifugio nelle vicinanze?"],
+        'de': ["Wege zu gehen ist kostenlos — du fragst nach der falschen Art von Ausgabe! Meintest du vielleicht eine Hütte in der Nähe?"],
+    },
+
+    # ── Transport / bus / parking ───────────────────────────────────────────
+    'transportInfo': {
+        'en': ["Getting to {name} — {parts}"],
+        'it': ["Per arrivare a {name} — {parts}"],
+        'de': ["Anreise zu {name} — {parts}"],
+    },
+    'transportBus': {
+        'en': ["By bus: {v}"], 'it': ["In autobus: {v}"], 'de': ["Mit dem Bus: {v}"],
+    },
+    'transportCar': {
+        'en': ["By car: {v}"], 'it': ["In auto: {v}"], 'de': ["Mit dem Auto: {v}"],
+    },
+    'transportNone': {
+        'en': ["I don't have transport details for {name} in my notes yet. Check the trail map in the app or search 'sad.it' for bus timetables in South Tyrol."],
+        'it': ["Non ho ancora i dettagli sui trasporti per {name} nei miei appunti. Controlla la mappa del sentiero nell'app o cerca su 'sad.it' gli orari dei bus in Alto Adige."],
+        'de': ["Ich habe noch keine Verkehrsdetails für {name} in meinen Notizen. Prüf die Wegkarte in der App oder such auf 'sad.it' nach Busfahrplänen in Südtirol."],
+    },
+
+    # ── Crowding ────────────────────────────────────────────────────────────
+    'crowdInfo': {
+        'en': ["{name} typically sees {level} visitor numbers, with the busiest period in {peak}.{tip}"],
+        'it': ["{name} registra in genere un'affluenza {level}, con il periodo di punta in {peak}.{tip}"],
+        'de': ["{name} hat in der Regel {level} Besucherzahlen, mit der Hauptzeit im {peak}.{tip}"],
+    },
+    'crowdTip': {
+        'en': [" My tip: {tip}"],
+        'it': [" Il mio consiglio: {tip}"],
+        'de': [" Mein Tipp: {tip}"],
+    },
+    'crowdNone': {
+        'en': ["I don't have crowd information for {name} in my data. Generally, South Tyrol trails are busiest in July and August — weekday mornings are always quieter."],
+        'it': ["Non ho informazioni sull'affluenza per {name} nei miei dati. In generale, i sentieri dell'Alto Adige sono più affollati a luglio e agosto — le mattine infrasettimanali sono sempre più tranquille."],
+        'de': ["Ich habe für {name} keine Besucherdaten. Generell sind die Südtiroler Wege im Juli und August am vollsten — Werktagvormittage sind immer ruhiger."],
+    },
+
+    # ── Recovery routing (multi-day exits, SAFETY) ──────────────────────────
+    'recoveryStage': {
+        'en': ["No problem — for {adv}, Stage {stage}: {desc} Transport: {transport}.{rejoin}"],
+        'it': ["Nessun problema — per {adv}, Tappa {stage}: {desc} Trasporto: {transport}.{rejoin}"],
+        'de': ["Kein Problem — für {adv}, Etappe {stage}: {desc} Transport: {transport}.{rejoin}"],
+    },
+    'recoveryRejoin': {
+        'en': [" To get back on trail, you have two options: {options}"],
+        'it': [" Per rientrare sul percorso hai due opzioni: {options}"],
+        'de': [" Um wieder auf den Weg zu kommen, hast du zwei Möglichkeiten: {options}"],
+    },
+    'tipConnector': {
+        'en': [" — and one thing I always mention: {tip}"],
+        'it': [" — e una cosa che dico sempre: {tip}"],
+        'de': [" — und eine Sache, die ich immer erwähne: {tip}"],
+    },
+    'recoveryGeneric': {
+        'en': ["For emergency exits and recovery routing on a multi-day adventure, the key rule is: follow any red-white-red marked path downhill to the nearest valley. Then call mountain rescue (118) or SAD transport (sad.it). Tell me which specific adventure and day you're on and I'll give you precise options."],
+        'it': ["Per le uscite d'emergenza e il rientro su un'avventura di più giorni, la regola fondamentale è: segui un qualsiasi sentiero con segnavia bianco-rosso-bianco scendendo verso la valle più vicina. Poi chiama il soccorso alpino (118) o i trasporti SAD (sad.it). Dimmi quale avventura e quale giorno stai affrontando e ti do opzioni precise."],
+        'de': ["Für Notausstiege und Rückwege auf einer mehrtägigen Tour gilt die wichtigste Regel: folge einem rot-weiß-rot markierten Weg bergab ins nächste Tal. Ruf dann die Bergrettung (118) oder den SAD-Verkehr (sad.it) an. Sag mir, welche Tour und welchen Tag du gehst, und ich gebe dir genaue Optionen."],
     },
 }
