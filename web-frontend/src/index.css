@@ -5,7 +5,7 @@
   --bg-elevated: #1a2a1c;
   --text-primary: #f0ece6;
   --text-secondary: #9a9488;
-  --text-muted: #5a5c50;
+  --text-muted: #888a76;   /* WCAG AA: ≥4.5:1 on bg-primary/card (was #5a5c50 ≈2.5:1) */
   --accent-primary: #c9a84c;
   --accent-gold: #e8cc80;
   --accent-warm: #d8a25a;        /* sunset amber — warm editorial accent */
