@@ -892,6 +892,32 @@ _PLACES_CACHE = {'index': None, 'keys': None}
 # geocode fallback — keep results inside the province.
 _ST_BBOX = (10.38, 46.20, 12.50, 47.10)
 _CONNECTIVES = (' in ', ' im ', ' an der ', ' an ', ' a ', ' bei ', ' presso ')
+# Leading lodging words stripped so "Hotel Küglerhof" / "Küglerhof" both match
+# "Hotel Der Küglerhof". Applied to POI names AND the query (normalized form).
+_LODGING_PREFIX = ('hotel der ', 'hotel ', 'garni ', 'residence ', 'pension ',
+                   'gasthof ', 'gasthaus ', 'albergo ', 'locanda ', 'chalet ',
+                   'apparthotel ', 'aparthotel ', 'apartments ', 'apartment ',
+                   'suites ', 'suite ', 'bed and breakfast ', 'b b ')
+
+
+def _strip_lodging(nn):
+    for pre in _LODGING_PREFIX:
+        if nn.startswith(pre):
+            return nn[len(pre):].strip()
+    return nn
+# Live geocoder is OPT-IN and provider-agnostic. The public OSM Nominatim
+# endpoint is NOT used by default: its usage policy forbids being silently
+# built into apps and discourages commercial reliance. To enable a fallback in
+# production, set GEOCODER_URL to a Nominatim-compatible /search endpoint you are
+# entitled to use (a self-hosted Nominatim, or a commercial provider such as
+# Geoapify / LocationIQ / Maptiler). GEOCODER_EMAIL is sent for identification.
+# When unset, unknown places simply fall back to the honest "widen" offer.
+_GEOCODER_URL = os.environ.get('GEOCODER_URL', '').strip()
+_GEOCODER_EMAIL = os.environ.get('GEOCODER_EMAIL', '').strip()
+_GEOCODER_KEY = os.environ.get('GEOCODER_KEY', '').strip()
+_GEOCODER_UA = os.environ.get(
+    'GEOCODER_USER_AGENT',
+    'Josephine/1.0 (South Tyrol hiking companion; set GEOCODER_EMAIL for contact)')
 # Well-known places OUTSIDE South Tyrol. A user who types one of these means
 # that city — never let the live geocoder snap to a coincidental in-region POI
 # (e.g. "Vienna" -> a "Hotel Vienna" in Val Badia, "Innsbruck" -> "Via Innsbruck").
@@ -906,20 +932,32 @@ _NON_ST_PLACES = {
 
 
 def _norm_place(s):
-    """Lowercase, strip diacritics & punctuation, collapse whitespace."""
+    """Lowercase, normalize German umlauts to their digraphs (ü→ue, ö→oe, ä→ae,
+    ß→ss) so "Küglerhof" and "Kueglerhof" match, strip remaining diacritics
+    (Italian/Ladin à→a), drop punctuation, collapse whitespace."""
     if not s:
         return ''
+    s = s.lower()
+    s = (s.replace('ß', 'ss').replace('ü', 'ue').replace('ö', 'oe').replace('ä', 'ae'))
     s = unicodedata.normalize('NFKD', s)
     s = ''.join(c for c in s if not unicodedata.combining(c))
-    s = ''.join(c if (c.isalnum() or c.isspace()) else ' ' for c in s.lower())
+    s = ''.join(c if (c.isalnum() or c.isspace()) else ' ' for c in s)
     return ' '.join(s.split())
 
 
+# Denylist compared in normalized form (München -> "muenchen", Zürich -> "zuerich").
+_NON_ST_NORM = {_norm_place(x) for x in _NON_ST_PLACES}
+
+
 def _place_index():
-    """Lazily build {normalized name variant -> (lat, lon, rank)} + key list."""
+    """Lazily build the normalized name index. Returns (idx, strict_keys): idx
+    maps every alias -> (lat, lon, rank); strict_keys are settlement/area aliases
+    only. POIs (hotels/huts) resolve by EXACT name, never via containment/fuzzy,
+    so a vague query never snaps to a random same-ish hotel."""
     if _PLACES_CACHE['index'] is not None:
         return _PLACES_CACHE['index'], _PLACES_CACHE['keys']
     idx = {}
+    strict = set()
     try:
         with open(_PLACES_FILE, encoding='utf-8') as f:
             places = json.load(f).get('places', [])
@@ -930,6 +968,7 @@ def _place_index():
         lat, lon, rk = p.get('lat'), p.get('lon'), p.get('rank', 1)
         if lat is None or lon is None:
             continue
+        is_poi = bool(p.get('poi'))
         variants = set()
         for n in (p.get('names') or [p.get('name', '')]):
             nn = _norm_place(n)
@@ -938,58 +977,74 @@ def _place_index():
                 for sep in _CONNECTIVES:           # short form: "san leonardo"
                     if sep in nn:
                         variants.add(nn.split(sep)[0].strip())
+                if is_poi:                         # "kueglerhof" from "hotel der kueglerhof"
+                    st = _strip_lodging(nn)
+                    if st != nn and len(st) >= 6:
+                        variants.add(st)
         for v in variants:
             if len(v) < 3:
                 continue
             if v not in idx or rk > idx[v][2]:     # bigger settlement wins ties
                 idx[v] = (lat, lon, rk)
+            if not is_poi:
+                strict.add(v)
     # Curated entries are the canonical tourist meaning of a name (areas like
     # "Val Gardena", and disambiguators like "Corvara" = Corvara in Badia, not a
-    # Passeier hamlet). They OVERRIDE gazetteer collisions (rank above city).
+    # Passeier hamlet). They OVERRIDE collisions and are containment/fuzzy-eligible.
     for k, co in _AREA_COORDS.items():
-        idx[_norm_place(k)] = (co[0], co[1], 5)
+        nk = _norm_place(k)
+        idx[nk] = (co[0], co[1], 5)
+        strict.add(nk)
     _PLACES_CACHE['index'] = idx
-    _PLACES_CACHE['keys'] = list(idx.keys())
-    print(f"[gazetteer] indexed {len(idx)} place aliases")
+    _PLACES_CACHE['keys'] = list(strict)
+    print(f"[gazetteer] indexed {len(idx)} aliases ({len(strict)} settlement/area)")
     return idx, _PLACES_CACHE['keys']
 
 
 def _resolve_area_coords(area):
-    """[lat, lon] for any South Tyrol place name (DE/IT/Ladin), or None.
-    Offline gazetteer: exact -> connective-stripped -> containment -> fuzzy."""
+    """[lat, lon] for any South Tyrol place name (DE/IT/Ladin) or named hotel/hut,
+    or None. exact -> connective-stripped -> containment -> fuzzy (the last two
+    are settlement/area only; POIs require an exact name)."""
     if not area:
         return None
-    idx, keys = _place_index()
+    idx, strict_keys = _place_index()
     q = _norm_place(area)
     if not q:
         return None
-    if q in idx:                                   # 1. exact
+    if q in idx:                                   # 1. exact (incl. POIs)
         return [idx[q][0], idx[q][1]]
+    qs = _strip_lodging(q)                          # 1b. "hotel küglerhof" -> "kueglerhof"
+    if qs != q and qs in idx:
+        return [idx[qs][0], idx[qs][1]]
     for sep in _CONNECTIVES:                        # 2. "san leonardo in passiria"
         if sep in q:
             head = q.split(sep)[0].strip()
             if head in idx:
                 return [idx[head][0], idx[head][1]]
-    best = None                                     # 3. place name inside the phrase
-    for k in keys:
+    best = None                                     # 3. settlement name inside phrase
+    for k in strict_keys:
         if len(k) >= 4 and k in q and (best is None or len(k) > best[1]):
             best = (k, len(k))
     if best:
         return [idx[best[0]][0], idx[best[0]][1]]
-    m = difflib.get_close_matches(q, keys, n=1, cutoff=0.86)  # 4. typo tolerance
+    m = difflib.get_close_matches(q, strict_keys, n=1, cutoff=0.86)  # 4. typos
     if m:
         return [idx[m[0]][0], idx[m[0]][1]]
     return None
 
 
 def _geocode_live(area):
-    """Last-resort geocode via Nominatim, bounded to South Tyrol and cached in
-    SQLite. Returns [lat, lon] or None. Never raises; never blocks for long."""
+    """Opt-in last-resort geocode via a *configured* Nominatim-compatible
+    provider (GEOCODER_URL), bounded to South Tyrol and cached in SQLite.
+    Disabled by default — returns None unless GEOCODER_URL is set, so the public
+    OSM endpoint is never silently called. Never raises; never blocks for long."""
+    if not _GEOCODER_URL:
+        return None                                # disabled → graceful widen
     if not area or not area.strip():
         return None
     key = _norm_place(area)
     # A famous place outside South Tyrol → don't snap to a coincidental in-region POI.
-    if key in _NON_ST_PLACES:
+    if key in _NON_ST_NORM:
         return None
     try:
         row = _db_conn.execute('SELECT lat, lon FROM geocode_cache WHERE q=?', (key,)).fetchone()
@@ -1003,14 +1058,19 @@ def _geocode_live(area):
     # named "Via Innsbruck" must NOT make the city of Innsbruck resolve).
     _REJECT_CLASS = {'highway', 'railway', 'waterway', 'route', 'aerialway', 'power', 'barrier'}
     try:
-        params = urllib.parse.urlencode({
+        qp = {
             'q': f'{area}, Südtirol, Italy', 'format': 'json', 'limit': 5,
             'viewbox': '10.38,47.10,12.50,46.20', 'bounded': 1, 'countrycodes': 'it',
             'addressdetails': 1,
-        })
+        }
+        if _GEOCODER_EMAIL:
+            qp['email'] = _GEOCODER_EMAIL          # Nominatim identification convention
+        if _GEOCODER_KEY:
+            qp['key'] = _GEOCODER_KEY              # commercial providers' API key
+        sep = '&' if '?' in _GEOCODER_URL else '?'
         req = urllib.request.Request(
-            'https://nominatim.openstreetmap.org/search?' + params,
-            headers={'User-Agent': 'JosephineGazetteer/1.0 (South Tyrol hiking companion)'})
+            _GEOCODER_URL + sep + urllib.parse.urlencode(qp),
+            headers={'User-Agent': _GEOCODER_UA})
         with urllib.request.urlopen(req, timeout=3) as r:
             arr = json.loads(r.read().decode())
         for hit in arr:

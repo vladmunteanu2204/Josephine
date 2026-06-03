@@ -1,5 +1,34 @@
 # TODO — deferred setup
 
+## 11. Place resolution / geocoding (gazetteer + optional live fallback)
+
+"I'm in <village>" / "I'm at <hotel>" → coordinates → proximity-ranked hikes.
+
+- **Offline gazetteer (always on, self-hosted, compliant):**
+  `backend/data/south_tyrol_places.json` — every South Tyrol settlement +
+  lodging/alpine-hut POI from OpenStreetMap (ODbL). Rebuild with
+  `python3 backend/build_gazetteer.py` (one-time bulk extract from Overpass;
+  re-run to refresh). This covers ~all real places with zero runtime network.
+- **Attribution (REQUIRED before launch, ODbL):** display
+  "© OpenStreetMap contributors" where this data informs results (a credit
+  line in the chat/app about or footer is enough — small extraction, but
+  share-alike applies). Not yet surfaced in the UI — do this for launch.
+- **Live geocoder is OPT-IN and OFF by default.** The public
+  `nominatim.openstreetmap.org` endpoint is intentionally NOT used: its usage
+  policy forbids being silently built into apps and discourages commercial
+  reliance (donated servers, access can be withdrawn). To enable a fallback
+  in production set:
+      `GEOCODER_URL`   — a Nominatim-compatible /search endpoint you're
+                         entitled to use: a self-hosted Nominatim, OR a
+                         commercial provider (Geoapify / LocationIQ / Maptiler).
+      `GEOCODER_EMAIL` — contact, sent as Nominatim's `email` param.
+      `GEOCODER_KEY`   — API key (commercial providers), sent as `key`.
+      `GEOCODER_USER_AGENT` — optional override; include a real contact.
+  Results are cached in SQLite (incl. negatives). When unset, unknown places
+  fall back to the honest "widen" offer — no external call is made.
+- **B2B partners:** store each partner hotel's coordinates directly at
+  onboarding (you'll have them) so the concierge never depends on geocoding.
+
 ## 0. Enable hut-booking auto-email (Resend)
 
 The booking system auto-emails a hut when its email is **verified**; until the

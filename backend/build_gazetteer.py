@@ -20,7 +20,10 @@ import urllib.request
 OVERPASS = "https://overpass-api.de/api/interpreter"
 OUT = os.path.join(os.path.dirname(__file__), "data", "south_tyrol_places.json")
 
-QUERY = """
+# Two one-time bulk extracts (single thread): settlements + lodging/huts. Taking
+# complete sets from an OSM extract is the policy-endorsed path (vs hammering a
+# live geocoding API at runtime).
+QUERY_SETTLEMENTS = """
 [out:json][timeout:180];
 area["ISO3166-2"="IT-BZ"]->.a;
 (
@@ -29,9 +32,18 @@ area["ISO3166-2"="IT-BZ"]->.a;
 out;
 """
 
+QUERY_POIS = """
+[out:json][timeout:180];
+area["ISO3166-2"="IT-BZ"]->.a;
+(
+  node["tourism"~"^(hotel|guest_house|hostel|chalet|apartment|alpine_hut|wilderness_hut)$"]["name"](area.a);
+);
+out;
+"""
 
-def fetch():
-    data = urllib.parse.urlencode({"data": QUERY}).encode()
+
+def fetch(query):
+    data = urllib.parse.urlencode({"data": query}).encode()
     req = urllib.request.Request(
         OVERPASS, data=data,
         headers={
@@ -49,49 +61,62 @@ def fetch():
     raise SystemExit("Overpass fetch failed after 3 attempts")
 
 
-def main():
-    print("Querying Overpass for South Tyrol (IT-BZ) places…")
-    raw = fetch()
-    els = raw.get("elements", [])
-    print(f"  got {len(els)} nodes")
+def _names(t):
+    names = []
+    for key in ("name", "name:de", "name:it", "name:lld", "alt_name",
+                "official_name", "old_name"):
+        v = t.get(key)
+        if v:
+            names.extend(p.strip() for p in v.split(";") if p.strip())
+    seen, uniq = set(), []
+    for n in names:
+        k = n.lower()
+        if k not in seen:
+            seen.add(k); uniq.append(n)
+    return uniq
 
-    # Rank by settlement size so ambiguous names prefer the bigger place.
+
+def main():
     rank = {"city": 4, "town": 3, "village": 2, "hamlet": 1}
     places = []
-    for e in els:
+
+    print("Querying Overpass for South Tyrol (IT-BZ) settlements…")
+    for e in fetch(QUERY_SETTLEMENTS).get("elements", []):
         t = e.get("tags", {})
         lat, lon = e.get("lat"), e.get("lon")
-        if lat is None or lon is None:
+        if lat is None or lon is None or not t.get("name"):
             continue
-        name = t.get("name")
-        if not name:
-            continue
-        names = []
-        for key in ("name", "name:de", "name:it", "name:lld", "alt_name",
-                    "official_name", "old_name"):
-            v = t.get(key)
-            if v:
-                # alt_name can be ';'-separated
-                names.extend(p.strip() for p in v.split(";") if p.strip())
-        # de-dupe, keep order
-        seen, uniq = set(), []
-        for n in names:
-            k = n.lower()
-            if k not in seen:
-                seen.add(k); uniq.append(n)
         places.append({
-            "name": name,
-            "names": uniq,
-            "lat": round(lat, 5),
-            "lon": round(lon, 5),
+            "name": t["name"], "names": _names(t),
+            "lat": round(lat, 5), "lon": round(lon, 5),
             "place": t.get("place", "village"),
             "rank": rank.get(t.get("place", "village"), 1),
+            "poi": False,
         })
+    print(f"  settlements: {len(places)}")
 
-    # Sort biggest-first so the resolver's first-match-wins prefers cities.
-    places.sort(key=lambda p: -p["rank"])
+    time.sleep(2)  # be gentle between bulk queries (single thread)
+    print("Querying Overpass for South Tyrol lodging & alpine huts…")
+    n0 = len(places)
+    for e in fetch(QUERY_POIS).get("elements", []):
+        t = e.get("tags", {})
+        lat, lon = e.get("lat"), e.get("lon")
+        if lat is None or lon is None or not t.get("name"):
+            continue
+        places.append({
+            "name": t["name"], "names": _names(t),
+            "lat": round(lat, 5), "lon": round(lon, 5),
+            "place": t.get("tourism", "hotel"),
+            "rank": 0,        # below any settlement on a name collision
+            "poi": True,      # POIs resolve by EXACT name only (no fuzzy guessing)
+        })
+    print(f"  lodging/huts: {len(places) - n0}")
+
+    # Settlements first (biggest-first) so first-match-wins prefers real towns.
+    places.sort(key=lambda p: (p["poi"], -p["rank"]))
     out = {
-        "_source": "OpenStreetMap via Overpass (area ISO3166-2=IT-BZ)",
+        "_source": "OpenStreetMap via Overpass (area ISO3166-2=IT-BZ): "
+                   "place=city/town/village/hamlet + tourism lodging/huts",
         "_license": "ODbL — © OpenStreetMap contributors",
         "_generated": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "count": len(places),
@@ -100,7 +125,7 @@ def main():
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=0)
-    print(f"  wrote {len(places)} places → {OUT}")
+    print(f"  wrote {len(places)} entries → {OUT}")
 
 
 if __name__ == "__main__":
