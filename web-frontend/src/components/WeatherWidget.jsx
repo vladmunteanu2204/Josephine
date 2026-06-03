@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Wind, Droplet, Cloud, Eye, Check, AlertTriangle, X, Zap, ChevronDown, ChevronRight } from 'lucide-react';
 import './WeatherWidget.css';
 
 function WeatherWidget({ lat, lon, difficulty = 'moderate' }) {
@@ -59,7 +60,7 @@ function WeatherWidget({ lat, lon, difficulty = 'moderate' }) {
     return (
       <div className="weather-widget error">
         <div className="weather-error-message">
-          <span style={{fontSize: '2rem'}}>⚠️</span>
+          <AlertTriangle size={32} strokeWidth={1.75} color="#fbbf24" aria-hidden="true" />
           <p style={{margin: '0.5rem 0', color: '#fbbf24'}}>Unable to load weather data</p>
           <p style={{margin: 0, fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.6)'}}>{error}</p>
         </div>
@@ -108,28 +109,28 @@ function WeatherWidget({ lat, lon, difficulty = 'moderate' }) {
 
         <div className="weather-details-grid">
           <div className="weather-detail">
-            <span className="detail-icon">💨</span>
+            <span className="detail-icon"><Wind size={20} strokeWidth={1.75} aria-hidden="true" /></span>
             <div>
               <div className="detail-value">{current.wind_speed} km/h</div>
               <div className="detail-label">{getWindDirection(current.wind_direction)} {t('weather.wind', 'Wind')}</div>
             </div>
           </div>
           <div className="weather-detail">
-            <span className="detail-icon">💧</span>
+            <span className="detail-icon"><Droplet size={20} strokeWidth={1.75} aria-hidden="true" /></span>
             <div>
               <div className="detail-value">{current.humidity}%</div>
               <div className="detail-label">{t('weather.humidity', 'Humidity')}</div>
             </div>
           </div>
           <div className="weather-detail">
-            <span className="detail-icon">☁️</span>
+            <span className="detail-icon"><Cloud size={20} strokeWidth={1.75} aria-hidden="true" /></span>
             <div>
               <div className="detail-value">{current.clouds}%</div>
               <div className="detail-label">{t('weather.clouds', 'Clouds')}</div>
             </div>
           </div>
           <div className="weather-detail">
-            <span className="detail-icon">👁️</span>
+            <span className="detail-icon"><Eye size={20} strokeWidth={1.75} aria-hidden="true" /></span>
             <div>
               <div className="detail-value">{current.visibility} km</div>
               <div className="detail-label">{t('weather.visibility', 'Visibility')}</div>
@@ -151,9 +152,9 @@ function WeatherWidget({ lat, lon, difficulty = 'moderate' }) {
             ></div>
           </div>
           <div className="suitability-text">
-            {suitability.score >= 80 && <span style={{color: '#4ade80'}}>✓ {t('weather.excellent', 'Excellent')}</span>}
-            {suitability.score >= 60 && suitability.score < 80 && <span style={{color: '#fbbf24'}}>⚠ {t('weather.fair', 'Fair')}</span>}
-            {suitability.score < 60 && <span style={{color: '#ef4444'}}>✗ {t('weather.poor', 'Poor')}</span>}
+            {suitability.score >= 80 && <span style={{color: '#4ade80', display: 'inline-flex', alignItems: 'center', gap: '4px'}}><Check size={16} strokeWidth={2.25} aria-hidden="true" /> {t('weather.excellent', 'Excellent')}</span>}
+            {suitability.score >= 60 && suitability.score < 80 && <span style={{color: '#fbbf24', display: 'inline-flex', alignItems: 'center', gap: '4px'}}><AlertTriangle size={16} strokeWidth={2.25} aria-hidden="true" /> {t('weather.fair', 'Fair')}</span>}
+            {suitability.score < 60 && <span style={{color: '#ef4444', display: 'inline-flex', alignItems: 'center', gap: '4px'}}><X size={16} strokeWidth={2.25} aria-hidden="true" /> {t('weather.poor', 'Poor')}</span>}
           </div>
         </div>
       )}
@@ -162,8 +163,8 @@ function WeatherWidget({ lat, lon, difficulty = 'moderate' }) {
         <div className="weather-alerts">
           {alerts.map((alert, index) => (
             <div key={index} className={`weather-alert ${alert.severity}`}>
-              {alert.severity === 'high' && <span>⚠️</span>}
-              {alert.severity === 'medium' && <span>⚡</span>}
+              {alert.severity === 'high' && <AlertTriangle size={16} strokeWidth={2} aria-hidden="true" />}
+              {alert.severity === 'medium' && <Zap size={16} strokeWidth={2} aria-hidden="true" />}
               {alert.message}
             </div>
           ))}
@@ -176,7 +177,7 @@ function WeatherWidget({ lat, lon, difficulty = 'moderate' }) {
             className="forecast-toggle"
             onClick={() => setShowForecast(!showForecast)}
           >
-            {showForecast ? '▼' : '▶'} {t('weather.sevenDayForecast', '7-Day Forecast')}
+            {showForecast ? <ChevronDown size={16} strokeWidth={2} aria-hidden="true" /> : <ChevronRight size={16} strokeWidth={2} aria-hidden="true" />} {t('weather.sevenDayForecast', '7-Day Forecast')}
           </button>
 
           {showForecast && (
@@ -192,7 +193,7 @@ function WeatherWidget({ lat, lon, difficulty = 'moderate' }) {
                   </div>
                   <div className="forecast-desc">{day.description}</div>
                   {day.rain_probability > 30 && (
-                    <div className="forecast-rain">💧 {day.rain_probability}%</div>
+                    <div className="forecast-rain" style={{display: 'inline-flex', alignItems: 'center', gap: '3px'}}><Droplet size={13} strokeWidth={2} aria-hidden="true" /> {day.rain_probability}%</div>
                   )}
                 </div>
               ))}
