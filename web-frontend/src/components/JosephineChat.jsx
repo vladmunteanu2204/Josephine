@@ -829,6 +829,19 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         }, 350);
         return;
       }
+      // Backend signals no dog-friendly trail matched — be honest, don't
+      // recommend a dog-hostile trail to someone hiking with a dog.
+      if (response.data.no_dog_friendly) {
+        setTyping(false);
+        setTimeout(() => {
+          appendJosephineMessage({
+            type: 'text',
+            text: tj('noDogFriendly', "I couldn't find a dog-friendly trail that fits here — I'd rather tell you than send you somewhere your dog isn't welcome. Want me to widen the search or drop the area?"),
+            chips: [t('chipPlanMyDay'), t('chipStartOver')],
+          });
+        }, 350);
+        return;
+      }
 
       const results = (response.data.results || []).slice(0, 3);
       setApiResults(results);

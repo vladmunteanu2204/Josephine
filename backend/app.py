@@ -690,7 +690,31 @@ def _local_now(iso_str):
     return datetime.now(_TZ_LOCAL).replace(tzinfo=None) if _TZ_LOCAL else datetime.now()
 
 
-_DISPERSAL_PENALTY = 6.0   # max score points subtracted from a hotspot at peak
+_DISPERSAL_PENALTY = 3.0   # max score nudge for a hotspot at peak (gentle, not dominating)
+
+_MONTHS_ORDER = ['January', 'February', 'March', 'April', 'May', 'June',
+                 'July', 'August', 'September', 'October', 'November', 'December']
+
+
+def _season_status(current_month, best_season):
+    """Classify the current month vs a trail's best_season as
+    'in' / 'shoulder' (immediately adjacent) / 'out'. Shoulder months (e.g.
+    early October just after a Jun–Sep season) get no penalty — they're often
+    the quietest, finest windows."""
+    season = {_MONTHS_ORDER.index(m) for m in best_season if m in _MONTHS_ORDER}
+    if not season:
+        return 'in'
+    cur = _MONTHS_ORDER.index(current_month) if current_month in _MONTHS_ORDER else -1
+    if cur in season:
+        return 'in'
+    if any((abs(cur - s) == 1) or (abs(cur - s) == 11) for s in season):  # 11 = Dec/Jan wrap
+        return 'shoulder'
+    return 'out'
+
+
+def _season_range_label(best_season):
+    nums = sorted(_MONTHS_ORDER.index(m) for m in best_season if m in _MONTHS_ORDER)
+    return f"{_MONTHS_ORDER[nums[0]]}–{_MONTHS_ORDER[nums[-1]]}" if nums else ''
 
 
 def _dispersal_alternative(hotspot, pick, ordered):
@@ -866,7 +890,7 @@ def get_recommendations():
             for interest in mood_interests:
                 interest_lower = interest.lower()
                 if interest_lower in trail_keywords:
-                    score += 2
+                    score += 3   # a chosen mood is a strong signal
                     reasons.append(interest)
                 elif any(interest_lower.split()[0] in kw for kw in trail_keywords):
                     score += 1
@@ -877,12 +901,12 @@ def get_recommendations():
                 score += 2
 
             # ── Dog-friendly ─────────────────────────────────────────────
-            if with_dog:
-                if trail.get('dog_friendly'):
-                    score += 3
-                    reasons.append("dog-friendly")
-                else:
-                    score -= 10   # effectively excludes it
+            # Non-dog-friendly trails are hard-filtered out below (with an honest
+            # "none found" message) rather than silently demoted — so we never
+            # recommend a dog-hostile trail to someone hiking with a dog.
+            if with_dog and trail.get('dog_friendly'):
+                score += 3
+                reasons.append("dog-friendly")
 
             # ── Fix 3: Family-friendly ───────────────────────────────────
             if family_friendly:
@@ -921,14 +945,17 @@ def get_recommendations():
                     # Partial word match (e.g. "merano" in "Merano & Surroundings")
                     score += 2
 
-            # ── Fix 2: Season awareness ───────────────────────────────────
+            # ── Fix 2: Season awareness (shoulder-aware) ──────────────────
             best_season = trail.get('best_season', [])
             if best_season:
-                if current_month in best_season:
+                status = _season_status(current_month, best_season)
+                if status == 'in':
                     score += 2   # boost in-season trails
-                else:
-                    score -= 2   # penalise out-of-season
-                    warnings.append(f"best visited {best_season[0]}–{best_season[-1]}")
+                elif status == 'out':
+                    score -= 2   # penalise genuinely out-of-season
+                    warnings.append(f"best visited {_season_range_label(best_season)}")
+                # 'shoulder' (month immediately before/after the season) → neutral:
+                # often the quietest, finest window — no penalty, no warning.
             # Trails with no season set are year-round — no penalty
 
             scored_trails.append({
@@ -975,6 +1002,16 @@ def get_recommendations():
             else:
                 # Return empty so the frontend can show an honest "not found" message
                 return jsonify({'results': [], 'area_not_found': True, 'area': start_area})
+
+        # Hiking with a dog → only ever return dog-friendly trails; if there are
+        # none (here / in this area), say so honestly instead of recommending a
+        # trail that turns the dog away.
+        if with_dog:
+            dog_ok = [it for it in scored_trails if it['trail'].get('dog_friendly')]
+            if dog_ok:
+                scored_trails = dog_ok
+            else:
+                return jsonify({'results': [], 'no_dog_friendly': True, 'area': start_area or ''})
 
         # Daily jitter — stable within a day, rotates each morning
         daily_rng = random.Random(datetime.now().strftime('%Y-%m-%d'))

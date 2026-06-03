@@ -1230,6 +1230,7 @@
     "refDiffMed2": "Ci penso io — qualcosa di equilibrato, in arrivo.",
     "refDiffMed3": "Moderato va bene. Cerco ora.",
     "noTrailsNearArea": "Non ho ancora sentieri vicino a {{area}} nel mio database. Prova una valle o un paese vicino — oppure ti propongo qualcosa nella più ampia regione delle Dolomiti?",
+    "noDogFriendly": "Non ho trovato un sentiero adatto ai cani che vada bene qui — preferisco dirtelo piuttosto che mandarti dove il tuo cane non è benvenuto. Allargo la ricerca o tolgo la zona?",
     "dogFindTrails": "Volentieri, porta con te il cane! Ti cerco sentieri adatti ai cani…",
     "transportDriveMinutes": "circa {{min}} minuti in auto",
     "transportDriveLong": "circa un'ora e mezza in auto",

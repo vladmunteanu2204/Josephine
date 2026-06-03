@@ -1230,6 +1230,7 @@
     "refDiffMed2": "On it — something balanced, coming up.",
     "refDiffMed3": "Moderate works. Searching now.",
     "noTrailsNearArea": "I don't have any trails near {{area}} in my database yet. Try a nearby valley or village — or let me suggest something in the wider Dolomites region?",
+    "noDogFriendly": "I couldn't find a dog-friendly trail that fits here — I'd rather tell you than send you somewhere your dog isn't welcome. Want me to widen the search or drop the area?",
     "dogFindTrails": "Happy to bring your dog along! Let me find dog-friendly trails for you…",
     "transportDriveMinutes": "about {{min}} minutes by car",
     "transportDriveLong": "a good hour and a half by car",
