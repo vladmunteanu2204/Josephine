@@ -40,10 +40,19 @@
   font-size: 1rem;
   margin-bottom: 1rem;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .safety-category.emergency .safety-category-title {
   color: #e57373;
+}
+
+.safety-header .section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
 }
 
 .safety-tips-list {
