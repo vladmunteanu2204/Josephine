@@ -1232,6 +1232,8 @@
     "refDiffMed2": "On it — something balanced, coming up.",
     "refDiffMed3": "Moderate works. Searching now.",
     "noTrailsNearArea": "I don't have any trails near {{area}} in my database yet. Try a nearby valley or village — or let me suggest something in the wider Dolomites region?",
+    "chipSuggestWider": "Yes, suggest something",
+    "widerRegionResp": "Wonderful — let me pull a few of my favourites from across the Dolomites.",
     "noDogFriendly": "I couldn't find a dog-friendly trail that fits here — I'd rather tell you than send you somewhere your dog isn't welcome. Want me to widen the search or drop the area?",
     "introOne1": "I found one that fits beautifully — here it is. ✦",
     "introOne2": "One pick stands out for what you're after. Take a look. ✦",

@@ -518,6 +518,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
   });
   const [refining, setRefining]           = useState(false);
   const [awaitingRefinement, setAwaitingRefinement] = useState(null); // 'length' | 'difficulty' | null
+  const [awaitingWiden, setAwaitingWiden] = useState(false); // offered to widen past an unknown area
   const [chatHistory, setChatHistory]     = useState([]);
   const [showMenu, setShowMenu]       = useState(false);
   const [copyFeedback, setCopyFeedback] = useState(false);
@@ -833,11 +834,12 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       if (response.data.area_not_found) {
         const area = response.data.area || data.startArea || 'that area';
         setTyping(false);
+        setAwaitingWiden(true); // a typed "yes" should trigger the wider search too
         after(() => {
           appendJosephineMessage({
             type: 'text',
             text: tj('noTrailsNearArea', "I don't have any trails near {{area}} in my database yet. Try a nearby valley or village — or let me suggest something in the wider Dolomites region?", { area }),
-            chips: [t('chipPlanMyDay'), t('chipStartOver')],
+            chips: [tj('chipSuggestWider', 'Yes, suggest something'), t('chipStartOver')],
           });
         }, 350);
         return;
@@ -1159,6 +1161,19 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       }
     }
 
+    // ── Affirmative reply to the "suggest in the wider region?" offer ────
+    // She offered to widen past an unknown area; a typed "yes/sure/please"
+    // must actually deliver instead of falling through to the LLM fallback.
+    if (awaitingWiden) {
+      if (/\b(yes|yeah|yep|sure|ok|okay|please|go ahead|sounds good|do it|why not|suggest|you can|go for it|s[iì]|certo|va bene|certamente|ja|gerne|klar|bitte)\b/i.test(tl)) {
+        appendUserMessage(trimmed);
+        setInput('');
+        widenToRegion();
+        return;
+      }
+      setAwaitingWiden(false); // said something else — let the offer lapse
+    }
+
     // ── Detect "too long / too hard" typed as free text ─────────────────
     if (planningStep > 0 && /too long|too far|too many km|too much|troppo lung|troppo lontan|zu lang|zu weit/i.test(tl)) {
       setAwaitingRefinement('length');
@@ -1321,7 +1336,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       appendJosephineMessage({ type: 'text', text: t('windError'), chips: [t('chipPlanMyDay'), t('chipSurpriseMe')] });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chatHistory, lang, t, awaitingRefinement, apiResults, planningData, planningStep, selectedTrail]);
+  }, [chatHistory, lang, t, awaitingRefinement, awaitingWiden, apiResults, planningData, planningStep, selectedTrail]);
 
   // Keep ref fresh so mic closure can call the latest version
   sendMsgRef.current = sendMessage;
@@ -1350,6 +1365,19 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
     recognitionRef.current = recognition;
     setIsListening(true);
   }, [SpeechRecognitionAPI, isListening, lang]);
+
+  /* ── Widen the search past an unknown start area (drop it, re-recommend) ── */
+  const widenToRegion = () => {
+    setAwaitingWiden(false);
+    const d = { ...planningData, startArea: '', max_distance_km: undefined };
+    setPlanningData(d);
+    appendJosephineMessage({
+      type: 'text',
+      text: tj('widerRegionResp', 'Wonderful — let me pull a few of my favourites from across the Dolomites.'),
+      chips: null,
+    });
+    after(() => callRecommendAPI(d), 400);
+  };
 
   /* ── Chip handler ────────────────────────────────────────────────────── */
   const handleChip = (chip) => {
@@ -1472,6 +1500,12 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         chips: null,
       });
       after(() => callRecommendAPI(d), 400);
+      return;
+    }
+
+    if (chip === tj('chipSuggestWider', 'Yes, suggest something')) {
+      appendUserMessage(chip);
+      widenToRegion();
       return;
     }
 

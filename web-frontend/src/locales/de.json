@@ -1232,6 +1232,8 @@
     "refDiffMed2": "Mach ich — etwas Ausgewogenes, kommt sofort.",
     "refDiffMed3": "Moderat passt. Ich suche jetzt.",
     "noTrailsNearArea": "Ich habe noch keine Wege in der Nähe von {{area}} in meiner Datenbank. Versuch ein nahes Tal oder Dorf — oder ich schlage dir etwas in der weiteren Dolomiten-Region vor?",
+    "chipSuggestWider": "Ja, schlag etwas vor",
+    "widerRegionResp": "Wunderbar — ich suche dir ein paar meiner Lieblingstouren aus den ganzen Dolomiten heraus.",
     "noDogFriendly": "Ich habe hier keinen passenden hundefreundlichen Weg gefunden — das sage ich dir lieber, als dich irgendwohin zu schicken, wo dein Hund nicht willkommen ist. Soll ich weiter suchen oder die Gegend weglassen?",
     "introOne1": "Ich habe einen gefunden, der perfekt passt — hier ist er. ✦",
     "introOne2": "Ein Vorschlag sticht für das heraus, was du suchst. Schau mal. ✦",
