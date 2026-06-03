@@ -461,6 +461,19 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
   useEffect(() => () => {
     userLat = WX_LAT; userLon = WX_LON; userLocated = false; lastWeather = null;
   }, []);
+  // Tracked timers: the conversation choreography schedules many delayed
+  // messages; `after` registers each id so they're all cancelled on unmount —
+  // no setState-on-unmounted warnings or stray messages after navigating away.
+  const _timers = useRef([]);
+  const after = useCallback((fn, ms) => {
+    const id = window.setTimeout(fn, ms);
+    _timers.current.push(id);
+    return id;
+  }, []);
+  useEffect(() => () => {
+    _timers.current.forEach(window.clearTimeout);
+    _timers.current = [];
+  }, []);
   const t = useCallback(
     (key, fallback) => {
       const full = `josephineChat.${key}`;
@@ -646,7 +659,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
     navigator.clipboard.writeText(lines.join('\n')).then(() => {
       setCopyFeedback(true);
       setShowMenu(false);
-      setTimeout(() => setCopyFeedback(false), 2000);
+      after(() => setCopyFeedback(false), 2000);
     }).catch(() => {});
   };
 
@@ -764,7 +777,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
     setApiResults([]);
     setSelectedTrail(null);
     setRefining(false);
-    setTimeout(() => {
+    after(() => {
       // Combined intro text + mood grid in one message (removes the visual gap between them)
       appendJosephineMessage({ type: 'mood-intro', text: t('moodIntro'), moods: MOODS });
     }, 450);
@@ -784,14 +797,14 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
     setTyping(false);
     appendJosephineMessage({ type: 'conditions', conditions });
     // Short weather remark — appears 900ms after card, before trail results
-    setTimeout(() => {
+    after(() => {
       appendJosephineMessage({
         type: 'text',
         text: buildWeatherRemark(conditions, Date.now()),
         chips: null,
       });
     }, 900);
-    setTimeout(() => callRecommendAPI(data), 1800);
+    after(() => callRecommendAPI(data), 1800);
   };
 
   const callRecommendAPI = async (data, adjustments = {}) => {
@@ -820,7 +833,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       if (response.data.area_not_found) {
         const area = response.data.area || data.startArea || 'that area';
         setTyping(false);
-        setTimeout(() => {
+        after(() => {
           appendJosephineMessage({
             type: 'text',
             text: tj('noTrailsNearArea', "I don't have any trails near {{area}} in my database yet. Try a nearby valley or village — or let me suggest something in the wider Dolomites region?", { area }),
@@ -833,7 +846,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       // recommend a dog-hostile trail to someone hiking with a dog.
       if (response.data.no_dog_friendly) {
         setTyping(false);
-        setTimeout(() => {
+        after(() => {
           appendJosephineMessage({
             type: 'text',
             text: tj('noDogFriendly', "I couldn't find a dog-friendly trail that fits here — I'd rather tell you than send you somewhere your dog isn't welcome. Want me to widen the search or drop the area?"),
@@ -883,7 +896,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
           checkDistanceFromGPS(userLat, userLon, first.region) ??
           (data.startArea ? checkDistanceWarning(data.startArea, first.region) : null);
 
-        setTimeout(() => {
+        after(() => {
           appendJosephineMessage({ type: 'text', text: optionsIntros[Math.floor(Math.random() * optionsIntros.length)], chips: null });
           appendJosephineMessage({
             type: 'options', trails: results,
@@ -896,11 +909,11 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
             ? buildDispersalNote(first.dispersal, first, first.dispersal.suggested_alternative)
             : null;
           if (disp) {
-            setTimeout(() => {
+            after(() => {
               appendJosephineMessage({ type: 'text', text: disp.text, chips: disp.chips });
             }, 600);
           } else if (distWarning) {
-            setTimeout(() => {
+            after(() => {
               appendJosephineMessage({
                 type: 'text',
                 text: buildTransportNote(distWarning, Date.now()),
@@ -910,7 +923,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
           }
         }, 350);
       } else {
-        setTimeout(() => {
+        after(() => {
           appendJosephineMessage({
             type: 'text', text: t('noMatchIntro'),
             chips: [t('chipStartOver')],
@@ -928,7 +941,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       );
       setTyping(false);
       setPlanningStep(0);
-      setTimeout(() => {
+      after(() => {
         appendJosephineMessage({
           type: 'text', text: t('windError'),
           chips: [t('retryChip'), t('chipStartOver')],
@@ -942,7 +955,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
     setSelectedTrail(trail);
     appendUserMessage(trail.name);
     setTyping(true);
-    setTimeout(() => {
+    after(() => {
       setTyping(false);
       appendJosephineMessage({
         type: 'trail-card', trail,
@@ -1183,7 +1196,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       appendUserMessage(trimmed);
       setInput('');
       setTyping(true);
-      setTimeout(() => {
+      after(() => {
         setTyping(false);
         if (selectedTrail) {
           const ok = selectedTrail.dog_friendly;
@@ -1230,7 +1243,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       const factual = bits.length ? tj('whyFactual', "It's {{bits}}.", { bits: bits.join(', ') }) : '';
       const note = (top.josephine_note || '').trim();
       const text = [tj('whyPick', '{{name}} is my pick for today.', { name: top.name }), factual, note].filter(Boolean).join(' ');
-      setTimeout(() => {
+      after(() => {
         setTyping(false);
         appendJosephineMessage({ type: 'text', text, chips: null });
         // Re-surface the trail right here so it's easy to open.
@@ -1254,7 +1267,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         appendUserMessage(trimmed);
         setInput('');
         setTyping(true);
-        setTimeout(() => {
+        after(() => {
           setTyping(false);
           appendJosephineMessage({ type: 'text', text: ans.text, chips: [t('chipStartOver')] });
         }, 350);
@@ -1329,7 +1342,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       const transcript = e.results[0][0].transcript;
       setInput(transcript);
       setIsListening(false);
-      setTimeout(() => sendMsgRef.current?.(transcript), 200);
+      after(() => sendMsgRef.current?.(transcript), 200);
     };
     recognition.onerror = () => setIsListening(false);
     recognition.onend  = () => setIsListening(false);
@@ -1396,7 +1409,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         tj('refLenQ2', 'Good to know. What distance works for you?{{hint}} Pick below or just tell me.', { hint }),
         tj('refLenQ3', "Noted. How far is comfortable for you?{{hint}} Give me a number and I'll find it.", { hint }),
       ];
-      setTimeout(() => {
+      after(() => {
         appendJosephineMessage({
           type: 'text',
           text: questions[Math.floor(Math.random() * questions.length)],
@@ -1413,7 +1426,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         tj('refDiffQ2', 'Understood. What difficulty works for you today?'),
         tj('refDiffQ3', 'Of course. What level are you comfortable with?'),
       ];
-      setTimeout(() => {
+      after(() => {
         appendJosephineMessage({
           type: 'text',
           text: questions[Math.floor(Math.random() * questions.length)],
@@ -1426,7 +1439,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
       appendUserMessage(chip);
       setPlanningStep(0); setPlanningData({}); setApiResults([]);
       setSelectedTrail(null); setRefining(false); setChatHistory([]);
-      setTimeout(() => {
+      after(() => {
         appendJosephineMessage({
           type: 'text',
           text: t('startOver', 'Let\'s start fresh. What kind of adventure are you after today?'),
@@ -1458,7 +1471,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         text: tj('geoCloserResp', 'Of course — let me find something closer to you.'),
         chips: null,
       });
-      setTimeout(() => callRecommendAPI(d), 400);
+      after(() => callRecommendAPI(d), 400);
       return;
     }
 
