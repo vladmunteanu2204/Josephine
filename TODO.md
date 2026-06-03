@@ -120,3 +120,27 @@ dead `X-Admin-Password` header removed.
 context to end prop-drilling. User-invisible and high-risk; best done in a
 dedicated session with heavy incremental testing rather than bundled with
 feature work.
+
+**Deferred — remaining modal a11y (low priority):** two overlays were left on
+their bespoke implementations rather than the shared `Modal`/`Sheet` primitives:
+- `CelebrationModal` — entangled with the active-hike tracker's `z-index:
+  999999` fullscreen; portaling it to the primitive risks it rendering behind
+  the still-mounted map. Needs a real GPS-hike to verify. Single action button,
+  so the focus-trap value is low.
+- `MediaGallery` lightbox — already has Escape + arrow-key nav + click-to-close;
+  it's a full-bleed image viewer, an awkward fit for the centred card primitive.
+  Could gain a focus trap + `aria-modal` if revisited.
+
+**Won't-do — emoji→lucide (by design):** the conversion was functional-only.
+Colour-coded weather *conditions* (☀️🌧️❄️), celebration 🎉🏆, mood tiles,
+flags 🇬🇧, badge icons, canvas-drawn text and `alert()` glyphs stay as emoji
+(a monochrome outline would lose meaning / can't render). Admin `TrailManager`
+was left (internal tool, alert-heavy, low ROI).
+
+## 6. Local dev state (housekeeping)
+
+- Empty `headers: {  }` objects remain in several admin components after the
+  dead `X-Admin-Password` removal — inert (auth is the Bearer interceptor),
+  cosmetic only; tidy opportunistically.
+- Testing left the dev Firebase session cleared on `localhost:5173` (re-login in
+  dev) and dev servers may still be running (backend `:8000`, vite `:5173`).
