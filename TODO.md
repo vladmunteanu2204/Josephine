@@ -1,5 +1,11 @@
 # TODO — deferred setup
 
+> **Strategic plan of record:** see `docs/MASTERPLAN.md` — the reviewed
+> 5-system architecture (Knowledge Graph / Context / Decision / Agent /
+> Commercial), the Open Data Hub South Tyrol data-moat finding, GDPR + LLM-cost
+> workstreams, and the re-sequenced 5-phase roadmap. This file (TODO) is the
+> near-term task list; the masterplan is the destination.
+
 ## 11. Place resolution / geocoding (offline gazetteer)
 
 "I'm in <village>" / "I'm at <hotel>" → coordinates → proximity-ranked hikes.
