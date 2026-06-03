@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Map, { Source, Layer } from 'react-map-gl';
+import { X, Ruler, Mountain, Clock, Trophy, MapPin, Home, FileText, Star, Share2 } from 'lucide-react';
 import './TripSummary.css';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -137,7 +138,7 @@ function TripSummary({ hikeData, onClose, onAddReview }) {
     <div className="trip-summary-overlay">
       <div className="trip-summary-container">
         <button className="close-summary-btn" onClick={onClose} aria-label="Close">
-          ✕
+          <X size={20} strokeWidth={2} aria-hidden="true" />
         </button>
 
         <div className="trip-summary-content">
@@ -208,17 +209,17 @@ function TripSummary({ hikeData, onClose, onAddReview }) {
           {/* Stats Cards */}
           <div className="summary-stats-grid">
             <div className="summary-stat-card">
-              <div className="stat-icon">📏</div>
+              <div className="stat-icon"><Ruler size={22} strokeWidth={1.75} aria-hidden="true" /></div>
               <div className="stat-label">{t('tripSummary.distance')}</div>
               <div className="stat-value">{(hikeData.stats.distance_km || hikeData.stats.distance / 1000 || 0).toFixed(1)} km</div>
             </div>
             <div className="summary-stat-card">
-              <div className="stat-icon">⛰️</div>
+              <div className="stat-icon"><Mountain size={22} strokeWidth={1.75} aria-hidden="true" /></div>
               <div className="stat-label">{t('tripSummary.elevationGain')}</div>
               <div className="stat-value">{Math.round(hikeData.stats.elevation_gain_m || hikeData.stats.elevation || 0)} m</div>
             </div>
             <div className="summary-stat-card">
-              <div className="stat-icon">⏱️</div>
+              <div className="stat-icon"><Clock size={22} strokeWidth={1.75} aria-hidden="true" /></div>
               <div className="stat-label">{t('tripSummary.duration')}</div>
               <div className="stat-value">{(hikeData.stats.duration_hours || hikeData.stats.duration / 3600 || 0).toFixed(1)} {t('tripSummary.hours')}</div>
             </div>
@@ -227,7 +228,7 @@ function TripSummary({ hikeData, onClose, onAddReview }) {
           {/* Badges Earned */}
           {hikeData.gamification?.newBadges && hikeData.gamification.newBadges.length > 0 && (
             <div className="summary-badges-section">
-              <h3>🏆 {t('tripSummary.badgesEarned')}</h3>
+              <h3><Trophy size={18} strokeWidth={1.75} aria-hidden="true" /> {t('tripSummary.badgesEarned')}</h3>
               <div className="summary-badges-grid">
                 {hikeData.gamification.newBadges.map((badge, index) => (
                   <div key={index} className="summary-badge-card">
@@ -243,12 +244,16 @@ function TripSummary({ hikeData, onClose, onAddReview }) {
           {/* Checkpoints Visited */}
           {hikeData.visited_checkpoints && hikeData.visited_checkpoints.length > 0 && (
             <div className="summary-checkpoints-section">
-              <h3>📍 {t('tripSummary.checkpointsVisited')}</h3>
+              <h3><MapPin size={18} strokeWidth={1.75} aria-hidden="true" /> {t('tripSummary.checkpointsVisited')}</h3>
               <div className="checkpoints-list">
                 {hikeData.visited_checkpoints.map((checkpoint, index) => (
                   <div key={index} className="checkpoint-item">
                     <div className="checkpoint-icon">
-                      {checkpoint.type === 'summit' ? '⛰️' : checkpoint.type === 'refuge' ? '🏠' : '📍'}
+                      {checkpoint.type === 'summit'
+                        ? <Mountain size={18} strokeWidth={1.75} aria-hidden="true" />
+                        : checkpoint.type === 'refuge'
+                          ? <Home size={18} strokeWidth={1.75} aria-hidden="true" />
+                          : <MapPin size={18} strokeWidth={1.75} aria-hidden="true" />}
                     </div>
                     <div className="checkpoint-info">
                       <div className="checkpoint-name">{checkpoint.name}</div>
@@ -268,7 +273,7 @@ function TripSummary({ hikeData, onClose, onAddReview }) {
               className="toggle-notes-btn"
               onClick={() => setShowNotes(!showNotes)}
             >
-              {showNotes ? '📝 ' + t('tripSummary.hideNotes') : '📝 ' + t('tripSummary.addNotes')}
+              <FileText size={16} strokeWidth={1.75} aria-hidden="true" /> {showNotes ? t('tripSummary.hideNotes') : t('tripSummary.addNotes')}
             </button>
             {showNotes && (
               <div className="notes-container">
@@ -295,10 +300,10 @@ function TripSummary({ hikeData, onClose, onAddReview }) {
           {/* Action Buttons */}
           <div className="summary-actions">
             <button className="action-btn review-btn" onClick={onAddReview}>
-              ⭐ {t('tripSummary.addReview')}
+              <Star size={16} strokeWidth={2} aria-hidden="true" /> {t('tripSummary.addReview')}
             </button>
             <button className="action-btn share-btn" onClick={exportSummaryImage}>
-              📤 {t('tripSummary.exportImage')}
+              <Share2 size={16} strokeWidth={2} aria-hidden="true" /> {t('tripSummary.exportImage')}
             </button>
             <button className="action-btn close-btn" onClick={onClose}>
               {t('tripSummary.close')}

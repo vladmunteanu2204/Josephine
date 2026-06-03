@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AlertTriangle, CloudSun, Smartphone, Backpack, Map, Dumbbell, LifeBuoy } from 'lucide-react';
 import { Modal } from './ui';
 import './SafetyDisclaimerModal.css';
 
@@ -17,7 +18,7 @@ function SafetyDisclaimerModal({ onAccept, onCancel, trailName }) {
     <Modal isOpen onClose={onCancel} closeOnBackdrop={false} ariaLabelledby="safety-modal-title">
       <div className="safety-modal">
         <div className="modal-header">
-          <h2 className="modal-title" id="safety-modal-title">⚠️ {t('safetyDisclaimer.title')}</h2>
+          <h2 className="modal-title" id="safety-modal-title"><AlertTriangle size={20} strokeWidth={2} aria-hidden="true" /> {t('safetyDisclaimer.title')}</h2>
         </div>
 
         <div className="modal-content">
@@ -30,7 +31,7 @@ function SafetyDisclaimerModal({ onAccept, onCancel, trailName }) {
             <h3>{t('safetyDisclaimer.beforeYouStart')}</h3>
             
             <div className="checklist-item">
-              <span className="icon">🌤️</span>
+              <span className="icon"><CloudSun size={20} strokeWidth={1.75} aria-hidden="true" /></span>
               <div>
                 <strong>{t('safetyDisclaimer.checkWeather')}</strong>
                 <p>{t('safetyDisclaimer.checkWeatherDesc')}</p>
@@ -38,7 +39,7 @@ function SafetyDisclaimerModal({ onAccept, onCancel, trailName }) {
             </div>
 
             <div className="checklist-item">
-              <span className="icon">📱</span>
+              <span className="icon"><Smartphone size={20} strokeWidth={1.75} aria-hidden="true" /></span>
               <div>
                 <strong>{t('safetyDisclaimer.informSomeone')}</strong>
                 <p>{t('safetyDisclaimer.informSomeoneDesc')}</p>
@@ -46,7 +47,7 @@ function SafetyDisclaimerModal({ onAccept, onCancel, trailName }) {
             </div>
 
             <div className="checklist-item">
-              <span className="icon">🎒</span>
+              <span className="icon"><Backpack size={20} strokeWidth={1.75} aria-hidden="true" /></span>
               <div>
                 <strong>{t('safetyDisclaimer.properEquipment')}</strong>
                 <p>{t('safetyDisclaimer.properEquipmentDesc')}</p>
@@ -54,7 +55,7 @@ function SafetyDisclaimerModal({ onAccept, onCancel, trailName }) {
             </div>
 
             <div className="checklist-item">
-              <span className="icon">🗺️</span>
+              <span className="icon"><Map size={20} strokeWidth={1.75} aria-hidden="true" /></span>
               <div>
                 <strong>{t('safetyDisclaimer.backupNavigation')}</strong>
                 <p>{t('safetyDisclaimer.backupNavigationDesc')}</p>
@@ -62,7 +63,7 @@ function SafetyDisclaimerModal({ onAccept, onCancel, trailName }) {
             </div>
 
             <div className="checklist-item">
-              <span className="icon">💪</span>
+              <span className="icon"><Dumbbell size={20} strokeWidth={1.75} aria-hidden="true" /></span>
               <div>
                 <strong>{t('safetyDisclaimer.knowLimits')}</strong>
                 <p>{t('safetyDisclaimer.knowLimitsDesc')}</p>
@@ -71,7 +72,7 @@ function SafetyDisclaimerModal({ onAccept, onCancel, trailName }) {
           </div>
 
           <div className="emergency-info">
-            <h3>🆘 {t('safetyDisclaimer.emergencyNumbers')}</h3>
+            <h3><LifeBuoy size={18} strokeWidth={1.75} aria-hidden="true" /> {t('safetyDisclaimer.emergencyNumbers')}</h3>
             <div className="emergency-numbers">
               <div className="emergency-number">
                 <strong>Europe:</strong> 112
