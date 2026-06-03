@@ -299,3 +299,56 @@ signal already returned by `/api/ai/recommend`.
 - **Level 1 (curated)** — `hotspots.json` with peak windows, access constraints,
   ranked alternatives. High trust, admin data-entry, no integration.
 - **Level 2 (real-time)** — see Decision C. Deferred.
+
+## 10. Josephine Layer-2 (`structured_answer`) full i18n — dedicated session
+
+From the Josephine audit: `structured_answer` in `backend/app.py` (≈lines
+3790–4290) is the offline, deterministic responder the chat hits BEFORE the LLM,
+and it returns **English only** — so IT/DE users get English for ~60 canned
+answers (gear, food, transport, emergencies, etc.). Owner decision: **full
+translation** (not LLM-routing), done as its own focused pass (much of the
+content is **alpine-safety-critical** and needs exactness + native review).
+
+### Architecture (build first)
+- New `backend/josephine_answers.py`: `ANSWERS = { key: {'en':[...], 'it':[...],
+  'de':[...]} }` (always lists, even singletons, so `_vary` rotation works) +
+  helper `answer(key, lang, q='', **vars)` → pick `lang` (fallback `en`),
+  `_vary(q, variants)` for stable rotation, then `{var}` interpolation.
+- Refactor `structured_answer(question, lang='en')`: keep ALL control flow /
+  keyword detection exactly as-is; replace each inline English `return "…"` /
+  `return _vary(q,[…])` with `answer('key', lang, q, **vars)`. Convert the
+  data-templated returns (opening/access/technical/dog/family/prices/transport/
+  crowding/recovery) to `{name}`/`{status}`-style placeholders.
+- Caller `/api/chat` (≈line 4334): pass `lang` → `structured_answer(message, lang)`.
+- Until `it`/`de` are filled, they fall back to `en` → **zero regression** (IT/DE
+  behave exactly as today), so it can ship incrementally.
+
+### Key inventory (every answer to key + translate)
+- **Weather-gear** (≈3834–3868): wxGearRain, wxGearSun, wxGearWind, wxGearFog,
+  wxGearSnow, wxGearGeneric. **Weather-deflect** (3871): wxNoLive.
+- **General knowledge** (3904–4095): gearEasy, gearHard, gearMedium(2 variants);
+  food(2); booking(2); rifugioTypes(2); bus(2); emergency(2); startTime(2);
+  water; cash; altitude; navigation; fitness; photography; connectivity;
+  language; guide; toilets; whoAreYou; greeting(3).
+- **Entity-templated** (4104–4239): openRifugio (closed/opensIn/openUntil/
+  noDates/bivacco templates), openTrail (inSeason/outSeason/noDates), access/
+  accessNone, technicalTrail/technicalRifugio, dogTrailYes/No/Unknown,
+  dogRifugioYes/No/Unknown, familyTrailYes/No/Unknown/Rifugio, pricesRifugio/
+  pricesTrail, transport/transportNone, crowding/crowdingNone.
+- **Recovery routing** (4242–4282): recoveryStage, recoveryRejoin connectives.
+- **Final fallback** (after 4282): the generic "out of my map" reply (varies).
+
+### Translation guidance
+- Josephine's warm first-person voice; **IT = tu**, **DE = du** (informal).
+- Keep numbers/units/phone codes EXACT (118, 112, SPF 50, 2L, 6°C/1000m, GPS).
+- **SAFETY keys** — emergency, altitude, navigation, wxGearRain/Snow, technical —
+  translate precisely and **flag for native-speaker review before launch**
+  (mistranslation here = the "never erroneous data" rule broken).
+
+### Verify
+- Parity: `en/it/de` key counts equal in `josephine_answers.py`.
+- `structured_answer(q, 'en')` returns byte-identical strings to today (spot-check
+  ~10 across categories) — proves the refactor preserved content.
+- `structured_answer(q, 'it'/'de')` returns the translation (spot-check).
+- `python3 -c "import ast; ast.parse(open('backend/app.py').read())"`; chat smoke
+  in all three languages.
