@@ -56,6 +56,28 @@ app = Flask(__name__,
             static_folder='../web-frontend/dist',
             static_url_path='')
 
+# ── Trust the upstream proxy for the client IP (anti-spoofing) ────────────────
+# TLS is terminated by a proxy (Cloudflare/Replit), so the real client IP is the
+# entry the trusted proxy *appends* to X-Forwarded-For — not the leftmost value,
+# which any client can forge. ProxyFix rewrites request.remote_addr from exactly
+# TRUSTED_PROXY_HOPS positions from the right, so a forged leftmost IP can no
+# longer slip past the per-IP rate limits / admin lockout. Set the env to match
+# the real number of proxies in front (1 for a single proxy, 2 for CF+Replit).
+from werkzeug.middleware.proxy_fix import ProxyFix
+_PROXY_HOPS = max(0, int(os.environ.get('TRUSTED_PROXY_HOPS', '1')))
+if _PROXY_HOPS:
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=_PROXY_HOPS, x_proto=_PROXY_HOPS,
+                            x_host=_PROXY_HOPS, x_port=_PROXY_HOPS)
+
+
+def _client_ip() -> str:
+    """Trusted client IP for rate limiting / lockout.
+
+    With ProxyFix in place, request.remote_addr is the proxy-supplied client IP
+    (not a forgeable header value). Falls back to a constant when unknown.
+    """
+    return request.remote_addr or '0.0.0.0'
+
 # ── CORS — fail closed in production ──────────────────────────────────────
 # Dev defaults to '*' for convenience; production refuses the wildcard and
 # requires an explicit ALLOWED_ORIGINS list so we never echo arbitrary origins.
@@ -179,7 +201,7 @@ def _is_locked_out(ip: str) -> bool:
 @app.route('/api/admin/login', methods=['POST'])
 def admin_login():
     """Issue a short-lived JWT after verifying admin password."""
-    ip = request.headers.get('X-Forwarded-For', request.remote_addr or '0.0.0.0').split(',')[0].strip()
+    ip = _client_ip()
     if _is_locked_out(ip):
         return jsonify({'error': 'Too many failed attempts. Try again in 15 minutes.'}), 429
     body = request.get_json(silent=True) or {}
@@ -2461,7 +2483,7 @@ def submit_booking_inquiry():
             return jsonify({'error': err}), 400
 
         # Per-IP rate limit (before persisting)
-        ip = request.headers.get('X-Forwarded-For', request.remote_addr or '0.0.0.0').split(',')[0].strip()
+        ip = _client_ip()
         if not _booking_rate_ok(ip):
             return jsonify({'error': 'rate_limited',
                             'message': 'Too many inquiries — please try again later.'}), 429
@@ -3823,7 +3845,16 @@ def structured_answer(question: str, lang: str = 'en'):
                     'injured','couldn\'t continue'}
 
     def has(kw_set):
-        return any(k in q for k in kw_set)
+        # Single-word keywords match on word boundaries so 'end' doesn't fire
+        # inside 'friendly'/'weekend'/'recommend'; multi-word phrases stay as
+        # substring checks (e.g. 'get to', 'via ferrata').
+        for k in kw_set:
+            if ' ' in k or "'" in k:
+                if k in q:
+                    return True
+            elif re.search(r'\b' + re.escape(k) + r'\b', q):
+                return True
+        return False
 
     entity_type, entity = _fuzzy_match_entity(question)
 
@@ -3878,8 +3909,12 @@ def structured_answer(question: str, lang: str = 'en'):
 
     # General knowledge intents — answer from the bible regardless of entity match.
     # These are questions about categories, not specific trails/rifugios.
-    _is_gear_q     = has(GEAR_KW) and any(w in q for w in ('pack','bring','wear','gear','equipment','boots','what to take','what do i need','what should i'))
-    _is_food_q     = has(FOOD_KW) and not any(w in q for w in ('how far','how long','distance','rating'))
+    # When a specific entity is named AND the question is really about dogs or
+    # families, defer to the entity-specific branch instead of letting a generic
+    # trigger word ('bring'/'eat') hijack it ("Can I bring my dog on X?").
+    _entity_specific = entity is not None and (has(DOG_KW) or has(FAMILY_KW))
+    _is_gear_q     = has(GEAR_KW) and any(w in q for w in ('pack','bring','wear','gear','equipment','boots','what to take','what do i need','what should i')) and not _entity_specific
+    _is_food_q     = has(FOOD_KW) and not any(w in q for w in ('how far','how long','distance','rating')) and not _entity_specific
     _is_booking_q  = any(k in q for k in ('how to book','book a rifugio','book rifugio','how do i book','reserve a rifugio','rifugio booking','half board','mezza pensione','overnight in a','stay overnight'))
     _is_rifugio_q  = any(k in q for k in ('what is a rifugio','how do rifugios work','rifugio etiquette','what is a malga','what is a bivacco','bivacco open'))
     _is_bus_q      = any(k in q for k in ('how do i get around','public transport','sad bus','guest pass','südtirol pass','alto adige pass','vinschgaubahn','cable car south','gondola south','how much is the cable','bus south tyrol','how to get around'))
@@ -4138,8 +4173,7 @@ def structured_answer(question: str, lang: str = 'en'):
                 best_score, best_adv = sc, adv
 
         if best_adv and best_score >= 10:
-            # Try to detect day/stage number
-            import re
+            # Try to detect day/stage number (re is imported at module scope)
             day_match = re.search(r'\b(?:day|stage|giorno|etappe)\s*(\d+)\b', q)
             stage_num = int(day_match.group(1)) if day_match else None
             stages = best_adv.get('stages', [])
@@ -4248,7 +4282,7 @@ def josephine_chat():
         return jsonify({'reply': cached, 'mode': 'cached'})
 
     # Rate limit per IP
-    ip = request.headers.get('X-Forwarded-For', request.remote_addr or '0.0.0.0').split(',')[0].strip()
+    ip = _client_ip()
     if not _rate_allowed(ip):
         return jsonify({
             'reply': RATE_LIMIT_REPLIES.get(lang,

@@ -1489,7 +1489,15 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
     if (chip === tj('chipShowAlternative', 'Show me the quieter option')) {
       appendUserMessage(chip);
       const altId = apiResults[0]?.dispersal?.suggested_alternative?.id;
-      if (!altId) return;
+      if (!altId) {
+        // Never leave the tap unanswered — offer a way forward instead.
+        appendJosephineMessage({
+          type: 'text',
+          text: tj('dispAltError', "Hmm, I couldn't pull that one up — want to start over?"),
+          chips: [t('chipStartOver')],
+        });
+        return;
+      }
       setTyping(true);
       // Fetch the full trail so the card + View details behave like any other pick.
       axios.get(`/api/trails/${altId}`).then(res => {
@@ -1587,8 +1595,17 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
         {copyFeedback && <div className="jc-copy-toast">{t('copied', 'Copied ✓')}</div>}
       </div>
 
-      {/* Messages */}
-      <div className="jc-messages" ref={messagesRef}>
+      {/* Messages — a polite live region so screen readers announce each new
+          Josephine reply as it arrives (additions only, not the whole log). */}
+      <div
+        className="jc-messages"
+        ref={messagesRef}
+        role="log"
+        aria-live="polite"
+        aria-relevant="additions text"
+        aria-atomic="false"
+        aria-label={t('chatLogLabel', 'Conversation with Josephine')}
+      >
         {messages.map((msg, idx) => {
           const active = isChipActive(msg);
           const prevMsg = messages[idx - 1];
@@ -1750,7 +1767,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
             <div className="jc-msg__avatar">
               <img src="/josephine-portrait.webp" alt="" onError={e => { e.currentTarget.src='/logo.webp'; }} />
             </div>
-            <div className="jc-bubble jc-bubble--typing"><span /><span /><span /></div>
+            <div className="jc-bubble jc-bubble--typing" aria-label={t('typingLabel', 'Josephine is typing')}><span /><span /><span /></div>
           </div>
         )}
 
