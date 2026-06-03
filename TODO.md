@@ -186,3 +186,58 @@ Build bottom-up (each phase shippable on its own):
 Moat note: AV huts are already on hut-reservation.org — the durable edge is the
 CAI/private **email-phone long tail** (Phase 0's verified-contacts work, treated
 as an ongoing data effort) plus the "today" decision assistant.
+
+## 8. Long-term vision — become the #1 South Tyrol tourism brand
+
+Positioning: "Josephine knows South Tyrol like a local friend — tells you what
+to do today, books it, gets you there, and keeps you off the overcrowded spots."
+A decision-assistant + concierge + local insider, NOT a map/catalog. The moat is
+South-Tyrol-specific local intelligence, not map data.
+
+### Tier 1 — features that make it indispensable here
+- **Südtirol Guest Pass / Mobilcard integration** — surface "this bus/lift is
+  free with your Guest Pass." Ties directly into the B2B concierge (hotel issues
+  the pass) and removes parking friction.
+- **Overtourism dispersal / "go now, go here instead"** — crowd + access +
+  parking intelligence (Braies access slots, Seiser Alm traffic limits, full
+  lots) → steer to equally good, quieter alternatives. This is also the angle
+  that wins an IDM Südtirol / Tourismusverein partnership (it solves THEIR #1
+  problem). See §9 for the working discussion.
+- **Winter** — ski touring, snowshoe, slope/lift status, avalanche bulletins.
+  Same engine; doubles the season and audience (Dolomiti Superski is huge).
+- **Real-time conditions** — lift/cable-car open status, hut open/full/closed,
+  trail/road/pass closures, webcams. Drives daily opens.
+- **Ladin + German dialect** — add Ladin (Val Gardena/Badia): small effort,
+  big "we're from here" brand signal.
+
+### Tier 2 — concierge depth (extends the booking rail already built)
+- Book the whole day: cable-car tickets, restaurant/Buschenschank/Hofschank
+  tables, guided tours, e-bike/gear rental, wellness slots.
+- Cultural seasons: Törggelen, Almabtrieb, Christmas markets, wine roads —
+  year-round relevance beyond summer hiking.
+- Cuisine layer: hike + hut lunch + winery itineraries (Michelin density +
+  Speck/wine identity).
+
+### Tier 3 — trust & retention
+- Offline maps/trails + safety (SOS with coords, live-location share, one-tap
+  mountain rescue 112).
+- Post-trip recap (build on TripSummary) → shareable, organic word-of-mouth.
+
+### Business moves
+- Data moat = verified contacts + real-time + crowd data (ongoing ops, not a
+  one-off feature).
+- GTM: hotels (the §7 plan) + a lighthouse tourism-board/valley reference; the
+  overtourism angle is the door-opener.
+- Monetization layered: B2B SaaS to hosts → booking commissions → premium
+  consumer tier (offline + winter + live) → tourism-board/sponsored placements.
+- Brand = "the local friend"; protect Josephine's voice (native-speaker review
+  of IT/DE/Ladin copy before launch).
+
+### What NOT to do
+- Don't try to out-map Komoot/Outdooractive — maps are a commodity; the
+  decision + booking + local intelligence is the wedge.
+- Don't sprawl — the four Tier-1 bets (Guest Pass, crowd dispersal, winter,
+  real-time) are what actually move toward #1.
+
+First thing to fund if only one: the overtourism dispersal feature + a
+tourism-board partnership.
