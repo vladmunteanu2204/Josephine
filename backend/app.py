@@ -4167,11 +4167,74 @@ def structured_answer(question: str, lang: str = 'en'):
     if _is_rifugio_q:
         return _ans('rifugioTypes', lang, q)
 
+    # Guest Pass / Mobilcard — richer than the generic bus answer; check first.
+    if any(k in q for k in ('guest pass','südtirol pass','suedtirol pass','mobilcard','mobil card',
+                            'museumobil','free bus','free transport','free travel','is transport free',
+                            'transport free','mobility card','travel pass')):
+        return _ans('guestPass', lang, q)
+
     if _is_bus_q:
         return _ans('bus', lang, q)
 
+    # INSURANCE / rescue cost — check before emergency so "is rescue free?" /
+    # "do I need insurance?" get the cost answer, not the what-to-do-in-a-crisis one.
+    if any(k in q for k in ('travel insurance','rescue insurance','do i need insurance','need insurance',
+                            'is rescue free','rescue cost','rescue free','helicopter cost','mountain rescue cost',
+                            'insured','insurance for hiking','accident insurance')):
+        return _ans('insurance', lang, q)
+
     if _is_emergency_q:
         return _ans('emergency', lang, q)
+
+    # ── Trip-planning knowledge (Batch 3) — general "before you go" questions ──
+    # BEST TIME / SEASON to visit
+    if any(k in q for k in ('best time to visit','best time to go','best month','which month','what month',
+                            'when to visit','when to go','best season to','time of year to visit',
+                            'snow in june','still snow','is there snow','high season','peak season','shoulder season',
+                            'when is the best time to')):
+        return _ans('bestTime', lang, q)
+
+    # GETTING THERE / airports / arriving
+    if any(k in q for k in ('nearest airport','closest airport','which airport','what airport','airport for',
+                            'fly to','flight to','flights to','how do i get to south tyrol','how to get to south tyrol',
+                            'how do i get to the dolomites','how to get to the dolomites','get to the dolomites',
+                            'how to reach south tyrol','how to reach the dolomites','arrive by train','train to bolzano',
+                            'train to south tyrol','from the airport','getting to the dolomites','getting to south tyrol')):
+        return _ans('gettingThere', lang, q)
+
+    # DRIVING / car / parking reservations / tolls
+    if any(k in q for k in ('do i need a car','need a car','rent a car','car rental','hire a car','by car',
+                            'driving in south tyrol','drive to south tyrol','drive to the dolomites','parking reservation',
+                            'reserve parking','book parking','car ban','road closure','road closed','ztl','vignette',
+                            'motorway toll','autostrada','where to park','car free','without a car')):
+        return _ans('drivingAround', lang, q)
+
+    # HOW MANY DAYS / itinerary
+    if any(k in q for k in ('how many days','how long should i stay','how many days do i need','days do i need',
+                            'days in the dolomites','days in south tyrol','itinerary','how long to spend',
+                            'how long do i need','length of trip','plan my trip','how long should my trip')):
+        return _ans('itinerary', lang, q)
+
+    # VIA FERRATA basics
+    if any(k in q for k in ('via ferrata','klettersteig','iron path','cabled route','what is a ferrata',
+                            'do i need a harness','ferrata gear','ferrata kit','ferrata for beginners')):
+        return _ans('viaFerrata', lang, q)
+
+    # ALPINE CLUB membership
+    if any(k in q for k in ('alpine club','cai membership','cai card','avs membership','dav membership','alpenverein',
+                            'club membership','membership discount','hut discount','reciprocal','member rate')):
+        return _ans('alpineClub', lang, q)
+
+    # SIM / DATA / roaming
+    if any(k in q for k in ('sim card','e-sim','esim','data plan','mobile data','buy a sim','where to buy a sim',
+                            'roaming','phone plan','get online','data roaming','prepaid sim')):
+        return _ans('simData', lang, q)
+
+    # BUDGET / trip cost (general — entity prices handled later)
+    if any(k in q for k in ('how much does it cost to visit','how much does a trip','cost of a trip','trip cost',
+                            'daily budget','budget for','how expensive is','expensive to visit','cost per day',
+                            'how much money','how much should i budget','is it expensive')):
+        return _ans('budget', lang, q)
 
     # ── More general-knowledge topics (no specific trail/rifugio needed) ──────
     # These broaden Josephine's "bible" so far fewer everyday questions fall
