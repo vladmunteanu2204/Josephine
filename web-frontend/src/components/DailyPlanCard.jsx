@@ -126,16 +126,18 @@ export default function DailyPlanCard({ plan, t, onSave, onViewTrail, onAlt, sav
 
         <div className="dpc__actions">
           {onStartHike && (
-            <button className="dpc__btn dpc__btn--primary" onClick={() => onStartHike(trail)}>
+            <button className="dpc__btn dpc__btn--primary dpc__btn--full" onClick={() => onStartHike(trail)}>
               {tt('planStartHike', '▶ Start with Josephine')}
             </button>
           )}
-          <button className={`dpc__btn ${onStartHike ? 'dpc__btn--ghost' : 'dpc__btn--primary'}`} onClick={() => onViewTrail && onViewTrail(trail)}>
-            {tt('planView', 'View details')}
-          </button>
-          <button className="dpc__btn dpc__btn--ghost" onClick={() => onSave && onSave(trail)}>
-            {saved ? tt('planSaved', '✓ Saved') : tt('planSave', 'Save')}
-          </button>
+          <div className="dpc__actions-row">
+            <button className={`dpc__btn ${onStartHike ? 'dpc__btn--ghost' : 'dpc__btn--primary'}`} onClick={() => onViewTrail && onViewTrail(trail)}>
+              {tt('planView', 'View details')}
+            </button>
+            <button className="dpc__btn dpc__btn--ghost" onClick={() => onSave && onSave(trail)}>
+              {saved ? tt('planSaved', '✓ Saved') : tt('planSave', 'Save')}
+            </button>
+          </div>
         </div>
       </div>
     </div>
