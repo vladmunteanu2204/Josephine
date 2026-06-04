@@ -1344,7 +1344,9 @@ def save_hike():
             'end_time': hike_data.get('end_time'),
             'stats': hike_data.get('stats'),
             'gps_track': hike_data.get('gps_track', []),
-            'visited_checkpoints': hike_data.get('visited_checkpoints', [])
+            'visited_checkpoints': hike_data.get('visited_checkpoints', []),
+            'rating': hike_data.get('rating'),   # "how were the legs?" 1–3 (memory hook)
+            'note': hike_data.get('note'),
         }
         
         hikes['hikes'].append(hike_entry)

@@ -48,6 +48,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
   const [shareLink, setShareLink] = useState(null);
   const [completedHikeData, setCompletedHikeData] = useState(null);
   const [activeMoment, setActiveMoment] = useState(null);   // current Josephine "moment" (avatar bubble)
+  const [showRecap, setShowRecap] = useState(false);        // "how were the legs?" prompt
   const [audioMuted, setAudioMuted] = useState(() => {
     try { return localStorage.getItem('companionMuted') === '1'; } catch { return false; }
   });
@@ -1037,7 +1038,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
     }
     
     setIsEnding(true);
-    
+
     // Stop tracking
     if (watchIdRef.current) {
       navigator.geolocation.clearWatch(watchIdRef.current);
@@ -1046,8 +1047,19 @@ function ActiveHikeTracker({ trail, onEnd }) {
       clearInterval(intervalRef.current);
     }
     releaseWakeLock();
+    try { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); } catch { /* no-op */ }
 
-    // Save hike data (use refs for latest data)
+    // Auto-ended (inactivity) → save straight away. A deliberate end → ask
+    // "how were the legs?" first so the rating rides along in the save payload.
+    if (autoEnded) {
+      finalizeHike(null, null, true);
+    } else {
+      setShowRecap(true);
+    }
+  };
+
+  // Save the hike (with optional recap rating) → gamification → celebration.
+  const finalizeHike = async (rating, note, autoEnded) => {
     const hikeData = {
       user_email: currentUser?.email || null,
       trail_id: trail.id,
@@ -1056,6 +1068,8 @@ function ActiveHikeTracker({ trail, onEnd }) {
       end_time: new Date().toISOString(),
       gps_track: gpsTrackRef.current,
       visited_checkpoints: visitedCheckpoints,
+      rating: rating || null,         // "how were the legs?" 1–3 (easy/good/tough)
+      note: (note || '').trim() || null,
       stats: {
         distance_km: statsRef.current.distance / 1000,
         elevation_gain_m: statsRef.current.elevation,
@@ -1074,8 +1088,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
       console.error('Failed to save hike:', error);
     }
 
-    // Check for badges and award XP (use refs for latest data)
-    const gamificationData = {
+    const gamificationResult = checkNewBadges({
       distance: statsRef.current.distance,
       elevation: statsRef.current.elevation,
       duration: statsRef.current.duration,
@@ -1083,13 +1096,10 @@ function ActiveHikeTracker({ trail, onEnd }) {
       startTime: startTimeRef.current,
       endTime: Date.now(),
       completed: !autoEnded
-    };
-    
-    const gamificationResult = checkNewBadges(gamificationData);
-    
-    // Show celebration modal instead of immediately calling onEnd
-    const completeData = { ...hikeData, gamification: gamificationResult };
-    setCompletedHikeData(completeData);
+    });
+
+    setCompletedHikeData({ ...hikeData, gamification: gamificationResult });
+    setShowRecap(false);
     setShowCelebration(true);
   };
   
@@ -1374,6 +1384,30 @@ function ActiveHikeTracker({ trail, onEnd }) {
             <div className="warning-message">
               {t('gps.statsPausedMessage') || 'Stats recording paused. Return to trail to resume.'}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Recap: "how were the legs?" — rides along in the save payload */}
+      {showRecap && (
+        <div className="recap-overlay">
+          <div className="recap-card">
+            <img src="/josephine-portrait.webp" alt="Josephine" className="recap-avatar" />
+            <p className="recap-q">{t('gps.recapQuestion', 'How were the legs?')}</p>
+            <div className="recap-options">
+              <button className="recap-opt" onClick={() => finalizeHike(1, null, false)}>
+                <span>🙂</span>{t('gps.recapEasy', 'Easy')}
+              </button>
+              <button className="recap-opt" onClick={() => finalizeHike(2, null, false)}>
+                <span>💪</span>{t('gps.recapGood', 'Just right')}
+              </button>
+              <button className="recap-opt" onClick={() => finalizeHike(3, null, false)}>
+                <span>😣</span>{t('gps.recapTough', 'Tough')}
+              </button>
+            </div>
+            <button className="recap-skip" onClick={() => finalizeHike(null, null, false)}>
+              {t('gps.recapSkip', 'Skip')}
+            </button>
           </div>
         </div>
       )}

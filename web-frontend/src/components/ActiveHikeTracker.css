@@ -84,6 +84,36 @@
   box-shadow: 0 2px 12px rgba(239, 68, 68, 0.6), 0 0 0 2px rgba(239, 68, 68, 0.3);
 }
 
+/* ── Recap "how were the legs?" ── */
+.recap-overlay {
+  position: fixed; inset: 0; z-index: 4000;
+  background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.recap-card {
+  background: #1f2d27; border: 1px solid rgba(201, 168, 76, 0.4);
+  border-radius: 20px; padding: 26px 22px; max-width: 360px; width: 100%;
+  text-align: center; box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+}
+.recap-avatar {
+  width: 56px; height: 56px; border-radius: 50%; object-fit: cover;
+  border: 2px solid #c9a84c; margin-bottom: 12px;
+}
+.recap-q { font-size: 18px; font-weight: 600; color: #f0ece6; margin: 0 0 18px; }
+.recap-options { display: flex; gap: 10px; justify-content: center; margin-bottom: 14px; }
+.recap-opt {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 14px 8px; border-radius: 14px; cursor: pointer;
+  background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f0ece6; font-size: 13px;
+}
+.recap-opt span { font-size: 26px; }
+.recap-opt:hover { background: rgba(201, 168, 76, 0.16); border-color: rgba(201, 168, 76, 0.5); }
+.recap-skip {
+  background: none; border: none; color: rgba(240, 236, 230, 0.5);
+  font-size: 13px; cursor: pointer; padding: 6px;
+}
+
 /* ── Josephine walking companion ── */
 .jph-companion {
   display: flex;
