@@ -1550,24 +1550,52 @@ def _collect_ml_dicts(node, out):
             _collect_ml_dicts(v, out)
 
 
-def _autotranslate_payload(data):
-    """Write-once-in-English: fill any EMPTY it/de from a non-empty en across every
-    multilingual field in the payload, in ONE batched LLM call. Only fills blanks
-    (never clobbers a translation the owner typed). Guarded — no key or any error
-    leaves the payload untouched. Returns how many fields were filled."""
+def _autotranslate_payload(data, old_data=None):
+    """English is the source of truth: keep IT/DE in sync with EN across every
+    multilingual field, in ONE batched LLM call.
+
+    - English UNCHANGED (matches the stored record) → keep the existing IT/DE
+      (so a manual tweak is preserved; no LLM call).
+    - English NEW or CHANGED → (re)translate both IT/DE.
+    - Empty EN → left alone.
+
+    Guarded — no key or any error leaves the payload untouched. Returns how many
+    fields were (re)translated."""
     if not _anthropic_client:
         return 0
     try:
         targets = []
         _collect_ml_dicts(data, targets)
+
+        # Map of EN text → its existing translations in the stored record. When an
+        # incoming EN matches, the English didn't change → reuse those.
+        old_map = {}
+        if old_data:
+            olds = []
+            _collect_ml_dicts(old_data, olds)
+            for d in olds:
+                en = (d.get('en') or '').strip()
+                if en:
+                    old_map[en] = {'it': (d.get('it') or ''), 'de': (d.get('de') or '')}
+
         jobs = []
         for d in targets:
             en = (d.get('en') or '').strip()
             if not en:
                 continue
-            need = [l for l in ('it', 'de') if not (d.get(l) or '').strip()]
-            if need:
-                jobs.append((d, en, need))
+            prev = old_map.get(en)
+            if prev is not None:
+                # EN unchanged → restore any missing translation from the stored
+                # record (cheap, no LLM), then only call the LLM for genuine gaps.
+                for l in ('it', 'de'):
+                    if not (d.get(l) or '').strip() and (prev.get(l) or '').strip():
+                        d[l] = prev[l]
+                need = [l for l in ('it', 'de') if not (d.get(l) or '').strip()]
+                if need:
+                    jobs.append((d, en, need))
+            else:
+                # EN is new or changed → (re)translate both languages.
+                jobs.append((d, en, ['it', 'de']))
         if not jobs:
             return 0
         srcs = [en for _, en, _ in jobs]
@@ -1632,12 +1660,15 @@ def update_trail(trail_id):
     """Update an existing trail (Admin)"""
     try:
         trail_data = request.json
-        _autotranslate_payload(trail_data)   # write-once-EN → fill IT/DE blanks
         trails = load_complete_trails()
 
         trail_index = next((i for i, t in enumerate(trails['trails']) if t['id'] == trail_id), None)
         if trail_index is None:
             return jsonify({'error': 'Trail not found'}), 404
+
+        # EN is the source of truth → re-translate only fields whose English
+        # changed vs. the stored trail; unchanged EN keeps its IT/DE.
+        _autotranslate_payload(trail_data, trails['trails'][trail_index])
         
         trails['trails'][trail_index] = trail_data
 
@@ -3178,12 +3209,15 @@ def update_rifugio(rifugio_id):
     """Update rifugio (Admin)"""
     try:
         data = request.json
-        _autotranslate_payload(data)   # write-once-EN → fill IT/DE blanks
         rifugios = load_rifugios()
 
         rifugio_index = next((i for i, r in enumerate(rifugios) if r['id'] == rifugio_id), None)
         if rifugio_index is None:
             return jsonify({'error': 'Rifugio not found'}), 404
+
+        # EN is the source of truth → re-translate only fields whose English
+        # changed vs. the stored rifugio; unchanged EN keeps its IT/DE.
+        _autotranslate_payload(data, rifugios[rifugio_index])
         
         # Update fields
         rifugios[rifugio_index].update(data)
