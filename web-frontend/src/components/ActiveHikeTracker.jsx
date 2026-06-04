@@ -5,7 +5,6 @@ import SafetyDisclaimerModal from './SafetyDisclaimerModal';
 import CelebrationModal from './CelebrationModal';
 import TripSummary from './TripSummary';
 import HikeComplete from './HikeComplete';
-import JosephineAvatar from './JosephineAvatar';
 import { ENABLE_GAMIFICATION } from '../featureFlags';
 import { checkNewBadges } from '../utils/gamification';
 import { useToast } from '../contexts/ToastContext';
@@ -1336,7 +1335,8 @@ function ActiveHikeTracker({ trail, onEnd }) {
                     <span className="jph-bubble__text">{activeMoment.line}</span>
                   </div>
                 )}
-                <JosephineAvatar state="walking" feather={false} className="jph-companion__avatar" />
+                <img src="/josephine/portrait.png" alt="Josephine" className="jph-companion__avatar"
+                  onError={e => { e.currentTarget.src='/josephine-portrait.webp'; }} />
               </div>
             </Marker>
           )}
