@@ -990,6 +990,35 @@ def _resolve_area_coords(area):
     return None
 
 
+_SETTLEMENTS_CACHE = {'list': None}
+
+
+def _reverse_place_name(lat, lon, max_km=10.0):
+    """Nearest South Tyrol settlement name to a coordinate (e.g. for naming a GPX
+    trailhead). Settlements only (never a random hotel); None if nothing close."""
+    if lat is None or lon is None:
+        return None
+    if _SETTLEMENTS_CACHE['list'] is None:
+        rows = []
+        try:
+            with open(_PLACES_FILE, encoding='utf-8') as f:
+                for p in json.load(f).get('places', []):
+                    if p.get('poi') or p.get('lat') is None or p.get('lon') is None:
+                        continue
+                    rows.append((p.get('name', ''), p['lat'], p['lon'], p.get('rank', 1)))
+        except Exception as e:  # noqa: BLE001
+            print(f"[gazetteer] reverse load failed: {e}")
+        _SETTLEMENTS_CACHE['list'] = rows
+    best, best_d = None, max_km
+    for name, plat, plon, rank in _SETTLEMENTS_CACHE['list']:
+        d = haversine(lat, lon, plat, plon)
+        # bias toward bigger places when nearly equidistant
+        score = d - (rank * 0.05)
+        if score < best_d:
+            best_d, best = score, name
+    return best or None
+
+
 # Region centroid [lat, lon] — fallback location when a trail has no coordinate
 # path (most don't yet). Every trail carries a `region`, so this gives proximity
 # ranking something to work with region-wide.
@@ -1618,11 +1647,13 @@ def parse_gpx():
             return jsonify({'error': 'No track points found in GPX'}), 400
         
         coordinates = [[pt['lon'], pt['lat']] for pt in track_points]
-        
+
         total_distance = 0
         elevation_gain = 0
+        elevation_loss = 0
         elevations = [pt['ele'] for pt in track_points]
-        
+        cum_dist = [0.0]                 # cumulative km at each point (for the profile)
+
         for i in range(1, len(track_points)):
             lat1, lon1 = radians(track_points[i-1]['lat']), radians(track_points[i-1]['lon'])
             lat2, lon2 = radians(track_points[i]['lat']), radians(track_points[i]['lon'])
@@ -1630,16 +1661,44 @@ def parse_gpx():
             a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
             c = 2 * atan2(sqrt(a), sqrt(1-a))
             total_distance += 6371 * c
-            
-            if track_points[i]['ele'] > track_points[i-1]['ele']:
-                elevation_gain += track_points[i]['ele'] - track_points[i-1]['ele']
-        
+            cum_dist.append(total_distance)
+
+            delta = track_points[i]['ele'] - track_points[i-1]['ele']
+            if delta > 0:
+                elevation_gain += delta
+            else:
+                elevation_loss += -delta
+
+        # Downsampled elevation profile (≤120 points) so the trail page can render
+        # the curve without a runtime elevation API call.
+        profile = []
+        n = len(track_points)
+        step = max(1, n // 120)
+        for i in range(0, n, step):
+            profile.append({'dist_km': round(cum_dist[i], 2), 'ele': round(elevations[i], 0)})
+        if profile and profile[-1]['dist_km'] != round(cum_dist[-1], 2):
+            profile.append({'dist_km': round(cum_dist[-1], 2), 'ele': round(elevations[-1], 0)})
+
+        # Loop vs out-and-back: start≈end (within ~250 m) on a route over 1 km.
+        start, end = track_points[0], track_points[-1]
+        gap_km = haversine(start['lat'], start['lon'], end['lat'], end['lon'])
+        trail_type = 'loop' if (gap_km < 0.25 and total_distance > 1.0) else 'out_and_back'
+
+        # Name the trailhead from the offline gazetteer (settlements only).
+        start_area = _reverse_place_name(start['lat'], start['lon'])
+
         return jsonify({
             'total_points': len(track_points),
             'distance': round(total_distance, 2),
             'elevation_gain': round(elevation_gain, 0),
+            'elevation_loss': round(elevation_loss, 0),
             'min_elevation': round(min(elevations), 0),
             'max_elevation': round(max(elevations), 0),
+            'low_point': round(min(elevations), 0),
+            'high_point': round(max(elevations), 0),
+            'elevation_profile': profile,
+            'trail_type': trail_type,
+            'start_area': start_area,
             'route': {
                 'type': 'Feature',
                 'geometry': {
