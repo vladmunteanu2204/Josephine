@@ -1414,6 +1414,8 @@ def josephine_plan():
             context, ranked,
             resolve_nearby_rifugios=_resolve_nearby_rifugios,
             dispersal_mod=dispersal,
+            trail_centroid=_trail_centroid,
+            haversine=haversine,
         )
         return jsonify({'plan': plan})
     except Exception as e:  # noqa: BLE001
@@ -3892,6 +3894,7 @@ def _resolve_nearby_rifugios(id_list: list) -> list:
                 open_now = None
         else:
             open_now = True if r.get('type') in ('bivacco', 'bivouac') else None
+        coords = r.get('coordinates') or {}
         return {
             'id':               r.get('id'),
             'name':             r.get('name', ''),
@@ -3901,6 +3904,8 @@ def _resolve_nearby_rifugios(id_list: list) -> list:
             'opening_season':   season,
             'booking_required': r.get('booking_required', False),
             'josephine_note':   r.get('josephine_note', ''),
+            'lat':              coords.get('lat'),
+            'lon':              coords.get('lng') or coords.get('lon'),
         }
 
     result = []
@@ -3927,6 +3932,8 @@ def _resolve_nearby_rifugios(id_list: list) -> list:
                 'opening_season':   inline.get('opening_season', {}),
                 'booking_required': inline.get('booking_required', False),
                 'josephine_note':   inline.get('josephine_note', ''),
+                'lat':              (inline.get('coordinates') or {}).get('lat'),
+                'lon':              (inline.get('coordinates') or {}).get('lng'),
             })
         # else: bare string that isn't a known id (free-text name) → skip
     return result

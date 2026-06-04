@@ -318,7 +318,16 @@ def _refusal_plan(context, message):
     }
 
 
-def compose_plan(context, ranked, *, resolve_nearby_rifugios, dispersal_mod):
+MAX_HUT_KM = 6.0   # a hut only counts as "on this hike" if it's genuinely close
+
+
+def _round_down_15(h, m):
+    total = (h * 60 + m) // 15 * 15
+    return total // 60, total % 60
+
+
+def compose_plan(context, ranked, *, resolve_nearby_rifugios, dispersal_mod,
+                 trail_centroid=None, haversine=None):
     """Build one Daily Plan Card. Never raises — degrades to a refusal/caution."""
     try:
         lang = context.get('lang', 'en')
@@ -364,19 +373,28 @@ def compose_plan(context, ranked, *, resolve_nearby_rifugios, dispersal_mod):
         else:
             suggested_start = '09:00'
             t_reason = _p('t_easy', lang)
-        latest = None
+        latest = None          # rounded "~HH:MM" string for display
+        latest_t = None        # the rounded time without the tilde
         clk = _clock(sunset) if sunset else None
         if clk:
             mins = clk[0] * 60 + clk[1] - int((duration_h + 1.0) * 60)   # finish + 1h buffer
             if mins > 0:
-                latest = _fmt_hm(mins // 60, mins % 60)
+                rh, rm = _round_down_15(mins // 60, mins % 60)            # don't oversell precision
+                latest_t = _fmt_hm(rh, rm)
+                latest = '~' + latest_t
         timing = {'suggested_start': suggested_start, 'latest_safe_start': latest,
                   'sunset': _fmt_hm(*clk) if clk else None, 'reason': t_reason}
 
-        # ── Hut pairing ─────────────────────────────────────────────────────
+        # ── Hut pairing (only a hut that's genuinely near the trail) ─────────
         hut = None
         try:
             huts = resolve_nearby_rifugios(trail.get('nearby_rifugios', []))
+            ctr = trail_centroid(trail) if trail_centroid else None
+            def _near_enough(h):
+                if not (ctr and haversine and h.get('lat') is not None and h.get('lon') is not None):
+                    return True   # can't verify distance → trust the curated link
+                return haversine(ctr[0], ctr[1], h['lat'], h['lon']) <= MAX_HUT_KM
+            huts = [h for h in huts if _near_enough(h)]
             chosen = next((h for h in huts if h.get('open_now') is not False), huts[0] if huts else None)
             if chosen:
                 hut = {'id': chosen.get('id'), 'name': chosen.get('name'),

@@ -1,5 +1,37 @@
 # TODO — deferred setup
 
+## ⚠️ 12. Verify curated notes (never-fabricate) — LAUNCH BLOCKER
+
+Audit finding (Daily Plan Card review): the planning ENGINE is trustworthy, but
+the **curated content is AI-seeded and unverified** and contains fabricated
+specifics + at least one geographic mislink. The owner's hard rule
+("never provide erroneous/fabricated data") makes this the #1 launch blocker.
+
+Examples found:
+- `rifugios.json` notes are confident invented anecdotes — e.g. rif-067 Malga
+  Fedare: *"Arrive by 4pm to watch the evening milking… you can help"* (a
+  specific operational claim almost certainly untrue). Most hut/trail notes read
+  the same way.
+- `data/trails.json` `nearby_rifugios` links are unreliable — Val di Funes
+  Meadow Trail listed Malga Fedare, which is 9.4 km away in a different valley.
+
+Done already (mitigations, commit pending):
+- Distance-gate hut pairing (compose_plan only pairs a hut within ~6 km).
+- Rounded "best before ~HH:MM" (no false-precise minutes).
+
+Still to do (the real workstream):
+- [ ] Add the **verification-metadata contract** (`verification_status`,
+      `source_type`, `source_url`, `last_verified_at`, `stale_after_days`) to
+      every trail/rifugio record (MASTERPLAN Phase 0).
+- [ ] **Stop surfacing unverified specific operational claims** (hut hours,
+      "you can help with X", exact prices) until a human or an official feed
+      confirms them — soften to safe phrasing meanwhile.
+- [ ] Re-source rifugio/gastronomy data from **Open Data Hub South Tyrol** +
+      verified hut contacts (Phase 0 verified-hut activation) instead of seed
+      flavor text.
+- [ ] Admin "stale / unverified data" review view (fed by the gap-logger pattern).
+- [ ] Re-check all `nearby_rifugios` links for geographic sanity.
+
 > **Strategic plan of record:** see `docs/MASTERPLAN.md` — the reviewed
 > 5-system architecture (Knowledge Graph / Context / Decision / Agent /
 > Commercial), the Open Data Hub South Tyrol data-moat finding, GDPR + LLM-cost
