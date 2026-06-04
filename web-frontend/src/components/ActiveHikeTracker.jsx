@@ -4,6 +4,8 @@ import Map, { Source, Layer, Marker, NavigationControl } from 'react-map-gl';
 import SafetyDisclaimerModal from './SafetyDisclaimerModal';
 import CelebrationModal from './CelebrationModal';
 import TripSummary from './TripSummary';
+import HikeComplete from './HikeComplete';
+import { ENABLE_GAMIFICATION } from '../featureFlags';
 import { checkNewBadges } from '../utils/gamification';
 import { useToast } from '../contexts/ToastContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -49,6 +51,8 @@ function ActiveHikeTracker({ trail, onEnd }) {
   const [completedHikeData, setCompletedHikeData] = useState(null);
   const [activeMoment, setActiveMoment] = useState(null);   // current Josephine "moment" (avatar bubble)
   const [showRecap, setShowRecap] = useState(false);        // "how were the legs?" prompt
+  const [showComplete, setShowComplete] = useState(false);  // on-brand Josephine close
+  const [completeLine, setCompleteLine] = useState('');
   const [audioMuted, setAudioMuted] = useState(() => {
     try { return localStorage.getItem('companionMuted') === '1'; } catch { return false; }
   });
@@ -1088,7 +1092,8 @@ function ActiveHikeTracker({ trail, onEnd }) {
       console.error('Failed to save hike:', error);
     }
 
-    const gamificationResult = checkNewBadges({
+    // Gamification (XP/badges) is not launched → only compute when enabled.
+    const gamificationResult = ENABLE_GAMIFICATION ? checkNewBadges({
       distance: statsRef.current.distance,
       elevation: statsRef.current.elevation,
       duration: statsRef.current.duration,
@@ -1096,11 +1101,24 @@ function ActiveHikeTracker({ trail, onEnd }) {
       startTime: startTimeRef.current,
       endTime: Date.now(),
       completed: !autoEnded
-    });
+    }) : null;
 
     setCompletedHikeData({ ...hikeData, gamification: gamificationResult });
     setShowRecap(false);
-    setShowCelebration(true);
+
+    if (ENABLE_GAMIFICATION) {
+      setShowCelebration(true);
+    } else {
+      // On-brand close: Josephine sees you off the trail (no gamification).
+      const km = (statsRef.current.distance / 1000);
+      const line = (km >= 0.1
+        ? t('gps.completeLine', 'You gave {{trail}} a good day — that air and that light stay with you.')
+        : t('gps.completeLineShort', 'Every step on {{trail}} counts. Come back when you can.')
+      ).replace('{{trail}}', trail.name || '');
+      setCompleteLine(line);
+      speakLine(line);
+      setShowComplete(true);
+    }
   };
   
   // Handle celebration close
@@ -1228,21 +1246,23 @@ function ActiveHikeTracker({ trail, onEnd }) {
               <Layer
                 id="route-line"
                 type="line"
+                layout={{ 'line-cap': 'round', 'line-join': 'round' }}
                 paint={{
-                  'line-color': isTracking ? '#60a5fa' : '#3b82f6',
+                  'line-color': '#c9a84c',
                   'line-width': isTracking ? 6 : 4,
-                  'line-opacity': isTracking ? 1 : 0.8
+                  'line-opacity': isTracking ? 1 : 0.85
                 }}
               />
               {isTracking && (
                 <Layer
                   id="route-line-glow"
                   type="line"
+                  layout={{ 'line-cap': 'round', 'line-join': 'round' }}
                   paint={{
-                    'line-color': '#60a5fa',
-                    'line-width': 12,
-                    'line-opacity': 0.3,
-                    'line-blur': 4
+                    'line-color': '#c9a84c',
+                    'line-width': 14,
+                    'line-opacity': 0.25,
+                    'line-blur': 6
                   }}
                 />
               )}
@@ -1265,10 +1285,12 @@ function ActiveHikeTracker({ trail, onEnd }) {
               <Layer
                 id="gps-track-line"
                 type="line"
+                layout={{ 'line-cap': 'round', 'line-join': 'round' }}
                 paint={{
-                  'line-color': '#ef4444',
+                  'line-color': '#f0ece6',
                   'line-width': 3,
-                  'line-opacity': 0.9
+                  'line-opacity': 0.85,
+                  'line-dasharray': [1, 1.5]
                 }}
               />
             </Source>
@@ -1412,7 +1434,18 @@ function ActiveHikeTracker({ trail, onEnd }) {
         </div>
       )}
 
-      {/* Celebration Modal */}
+      {/* On-brand completion (gamification off) — Josephine sees you off */}
+      {showComplete && completedHikeData && (
+        <HikeComplete
+          hikeData={completedHikeData}
+          line={completeLine}
+          onExportGpx={() => { if (gpsTrackRef.current.length > 0) exportGPX(); }}
+          onAddReview={() => { clearHikeSession(); setShowComplete(false); onEnd({ ...completedHikeData, showReviewForm: true }); }}
+          onDone={() => { clearHikeSession(); setShowComplete(false); onEnd(completedHikeData); }}
+        />
+      )}
+
+      {/* Celebration Modal (only when gamification is enabled) */}
       {showCelebration && completedHikeData && (
         <CelebrationModal
           hikeData={completedHikeData}
