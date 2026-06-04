@@ -38,8 +38,20 @@ function TrailManager({ adminPassword }) {
     dog_friendly: false,
     family_friendly: false,
     coordinates: null,
-    checkpoints: []
+    checkpoints: [],
+    // ── Card-powering fields (drive the Daily Plan Card) ──
+    crowding: { level: 'medium', peak_months: [], quiet_tip: { en: '', it: '', de: '' } },
+    nearby_rifugios: [],
+    transport: { car: '', bus: '' },
+    trailhead_info: { parking: '' },
+    difficulty_details: { technical: '', exposure: '', fitness: '' },
+    highlights: [],
+    verification: { status: 'unverified', source_type: 'manual', source_url: '', last_verified_at: '' },
   });
+  const [allRifugios, setAllRifugios] = useState([]);
+  const [rifSearch, setRifSearch] = useState('');
+  const [peakInput, setPeakInput] = useState('');
+  const [highlightsInput, setHighlightsInput] = useState('');
   
   // Temporary string states for comma-separated inputs
   const [tagsInput, setTagsInput] = useState('');
@@ -57,7 +69,24 @@ function TrailManager({ adminPassword }) {
 
   useEffect(() => {
     loadTrails();
+    // Rifugio list powers the "nearby huts" picker.
+    axios.get('/api/rifugios')
+      .then(r => setAllRifugios(r.data?.rifugios || []))
+      .catch(() => {});
   }, []);
+
+  // Distance (km) between trail centroid and a rifugio, for the picker warning.
+  const _hutDistanceKm = (rif) => {
+    const co = formData.coordinates;
+    const rc = rif.coordinates || {};
+    if (!Array.isArray(co) || !co.length || rc.lat == null) return null;
+    let la = 0, lo = 0;
+    co.forEach(p => { lo += p[0]; la += p[1]; });
+    la /= co.length; lo /= co.length;
+    const R = 6371, dLat = (rc.lat - la) * Math.PI / 180, dLon = ((rc.lng ?? rc.lon) - lo) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) ** 2 + Math.cos(la * Math.PI / 180) * Math.cos(rc.lat * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  };
 
   const [statusFilter, setStatusFilter] = useState('all'); // 'all' | 'published' | 'draft'
 
@@ -96,11 +125,27 @@ function TrailManager({ adminPassword }) {
       videos: trail.videos || '',
       checkpoints: trail.checkpoints || [],
       josephineNote: trail.josephineNote || { en: '', it: '', de: '' },
-      family_friendly: trail.family_friendly ?? false
+      family_friendly: trail.family_friendly ?? false,
+      crowding: {
+        level: (trail.crowding || {}).level || 'medium',
+        peak_months: (trail.crowding || {}).peak_months || [],
+        quiet_tip: typeof (trail.crowding || {}).quiet_tip === 'object'
+          ? { en: '', it: '', de: '', ...((trail.crowding || {}).quiet_tip) }
+          : { en: (trail.crowding || {}).quiet_tip || '', it: '', de: '' },
+      },
+      nearby_rifugios: (trail.nearby_rifugios || []).map(r =>
+        typeof r === 'string' ? { id: r, name: r } : { id: r.id, name: r.name || r.id }),
+      transport: { car: '', bus: '', ...(trail.transport || {}) },
+      trailhead_info: { parking: '', ...(trail.trailhead_info || {}) },
+      difficulty_details: { technical: '', exposure: '', fitness: '', ...(trail.difficulty_details || {}) },
+      highlights: trail.highlights || [],
+      verification: { status: 'unverified', source_type: 'manual', source_url: '', last_verified_at: '', ...(trail.verification || {}) },
     });
     // Set the string inputs for editing
     setTagsInput((trail.tags || []).join(', '));
     setSeasonsInput((trail.best_season || []).join(', '));
+    setPeakInput(((trail.crowding || {}).peak_months || []).join(', '));
+    setHighlightsInput((trail.highlights || []).join(', '));
     setShowCreateForm(false);
   };
 
@@ -112,6 +157,9 @@ function TrailManager({ adminPassword }) {
     setPreview(null);
     setTagsInput('');
     setSeasonsInput('');
+    setPeakInput('');
+    setHighlightsInput('');
+    setRifSearch('');
     setFormData({
       id: '',
       name: '',
@@ -133,7 +181,15 @@ function TrailManager({ adminPassword }) {
       trail_type: 'loop',
       dog_friendly: false,
       family_friendly: false,
-      coordinates: null
+      coordinates: null,
+      checkpoints: [],
+      crowding: { level: 'medium', peak_months: [], quiet_tip: { en: '', it: '', de: '' } },
+      nearby_rifugios: [],
+      transport: { car: '', bus: '' },
+      trailhead_info: { parking: '' },
+      difficulty_details: { technical: '', exposure: '', fitness: '' },
+      highlights: [],
+      verification: { status: 'unverified', source_type: 'manual', source_url: '', last_verified_at: '' },
     });
   };
 
@@ -314,11 +370,20 @@ function TrailManager({ adminPassword }) {
       
       const note = formData.josephineNote || {};
       const hasNote = (note.en || '').trim() || (note.it || '').trim() || (note.de || '').trim();
+      const peakArray = peakInput.split(',').map(s => s.trim()).filter(Boolean);
+      const highlightsArray = highlightsInput.split(',').map(s => s.trim()).filter(Boolean);
+      const verif = { ...formData.verification };
+      if (verif.status === 'verified' && !verif.last_verified_at) {
+        verif.last_verified_at = new Date().toISOString().slice(0, 10);
+      }
       const trailData = {
         ...formData,
         tags: tagsArray,
         interests: tagsArray,
         best_season: seasonsArray,
+        crowding: { ...formData.crowding, peak_months: peakArray },
+        highlights: highlightsArray,
+        verification: verif,
         josephineNote: hasNote
           ? { en: (note.en || '').trim(), it: (note.it || '').trim(), de: (note.de || '').trim() }
           : undefined
@@ -796,6 +861,128 @@ function TrailManager({ adminPassword }) {
                 </label>
               </div>
             </div>
+
+            <div className="form-divider"></div>
+
+            {/* ── What powers the Daily Plan Card ── */}
+            <h3 style={{ color: '#d4a05a', margin: '0 0 4px', display: 'inline-flex', alignItems: 'center', gap: 6 }}>✦ What Josephine puts on the card</h3>
+            <p style={{ fontSize: 12, opacity: 0.6, margin: '0 0 14px', maxWidth: 640 }}>
+              These power the live plan card — crowd signals, the lunch stop, “getting there”, and the local tip.
+              Leave any blank and that line simply won't appear.
+            </p>
+            {(() => {
+              const hint = { fontSize: 11, opacity: 0.55, fontWeight: 400 };
+              const c = formData.crowding || {};
+              const setC = (patch) => setFormData({ ...formData, crowding: { ...formData.crowding, ...patch } });
+              const setQT = (lng, v) => setC({ quiet_tip: { ...(c.quiet_tip || {}), [lng]: v } });
+              const setT = (patch) => setFormData({ ...formData, transport: { ...formData.transport, ...patch } });
+              const setDD = (patch) => setFormData({ ...formData, difficulty_details: { ...formData.difficulty_details, ...patch } });
+              const setV = (patch) => setFormData({ ...formData, verification: { ...formData.verification, ...patch } });
+              return (
+                <>
+                  {/* Crowding */}
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>Crowd level <span style={hint}>→ “quiet today / busy now” signal + dispersal</span></label>
+                      <select value={c.level || 'medium'} onChange={(e) => setC({ level: e.target.value })}>
+                        <option value="low">low</option><option value="medium">medium</option><option value="high">high</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Peak months <span style={hint}>→ when it's busiest (comma-separated)</span></label>
+                      <input type="text" value={peakInput} onChange={(e) => setPeakInput(e.target.value)} placeholder="July, August" />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label>Quiet tip <span style={hint}>→ the 💡 local tip on the card</span></label>
+                    <input type="text" placeholder="EN — e.g. Arrive before 8am or after 5pm to have it to yourself." value={(c.quiet_tip || {}).en || ''} onChange={(e) => setQT('en', e.target.value)} />
+                    <input type="text" placeholder="IT" style={{ marginTop: 6 }} value={(c.quiet_tip || {}).it || ''} onChange={(e) => setQT('it', e.target.value)} />
+                    <input type="text" placeholder="DE" style={{ marginTop: 6 }} value={(c.quiet_tip || {}).de || ''} onChange={(e) => setQT('de', e.target.value)} />
+                  </div>
+
+                  {/* Nearby huts picker */}
+                  <div className="form-group">
+                    <label>Nearby huts / malghe <span style={hint}>→ the lunch / hut stop (only huts within ~6 km appear on the card)</span></label>
+                    {(formData.nearby_rifugios || []).length > 0 && (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }}>
+                        {formData.nearby_rifugios.map((r) => (
+                          <span key={r.id} style={{ background: 'rgba(212,160,90,0.15)', color: '#e8c79a', borderRadius: 999, padding: '3px 8px', fontSize: 12 }}>
+                            {r.name}{' '}
+                            <button type="button" onClick={() => setFormData({ ...formData, nearby_rifugios: formData.nearby_rifugios.filter((x) => x.id !== r.id) })}
+                              style={{ background: 'none', border: 'none', color: '#e8c79a', cursor: 'pointer', fontWeight: 700 }}>×</button>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <input type="text" placeholder="Search huts to add…" value={rifSearch} onChange={(e) => setRifSearch(e.target.value)} />
+                    {rifSearch && (
+                      <div style={{ marginTop: 6, border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, overflow: 'hidden' }}>
+                        {allRifugios
+                          .filter((r) => (r.name || '').toLowerCase().includes(rifSearch.toLowerCase()) && !(formData.nearby_rifugios || []).some((x) => x.id === r.id))
+                          .slice(0, 6).map((r) => {
+                            const d = _hutDistanceKm(r);
+                            return (
+                              <button key={r.id} type="button"
+                                onClick={() => { setFormData({ ...formData, nearby_rifugios: [...(formData.nearby_rifugios || []), { id: r.id, name: r.name }] }); setRifSearch(''); }}
+                                style={{ display: 'block', width: '100%', textAlign: 'left', padding: '8px 10px', background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.06)', color: '#f0ece6', cursor: 'pointer', fontSize: 13 }}>
+                                {r.name}
+                                {d != null && <span style={{ opacity: 0.6 }}> · {d.toFixed(1)} km</span>}
+                                {d != null && d > 6 && <span style={{ color: '#f3a3a3' }}> ⚠ too far — won't show</span>}
+                              </button>
+                            );
+                          })}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Getting there */}
+                  <div className="form-group">
+                    <label>Parking / trailhead <span style={hint}>→ “Getting there” row + tip fallback</span></label>
+                    <input type="text" value={(formData.trailhead_info || {}).parking || ''} onChange={(e) => setFormData({ ...formData, trailhead_info: { ...formData.trailhead_info, parking: e.target.value } })}
+                      placeholder="Free car park beside the church, 60 spaces — fills by 9am" />
+                  </div>
+                  <div className="form-row">
+                    <div className="form-group"><label>By car</label>
+                      <input type="text" value={(formData.transport || {}).car || ''} onChange={(e) => setT({ car: e.target.value })} placeholder="From Bolzano, 45 min via the SS242" /></div>
+                    <div className="form-group"><label>By bus / lift</label>
+                      <input type="text" value={(formData.transport || {}).bus || ''} onChange={(e) => setT({ bus: e.target.value })} placeholder="SAD line 170; cable car from Ortisei" /></div>
+                  </div>
+
+                  {/* Difficulty details */}
+                  <div className="form-row">
+                    <div className="form-group"><label>Technical <span style={hint}>→ “how hard” answer</span></label>
+                      <input type="text" value={(formData.difficulty_details || {}).technical || ''} onChange={(e) => setDD({ technical: e.target.value })} placeholder="low / some scrambling" /></div>
+                    <div className="form-group"><label>Exposure</label>
+                      <input type="text" value={(formData.difficulty_details || {}).exposure || ''} onChange={(e) => setDD({ exposure: e.target.value })} placeholder="none / moderate" /></div>
+                    <div className="form-group"><label>Fitness</label>
+                      <input type="text" value={(formData.difficulty_details || {}).fitness || ''} onChange={(e) => setDD({ fitness: e.target.value })} placeholder="low / high" /></div>
+                  </div>
+
+                  {/* Highlights */}
+                  <div className="form-group">
+                    <label>Highlights <span style={hint}>→ fallback local tip (comma-separated)</span></label>
+                    <input type="text" value={highlightsInput} onChange={(e) => setHighlightsInput(e.target.value)} placeholder="Turquoise lake, panoramic ridge, larch forest" />
+                  </div>
+
+                  {/* Verification (never-fabricate) */}
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>Verification <span style={hint}>→ trust status (never-fabricate)</span></label>
+                      <select value={(formData.verification || {}).status || 'unverified'} onChange={(e) => setV({ status: e.target.value })}>
+                        <option value="unverified">unverified</option>
+                        <option value="editorial">editorial</option>
+                        <option value="verified">verified</option>
+                        <option value="stale">stale</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Source <span style={hint}>→ where it's confirmed</span></label>
+                      <input type="text" value={(formData.verification || {}).source_url || ''} onChange={(e) => setV({ source_url: e.target.value })} placeholder="URL, or who confirmed it" />
+                    </div>
+                  </div>
+                </>
+              );
+            })()}
 
             <div className="form-divider"></div>
 

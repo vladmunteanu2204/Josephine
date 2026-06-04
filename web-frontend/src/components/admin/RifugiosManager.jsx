@@ -17,6 +17,7 @@ const BLANK_FORM = {
   photos: [], status: 'seasonal', special_closures: [],
   josephine_note: '', highlights: [],
   booking_email_verified: false,
+  verification: { status: 'unverified', source_type: 'manual', source_url: '', last_verified_at: '' },
 };
 
 export default function RifugiosManager({ adminPassword }) {
@@ -85,8 +86,13 @@ export default function RifugiosManager({ adminPassword }) {
     if (!form.name.trim()) { showToast('Name is required', 'error'); return; }
     setSaving(true);
     try {
+      const verif = { ...form.verification };
+      if (verif.status === 'verified' && !verif.last_verified_at) {
+        verif.last_verified_at = new Date().toISOString().slice(0, 10);
+      }
       const payload = {
         ...form,
+        verification: verif,
         photos: photosInput.split('\n').map(s => s.trim()).filter(Boolean),
       };
       if (editing === 'new') {
@@ -382,6 +388,7 @@ export default function RifugiosManager({ adminPassword }) {
                 <legend style={{ color: '#c9a84c', display: 'inline-flex', alignItems: 'center', gap: 6 }}><MessageSquare size={15} strokeWidth={2} /> Josephine's Insider Tip</legend>
                 <p style={{ fontSize: '12px', opacity: 0.6, margin: '0 0 10px' }}>
                   A personal tip shown on the detail page and delivered by Josephine in chat. Keep it short, specific, and useful — e.g. "Ask for the Schlutzkrapfen on Sundays" or "The sunrise from the east terrace is worth the early start."
+                  {' '}<strong>Only claim specifics you've confirmed</strong> (hours, "you can join the milking") — set the verification below honestly.
                 </p>
                 <textarea
                   rows={3}
@@ -390,6 +397,25 @@ export default function RifugiosManager({ adminPassword }) {
                   placeholder="e.g. Ask Hannes for the off-menu Kaiserschmarrn — he only makes it for guests who ask."
                   style={{ width: '100%', resize: 'vertical' }}
                 />
+                <div style={{ display: 'flex', gap: 12, marginTop: 12, flexWrap: 'wrap' }}>
+                  <label style={{ flex: '1 1 160px' }}>
+                    <span style={{ fontSize: 12, opacity: 0.7 }}>Verification (never-fabricate)</span>
+                    <select value={(form.verification || {}).status || 'unverified'}
+                      onChange={e => set('verification', { ...form.verification, status: e.target.value })}
+                      style={{ width: '100%' }}>
+                      <option value="unverified">unverified</option>
+                      <option value="editorial">editorial</option>
+                      <option value="verified">verified</option>
+                      <option value="stale">stale</option>
+                    </select>
+                  </label>
+                  <label style={{ flex: '2 1 220px' }}>
+                    <span style={{ fontSize: 12, opacity: 0.7 }}>Source (URL / who confirmed)</span>
+                    <input value={(form.verification || {}).source_url || ''}
+                      onChange={e => set('verification', { ...form.verification, source_url: e.target.value })}
+                      placeholder="https://… or 'called the hut, June 2026'" style={{ width: '100%' }} />
+                  </label>
+                </div>
               </fieldset>
 
               {/* Highlights */}
