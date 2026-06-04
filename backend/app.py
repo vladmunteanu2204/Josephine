@@ -698,6 +698,31 @@ def get_trail(trail_id):
     
     return jsonify(trail)
 
+@app.route('/api/trails/<trail_id>/insights', methods=['GET'])
+def get_trail_insights(trail_id):
+    """Public insider insights for a trail. `?visibility=public` (default) returns
+    the localized public items; `?visibility=chat_only` returns only the COUNT
+    (secret text never leaves the server outside the gated chat payload)."""
+    try:
+        lang = request.args.get('lang', 'en')
+        visibility = request.args.get('visibility', 'public')
+        trails = load_complete_trails()
+        trail = next((t for t in trails['trails'] if t['id'] == trail_id), None)
+        if not trail:
+            return jsonify({'error': 'Trail not found'}), 404
+        ctx = {'lang': lang, 'conditions': {'now': datetime.now(), 'season': None,
+                                            'weather': None, 'sunset': None}}
+        if visibility == 'chat_only':
+            return jsonify({'count': insights_engine.count_insights(
+                trail, ctx, visibility='chat_only')})
+        return jsonify({'insights': insights_engine.select_insights(
+            trail, ctx, visibility='public', limit=8, ignore_conditions=True),
+            'secret_count': insights_engine.count_insights(trail, ctx, visibility='chat_only')})
+    except Exception as e:  # noqa: BLE001
+        print(f"[get_trail_insights] error: {e}")
+        return jsonify({'insights': [], 'secret_count': 0})
+
+
 @app.route('/api/trails/generate', methods=['POST'])
 def generate_trail():
     """

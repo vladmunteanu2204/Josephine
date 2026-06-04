@@ -20,6 +20,12 @@ const DIFFICULTY_CONFIG = {
   hard:   { color: '#ef4444', label: 'Hard'     },
 };
 
+// Icon per insider-insight kind (kept in sync with backend insights.INSIGHT_KINDS)
+const INSIGHT_ICON = {
+  photo_spot: '📷', viewpoint: '◉', tip: '💡', food: '🍽',
+  hazard: '⚠', dog_tip: '🐾', sunrise_tip: '🌅', sunset_tip: '🌇',
+};
+
 /* ── Elevation Profile ─────────────────────────────────────── */
 function ElevationProfile({ trail }) {
   const W = 500, H = 90;
@@ -175,7 +181,7 @@ function NearbyRifugios({ ids, onViewRifugio }) {
   );
 }
 
-function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin }) {
+function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin, onPlanWithJosephine }) {
   const { t, i18n } = useTranslation();
   const toast = useToast();
   const { currentUser } = useAuth();
@@ -185,6 +191,8 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin }
   const [isHikeActive, setIsHikeActive] = useState(false);
   const [isSaved, setIsSaved]     = useState(false);
   const [parallaxOffset, setParallaxOffset] = useState(0);
+  const [publicInsights, setPublicInsights] = useState([]);
+  const [secretCount, setSecretCount] = useState(0);
   const heroRef = useRef(null);
 
   // Fetch full trail if only ID passed
@@ -208,6 +216,18 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin }
       setIsSaved(saved.includes(fullTrail.id));
     }
   }, [fullTrail]);
+
+  // Insider insights: public list + count of chat-only secrets (the teaser)
+  useEffect(() => {
+    if (!fullTrail?.id) return;
+    const lng = (i18n.language || 'en').split('-')[0];
+    axios.get(`/api/trails/${fullTrail.id}/insights`, { params: { lang: lng } })
+      .then(res => {
+        setPublicInsights(res.data?.insights || []);
+        setSecretCount(res.data?.secret_count || 0);
+      })
+      .catch(() => { setPublicInsights([]); setSecretCount(0); });
+  }, [fullTrail?.id, i18n.language]);
 
   // Cleanup GPS on unmount
   useEffect(() => () => { if (setIsGPSActive) setIsGPSActive(false); }, [setIsGPSActive]);
@@ -392,6 +412,34 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin }
             </div>
             <p className="td-jph-note__text">{noteText}</p>
           </div>
+        )}
+
+        {/* Local notes — public insider insights */}
+        {publicInsights.length > 0 && (
+          <div className="td-insights">
+            <p className="td-insights__label">{t('trail.localSecretsTitle', 'Local notes')}</p>
+            <ul className="td-insights__list">
+              {publicInsights.map((ins) => (
+                <li className="td-insights__item" key={ins.id}>
+                  <span className="td-insights__icon">{INSIGHT_ICON[ins.kind] || '✦'}</span>
+                  <span className="td-insights__text">{ins.text}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Plan-with-Josephine CTA — teases the chat-only secrets */}
+        {onPlanWithJosephine && (
+          <button className="td-plan-cta" onClick={() => onPlanWithJosephine(fullTrail)}>
+            <img src="/josephine-portrait.webp" alt="" className="td-plan-cta__mark" />
+            <span className="td-plan-cta__text">
+              {secretCount > 0
+                ? t('trail.secretsCta', 'Plan with Josephine — she knows {{count}} more secrets here', { count: secretCount })
+                : t('trail.planCta', 'Plan this hike with Josephine')}
+            </span>
+            <span className="td-plan-cta__arrow">→</span>
+          </button>
         )}
 
         {/* Good to know */}

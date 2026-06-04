@@ -152,11 +152,15 @@ def _passes_gate(insight, parent_record):
 
 
 # ── public API ───────────────────────────────────────────────────────────────
-def select_insights(record, context, *, visibility=None, limit=4):
+def select_insights(record, context, *, visibility=None, limit=4, ignore_conditions=False):
     """Return localized, gated, context-matched insights for a trail/rifugio.
 
     visibility: 'public' | 'chat_only' | None (any). Returns slim dicts:
     {id, kind, text, coordinates?}. Never raises → [] on any failure.
+
+    ignore_conditions=True skips the season/time/weather gate — used by the
+    public trail page (browsed anytime), where conditions are annotations, not a
+    live moment. Chat delivery keeps conditions on (moment-aware).
     """
     try:
         items = (record or {}).get('insights') or []
@@ -170,7 +174,7 @@ def select_insights(record, context, *, visibility=None, limit=4):
                 continue
             if not _passes_gate(it, record):
                 continue
-            if not _conditions_match(it.get('conditions'), context):
+            if not ignore_conditions and not _conditions_match(it.get('conditions'), context):
                 continue
             text = _loc(it.get('text'), lang).strip()
             if not text:
@@ -190,7 +194,9 @@ def select_insights(record, context, *, visibility=None, limit=4):
         return []
 
 
-def count_insights(record, context, *, visibility='chat_only'):
-    """How many insights of a given visibility are currently surfaceable. Used by
-    the public trail page to tease 'N more secrets' without leaking the text."""
-    return len(select_insights(record, context, visibility=visibility, limit=999))
+def count_insights(record, context, *, visibility='chat_only', ignore_conditions=True):
+    """How many insights of a given visibility exist. Used by the public trail
+    page to tease 'N more secrets' without leaking the text. ignore_conditions
+    defaults True so the teaser count is stable regardless of time of day."""
+    return len(select_insights(record, context, visibility=visibility, limit=999,
+                               ignore_conditions=ignore_conditions))
