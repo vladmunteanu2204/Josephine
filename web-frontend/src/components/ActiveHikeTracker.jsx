@@ -1367,7 +1367,9 @@ function ActiveHikeTracker({ trail, onEnd }) {
         </div>
       </div>
 
-      {/* Controls */}
+      {/* Controls — hidden once the hike is wrapping up so they don't bleed
+          under the recap / celebration / completion card. */}
+      {!showRecap && !showCelebration && !showComplete && (
       <div className="tracker-controls">
         <button
           className="control-btn pause-btn"
@@ -1392,14 +1394,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
           {audioMuted ? '🔇' : '🔊'}
         </button>
 
-        <button 
-          className="control-btn emergency-btn"
-          onClick={generateShareLink}
-        >
-          🆘 Share Live Location
-        </button>
-
-        <button 
+        <button
           className="control-btn end-btn"
           onClick={() => endHike(false)}
           disabled={isEnding}
@@ -1407,9 +1402,10 @@ function ActiveHikeTracker({ trail, onEnd }) {
           {isEnding ? '⌛ Ending...' : '🏁 End Hike'}
         </button>
       </div>
+      )}
 
       {/* Off-trail warning banner */}
-      {isOffTrail && (
+      {isOffTrail && !showRecap && !showCelebration && !showComplete && (
         <div className="warning-banner off-trail-active">
           <div className="warning-icon">⚠️</div>
           <div className="warning-content">
