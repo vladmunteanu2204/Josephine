@@ -15,17 +15,30 @@ Examples found:
 - `data/trails.json` `nearby_rifugios` links are unreliable — Val di Funes
   Meadow Trail listed Malga Fedare, which is 9.4 km away in a different valley.
 
-Done already (mitigations, commit pending):
+Done already (mitigations):
 - Distance-gate hut pairing (compose_plan only pairs a hut within ~6 km).
 - Rounded "best before ~HH:MM" (no false-precise minutes).
+- **Verification-metadata contract is now authored AND enforced.** Admin guided
+  forms write `verification {status, source_type, source_url, last_verified_at}`
+  (status ∈ unverified|editorial|verified|stale) on every trail/rifugio.
+  `decision_engine.compose_plan` now GATES what the card asserts on that status
+  (`verification_state` / `can_state_fact` / `can_show_voice`):
+  · hard operational facts (hut note, hut `open_now`, lunch signal, parking
+    "fills by 09:00") → only when the source record is **verified**;
+  · curated voice/prose (trail note, quiet-tip, highlights) → **verified or
+    editorial**; · engine-generated lead/why/signals always stand; · directions
+    (by car/bus = generic wayfinding) always show; · hut *name* (identity, not a
+    claim) still shows. `verified` auto-downgrades to `stale` past
+    `stale_after_days`. The card payload now carries
+    `verification {trail, hut}`. **Net effect:** until the owner verifies a
+    record in the admin panel, Josephine no longer asserts its specifics.
 
 Still to do (the real workstream):
-- [ ] Add the **verification-metadata contract** (`verification_status`,
-      `source_type`, `source_url`, `last_verified_at`, `stale_after_days`) to
-      every trail/rifugio record (MASTERPLAN Phase 0).
-- [ ] **Stop surfacing unverified specific operational claims** (hut hours,
-      "you can help with X", exact prices) until a human or an official feed
-      confirms them — soften to safe phrasing meanwhile.
+- [ ] Add `stale_after_days` to the admin form (contract field exists & is honored
+      by the engine, but the guided form doesn't yet expose it — defaults unset).
+- [ ] **Verify the actual records** — the gate is built, but every existing
+      trail/rifugio is still `unverified`, so cards are currently bland until the
+      owner walks the admin panel confirming specifics.
 - [ ] Re-source rifugio/gastronomy data from **Open Data Hub South Tyrol** +
       verified hut contacts (Phase 0 verified-hut activation) instead of seed
       flavor text.

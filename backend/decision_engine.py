@@ -292,6 +292,42 @@ def _loc(val, lang):
     return val or ''
 
 
+def verification_state(rec):
+    """Effective verification status of a trail/rifugio record.
+
+    Returns one of 'verified' | 'editorial' | 'stale' | 'unverified'.
+    A 'verified' record whose last_verified_at is older than stale_after_days
+    is downgraded to 'stale' so Josephine stops asserting it as current.
+    """
+    v = (rec or {}).get('verification') or {}
+    status = (v.get('status') or 'unverified').strip().lower()
+    if status not in ('verified', 'editorial', 'stale', 'unverified'):
+        status = 'unverified'
+    if status == 'verified':
+        lva = v.get('last_verified_at')
+        days = v.get('stale_after_days')
+        if lva and days:
+            try:
+                d = _dt.fromisoformat(str(lva)[:10]).date()
+                if (_dt.now().date() - d).days > int(days):
+                    status = 'stale'
+            except Exception:  # noqa: BLE001
+                pass
+    return status
+
+
+def can_state_fact(rec):
+    """May Josephine assert specific operational facts (hut note, parking that
+    'fills by 9am', opening specifics) from this record? Only when verified."""
+    return verification_state(rec) == 'verified'
+
+
+def can_show_voice(rec):
+    """May Josephine surface curated prose/voice (mood note, quiet-tip,
+    highlights) from this record? Verified or our own editorial content."""
+    return verification_state(rec) in ('verified', 'editorial')
+
+
 def _clock(iso):
     """'2026-06-03T21:02' -> (21, 2) or None."""
     try:
@@ -397,19 +433,29 @@ def compose_plan(context, ranked, *, resolve_nearby_rifugios, dispersal_mod,
             huts = [h for h in huts if _near_enough(h)]
             chosen = next((h for h in huts if h.get('open_now') is not False), huts[0] if huts else None)
             if chosen:
+                # 'open_now' is computed from curated opening hours — only assert
+                # it as fact when the hut is verified; the note is a specific
+                # operational claim, so it too is gated behind 'verified'.
+                hut_ok = can_state_fact(chosen)
                 hut = {'id': chosen.get('id'), 'name': chosen.get('name'),
                        'type': chosen.get('type', 'rifugio'),
-                       'open_now': chosen.get('open_now'),
-                       'note': _loc(chosen.get('josephine_note'), lang)[:160]}
+                       'open_now': chosen.get('open_now') if hut_ok else None,
+                       'note': _loc(chosen.get('josephine_note'), lang)[:160] if hut_ok else '',
+                       'verification': verification_state(chosen)}
         except Exception:  # noqa: BLE001
             hut = None
 
         # ── Access ──────────────────────────────────────────────────────────
+        # Directions (by car/bus) are generic wayfinding → always useful.
+        # Parking specifics ("fills by 09:00") are an operational claim → gated.
+        trail_fact_ok = can_state_fact(trail)
+        trail_voice_ok = can_show_voice(trail)
         transport = trail.get('transport') or {}
         access = {
             'by_car': transport.get('car') or '',
             'by_transport': transport.get('bus') or '',
-            'parking': str((trail.get('trailhead_info') or {}).get('parking', '')) or '',
+            'parking': (str((trail.get('trailhead_info') or {}).get('parking', '')) or '')
+                       if trail_fact_ok else '',
             'reservation_required': bool(sig.get('access_note')),
         }
 
@@ -439,7 +485,7 @@ def compose_plan(context, ranked, *, resolve_nearby_rifugios, dispersal_mod,
             signals.append(_p('sig_clear', lang))
         if intent.get('with_dog') and trail.get('dog_friendly'):
             signals.append(_p('sig_dog', lang))
-        if 'open_food_stop' in must_have and hut and hut.get('open_now') is not False:
+        if 'open_food_stop' in must_have and hut and hut.get('open_now') is True:
             signals.append(_p('sig_lunch', lang))
         eff_key = _DIFF_EFFORT.get((trail.get('difficulty') or '').lower())
         if eff_key:
@@ -459,10 +505,14 @@ def compose_plan(context, ranked, *, resolve_nearby_rifugios, dispersal_mod,
         # ── Notes ───────────────────────────────────────────────────────────
         dog_note = _p('dog_note', lang) if (intent.get('with_dog') and trail.get('dog_friendly')) else None
         family_note = _p('family_note', lang) if (intent.get('family') and trail.get('family_friendly')) else None
-        local_tip = (_loc(crowding.get('quiet_tip'), lang)
-                     or access['parking']
-                     or (_loc((trail.get('highlights') or [''])[0], lang) if trail.get('highlights') else '')
-                     or '')
+        # Quiet-tip / highlight prose is curated voice → gate behind editorial+.
+        # Parking already gated above (empty unless verified).
+        local_tip = ''
+        if trail_voice_ok:
+            local_tip = (_loc(crowding.get('quiet_tip'), lang)
+                         or (_loc((trail.get('highlights') or [''])[0], lang) if trail.get('highlights') else '')
+                         or '')
+        local_tip = local_tip or access['parking']
 
         # ── Almanac moment tie-in ───────────────────────────────────────────
         moment = None
@@ -472,7 +522,10 @@ def compose_plan(context, ranked, *, resolve_nearby_rifugios, dispersal_mod,
                       'line': mo.get('share') or mo.get('voice', '')}
 
         # ── Josephine's voice ───────────────────────────────────────────────
-        note = _loc(trail.get('josephineNote') or trail.get('josephine_note'), lang).strip()
+        # The freeform trail note may carry curated specifics — surface it only
+        # when at least editorial; engine-generated lead/why always stand.
+        note = _loc(trail.get('josephineNote') or trail.get('josephine_note'), lang).strip() \
+            if trail_voice_ok else ''
         mood = intent.get('mood')
         lead = _p(f'lead_{mood}', lang) if mood in ('peaceful', 'epic', 'romantic', 'food') else ''
         why = ''
@@ -534,6 +587,10 @@ def compose_plan(context, ranked, *, resolve_nearby_rifugios, dispersal_mod,
             'family_note': family_note,
             'local_tip': local_tip,
             'moment': moment,
+            'verification': {
+                'trail': verification_state(trail),
+                'hut': hut['verification'] if hut else None,
+            },
             'alternatives': alternatives,
             'share': {
                 'headline': f"Your day{(' near ' + origin['name']) if origin.get('name') and origin['type'] in ('area', 'gps') else ''} ✦",
