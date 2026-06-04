@@ -104,6 +104,17 @@ sunset), full hut "call ahead" concierge hand-off on-trail.
 - Mid-hike weather-turn proactive re-plan; off-route alert; SOS (location + 118 +
   exact trail/altitude — never overclaim rescue is free).
 
+### 13f. Living characters — Josephine + Narya come alive (the "soul")
+Make the guide + her dog feel alive via an **AI-only pipeline** (no illustrator, no
+3D): pre-generate short looping clips and swap them by app state (idle / thinking /
+delight / walking / celebrate) — no real-time AI cost. Owner chose a **fully
+stylized cohesive painterly world**. Full character + animation spec with
+copy-paste generation prompts and the asset/format contract:
+**`docs/CHARACTER_ANIMATION.md`**. Next code step: a reusable `<JosephineAvatar>`
+clip player with static-poster fallback (reduced-motion/slow-net), wired into chat,
+the live-trail map companion, and the completion card. Owner generates clips; code
+makes them come alive.
+
 ### 13e. Distribution & growth (cheap, compounding — plumbing exists)
 - Shareable Strava-style recap card (map line + stats + Josephine one-liner) →
   WhatsApp/IG, each seeded back into the app (the `share` field already exists).
