@@ -1,0 +1,70 @@
+/* Daily Plan Card — the composed plan output inside the chat. */
+.dpc {
+  --dpc-gold: #d4a05a;
+  background: linear-gradient(160deg, rgba(40,38,34,0.97), rgba(26,25,22,0.97));
+  border: 1px solid rgba(212,160,90,0.30);
+  border-radius: 16px;
+  overflow: hidden;
+  max-width: 460px;
+  box-shadow: 0 10px 34px rgba(0,0,0,0.38);
+}
+
+.dpc__banner {
+  padding: 9px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.dpc__banner--caution { background: rgba(251,191,36,0.12); border-bottom: 1px solid rgba(251,191,36,0.45); color: #fbbf24; }
+.dpc__banner--avoid   { background: rgba(248,113,113,0.12); border-bottom: 1px solid rgba(248,113,113,0.5); color: #f3a3a3; }
+
+.dpc__hero { position: relative; height: 156px; background: #1c1b18; }
+.dpc__hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.dpc__hero::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(20,19,16,0.96), rgba(20,19,16,0.05) 62%);
+}
+
+.dpc__body { padding: 15px 16px 16px; }
+
+.dpc__title {
+  margin: 0 0 7px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 19.5px;
+  line-height: 1.25;
+  color: #f4efe7;
+}
+.dpc__says { margin: 0 0 13px; font-size: 14px; line-height: 1.58; color: rgba(240,236,230,0.9); }
+
+.dpc__signals { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 13px; }
+.dpc__sig {
+  font-size: 11.5px; padding: 3px 9px; border-radius: 999px;
+  background: rgba(212,160,90,0.16); color: #e8c79a; font-weight: 600; white-space: nowrap;
+}
+
+.dpc__rows { margin-bottom: 12px; }
+.dpc__row { display: flex; gap: 8px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13px; }
+.dpc__row:last-child { border-bottom: none; }
+.dpc__row-k { min-width: 96px; flex-shrink: 0; color: rgba(240,236,230,0.5); }
+.dpc__row-v { color: rgba(240,236,230,0.92); }
+
+.dpc__note { font-size: 12.5px; color: rgba(240,236,230,0.72); margin: 4px 0 0; line-height: 1.5; }
+.dpc__tip  { font-size: 12.5px; color: #e8c79a; margin: 9px 0 0; line-height: 1.5; }
+
+.dpc__alts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.dpc__alt {
+  font-size: 12px; padding: 6px 11px; border-radius: 8px; cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.05);
+  color: #f0ece6; transition: background 0.15s, border-color 0.15s;
+}
+.dpc__alt:hover { background: rgba(255,255,255,0.10); border-color: rgba(212,160,90,0.5); }
+
+.dpc__actions { display: flex; gap: 8px; margin-top: 16px; }
+.dpc__btn { border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 13.5px; transition: filter 0.15s, background 0.15s; }
+.dpc__btn--primary { flex: 1; padding: 11px; border: none; background: var(--dpc-gold); color: #1c1b18; }
+.dpc__btn--primary:hover { filter: brightness(1.07); }
+.dpc__btn--ghost { padding: 11px 15px; border: 1px solid rgba(212,160,90,0.4); background: transparent; color: #e8c79a; font-weight: 600; }
+.dpc__btn--ghost:hover { background: rgba(212,160,90,0.12); }
+
+/* Refusal state (no trail) */
+.dpc--refusal .dpc__body { padding: 18px 16px; }
