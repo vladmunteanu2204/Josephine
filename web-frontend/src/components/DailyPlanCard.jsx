@@ -12,7 +12,7 @@ const INSIGHT_ICON = {
   hazard: '⚠', dog_tip: '🐾', sunrise_tip: '🌅', sunset_tip: '🌇',
 };
 
-export default function DailyPlanCard({ plan, t, onSave, onViewTrail, onAlt, saved }) {
+export default function DailyPlanCard({ plan, t, onSave, onViewTrail, onAlt, saved, onStartHike }) {
   if (!plan) return null;
   const tt = (k, fb) => (t ? t(k, fb) : fb);
   const trail = plan.trail;
@@ -125,7 +125,12 @@ export default function DailyPlanCard({ plan, t, onSave, onViewTrail, onAlt, sav
         )}
 
         <div className="dpc__actions">
-          <button className="dpc__btn dpc__btn--primary" onClick={() => onViewTrail && onViewTrail(trail)}>
+          {onStartHike && (
+            <button className="dpc__btn dpc__btn--primary" onClick={() => onStartHike(trail)}>
+              {tt('planStartHike', '▶ Start with Josephine')}
+            </button>
+          )}
+          <button className={`dpc__btn ${onStartHike ? 'dpc__btn--ghost' : 'dpc__btn--primary'}`} onClick={() => onViewTrail && onViewTrail(trail)}>
             {tt('planView', 'View details')}
           </button>
           <button className="dpc__btn dpc__btn--ghost" onClick={() => onSave && onSave(trail)}>

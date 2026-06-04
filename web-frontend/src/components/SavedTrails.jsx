@@ -5,7 +5,7 @@ import axios from 'axios';
 import { ArrowLeft, Heart, Mountain, Ruler, Clock, TrendingUp, Star } from 'lucide-react';
 import './SavedTrails.css';
 
-function SavedTrails({ onNavigate }) {
+function SavedTrails({ onNavigate, onStartHike }) {
   const { t } = useTranslation();
   const [savedTrails, setSavedTrails] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -156,12 +156,20 @@ function SavedTrails({ onNavigate }) {
                       </div>
                     )}
 
-                    <button 
+                    <button
                       onClick={() => onNavigate('detail', trail.id)}
                       className="btn-view-trail"
                     >
                       {t('savedTrails.viewDetails')}
                     </button>
+                    {onStartHike && (
+                      <button
+                        onClick={() => onStartHike(trail)}
+                        className="btn-view-trail btn-start-hike"
+                      >
+                        {t('savedTrails.startHike', '▶ Start with Josephine')}
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}

@@ -181,7 +181,7 @@ function NearbyRifugios({ ids, onViewRifugio }) {
   );
 }
 
-function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin, onPlanWithJosephine }) {
+function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin, onPlanWithJosephine, autoStartHike, onAutoStartConsumed }) {
   const { t, i18n } = useTranslation();
   const toast = useToast();
   const { currentUser } = useAuth();
@@ -231,6 +231,15 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin, 
 
   // Cleanup GPS on unmount
   useEffect(() => () => { if (setIsGPSActive) setIsGPSActive(false); }, [setIsGPSActive]);
+
+  // Launched with "Start hike" from another surface → start tracking immediately.
+  useEffect(() => {
+    if (autoStartHike && ENABLE_HIKE_TRACKING && fullTrail?.name) {
+      setIsHikeActive(true);
+      if (setIsGPSActive) setIsGPSActive(true);
+      if (onAutoStartConsumed) onAutoStartConsumed();
+    }
+  }, [autoStartHike, fullTrail?.name]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Parallax
   useEffect(() => {

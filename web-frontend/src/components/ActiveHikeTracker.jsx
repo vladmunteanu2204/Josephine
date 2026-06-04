@@ -903,6 +903,8 @@ function ActiveHikeTracker({ trail, onEnd }) {
     fetchMoments();   // Live Trail Companion: load geo-anchored moments
     // Warm up speech voices (some browsers populate them lazily).
     try { if ('speechSynthesis' in window) window.speechSynthesis.getVoices(); } catch { /* no-op */ }
+    // Web reality: tracking pauses if the screen locks — nudge to keep it open.
+    toast.info(t('gps.keepOpenHint', 'Keep Josephine open on screen to stay on the trail.'));
 
     startTimeRef.current = Date.now();
     lastMoveTimeRef.current = Date.now();

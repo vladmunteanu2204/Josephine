@@ -97,6 +97,7 @@ function App() {
   const [selectedRifugio, setSelectedRifugio] = useState(null);
   const [selectedMultiDayTrail, setSelectedMultiDayTrail] = useState(null);
   const [seedTrail, setSeedTrail] = useState(null);   // "plan THIS hike with Josephine"
+  const [autoStartHike, setAutoStartHike] = useState(false);  // "start THIS hike" launch
   const [catalogInitialTags, setCatalogInitialTags] = useState([]);
   const [rifugiosInitialType, setRifugiosInitialType] = useState('');
   const [rifugiosInitialStatus, setRifugiosInitialStatus] = useState('');
@@ -168,6 +169,13 @@ function App() {
     setPreviousView(currentView);
     setSeedTrail(trail);
     setCurrentView('josephine');
+  };
+
+  const startTrailHike = (trail) => {
+    setPreviousView(currentView);
+    setSelectedTrail(trail);
+    setAutoStartHike(true);
+    setCurrentView('detail');
   };
 
   const viewRifugio = (rifugio) => {
@@ -248,6 +256,8 @@ function App() {
               viewRifugio={viewRifugio}
               onShowLogin={() => setShowLoginModal(true)}
               onPlanWithJosephine={openJosephineWithTrail}
+              autoStartHike={autoStartHike}
+              onAutoStartConsumed={() => setAutoStartHike(false)}
             />
           )}
 
@@ -259,7 +269,7 @@ function App() {
 
           {currentView === 'savedTrails' && (
             <GuestGuard setCurrentView={setCurrentView} onShowLogin={() => setShowLoginModal(true)}>
-              <SavedTrails onNavigate={navigate} />
+              <SavedTrails onNavigate={navigate} onStartHike={startTrailHike} />
             </GuestGuard>
           )}
 
@@ -322,7 +332,7 @@ function App() {
           {/* JosephineChat is the single recommendation surface; the legacy
               'recommendations' hash is aliased to it so old links still work. */}
           {(currentView === 'josephine' || currentView === 'recommendations') && (
-            <JosephineChat onBack={goBack} setCurrentView={setCurrentView} viewTrail={viewTrail} onShowLogin={() => setShowLoginModal(true)} seedTrail={seedTrail} onSeedConsumed={() => setSeedTrail(null)} />
+            <JosephineChat onBack={goBack} setCurrentView={setCurrentView} viewTrail={viewTrail} onShowLogin={() => setShowLoginModal(true)} seedTrail={seedTrail} onSeedConsumed={() => setSeedTrail(null)} onStartHike={startTrailHike} />
           )}
 
           {currentView === 'donate' && (

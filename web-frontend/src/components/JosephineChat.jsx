@@ -445,7 +445,7 @@ function TrailDetailCard({ trail, saved, onSave, onView, t }) {
 }
 
 /* ── Component ───────────────────────────────────────────────────────── */
-function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTrail, onSeedConsumed }) {
+function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTrail, onSeedConsumed, onStartHike }) {
   const { currentUser } = useAuth();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const [lang, setLang] = useState(() => i18nInstance.language?.slice(0, 2) || 'en');
@@ -1857,6 +1857,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
                     onSave={(tr) => saveHike(tr)}
                     onViewTrail={(tr) => (viewTrail ? viewTrail(tr) : showTrailDetail(tr))}
                     onAlt={handlePlanAlt}
+                    onStartHike={onStartHike}
                   />
                 )}
 
