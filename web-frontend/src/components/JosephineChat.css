@@ -590,8 +590,12 @@
 /* ── Trail card (inline in chat) ──────────────────────────────────────── */
 
 .jc-msg--card {
-  max-width: calc(100% - 38px);
+  max-width: 100%;
+  width: 100%;
 }
+/* Rich cards use the full chat width — drop the avatar gutter so they aren't squeezed */
+.jc-msg--card .jc-msg__avatar { display: none; }
+.jc-msg--card .jc-msg__content { width: 100%; }
 
 .jc-trail-card {
   width: 280px;

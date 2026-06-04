@@ -35,8 +35,11 @@ export default function DailyPlanCard({ plan, t, onSave, onViewTrail, onAlt, sav
     );
   }
 
-  const Row = ({ k, children }) => (
-    <div className="dpc__row"><span className="dpc__row-k">{k}</span><span className="dpc__row-v">{children}</span></div>
+  const Row = ({ k, children, clamp }) => (
+    <div className="dpc__row">
+      <span className="dpc__row-k">{k}</span>
+      <span className={`dpc__row-v${clamp ? ' dpc__row-v--clamp' : ''}`}>{children}</span>
+    </div>
   );
   const altLabel = (kind) => ({
     easier: tt('planAltEasier', 'Easier'),
@@ -65,6 +68,13 @@ export default function DailyPlanCard({ plan, t, onSave, onViewTrail, onAlt, sav
         )}
         {plan.josephine_says && <p className="dpc__says">{plan.josephine_says}</p>}
 
+        {/* Compact stat strip (name already shown in the title) */}
+        <div className="dpc__stats">
+          {trail.distance_km != null && <span>{trail.distance_km} km</span>}
+          {trail.duration_hours != null && <span>{trail.duration_hours} h</span>}
+          {trail.difficulty && <span className="dpc__stats-diff">{trail.difficulty}</span>}
+        </div>
+
         {plan.signals?.length > 0 && (
           <div className="dpc__signals">
             {plan.signals.map((s, i) => <span key={i} className="dpc__sig">{s}</span>)}
@@ -72,9 +82,6 @@ export default function DailyPlanCard({ plan, t, onSave, onViewTrail, onAlt, sav
         )}
 
         <div className="dpc__rows">
-          <Row k={tt('planTrail', 'Trail')}>
-            {trail.name} · {trail.distance_km}km · {trail.duration_hours}h · {trail.difficulty}
-          </Row>
           {plan.timing?.suggested_start && (
             <Row k={tt('planStart', 'Start by')}>
               {plan.timing.suggested_start}
@@ -89,7 +96,7 @@ export default function DailyPlanCard({ plan, t, onSave, onViewTrail, onAlt, sav
             </Row>
           )}
           {(plan.access?.parking || plan.access?.by_car || plan.access?.by_transport) && (
-            <Row k={tt('planGetting', 'Getting there')}>
+            <Row k={tt('planGetting', 'Getting there')} clamp>
               {plan.access.parking || plan.access.by_car || plan.access.by_transport}
             </Row>
           )}

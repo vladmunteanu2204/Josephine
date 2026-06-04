@@ -1823,7 +1823,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
             <div key={msg.id}
               className={`jc-msg jc-msg--${msg.from}${
                 (msg.type === 'trail-card' || msg.type === 'options' || msg.type === 'conditions' ||
-                 msg.type === 'itinerary' || msg.type === 'mood-intro') ? ' jc-msg--card' : ''}${
+                 msg.type === 'itinerary' || msg.type === 'mood-intro' || msg.type === 'plan') ? ' jc-msg--card' : ''}${
                 isGrouped ? ' jc-msg--grouped' : ''}`}
             >
               {msg.from === 'josephine' && (

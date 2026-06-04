@@ -5,6 +5,7 @@
   border: 1px solid rgba(212,160,90,0.30);
   border-radius: 16px;
   overflow: hidden;
+  width: 100%;
   max-width: 460px;
   box-shadow: 0 10px 34px rgba(0,0,0,0.38);
 }
@@ -36,6 +37,24 @@
 }
 .dpc__says { margin: 0 0 13px; font-size: 14px; line-height: 1.58; color: rgba(240,236,230,0.9); }
 
+/* Compact stat strip — distance · duration · difficulty */
+.dpc__stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 0;
+  margin-bottom: 13px;
+  font-size: 13px;
+  color: rgba(240,236,230,0.85);
+}
+.dpc__stats span { display: inline-flex; align-items: center; }
+.dpc__stats span:not(:last-child)::after {
+  content: '·';
+  margin: 0 10px;
+  color: rgba(240,236,230,0.35);
+}
+.dpc__stats-diff { text-transform: capitalize; color: var(--dpc-gold); font-weight: 600; }
+
 .dpc__signals { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 13px; }
 .dpc__sig {
   font-size: 11.5px; padding: 3px 9px; border-radius: 999px;
@@ -43,10 +62,18 @@
 }
 
 .dpc__rows { margin-bottom: 12px; }
-.dpc__row { display: flex; gap: 8px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13px; }
+/* Stacked rows: tiny uppercase label above a full-width value — far easier to
+   read on a phone than the old squeezed two-column layout. */
+.dpc__row { display: flex; flex-direction: column; gap: 3px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
 .dpc__row:last-child { border-bottom: none; }
-.dpc__row-k { min-width: 96px; flex-shrink: 0; color: rgba(240,236,230,0.5); }
-.dpc__row-v { color: rgba(240,236,230,0.92); }
+.dpc__row-k {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+  color: rgba(240,236,230,0.45);
+}
+.dpc__row-v { font-size: 14px; line-height: 1.5; color: rgba(240,236,230,0.92); }
+.dpc__row-v--clamp {
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
 
 .dpc__note { font-size: 12.5px; color: rgba(240,236,230,0.72); margin: 4px 0 0; line-height: 1.5; }
 .dpc__tip  { font-size: 12.5px; color: #e8c79a; margin: 9px 0 0; line-height: 1.5; }
