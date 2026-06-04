@@ -24,7 +24,7 @@ const CHECKPOINT_ARRIVAL_RADIUS = 30; // meters to mark as reached
 const CHECKPOINT_PASSED_RADIUS = 40; // meters to mark as passed after reaching
 
 function ActiveHikeTracker({ trail, onEnd }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const toast = useToast();
   const { currentUser } = useAuth();
   const [showDisclaimer, setShowDisclaimer] = useState(true);
@@ -47,6 +47,10 @@ function ActiveHikeTracker({ trail, onEnd }) {
   const [visitedCheckpoints, setVisitedCheckpoints] = useState([]);
   const [shareLink, setShareLink] = useState(null);
   const [completedHikeData, setCompletedHikeData] = useState(null);
+  const [activeMoment, setActiveMoment] = useState(null);   // current Josephine "moment" (avatar bubble)
+  const [audioMuted, setAudioMuted] = useState(() => {
+    try { return localStorage.getItem('companionMuted') === '1'; } catch { return false; }
+  });
   
   const watchIdRef = useRef(null);
   const startTimeRef = useRef(null);
@@ -64,6 +68,12 @@ function ActiveHikeTracker({ trail, onEnd }) {
   // NEW: Enhanced checkpoint tracking with state machine
   const checkpointStatesRef = useRef({}); // { [checkpointIndex]: { state: 'approaching'|'reached'|'passed', lastDistance: number } }
   const lastNotificationRef = useRef({}); // { [checkpointIndex]: { time: number, position: {lat, lon} } }
+
+  // Live Trail Companion — geofenced "moments" (insights/secrets + checkpoints + POIs)
+  const momentsRef = useRef([]);          // fetched from /api/trails/<id>/moments
+  const momentStatesRef = useRef({});     // { [moment.id]: { state, lastDistance } }
+  const momentNotifRef = useRef({});      // { [moment.id]: { time, position } } throttle
+  const momentBubbleTimerRef = useRef(null);
   const altitudeHistoryRef = useRef([]); // Sliding window for median filtering
   const lastValidAltitudeRef = useRef(null); // Last validated altitude reading
   
@@ -313,6 +323,89 @@ function ActiveHikeTracker({ trail, onEnd }) {
     });
 
     return nearestPOI;
+  };
+
+  // ── Live Trail Companion: moments ──────────────────────────────────────────
+  // Fetch the trail's geo-anchored, localized, Josephine-voiced moments.
+  const fetchMoments = async () => {
+    try {
+      const lng = (i18n.language || 'en').split('-')[0];
+      const res = await fetch(`/api/trails/${trail.id}/moments?lang=${lng}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      momentsRef.current = Array.isArray(data.moments) ? data.moments : [];
+      console.log(`[companion] loaded ${momentsRef.current.length} moments`);
+    } catch (e) {
+      console.warn('[companion] moments fetch failed:', e);
+    }
+  };
+
+  // Speak a line via the browser (locale voice); guarded + mute-aware.
+  const speakLine = (text) => {
+    try {
+      if (audioMuted || !text || !('speechSynthesis' in window)) return;
+      const u = new SpeechSynthesisUtterance(text.replace(/[^\p{L}\p{N}\s.,!?'’"—-]/gu, ''));
+      const lng = (i18n.language || 'en').split('-')[0];
+      u.lang = lng === 'it' ? 'it-IT' : lng === 'de' ? 'de-DE' : 'en-GB';
+      const v = window.speechSynthesis.getVoices().find(vo => vo.lang?.toLowerCase().startsWith(u.lang.toLowerCase().slice(0, 2)));
+      if (v) u.voice = v;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(u);
+    } catch { /* no-op */ }
+  };
+
+  // Surface a moment: bubble + toast + notification + chime + voice.
+  const announceMoment = (moment) => {
+    setActiveMoment(moment);
+    if (momentBubbleTimerRef.current) clearTimeout(momentBubbleTimerRef.current);
+    momentBubbleTimerRef.current = setTimeout(() => setActiveMoment(null), 12000);
+    toast.info(`${moment.icon || '✦'} ${moment.line}`);
+    sendNotification(`${moment.icon || '✦'} ${moment.title || ''}`.trim(), moment.line);
+    playMountainBell();
+    // chime first, then voice (avoid overlap)
+    setTimeout(() => speakLine(moment.line), 700);
+  };
+
+  // Geofence loop over moments (mirrors the checkpoint state-machine + throttle).
+  // Returns true if it handled proximity (so the caller can skip the legacy
+  // checkpoint/POI checks); false when there are no moments (use fallback).
+  const checkMomentProximity = (position) => {
+    const moments = momentsRef.current;
+    if (!moments || moments.length === 0) return false;
+
+    moments.forEach((m) => {
+      const distance = calculateDistance(position.latitude, position.longitude, m.lat, m.lon);
+      const key = m.id;
+      if (!momentStatesRef.current[key]) {
+        momentStatesRef.current[key] = { state: 'approaching', lastDistance: Infinity };
+      }
+      const st = momentStatesRef.current[key];
+      const radius = m.radius_m || 200;
+
+      if (distance <= CHECKPOINT_ARRIVAL_RADIUS && st.state === 'approaching') {
+        st.state = 'reached';
+      } else if (st.state === 'reached' && distance > CHECKPOINT_PASSED_RADIUS && distance > st.lastDistance) {
+        st.state = 'passed';
+      }
+      if (st.state === 'passed') { st.lastDistance = distance; return; }
+
+      // throttle: time OR distance since last announce for this moment
+      const now = Date.now();
+      const last = momentNotifRef.current[key];
+      let shouldNotify = !last;
+      if (last) {
+        const dt = now - last.time;
+        const dd = calculateDistance(position.latitude, position.longitude, last.position.lat, last.position.lon);
+        shouldNotify = dt > NOTIFICATION_THROTTLE_INTERVAL || dd > NOTIFICATION_DISTANCE_THRESHOLD;
+      }
+
+      if (st.state === 'approaching' && distance <= radius && shouldNotify) {
+        announceMoment(m);
+        momentNotifRef.current[key] = { time: now, position: { lat: position.latitude, lon: position.longitude } };
+      }
+      st.lastDistance = distance;
+    });
+    return true;
   };
 
   // Check POI proximity and send alerts
@@ -703,11 +796,12 @@ function ActiveHikeTracker({ trail, onEnd }) {
       // Update state for UI (async is fine here)
       setGpsTrack(updatedTrack);
 
-      // Check POI proximity
-      checkPOIProximity(position.coords);
-      
-      // Check checkpoint proximity
-      checkCheckpointProximity(position.coords);
+      // Live Trail Companion: run the unified moment geofence. If the trail has
+      // no moments, fall back to the legacy POI + checkpoint checks.
+      if (!checkMomentProximity(position.coords)) {
+        checkPOIProximity(position.coords);
+        checkCheckpointProximity(position.coords);
+      }
 
       // IMPORTANT: Save hike session to localStorage after every GPS update (persistence fix)
       saveHikeSession();
@@ -730,6 +824,8 @@ function ActiveHikeTracker({ trail, onEnd }) {
       isPaused,
       isOffTrail,
       checkpointStates: checkpointStatesRef.current,
+      moments: momentsRef.current,
+      momentStates: momentStatesRef.current,
       lastPosition: lastPositionForMovementRef.current,
       lastMoveTime: lastMoveTimeRef.current,
       totalOffTrailTime: totalOffTrailTimeRef.current,
@@ -761,6 +857,9 @@ function ActiveHikeTracker({ trail, onEnd }) {
       gpsTrackRef.current = session.gpsTrack || [];
       statsRef.current = session.stats || { distance: 0, elevation: 0, duration: 0, pace: 0 };
       checkpointStatesRef.current = session.checkpointStates || {};
+      momentsRef.current = session.moments || [];
+      momentStatesRef.current = session.momentStates || {};
+      if (!momentsRef.current.length) fetchMoments();   // older session → refetch
       lastPositionForMovementRef.current = session.lastPosition;
       lastMoveTimeRef.current = session.lastMoveTime || Date.now();
       totalOffTrailTimeRef.current = session.totalOffTrailTime || 0;
@@ -795,7 +894,10 @@ function ActiveHikeTracker({ trail, onEnd }) {
   const startTracking = () => {
     requestNotificationPermission();
     requestWakeLock();
-    
+    fetchMoments();   // Live Trail Companion: load geo-anchored moments
+    // Warm up speech voices (some browsers populate them lazily).
+    try { if ('speechSynthesis' in window) window.speechSynthesis.getVoices(); } catch { /* no-op */ }
+
     startTimeRef.current = Date.now();
     lastMoveTimeRef.current = Date.now();
     setIsTracking(true);
