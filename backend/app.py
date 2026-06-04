@@ -1710,6 +1710,72 @@ def parse_gpx():
     except Exception as e:
         return jsonify({'error': f'GPX parsing failed: {str(e)}'}), 500
 
+
+@app.route('/api/admin/ai-draft', methods=['POST'])
+@require_admin_auth
+def ai_draft():
+    """Turn the owner's rough bullet notes + known facts into polished EN/IT/DE
+    prose in Josephine's voice, for a single field. The owner reviews and edits
+    before saving (saving is what marks the record verified) — this NEVER writes
+    anything and NEVER invents facts. Degrades gracefully without an LLM key."""
+    body = request.json or {}
+    notes = (body.get('notes') or '').strip()
+    facts = (body.get('facts') or '').strip()
+    field = (body.get('field') or 'description').strip()
+    kind = (body.get('kind') or '').strip()
+
+    if not notes and not facts:
+        return jsonify({'draft': {'en': '', 'it': '', 'de': ''}, 'mode': 'empty'})
+
+    # No key → echo the notes so the owner still has a starting point.
+    if not _anthropic_client:
+        return jsonify({
+            'draft': {'en': notes, 'it': '', 'de': ''},
+            'mode': 'no_key',
+            'message': "AI drafting is off (no key). I kept your notes in the English field — translate and polish them yourself.",
+        })
+
+    try:
+        kind_hint = f" The field is an insight of kind '{kind}'." if kind else ''
+        system = (
+            "You are Josephine, a warm, knowledgeable South Tyrol alpine companion. "
+            "Turn the author's rough notes and the verified facts into ONE short, "
+            f"vivid sentence or two for the '{field}' field.{kind_hint} "
+            "Rules: be concise and human; first person where natural; NEVER invent "
+            "facts, numbers, names, hours, or claims beyond what is given — if a "
+            "detail isn't in the input, leave it out. Return STRICT JSON only, no "
+            "prose around it: {\"en\":\"…\",\"it\":\"…\",\"de\":\"…\"} with natural "
+            "Italian (tu) and German (du) translations."
+        )
+        user = f"FACTS (verified, safe to state):\n{facts or '(none)'}\n\nNOTES (my rough thoughts):\n{notes or '(none)'}"
+        resp = _anthropic_client.with_options(timeout=20.0).messages.create(
+            model='claude-haiku-4-5',
+            max_tokens=500,
+            temperature=0,
+            system=[{'type': 'text', 'text': system}],
+            messages=[{'role': 'user', 'content': user}],
+        )
+        raw = resp.content[0].text.strip()
+        # Be defensive: extract the JSON object even if wrapped.
+        start, end = raw.find('{'), raw.rfind('}')
+        draft = {'en': '', 'it': '', 'de': ''}
+        if start != -1 and end != -1:
+            parsed = json.loads(raw[start:end + 1])
+            for k in ('en', 'it', 'de'):
+                if isinstance(parsed.get(k), str):
+                    draft[k] = parsed[k].strip()
+        if not any(draft.values()):
+            draft['en'] = raw[:500]
+        return jsonify({'draft': draft, 'mode': 'llm'})
+    except Exception as e:  # noqa: BLE001
+        print(f"[ai_draft] error: {e}")
+        return jsonify({
+            'draft': {'en': notes, 'it': '', 'de': ''},
+            'mode': 'error',
+            'message': "Drafting hit a snag — I kept your notes in English so nothing's lost.",
+        })
+
+
 @app.route('/api/admin/reviews/<review_id>', methods=['DELETE'])
 @require_admin_auth
 def delete_review(review_id):
