@@ -200,3 +200,92 @@ def count_insights(record, context, *, visibility='chat_only', ignore_conditions
     defaults True so the teaser count is stable regardless of time of day."""
     return len(select_insights(record, context, visibility=visibility, limit=999,
                                ignore_conditions=ignore_conditions))
+
+
+# ── Live Trail Companion: geo-anchored "moments" ─────────────────────────────
+# Per-kind Josephine voice leads ({t} = the localized insight text).
+_MOMENT_LEAD = {
+    'photo_spot':  {'en': '📷 Stop here — {t}', 'it': '📷 Fermati qui — {t}', 'de': '📷 Halt kurz — {t}'},
+    'viewpoint':   {'en': '◉ Look up — {t}',    'it': '◉ Guarda — {t}',       'de': '◉ Schau — {t}'},
+    'tip':         {'en': '💡 {t}',             'it': '💡 {t}',               'de': '💡 {t}'},
+    'food':        {'en': '🍽 {t}',             'it': '🍽 {t}',               'de': '🍽 {t}'},
+    'hazard':      {'en': '⚠ Careful — {t}',    'it': '⚠ Attenzione — {t}',   'de': '⚠ Vorsicht — {t}'},
+    'dog_tip':     {'en': '🐾 {t}',             'it': '🐾 {t}',               'de': '🐾 {t}'},
+    'sunrise_tip': {'en': '🌅 {t}',             'it': '🌅 {t}',               'de': '🌅 {t}'},
+    'sunset_tip':  {'en': '🌇 {t}',             'it': '🌇 {t}',               'de': '🌇 {t}'},
+}
+_MOMENT_ICON = {
+    'photo_spot': '📷', 'viewpoint': '◉', 'tip': '💡', 'food': '🍽',
+    'hazard': '⚠', 'dog_tip': '🐾', 'sunrise_tip': '🌅', 'sunset_tip': '🌇',
+    'summit': '⛰', 'refuge': '🏠', 'rifugio': '🏠', 'lake': '💧',
+    'waterfall': '💧', 'cultural': '◆', 'peak': '⛰', 'forest': '🌲', 'poi': '📍',
+}
+_PLACE_NEAR = {'en': "You're nearing {n}", 'it': 'Stai arrivando a {n}', 'de': 'Du näherst dich {n}'}
+
+
+def _coord_pair(c):
+    """Normalize a coordinate to (lat, lon) floats from {lat,lon}/{lat,lng} or
+    a [lon,lat] pair. None if unusable."""
+    try:
+        if isinstance(c, dict):
+            lat = c.get('lat')
+            lon = c.get('lon', c.get('lng'))
+            return (float(lat), float(lon)) if lat is not None and lon is not None else None
+        if isinstance(c, (list, tuple)) and len(c) >= 2:
+            return (float(c[1]), float(c[0]))   # GeoJSON [lon, lat]
+    except (TypeError, ValueError):
+        return None
+    return None
+
+
+def geo_moments(trail, context, *, default_radius=150):
+    """Merge a trail's geo-anchored moments (verified insights incl. chat-only
+    secrets + checkpoints + POIs) into one localized, Josephine-voiced list for the
+    Live Trail Companion. Never raises → []."""
+    try:
+        lang = (context or {}).get('lang', 'en')
+        lg = lang if lang in ('en', 'it', 'de') else 'en'
+        out = []
+
+        # Insights with coordinates (public + chat_only; verification-gated).
+        for ins in select_insights(trail, context, visibility=None, limit=99,
+                                   ignore_conditions=True):
+            pair = _coord_pair(ins.get('coordinates'))
+            if not pair:
+                continue
+            kind = (ins.get('kind') or 'tip').lower()
+            lead = (_MOMENT_LEAD.get(kind) or _MOMENT_LEAD['tip'])
+            line = lead.get(lg, lead['en']).format(t=ins['text'])
+            out.append({'id': ins.get('id') or f'ins-{len(out)}', 'kind': kind,
+                        'lat': pair[0], 'lon': pair[1], 'radius_m': default_radius,
+                        'title': ins['text'][:40], 'line': line,
+                        'icon': _MOMENT_ICON.get(kind, '✦'), 'source': 'insight'})
+
+        # Checkpoints.
+        for i, cp in enumerate(trail.get('checkpoints') or []):
+            pair = _coord_pair(cp.get('coordinates'))
+            if not pair:
+                continue
+            name = cp.get('name') or 'a waypoint'
+            typ = (cp.get('type') or 'poi').lower()
+            out.append({'id': f'cp-{i}', 'kind': typ, 'lat': pair[0], 'lon': pair[1],
+                        'radius_m': cp.get('alert_distance') or 200,
+                        'title': name, 'line': _PLACE_NEAR[lg].format(n=name),
+                        'icon': _MOMENT_ICON.get(typ, '📍'), 'source': 'checkpoint'})
+
+        # POIs.
+        for i, poi in enumerate(trail.get('pois') or trail.get('points_of_interest') or []):
+            pair = _coord_pair(poi.get('coordinates'))
+            if not pair:
+                continue
+            name = poi.get('name') or 'a spot'
+            typ = (poi.get('type') or 'poi').lower()
+            out.append({'id': f'poi-{i}', 'kind': typ, 'lat': pair[0], 'lon': pair[1],
+                        'radius_m': 200, 'title': name,
+                        'line': _PLACE_NEAR[lg].format(n=name),
+                        'icon': _MOMENT_ICON.get(typ, '📍'), 'source': 'poi'})
+
+        return out
+    except Exception as e:  # noqa: BLE001
+        print(f'[insights] geo_moments failed: {e}')
+        return []

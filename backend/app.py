@@ -723,6 +723,25 @@ def get_trail_insights(trail_id):
         return jsonify({'insights': [], 'secret_count': 0})
 
 
+@app.route('/api/trails/<trail_id>/moments', methods=['GET'])
+def get_trail_moments(trail_id):
+    """Live Trail Companion: geo-anchored, localized, Josephine-voiced moments for
+    a trail (verified insights incl. chat-only secrets + checkpoints + POIs). The
+    on-trail client runs the geofence loop over these. Guarded — never 500s."""
+    try:
+        lang = request.args.get('lang', 'en')
+        trails = load_complete_trails()
+        trail = next((t for t in trails['trails'] if t['id'] == trail_id), None)
+        if not trail:
+            return jsonify({'error': 'Trail not found'}), 404
+        ctx = {'lang': lang, 'conditions': {'now': datetime.now(), 'season': None,
+                                            'weather': None, 'sunset': None}}
+        return jsonify({'moments': insights_engine.geo_moments(trail, ctx)})
+    except Exception as e:  # noqa: BLE001
+        print(f"[get_trail_moments] error: {e}")
+        return jsonify({'moments': []})
+
+
 @app.route('/api/trails/generate', methods=['POST'])
 def generate_trail():
     """
