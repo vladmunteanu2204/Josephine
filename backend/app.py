@@ -1776,6 +1776,58 @@ def ai_draft():
         })
 
 
+@app.route('/api/admin/opendatahub/enrich', methods=['POST'])
+@require_admin_auth
+def opendatahub_enrich():
+    """Propose verified external facts (opening season, contact, nearby events)
+    for a rifugio from the licensed Open Data Hub South Tyrol. Returns a PROPOSAL
+    only — the owner reviews and saves. Never persists; never 500s."""
+    import opendatahub
+    try:
+        body = request.json or {}
+        rid = body.get('rifugio_id')
+        name = body.get('name')
+        lat = body.get('lat')
+        lon = body.get('lon')
+        if rid:
+            rif = next((r for r in load_rifugios() if r.get('id') == rid), None)
+            if rif:
+                name = name or rif.get('name')
+                coords = rif.get('coordinates') or {}
+                lat = lat if lat is not None else coords.get('lat')
+                lon = lon if lon is not None else coords.get('lng')
+
+        hut = opendatahub.fetch_hut(name, lat, lon)
+        today = datetime.now().strftime('%Y-%m-%d')
+        events = opendatahub.fetch_events(lat, lon, from_date=today)
+
+        stamp = {'status': 'verified', 'source_type': 'opendatahub',
+                 'source_url': opendatahub.SOURCE_HOME,
+                 'last_verified_at': today, 'stale_after_days': 180}
+        proposal = {'verification': stamp}
+        if hut.get('opening_season'):
+            proposal['opening_season'] = hut['opening_season']
+        if hut.get('contact'):
+            proposal['contact'] = hut['contact']
+        # Turn the first upcoming event into a draft insight the owner can keep.
+        insight = None
+        if events:
+            ev = events[0]
+            when = ev['start'] + ((' – ' + ev['end']) if ev.get('end') and ev['end'] != ev['start'] else '')
+            insight = {
+                'kind': 'tip', 'visibility': 'public',
+                'text': {'en': f"{ev['title']} ({when})", 'it': '', 'de': ''},
+                'verification': dict(stamp, source_url=ev.get('source_url', opendatahub.SOURCE_HOME)),
+            }
+
+        ok = bool(hut.get('opening_season') or hut.get('contact') or events)
+        return jsonify({'ok': ok, 'proposal': proposal,
+                        'events': events, 'insight': insight})
+    except Exception as e:  # noqa: BLE001
+        print(f"[opendatahub_enrich] error: {e}")
+        return jsonify({'ok': False, 'proposal': {}, 'events': [], 'insight': None})
+
+
 @app.route('/api/admin/reviews/<review_id>', methods=['DELETE'])
 @require_admin_auth
 def delete_review(review_id):
