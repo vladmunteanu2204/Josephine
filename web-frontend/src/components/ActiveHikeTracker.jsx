@@ -94,6 +94,12 @@ function ActiveHikeTracker({ trail, onEnd }) {
     isPausedRef.current = isPaused;
   }, [isPaused]);
 
+  // Stop any narration + bubble timer when the tracker goes away.
+  useEffect(() => () => {
+    try { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); } catch { /* no-op */ }
+    if (momentBubbleTimerRef.current) clearTimeout(momentBubbleTimerRef.current);
+  }, []);
+
   // Convert coordinates to GeoJSON route if needed
   const trailRoute = trail.route || (trail.coordinates ? {
     type: 'Feature',
@@ -1269,6 +1275,26 @@ function ActiveHikeTracker({ trail, onEnd }) {
               </div>
             </Marker>
           )}
+
+          {/* Josephine walking alongside */}
+          {currentPosition && (
+            <Marker
+              longitude={currentPosition.lon}
+              latitude={currentPosition.lat}
+              anchor="bottom"
+              offset={[26, -6]}
+            >
+              <div className={`jph-companion ${isOffTrail ? 'jph-companion--concerned' : ''}`}>
+                {activeMoment && (
+                  <div className="jph-bubble">
+                    <span className="jph-bubble__icon">{activeMoment.icon || '✦'}</span>
+                    <span className="jph-bubble__text">{activeMoment.line}</span>
+                  </div>
+                )}
+                <img src="/josephine-portrait.webp" alt="Josephine" className="jph-companion__avatar" />
+              </div>
+            </Marker>
+          )}
         </Map>
       </div>
 
@@ -1298,11 +1324,27 @@ function ActiveHikeTracker({ trail, onEnd }) {
 
       {/* Controls */}
       <div className="tracker-controls">
-        <button 
+        <button
           className="control-btn pause-btn"
           onClick={togglePause}
         >
           {isPaused ? '▶️ Resume' : '⏸️ Pause'}
+        </button>
+
+        <button
+          className="control-btn mute-btn"
+          onClick={() => {
+            setAudioMuted(prev => {
+              const next = !prev;
+              try { localStorage.setItem('companionMuted', next ? '1' : '0'); } catch { /* no-op */ }
+              if (next && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+              return next;
+            });
+          }}
+          aria-pressed={audioMuted}
+          title={audioMuted ? t('gps.unmuteJosephine', 'Unmute Josephine') : t('gps.muteJosephine', 'Mute Josephine')}
+        >
+          {audioMuted ? '🔇' : '🔊'}
         </button>
 
         <button 

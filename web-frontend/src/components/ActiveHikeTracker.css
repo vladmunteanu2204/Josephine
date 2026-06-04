@@ -84,6 +84,55 @@
   box-shadow: 0 2px 12px rgba(239, 68, 68, 0.6), 0 0 0 2px rgba(239, 68, 68, 0.3);
 }
 
+/* ── Josephine walking companion ── */
+.jph-companion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+.jph-companion__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #c9a84c;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+  background: #1a1a1a;
+  animation: jph-bob 2.4s ease-in-out infinite;
+}
+.jph-companion--concerned .jph-companion__avatar {
+  border-color: #ef4444;
+}
+@keyframes jph-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jph-companion__avatar { animation: none; }
+}
+.jph-bubble {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  max-width: 220px;
+  margin-bottom: 8px;
+  padding: 9px 12px;
+  background: rgba(26, 26, 26, 0.94);
+  border: 1px solid rgba(201, 168, 76, 0.45);
+  border-radius: 14px;
+  color: #f0ece6;
+  font-size: 13px;
+  line-height: 1.4;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  animation: jph-bubble-in 0.25s ease;
+}
+.jph-bubble__icon { flex: 0 0 auto; }
+@keyframes jph-bubble-in {
+  from { opacity: 0; transform: translateY(6px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 .floating-stats-panel {
   position: fixed !important;
   top: 0 !important;
