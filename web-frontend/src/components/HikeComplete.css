@@ -27,15 +27,15 @@
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.hc-avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #c9a84c;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
-  margin-bottom: 14px;
+/* Celebration moment — show it bigger as a rounded rectangle (not a tiny circle)
+   so Josephine + Narya + the meadow/summit read properly. */
+.hc-card .hc-avatar {
+  border-radius: 18px;
+  border: 1px solid rgba(201, 168, 76, 0.45);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  margin: 0 auto 16px;
 }
+.hc-avatar { object-fit: cover; }
 
 .hc-eyebrow {
   font-size: 10px;

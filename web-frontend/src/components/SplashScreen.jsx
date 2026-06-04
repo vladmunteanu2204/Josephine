@@ -49,7 +49,13 @@ function SplashScreen({ onComplete }) {
       style={{ backgroundImage: `linear-gradient(180deg, rgba(5,10,5,0.45) 0%, rgba(5,10,5,0.15) 40%, var(--season-vignette) 100%), url('${splashImage}')` }}
     >
 
-      {/* ── Cinematic SVG mountain background ── */}
+      {/* ── Living hero: Josephine + Narya on the ridge at dawn ── */}
+      <video className="jph-splash__hero" autoPlay loop muted playsInline preload="auto" aria-hidden="true">
+        <source src="/josephine/hero.mp4" type="video/mp4" />
+        <source src="/josephine/hero.webm" type="video/webm" />
+      </video>
+
+      {/* ── Cinematic SVG mountain background (fallback under the hero) ── */}
       <svg
         className="jph-splash__bg"
         xmlns="http://www.w3.org/2000/svg"

@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import './JosephineAvatar.css';
 
-// Living-avatar clip library. Add states here as clips are produced.
+// Living-avatar clip library — base paths; the player serves .mp4 first (iOS
+// Safari) then .webm. Add states here as clips are produced.
 const CLIPS = {
-  idle: '/josephine/idle.webm',
-  thinking: '/josephine/thinking.webm',
-  walking: '/josephine/walking.webm',
-  peaceful: '/josephine/peaceful.webm',
-  celebrate: '/josephine/celebrate.webm',          // meadow joy (non-summit hikes)
-  celebrateSummit: '/josephine/celebrate-summit.webm', // flag on the summit
-  hero: '/josephine/hero.webm',
+  idle: '/josephine/idle',
+  thinking: '/josephine/thinking',
+  walking: '/josephine/walking',
+  peaceful: '/josephine/peaceful',
+  celebrate: '/josephine/celebrate',            // meadow joy (non-summit hikes)
+  celebrateSummit: '/josephine/celebrate-summit', // flag on the summit
+  hero: '/josephine/hero',
 };
 
 const reducedMotion =
@@ -30,16 +31,16 @@ export default function JosephineAvatar({
   poster = '/josephine-portrait.webp',
 }) {
   const [failed, setFailed] = useState(false);
-  const clip = CLIPS[state] || CLIPS.idle;
-  const useVideo = clip && !reducedMotion && !failed;
+  const base = CLIPS[state] || CLIPS.idle;
+  const useVideo = base && !reducedMotion && !failed;
   const style = size ? { width: size, height: size } : undefined;
 
   return (
     <span className={`jph-av ${size ? '' : 'jph-av--fill'} ${feather ? 'jph-av--feather' : ''} ${className}`} style={style}>
       {useVideo ? (
         <video
+          key={base}
           className="jph-av__media"
-          src={clip}
           poster={poster}
           autoPlay
           loop
@@ -47,7 +48,10 @@ export default function JosephineAvatar({
           playsInline
           preload="auto"
           onError={() => setFailed(true)}
-        />
+        >
+          <source src={`${base}.mp4`} type="video/mp4" />
+          <source src={`${base}.webm`} type="video/webm" />
+        </video>
       ) : (
         <img
           className="jph-av__media"

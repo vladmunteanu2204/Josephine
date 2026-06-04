@@ -1763,7 +1763,8 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
         </button>
         <div className="jc-header__identity">
           <div className="jc-header__avatar">
-            <JosephineAvatar state={typing ? 'thinking' : 'idle'} />
+            <img src="/josephine/portrait.png" alt="" className="jc-header__mark"
+              onError={e => { e.currentTarget.src='/josephine-portrait.webp'; }} />
           </div>
           <div>
             <p className="jc-header__name">Josephine</p>

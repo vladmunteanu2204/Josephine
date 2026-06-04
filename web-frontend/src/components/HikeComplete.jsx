@@ -23,7 +23,7 @@ export default function HikeComplete({ hikeData, line, onDone, onAddReview, onEx
   return (
     <div className="hc-overlay">
       <div className="hc-card">
-        <JosephineAvatar state={celebrateState} size={64} feather={false} className="hc-avatar" />
+        <JosephineAvatar state={celebrateState} size={148} feather={false} className="hc-avatar" />
         <p className="hc-eyebrow">{t('gps.completeEyebrow', 'Hike complete')}</p>
         <h2 className="hc-title">{t('gps.completeTitle', 'Beautiful work')}</h2>
         <p className="hc-trail">{hikeData?.trail_name}</p>

@@ -29,6 +29,20 @@
   display: none;
 }
 
+/* Living hero clip as the splash backdrop (behind vignette + wordmark). */
+.jph-splash__hero {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .jph-splash__hero { display: none; }
+}
+
 /* ── Dark vignette frame ── */
 .jph-splash__vignette {
   position: absolute;
