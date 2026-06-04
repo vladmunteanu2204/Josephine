@@ -1534,14 +1534,82 @@ def get_weather_suitability():
 
 # ===== ADMIN API ENDPOINTS =====
 
+def _collect_ml_dicts(node, out):
+    """Find every {en,it,de}-shaped dict in a payload (recursively). A node counts
+    only if its keys are a subset of {en,it,de} and it has a non-empty `en` — so we
+    never touch unrelated dicts that happen to contain an 'en' key."""
+    if isinstance(node, dict):
+        keys = set(node.keys())
+        if keys and keys <= {'en', 'it', 'de'} and isinstance(node.get('en'), str):
+            out.append(node)
+            return  # a leaf multilingual dict — don't recurse further
+        for v in node.values():
+            _collect_ml_dicts(v, out)
+    elif isinstance(node, list):
+        for v in node:
+            _collect_ml_dicts(v, out)
+
+
+def _autotranslate_payload(data):
+    """Write-once-in-English: fill any EMPTY it/de from a non-empty en across every
+    multilingual field in the payload, in ONE batched LLM call. Only fills blanks
+    (never clobbers a translation the owner typed). Guarded — no key or any error
+    leaves the payload untouched. Returns how many fields were filled."""
+    if not _anthropic_client:
+        return 0
+    try:
+        targets = []
+        _collect_ml_dicts(data, targets)
+        jobs = []
+        for d in targets:
+            en = (d.get('en') or '').strip()
+            if not en:
+                continue
+            need = [l for l in ('it', 'de') if not (d.get(l) or '').strip()]
+            if need:
+                jobs.append((d, en, need))
+        if not jobs:
+            return 0
+        srcs = [en for _, en, _ in jobs]
+        system = (
+            "You translate short alpine-tourism UI strings written by a local host "
+            "(Josephine). For each English string, give a natural Italian (informal "
+            "'tu') and German (informal 'du') translation — same meaning, same warm "
+            "tone, no added or removed facts. Return STRICT JSON only: an array, in "
+            "the same order, of objects {\"it\":\"…\",\"de\":\"…\"}."
+        )
+        resp = _anthropic_client.with_options(timeout=30.0).messages.create(
+            model='claude-haiku-4-5', max_tokens=1500, temperature=0,
+            system=[{'type': 'text', 'text': system}],
+            messages=[{'role': 'user', 'content': json.dumps(srcs, ensure_ascii=False)}],
+        )
+        raw = resp.content[0].text.strip()
+        start, end = raw.find('['), raw.rfind(']')
+        arr = json.loads(raw[start:end + 1]) if start != -1 and end != -1 else []
+        filled = 0
+        for (d, _en, need), tr in zip(jobs, arr):
+            if not isinstance(tr, dict):
+                continue
+            for l in need:
+                val = (tr.get(l) or '').strip()
+                if val:
+                    d[l] = val
+                    filled += 1
+        return filled
+    except Exception as e:  # noqa: BLE001
+        print(f"[autotranslate] skipped: {e}")
+        return 0
+
+
 @app.route('/api/admin/trails', methods=['POST'])
 @require_admin_auth
 def create_trail():
     """Create a new trail (Admin)"""
     try:
         trail_data = request.json
+        _autotranslate_payload(trail_data)   # write-once-EN → fill IT/DE blanks
         trails = load_complete_trails()
-        
+
         if any(t['id'] == trail_data['id'] for t in trails['trails']):
             return jsonify({'error': 'Trail ID already exists'}), 400
         
@@ -1564,8 +1632,9 @@ def update_trail(trail_id):
     """Update an existing trail (Admin)"""
     try:
         trail_data = request.json
+        _autotranslate_payload(trail_data)   # write-once-EN → fill IT/DE blanks
         trails = load_complete_trails()
-        
+
         trail_index = next((i for i, t in enumerate(trails['trails']) if t['id'] == trail_id), None)
         if trail_index is None:
             return jsonify({'error': 'Trail not found'}), 404
@@ -3074,31 +3143,28 @@ def create_rifugio():
     """Create new rifugio (Admin)"""
     try:
         data = request.json
+        _autotranslate_payload(data)   # write-once-EN → fill IT/DE blanks
         rifugios = load_rifugios()
-        
+
         # Generate ID
         new_id = f"rif-{len(rifugios) + 1:03d}"
-        
+
+        # Persist the WHOLE payload (so insights / josephine_note / highlights /
+        # verification aren't dropped on create), with required fields validated
+        # and id/timestamps enforced.
         rifugio = {
+            **data,
             'id': data.get('id', new_id),
             'name': data['name'],
-            'type': data.get('type', 'rifugio'),
             'region': data['region'],
             'altitude': data['altitude'],
             'coordinates': data['coordinates'],
-            'contact': data.get('contact', {}),
-            'facilities': data.get('facilities', {}),
-            'description': data.get('description', ''),
-            'access_info': data.get('access_info', ''),
-            'opening_season': data.get('opening_season', {}),
-            'prices': data.get('prices', {}),
-            'photos': data.get('photos', []),
+            'type': data.get('type', 'rifugio'),
             'status': data.get('status', 'seasonal'),
-            'special_closures': data.get('special_closures', []),
             'created_at': datetime.utcnow().isoformat() + 'Z',
-            'updated_at': datetime.utcnow().isoformat() + 'Z'
+            'updated_at': datetime.utcnow().isoformat() + 'Z',
         }
-        
+
         rifugios.append(rifugio)
         save_rifugios(rifugios)
         
@@ -3112,8 +3178,9 @@ def update_rifugio(rifugio_id):
     """Update rifugio (Admin)"""
     try:
         data = request.json
+        _autotranslate_payload(data)   # write-once-EN → fill IT/DE blanks
         rifugios = load_rifugios()
-        
+
         rifugio_index = next((i for i, r in enumerate(rifugios) if r['id'] == rifugio_id), None)
         if rifugio_index is None:
             return jsonify({'error': 'Rifugio not found'}), 404
