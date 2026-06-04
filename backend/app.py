@@ -4264,6 +4264,32 @@ def structured_answer(question: str, lang: str = 'en'):
 
     entity_type, entity = _fuzzy_match_entity(question)
 
+    # ── Insider secrets for a named trail/rifugio ────────────────────────────
+    INSIGHT_KW = {'secret', 'secrets', 'hidden', 'hidden gem', 'insider', 'photo spot',
+                  'photo spots', 'best photo', 'where to take photos', 'viewpoint',
+                  'viewpoints', 'best view', 'best views', 'sunrise', 'sunset',
+                  'local tip', 'local tips', 'tips and tricks'}
+    if entity is not None and has(INSIGHT_KW):
+        try:
+            now = _local_now(None)
+            season = {12: 'winter', 1: 'winter', 2: 'winter', 3: 'spring', 4: 'spring',
+                      5: 'spring', 6: 'summer', 7: 'summer', 8: 'summer',
+                      9: 'autumn', 10: 'autumn', 11: 'autumn'}.get(now.month)
+            ctx = {'lang': lang, 'conditions': {'now': now, 'season': season,
+                                                'weather': None, 'sunset': None}}
+            items = insights_engine.select_insights(entity, ctx, visibility='chat_only', limit=4)
+            if not items:  # fall back to public insider notes if no secret matches now
+                items = insights_engine.select_insights(entity, ctx, visibility='public',
+                                                        limit=4, ignore_conditions=True)
+            if items:
+                lead = {'en': f"Here's what I keep for {entity.get('name','this one')}:",
+                        'it': f"Ecco cosa custodisco per {entity.get('name','questo posto')}:",
+                        'de': f"Das habe ich für {entity.get('name','diesen Ort')}:"}.get(lang, '')
+                bullets = '\n'.join(f"• {it['text']}" for it in items)
+                return f"{lead}\n{bullets}"
+        except Exception as e:  # noqa: BLE001
+            print(f"[structured_answer] insight branch error: {e}")
+
     # Weather — deflect live-forecast questions, but answer gear-for-weather questions
     GEAR_FOR_WX_KW = {'pack','bring','wear','take','need','sunscreen','sunglasses','raincoat',
                        'rain jacket','waterproof','umbrella','boots','layers','what to bring',
