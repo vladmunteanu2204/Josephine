@@ -1,0 +1,54 @@
+.ins-editor {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid rgba(201,168,76,0.22);
+  border-radius: 12px;
+  background: rgba(201,168,76,0.04);
+}
+.ins-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.ins-title { font-size: 13px; font-weight: 700; color: #c9a84c; }
+.ins-title small { font-weight: 400; color: rgba(240,236,230,0.5); font-size: 11px; }
+.ins-add { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; padding: 6px 10px; border-radius: 8px;
+  background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.4); color: #c9a84c; cursor: pointer; }
+.ins-empty { font-size: 12px; color: rgba(240,236,230,0.5); margin: 6px 0; line-height: 1.5; }
+
+.ins-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.ins-row { display: flex; align-items: center; gap: 8px; padding: 7px 9px; border-radius: 8px;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); font-size: 12px; }
+.ins-kind { flex: 0 0 auto; color: #f0ece6; }
+.ins-vis { flex: 0 0 auto; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 6px; border-radius: 5px; }
+.ins-vis--public { background: rgba(74,222,128,0.14); color: #4ade80; }
+.ins-vis--chat_only { background: rgba(201,168,76,0.16); color: #c9a84c; }
+.ins-prev { flex: 1; color: rgba(240,236,230,0.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ins-verif { flex: 0 0 auto; font-size: 10px; padding: 2px 6px; border-radius: 5px; text-transform: uppercase; }
+.ins-verif--verified { background: rgba(74,222,128,0.14); color: #4ade80; }
+.ins-verif--editorial { background: rgba(96,165,250,0.14); color: #60a5fa; }
+.ins-verif--stale { background: rgba(248,113,113,0.14); color: #f87171; }
+.ins-verif--unverified { background: rgba(148,163,184,0.14); color: #94a3b8; }
+.ins-icon { flex: 0 0 auto; background: none; border: none; color: rgba(240,236,230,0.6); cursor: pointer; padding: 3px; }
+.ins-icon--del:hover { color: #f87171; }
+
+.ins-form { margin-top: 12px; padding: 14px; border-radius: 10px; background: rgba(0,0,0,0.18); border: 1px solid rgba(255,255,255,0.08); }
+.ins-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.ins-form label { display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: rgba(240,236,230,0.6); }
+.ins-form input, .ins-form select, .ins-form textarea {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 7px;
+  padding: 7px 9px; color: #f0ece6; font-size: 13px; font-family: inherit; }
+.ins-text { margin-bottom: 8px; }
+.ins-ai { display: flex; gap: 8px; margin-bottom: 10px; }
+.ins-ai input { flex: 1; }
+.ins-ai button { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; font-size: 12px; padding: 0 12px;
+  border-radius: 7px; background: rgba(201,168,76,0.16); border: 1px solid rgba(201,168,76,0.4); color: #c9a84c; cursor: pointer; }
+.ins-ai button:disabled { opacity: 0.4; cursor: default; }
+.ins-sub { font-size: 11px; font-weight: 700; color: rgba(240,236,230,0.5); margin: 12px 0 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+.ins-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-bottom: 8px; }
+.ins-chips-l { font-size: 11px; color: rgba(240,236,230,0.5); margin-right: 4px; }
+.ins-chip { font-size: 11px; padding: 3px 9px; border-radius: 12px; background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12); color: rgba(240,236,230,0.6); cursor: pointer; }
+.ins-chip.on { background: rgba(201,168,76,0.18); border-color: rgba(201,168,76,0.5); color: #c9a84c; }
+.ins-hint { font-size: 11px; color: rgba(240,236,230,0.45); line-height: 1.5; margin: 8px 0; }
+.ins-actions { display: flex; gap: 8px; margin-top: 10px; }
+.ins-save { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; padding: 8px 14px; border-radius: 8px;
+  background: #c9a84c; border: none; color: #1a1a1a; font-weight: 600; cursor: pointer; }
+.ins-cancel { font-size: 13px; padding: 8px 14px; border-radius: 8px; background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12); color: rgba(240,236,230,0.7); cursor: pointer; }

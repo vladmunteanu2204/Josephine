@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Hotel, Plus, Check, Pencil, Trash2, Undo2, X, MessageSquare, BedDouble } from 'lucide-react';
 import './RifugiosManager.css';
+import InsightsEditor from './InsightsEditor';
 
 const TYPE_LABELS = { rifugio: 'Rifugio', malga: 'Malga', bivacco: 'Bivacco' };
 const STATUS_COLORS = { open: '#4ade80', closed: '#ef4444', opening_soon: '#fbbf24' };
@@ -15,7 +16,7 @@ const BLANK_FORM = {
   opening_season: { start_date: '', end_date: '' },
   prices: { overnight: 0, breakfast: 0, dinner: 0, half_board: 0 },
   photos: [], status: 'seasonal', special_closures: [],
-  josephine_note: '', highlights: [],
+  josephine_note: '', highlights: [], insights: [],
   booking_email_verified: false,
   verification: { status: 'unverified', source_type: 'manual', source_url: '', last_verified_at: '' },
 };
@@ -109,6 +110,30 @@ export default function RifugiosManager({ adminPassword }) {
     } finally {
       setSaving(false);
     }
+  };
+
+  const [enriching, setEnriching] = useState(false);
+  const enrichFromODH = async () => {
+    setEnriching(true);
+    try {
+      const res = await axios.post('/api/admin/opendatahub/enrich', {
+        rifugio_id: editing !== 'new' ? editing : undefined,
+        name: form.name,
+        lat: form.coordinates?.lat, lon: form.coordinates?.lng,
+      });
+      const d = res.data || {};
+      if (!d.ok) { showToast('Open Data Hub had nothing new for this hut.', 'error'); return; }
+      setForm(prev => {
+        const next = { ...prev };
+        if (d.proposal?.opening_season) next.opening_season = { ...prev.opening_season, ...d.proposal.opening_season };
+        if (d.proposal?.contact) next.contact = { ...prev.contact, ...d.proposal.contact };
+        if (d.insight) next.insights = [...(prev.insights || []), { ...d.insight, id: 'ins_' + Math.random().toString(16).slice(2, 10) }];
+        return next;
+      });
+      showToast('Applied Open Data Hub proposal — review and save.');
+    } catch {
+      showToast('Open Data Hub enrich failed.', 'error');
+    } finally { setEnriching(false); }
   };
 
   const del = async (id) => {
@@ -427,6 +452,25 @@ export default function RifugiosManager({ adminPassword }) {
                   onChange={e => set('highlights', e.target.value.split('\n').map(s => s.trim()).filter(Boolean))}
                   placeholder="Panoramic terrace&#10;Traditional Tyrolean kitchen&#10;Dog-friendly"
                   style={{ width: '100%', resize: 'vertical' }}
+                />
+              </fieldset>
+
+              {/* Insider insights + Open Data Hub enrichment */}
+              <fieldset className="rif-fieldset">
+                <legend>Insider insights & enrichment</legend>
+                <button type="button" className="rif-btn-cancel" style={{ marginBottom: 10 }}
+                        onClick={enrichFromODH} disabled={enriching}>
+                  {enriching ? 'Fetching…' : '↻ Enrich from Open Data Hub'}
+                </button>
+                <InsightsEditor
+                  value={form.insights}
+                  onChange={(next) => set('insights', next)}
+                  facts={[
+                    form.name && `Hut: ${form.name}`,
+                    form.type && `Type: ${form.type}`,
+                    form.altitude && `Altitude: ${form.altitude} m`,
+                    form.opening_season?.start_date && `Season: ${form.opening_season.start_date}–${form.opening_season.end_date}`,
+                  ].filter(Boolean).join('. ')}
                 />
               </fieldset>
 

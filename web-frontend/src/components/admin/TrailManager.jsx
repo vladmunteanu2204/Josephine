@@ -3,6 +3,7 @@ import axios from 'axios';
 import Map, { Source, Layer } from 'react-map-gl';
 import { Plus, Pencil, Trash2, Check, MapPin, Mountain, Map as MapIcon, Home, Ruler, Undo2 } from 'lucide-react';
 import './TrailManager.css';
+import InsightsEditor from './InsightsEditor';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -46,6 +47,7 @@ function TrailManager({ adminPassword }) {
     trailhead_info: { parking: '' },
     difficulty_details: { technical: '', exposure: '', fitness: '' },
     highlights: [],
+    insights: [],
     verification: { status: 'unverified', source_type: 'manual', source_url: '', last_verified_at: '' },
   });
   const [allRifugios, setAllRifugios] = useState([]);
@@ -139,6 +141,7 @@ function TrailManager({ adminPassword }) {
       trailhead_info: { parking: '', ...(trail.trailhead_info || {}) },
       difficulty_details: { technical: '', exposure: '', fitness: '', ...(trail.difficulty_details || {}) },
       highlights: trail.highlights || [],
+      insights: trail.insights || [],
       verification: { status: 'unverified', source_type: 'manual', source_url: '', last_verified_at: '', ...(trail.verification || {}) },
     });
     // Set the string inputs for editing
@@ -189,6 +192,7 @@ function TrailManager({ adminPassword }) {
       trailhead_info: { parking: '' },
       difficulty_details: { technical: '', exposure: '', fitness: '' },
       highlights: [],
+      insights: [],
       verification: { status: 'unverified', source_type: 'manual', source_url: '', last_verified_at: '' },
     });
   };
@@ -983,6 +987,20 @@ function TrailManager({ adminPassword }) {
                 </>
               );
             })()}
+
+            {/* Insider insights — public + chat-only secrets */}
+            <InsightsEditor
+              value={formData.insights}
+              onChange={(next) => setFormData({ ...formData, insights: next })}
+              facts={[
+                formData.name && `Trail: ${formData.name}`,
+                formData.region && `Region: ${formData.region}`,
+                formData.difficulty && `Difficulty: ${formData.difficulty}`,
+                formData.distance_km && `Distance: ${formData.distance_km} km`,
+                formData.elevation_gain_m && `Ascent: ${formData.elevation_gain_m} m`,
+                (formData.best_season || []).length && `Best season: ${(formData.best_season || []).join(', ')}`,
+              ].filter(Boolean).join('. ')}
+            />
 
             <div className="form-divider"></div>
 
