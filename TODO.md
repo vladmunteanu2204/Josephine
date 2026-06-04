@@ -51,6 +51,67 @@ Still to do (the real workstream):
 > workstreams, and the re-sequenced 5-phase roadmap. This file (TODO) is the
 > near-term task list; the masterplan is the destination.
 
+## 13. Companion feature backlog (brainstorm 2026-06)
+
+The bets that push Josephine to #1 — a *companion*, not a catalog. The **Live
+Trail Companion** is being planned/built first (see its own plan); the rest are
+captured here, roughly in priority order.
+
+### 13a. Live Trail Companion — v1 SHIPPED (web/PWA, foreground)
+Save hike → "Start" → user tracked on the map with Josephine's avatar walking
+alongside → geofenced "moments" fire as bubble + chime + spoken voice, sourced
+from VERIFIED checkpoints/POIs/insights incl. chat-only secrets (hazards
+verified-only). Audio narration (locale voice, muteable). Launch from trail page /
+plan card / saved hikes. Post-hike "how were the legs?" rating → save payload
+(memory hook). Built across commits L1–L7.
+
+**Deferred — true background tracking (phone locked / in pocket).** Owner reviewed
+2026-06 and chose to STAY web/PWA for now (not switch to native yet). The web
+cannot track reliably once the screen locks (iOS Safari suspends JS); v1 keeps the
+screen awake via Wake Lock + shows a "keep Josephine open" hint. When the time is
+right to go native, the locked-in approach is:
+- **Capacitor** iOS/Android shell wrapping the existing web app.
+- **Hybrid**: native continuous background-geolocation only while a hike is active;
+  our moment engine runs over all moments; auto-stop on End/inactivity.
+- **Locked UX**: OS **local notification (text + Josephine's line + chime)**; live
+  avatar + spoken voice resume on unlock.
+- Needs "Always" location permission + app-store builds. (Owner undecided on timing.)
+
+Other v1 deferrals: web-push, offline **map tiles** (moments themselves are cached
+in `activeHikeSession`), condition-aware moment timing (e.g. sunset_tip only near
+sunset), full hut "call ahead" concierge hand-off on-trail.
+
+### 13b. Memory & proactivity (the relationship moat — highest differentiation)
+- Long-term per-user memory: dog's name, knees on descents, calm-vs-epic; surfaced
+  on return ("last time you wanted calm…").
+- Post-hike follow-up rating → reviews + sharpens her model of you.
+- Proactive "moments" push (the Almanac's promised P2 — owner owes a vetted list):
+  "the light at Seceda will be unreal in 2h."
+- Streaks/seasons ("5 valleys this summer, 2 left for the Pusteria set"),
+  re-engagement push ("first snow dusted the Dolomites overnight").
+
+### 13c. Booking concierge (the revenue)
+- Hut booking: inquiries → confirmed bookings; "found you a secret → shall I book
+  the rifugio?" hand-off (incl. mid-hike "reserve a table at the malga for 13:00?").
+- Hotel concierge (MASTERPLAN Phase 2): partner hotels embed Josephine for guests
+  (B2B2C wedge + tourism-board door-opener).
+- Affiliate rails booked inside the plan: cable-car tickets, guided via-ferrata, gear.
+
+### 13d. Live data + safety (Open Data Hub at runtime — MASTERPLAN Phase 4)
+- Real-time lift status, parking-fill, trail closures, events, weather/avalanche
+  warnings surfaced in chat & on-trail (upgrades dispersal from heuristics → truth).
+- Live "track me" link to family (safety + word-of-mouth).
+- Mid-hike weather-turn proactive re-plan; off-route alert; SOS (location + 118 +
+  exact trail/altitude — never overclaim rescue is free).
+
+### 13e. Distribution & growth (cheap, compounding — plumbing exists)
+- Shareable Strava-style recap card (map line + stats + Josephine one-liner) →
+  WhatsApp/IG, each seeded back into the app (the `share` field already exists).
+- Trailhead/hut/hotel-room QR → opens Josephine pre-seeded with that place (we
+  built trail-seeding).
+- Auto-generated multilingual SEO pages from verified data (Google funnel).
+- "Hiked with Josephine" passport of completed valleys.
+
 ## 11. Place resolution / geocoding (offline gazetteer)
 
 "I'm in <village>" / "I'm at <hotel>" → coordinates → proximity-ranked hikes.

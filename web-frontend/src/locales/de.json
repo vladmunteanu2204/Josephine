@@ -476,6 +476,7 @@
     "emptyTitle": "Noch keine gespeicherten Wanderwege",
     "emptyMessage": "Beginnen Sie zu erkunden und speichern Sie Ihre Lieblingswanderwege, um sie hier zu sehen",
     "browseCatalog": "Wanderwege-Katalog Durchsuchen",
+    "startHike": "▶ Mit Josephine starten",
     "viewDetails": "Details Anzeigen"
   },
   "settings": {
@@ -783,6 +784,14 @@
     "noMovementDetected": "Keine Bewegung erkannt. Tracking wird fortgesetzt, wenn du dich bewegst.",
     "movementDetected": "Bewegung erkannt, deine Wanderung wird weiter verfolgt",
     "offTrailAlert": "Vom Weg Abgekommen",
+    "keepOpenHint": "Lass Josephine am Bildschirm offen, um auf dem Weg zu bleiben.",
+    "muteJosephine": "Josephine stummschalten",
+    "unmuteJosephine": "Josephine aktivieren",
+    "recapQuestion": "Wie waren die Beine?",
+    "recapEasy": "Leicht",
+    "recapGood": "Genau richtig",
+    "recapTough": "Anstrengend",
+    "recapSkip": "Überspringen",
     "offTrailMessage": "Sie sind vom Weg abgekommen. Statistikaufzeichnung pausiert bis Sie zur Route zurückkehren.",
     "statsPausedMessage": "Statistikaufzeichnung pausiert. Kehren Sie zum Weg zurück, um fortzufahren.",
     "backOnTrail": "Zurück auf dem Weg - Statistikaufzeichnung Fortgesetzt"
@@ -1113,6 +1122,7 @@
     "planGetting": "Anreise",
     "planWeather": "Wetter",
     "planView": "Details ansehen",
+    "planStartHike": "▶ Mit Josephine starten",
     "planSave": "Speichern",
     "planSaved": "✓ Gespeichert",
     "planAltEasier": "Leichter",

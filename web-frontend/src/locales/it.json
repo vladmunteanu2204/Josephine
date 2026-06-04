@@ -476,6 +476,7 @@
     "emptyTitle": "Nessun sentiero salvato",
     "emptyMessage": "Inizia a esplorare e salva i tuoi sentieri preferiti per vederli qui",
     "browseCatalog": "Esplora Catalogo Sentieri",
+    "startHike": "▶ Parti con Josephine",
     "viewDetails": "Vedi Dettagli"
   },
   "settings": {
@@ -783,6 +784,14 @@
     "noMovementDetected": "Nessun movimento rilevato. Il tracking riprenderà quando ti muoverai.",
     "movementDetected": "Movimento rilevato, continua il tracking della tua escursione",
     "offTrailAlert": "Fuori Sentiero",
+    "keepOpenHint": "Tieni Josephine aperta sullo schermo per restare sul sentiero.",
+    "muteJosephine": "Silenzia Josephine",
+    "unmuteJosephine": "Riattiva Josephine",
+    "recapQuestion": "Come vanno le gambe?",
+    "recapEasy": "Facile",
+    "recapGood": "Giusta",
+    "recapTough": "Dura",
+    "recapSkip": "Salta",
     "offTrailMessage": "Sei fuori dal sentiero. Registrazione statistiche in pausa fino al tuo ritorno sul percorso.",
     "statsPausedMessage": "Registrazione statistiche in pausa. Torna sul sentiero per riprendere.",
     "backOnTrail": "Ritornato sul Sentiero - Registrazione Statistiche Ripresa"
@@ -1113,6 +1122,7 @@
     "planGetting": "Come arrivare",
     "planWeather": "Meteo",
     "planView": "Vedi dettagli",
+    "planStartHike": "▶ Parti con Josephine",
     "planSave": "Salva",
     "planSaved": "✓ Salvato",
     "planAltEasier": "Più facile",
