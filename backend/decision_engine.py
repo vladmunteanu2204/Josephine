@@ -363,7 +363,7 @@ def _round_down_15(h, m):
 
 
 def compose_plan(context, ranked, *, resolve_nearby_rifugios, dispersal_mod,
-                 trail_centroid=None, haversine=None):
+                 trail_centroid=None, haversine=None, select_insights=None):
     """Build one Daily Plan Card. Never raises — degrades to a refusal/caution."""
     try:
         lang = context.get('lang', 'en')
@@ -514,6 +514,15 @@ def compose_plan(context, ranked, *, resolve_nearby_rifugios, dispersal_mod,
                          or '')
         local_tip = local_tip or access['parking']
 
+        # ── Insider insights (public + chat-only secrets) ───────────────────
+        public_insights, secrets = [], []
+        if select_insights:
+            try:
+                public_insights = select_insights(trail, context, visibility='public', limit=3)
+                secrets = select_insights(trail, context, visibility='chat_only', limit=4)
+            except Exception:  # noqa: BLE001
+                public_insights, secrets = [], []
+
         # ── Almanac moment tie-in ───────────────────────────────────────────
         moment = None
         if moments:
@@ -587,6 +596,8 @@ def compose_plan(context, ranked, *, resolve_nearby_rifugios, dispersal_mod,
             'family_note': family_note,
             'local_tip': local_tip,
             'moment': moment,
+            'insights': public_insights,
+            'secrets': secrets,
             'verification': {
                 'trail': verification_state(trail),
                 'hut': hut['verification'] if hut else None,

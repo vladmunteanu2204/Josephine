@@ -30,6 +30,7 @@ import dispersal
 import almanac
 import decision_engine
 import context_engine
+import insights as insights_engine
 from decision_engine import _season_status, _season_range_label, _MONTHS_ORDER  # noqa: F401
 from notifications import EMAIL_ENABLED, send_email, build_inquiry_text
 try:
@@ -1410,12 +1411,22 @@ def josephine_plan():
         if 'open_food_stop' in (context['intent'].get('must_have') or []):
             ranked = decision_engine.prefer_food_stops(ranked, _resolve_nearby_rifugios)
 
+        # Seeded from a trail page ("plan THIS hike with Josephine") → float that
+        # trail to the top so its card + secrets surface as the pick.
+        seed_id = body.get('seed_trail_id')
+        if seed_id:
+            idx = next((i for i, r in enumerate(ranked)
+                        if (r.get('trail') or {}).get('id') == seed_id), None)
+            if idx is not None and idx > 0:
+                ranked = [ranked[idx]] + ranked[:idx] + ranked[idx + 1:]
+
         plan = decision_engine.compose_plan(
             context, ranked,
             resolve_nearby_rifugios=_resolve_nearby_rifugios,
             dispersal_mod=dispersal,
             trail_centroid=_trail_centroid,
             haversine=haversine,
+            select_insights=insights_engine.select_insights,
         )
         return jsonify({'plan': plan})
     except Exception as e:  # noqa: BLE001
