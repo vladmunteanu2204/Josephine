@@ -162,6 +162,7 @@ def rank_trails(trails, ctx, *, resolve_area_coords, trail_centroid, haversine):
     start_area      = ctx['start_area']
     with_dog        = ctx['with_dog']
     max_distance_km = ctx.get('max_distance_km')
+    origin_coords   = ctx.get('origin_coords')   # (lat, lon) for a GPS origin
 
     # Hard distance filter — only when a max was specified.
     if max_distance_km:
@@ -202,6 +203,21 @@ def rank_trails(trails, ctx, *, resolve_area_coords, trail_centroid, haversine):
                 scored_trails = near
             else:
                 return [], {'kind': 'area_not_found', 'area': start_area}
+    elif origin_coords:
+        # GPS origin (no named area): prefer trails physically near the user.
+        near = []
+        for item in scored_trails:
+            ctr = trail_centroid(item['trail'])
+            if not ctr:
+                continue
+            dist = haversine(origin_coords[0], origin_coords[1], ctr[0], ctr[1])
+            if dist <= NEAR_RADIUS_KM:
+                item['score'] += max(0.0, 6.0 - dist / 9.0)
+                item['reasons'].append('near you')
+                near.append(item)
+        if near:
+            scored_trails = near
+        # else: nothing within radius → keep region-wide (don't refuse on GPS)
 
     # Hiking with a dog → only dog-friendly trails; honest signal if none.
     if with_dog:
@@ -225,7 +241,48 @@ def rank_trails(trails, ctx, *, resolve_area_coords, trail_centroid, haversine):
 # and guarded; dispersal + resolve_nearby_rifugios are injected (no app import).
 from datetime import datetime as _dt, timedelta as _td
 
-_DIFF_EFFORT = {'easy': 'gentle', 'medium': 'a steady effort', 'hard': 'a real climb'}
+_DIFF_EFFORT = {'easy': 'eff_easy', 'medium': 'eff_medium', 'hard': 'eff_hard'}
+
+# Localized micro-copy for the Plan Card (signals, timing, safety, notes, voice).
+_PHRASES = {
+    'sig_quiet_now':   {'en': 'quiet if you go now', 'it': 'tranquillo se vai ora', 'de': 'jetzt noch ruhig'},
+    'sig_busy_now':    {'en': 'busy right now', 'it': 'affollato ora', 'de': 'gerade voll'},
+    'sig_quiet_today': {'en': 'quiet today', 'it': 'tranquillo oggi', 'de': 'heute ruhig'},
+    'sig_snow':        {'en': 'snow up high', 'it': 'neve in quota', 'de': 'Schnee in der Höhe'},
+    'sig_wet':         {'en': 'wet up high', 'it': 'bagnato in quota', 'de': 'nass in der Höhe'},
+    'sig_clear':       {'en': 'clear skies', 'it': 'cielo sereno', 'de': 'klarer Himmel'},
+    'sig_dog':         {'en': 'dog-friendly', 'it': 'cani ammessi', 'de': 'hundefreundlich'},
+    'sig_lunch':       {'en': 'lunch sorted', 'it': 'pranzo assicurato', 'de': 'Mittagessen gesichert'},
+    'sig_best_before': {'en': 'best before {t}', 'it': 'meglio prima delle {t}', 'de': 'am besten vor {t}'},
+    'eff_easy':        {'en': 'gentle', 'it': 'facile', 'de': 'gemütlich'},
+    'eff_medium':      {'en': 'a steady effort', 'it': 'impegno costante', 'de': 'solide Tour'},
+    'eff_hard':        {'en': 'a real climb', 'it': 'una vera salita', 'de': 'ein echter Anstieg'},
+    't_beat':          {'en': 'beat the crowds and the parking', 'it': 'eviti la folla e il parcheggio', 'de': 'der Menge und dem Parkplatz zuvorkommen'},
+    't_storm':         {'en': 'be off the exposed ground before afternoon storms', 'it': 'sei al riparo prima dei temporali pomeridiani', 'de': 'vor den Nachmittagsgewittern aus dem freien Gelände'},
+    't_easy':          {'en': 'an easy, unhurried start', 'it': 'una partenza tranquilla', 'de': 'ein entspannter Start'},
+    'safe_daylight':   {'en': "Not enough daylight to finish this safely today — go early tomorrow, or pick something shorter now.",
+                        'it': "Non c'è abbastanza luce per finire in sicurezza oggi — parti presto domani o scegli qualcosa di più breve.",
+                        'de': "Heute reicht das Tageslicht nicht für eine sichere Tour — geh morgen früh oder wähl jetzt etwas Kürzeres."},
+    'safe_snow':       {'en': 'Snow up high — check conditions.', 'it': 'Neve in quota — controlla le condizioni.', 'de': 'Schnee in der Höhe — prüf die Bedingungen.'},
+    'dog_note':        {'en': 'Keep them on a lead near pastures and wildlife; water at the hut.',
+                        'it': 'Tienilo al guinzaglio vicino ai pascoli e alla fauna; acqua al rifugio.',
+                        'de': 'An der Leine bei Weiden und Wild; Wasser an der Hütte.'},
+    'family_note':     {'en': 'Gentle enough for younger legs.', 'it': 'Adatto anche alle gambe più piccole.', 'de': 'Sanft genug für kleine Beine.'},
+    'lead_peaceful':   {'en': 'You wanted calm — ', 'it': 'Volevi calma — ', 'de': 'Du wolltest Ruhe — '},
+    'lead_epic':       {'en': 'You wanted something that makes you feel small — ', 'it': 'Volevi qualcosa che ti faccia sentire piccolo — ', 'de': 'Du wolltest etwas, das dich klein fühlen lässt — '},
+    'lead_romantic':   {'en': 'For something memorable — ', 'it': 'Per qualcosa di memorabile — ', 'de': 'Für etwas Unvergessliches — '},
+    'lead_food':       {'en': 'For a good lunch on the trail — ', 'it': 'Per un buon pranzo lungo il cammino — ', 'de': 'Für ein gutes Mittagessen unterwegs — '},
+    'why_beat':        {'en': "go now and you'll have it nearly to yourself. ", 'it': 'vai ora e lo avrai quasi tutto per te. ', 'de': 'geh jetzt, dann hast du ihn fast für dich. '},
+    'why_peak':        {'en': "it's busy at peak, so start early. ", 'it': "è affollato nelle ore di punta, quindi parti presto. ", 'de': 'zur Stoßzeit ist viel los, also starte früh. '},
+}
+
+
+def _p(key, lang, **vars):
+    s = _PHRASES.get(key, {})
+    txt = s.get((lang or 'en')[:2]) or s.get('en') or key
+    for k, v in vars.items():
+        txt = txt.replace('{' + k + '}', str(v))
+    return txt
 
 
 def _loc(val, lang):
@@ -295,16 +352,18 @@ def compose_plan(context, ranked, *, resolve_nearby_rifugios, dispersal_mod):
             sig = {'reason_code': 'none', 'daylight_ok': True, 'beat_crowds': False,
                    'peak_now': False, 'access_note': None, 'show_alternative': False}
 
+        must_have = intent.get('must_have') or []
+
         # ── Timing ──────────────────────────────────────────────────────────
         if sig.get('beat_crowds') or sig.get('peak_now'):
             suggested_start = '07:30'
-            t_reason = 'beat the crowds and the parking'
+            t_reason = _p('t_beat', lang)
         elif cond.get('season') == 'summer':
             suggested_start = '08:00'
-            t_reason = 'be off the exposed ground before afternoon storms'
+            t_reason = _p('t_storm', lang)
         else:
             suggested_start = '09:00'
-            t_reason = 'an easy, unhurried start'
+            t_reason = _p('t_easy', lang)
         latest = None
         clk = _clock(sunset) if sunset else None
         if clk:
@@ -348,44 +407,40 @@ def compose_plan(context, ranked, *, resolve_nearby_rifugios, dispersal_mod):
         signals = []
         crowding = (trail.get('crowding') or {})
         if sig.get('beat_crowds'):
-            signals.append('quiet if you go now')
+            signals.append(_p('sig_quiet_now', lang))
         elif sig.get('peak_now'):
-            signals.append('busy right now')
+            signals.append(_p('sig_busy_now', lang))
         elif crowding.get('level') == 'low':
-            signals.append('quiet today')
+            signals.append(_p('sig_quiet_today', lang))
         wdesc = (weather.get('description') or '').lower()
         if 'snow' in wdesc:
-            signals.append('snow up high')
+            signals.append(_p('sig_snow', lang))
         elif 'rain' in wdesc or 'thunder' in wdesc:
-            signals.append('wet up high')
+            signals.append(_p('sig_wet', lang))
         elif 'clear' in wdesc:
-            signals.append('clear skies')
+            signals.append(_p('sig_clear', lang))
         if intent.get('with_dog') and trail.get('dog_friendly'):
-            signals.append('dog-friendly')
-        eff = _DIFF_EFFORT.get((trail.get('difficulty') or '').lower())
-        if eff:
-            signals.append(eff)
+            signals.append(_p('sig_dog', lang))
+        if 'open_food_stop' in must_have and hut and hut.get('open_now') is not False:
+            signals.append(_p('sig_lunch', lang))
+        eff_key = _DIFF_EFFORT.get((trail.get('difficulty') or '').lower())
+        if eff_key:
+            signals.append(_p(eff_key, lang))
         if latest:
-            signals.append(f'best before {latest}')
+            signals.append(_p('sig_best_before', lang, t=latest))
         signals = signals[:5]
 
         # ── Safety ──────────────────────────────────────────────────────────
         if not sig.get('daylight_ok', True):
-            safety = {'level': 'avoid',
-                      'message': "Not enough daylight to finish this safely today — "
-                                 "go early tomorrow, or pick something shorter now."}
+            safety = {'level': 'avoid', 'message': _p('safe_daylight', lang)}
         elif warnings or 'snow' in wdesc:
-            safety = {'level': 'caution', 'message': warnings[0] if warnings else 'Snow up high — check conditions.'}
+            safety = {'level': 'caution', 'message': (warnings[0] if warnings else _p('safe_snow', lang))}
         else:
             safety = {'level': 'normal', 'message': ''}
 
         # ── Notes ───────────────────────────────────────────────────────────
-        dog_note = None
-        if intent.get('with_dog') and trail.get('dog_friendly'):
-            dog_note = "Keep them on a lead near pastures and wildlife; water at the hut."
-        family_note = None
-        if intent.get('family') and trail.get('family_friendly'):
-            family_note = "Gentle enough for younger legs."
+        dog_note = _p('dog_note', lang) if (intent.get('with_dog') and trail.get('dog_friendly')) else None
+        family_note = _p('family_note', lang) if (intent.get('family') and trail.get('family_friendly')) else None
         local_tip = (_loc(crowding.get('quiet_tip'), lang)
                      or access['parking']
                      or (_loc((trail.get('highlights') or [''])[0], lang) if trail.get('highlights') else '')
@@ -400,21 +455,13 @@ def compose_plan(context, ranked, *, resolve_nearby_rifugios, dispersal_mod):
 
         # ── Josephine's voice ───────────────────────────────────────────────
         note = _loc(trail.get('josephineNote') or trail.get('josephine_note'), lang).strip()
-        lead = ''
         mood = intent.get('mood')
-        if mood == 'peaceful':
-            lead = "You wanted calm — "
-        elif mood == 'epic':
-            lead = "You wanted something that makes you feel small — "
-        elif mood == 'romantic':
-            lead = "For something memorable — "
-        elif mood == 'food':
-            lead = "For a good lunch on the trail — "
+        lead = _p(f'lead_{mood}', lang) if mood in ('peaceful', 'epic', 'romantic', 'food') else ''
         why = ''
         if sig.get('reason_code') == 'beat_crowds':
-            why = "go now and you'll have it nearly to yourself. "
+            why = _p('why_beat', lang)
         elif sig.get('peak_now'):
-            why = "it's busy at peak, so start early. "
+            why = _p('why_peak', lang)
         josephine_says = (lead + why + note).strip() or note or \
             "This one feels right for today."
 
@@ -478,3 +525,18 @@ def compose_plan(context, ranked, *, resolve_nearby_rifugios, dispersal_mod):
     except Exception as e:  # noqa: BLE001
         print(f"[decision_engine] compose_plan failed: {e}")
         return _refusal_plan(context, "Something went sideways planning that — try again in a moment.")
+
+
+def prefer_food_stops(ranked, resolve_nearby_rifugios):
+    """Stable-reorder so trails with an OPEN nearby hut come first — used when the
+    prompt asks for lunch/food. Preserves score order within each group. Guarded."""
+    try:
+        def has_open_hut(item):
+            try:
+                huts = resolve_nearby_rifugios(item['trail'].get('nearby_rifugios', []))
+                return any(h.get('open_now') is not False for h in huts)
+            except Exception:  # noqa: BLE001
+                return False
+        return sorted(ranked, key=lambda it: (0 if has_open_hut(it) else 1, -it.get('score', 0)))
+    except Exception:  # noqa: BLE001
+        return ranked

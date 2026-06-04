@@ -1406,6 +1406,10 @@ def josephine_plan():
             plan['signal'] = signal['kind']
             return jsonify({'plan': plan})
 
+        # "good lunch" → prefer trails with an open hut so a food stop is real.
+        if 'open_food_stop' in (context['intent'].get('must_have') or []):
+            ranked = decision_engine.prefer_food_stops(ranked, _resolve_nearby_rifugios)
+
         plan = decision_engine.compose_plan(
             context, ranked,
             resolve_nearby_rifugios=_resolve_nearby_rifugios,

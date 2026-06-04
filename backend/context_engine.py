@@ -123,6 +123,10 @@ def to_ranking_ctx(context):
     it = context['intent']
     origin = context['origin']
     start_area = origin['name'] if origin['type'] == 'area' else ''
+    # GPS origin → rank by physical proximity (no named area to text-match).
+    origin_coords = None
+    if origin['type'] == 'gps' and origin.get('lat') is not None and origin.get('lon') is not None:
+        origin_coords = (origin['lat'], origin['lon'])
     return {
         'difficulty': it['difficulty'],
         'difficulty_any': it['difficulty_any'],
@@ -131,6 +135,7 @@ def to_ranking_ctx(context):
         'with_dog': it['with_dog'],
         'family_friendly': it['family'],
         'start_area': start_area,
+        'origin_coords': origin_coords,
         'current_month': context['conditions']['now'].strftime('%B'),
         'max_distance_km': it.get('max_distance_km'),
         'today_str': datetime.now().strftime('%Y-%m-%d'),
