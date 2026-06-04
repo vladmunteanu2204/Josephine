@@ -7,6 +7,7 @@ import { checkDistanceFromGPS, checkDistanceWarning, buildTransportNote } from '
 import { useAuth } from '../contexts/AuthContext';
 import AuthPromptModal from './AuthPromptModal';
 import DailyPlanCard from './DailyPlanCard';
+import JosephineAvatar from './JosephineAvatar';
 import './JosephineChat.css';
 
 const _seasonOverride = new URLSearchParams(window.location.search).get('season');
@@ -1762,8 +1763,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
         </button>
         <div className="jc-header__identity">
           <div className="jc-header__avatar">
-            <img src="/josephine-portrait.webp" alt="" className="jc-header__mark"
-              onError={e => { e.currentTarget.src='/logo.webp'; }} />
+            <JosephineAvatar state={typing ? 'thinking' : 'idle'} />
           </div>
           <div>
             <p className="jc-header__name">Josephine</p>
@@ -1828,8 +1828,9 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
             >
               {msg.from === 'josephine' && (
                 <div className="jc-msg__avatar" style={isFirstInRun ? {} : { visibility: 'hidden' }}>
-                  <img src="/josephine-portrait.webp" alt=""
-                    onError={e => { e.currentTarget.src='/logo.webp'; }} />
+                  {isFirstInRun
+                    ? <JosephineAvatar state="idle" />
+                    : <img src="/josephine-portrait.webp" alt="" onError={e => { e.currentTarget.src='/logo.webp'; }} />}
                 </div>
               )}
 

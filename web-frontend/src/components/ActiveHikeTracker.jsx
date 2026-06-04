@@ -1062,12 +1062,22 @@ function ActiveHikeTracker({ trail, onEnd }) {
     }
   };
 
+  // Did this hike conquer a summit? (drives meadow vs summit celebration —
+  // we only "plant the flag" when a peak was genuinely part of the route.)
+  const _isSummitHike = () => {
+    const hasPeak = (arr) => (arr || []).some(x => /summit|peak/i.test(x.type || ''));
+    return hasPeak(trail.checkpoints)
+      || hasPeak(trail.pois || trail.points_of_interest)
+      || /summit|peak|cima|vetta|gipfel|spitze|cir|sass|piz\b/i.test(trail.name || '');
+  };
+
   // Save the hike (with optional recap rating) → gamification → celebration.
   const finalizeHike = async (rating, note, autoEnded) => {
     const hikeData = {
       user_email: currentUser?.email || null,
       trail_id: trail.id,
       trail_name: trail.name,
+      is_summit: _isSummitHike(),
       start_time: new Date(startTimeRef.current).toISOString(),
       end_time: new Date().toISOString(),
       gps_track: gpsTrackRef.current,

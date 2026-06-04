@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { MapPin, Clock, TrendingUp } from 'lucide-react';
+import JosephineAvatar from './JosephineAvatar';
 import './HikeComplete.css';
 
 const fmtDist = (km) => (km < 1 ? `${Math.round((km || 0) * 1000)} m` : `${km.toFixed(1)} km`);
@@ -17,10 +18,12 @@ export default function HikeComplete({ hikeData, line, onDone, onAddReview, onEx
   const stats = hikeData?.stats || {};
   const moments = hikeData?.visited_checkpoints || [];
 
+  const celebrateState = hikeData?.is_summit ? 'celebrateSummit' : 'celebrate';
+
   return (
     <div className="hc-overlay">
       <div className="hc-card">
-        <img src="/josephine-portrait.webp" alt="Josephine" className="hc-avatar" />
+        <JosephineAvatar state={celebrateState} size={64} feather={false} className="hc-avatar" />
         <p className="hc-eyebrow">{t('gps.completeEyebrow', 'Hike complete')}</p>
         <h2 className="hc-title">{t('gps.completeTitle', 'Beautiful work')}</h2>
         <p className="hc-trail">{hikeData?.trail_name}</p>
