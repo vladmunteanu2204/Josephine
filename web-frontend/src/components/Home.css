@@ -29,6 +29,19 @@
   will-change: transform;
 }
 
+.hp-hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  opacity: 0;
+  transition: opacity 1s ease;
+  pointer-events: none;
+}
+.hp-hero__video.is-ready { opacity: 1; }
+
 .hp-hero__scrim {
   position: absolute;
   inset: 0;

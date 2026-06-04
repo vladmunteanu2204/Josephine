@@ -37,6 +37,11 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
   const heroBg = seasonAsset(config, 'heroImage');
   const [josephineMsg] = useState(() => Math.floor(Math.random() * JOSEPHINE_MESSAGES.length));
   const [convoVisible, setConvoVisible] = useState(false);
+  const [heroVidReady, setHeroVidReady] = useState(false);
+  // Only enhance with motion when it's safe to (respects reduced-motion + data-saver).
+  const heroMotionOK = typeof window !== 'undefined'
+    && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+    && !(navigator.connection && navigator.connection.saveData);
 
   const scrollYRef = useRef(0);
   const rafRef = useRef(null);
@@ -174,6 +179,20 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
           ref={el => heroLayersRef.current.bg = el}
           style={{ backgroundImage: `url('${heroBg}')`, backgroundPosition: config.heroPosition ?? '72% 50%' }}
         />
+        {/* Living hero — Josephine + Narya walking, layered over the static image
+            as a progressive enhancement (photo stays the instant LCP + poster). */}
+        {heroMotionOK && (
+          <video
+            className={`hp-hero__video ${heroVidReady ? 'is-ready' : ''}`}
+            poster={heroBg}
+            autoPlay loop muted playsInline preload="auto"
+            onCanPlay={() => setHeroVidReady(true)}
+            aria-hidden="true"
+          >
+            <source src="/josephine/walking.mp4" type="video/mp4" />
+            <source src="/josephine/walking.webm" type="video/webm" />
+          </video>
+        )}
         <div className="hp-hero__scrim" />
 
         <div className="hp-hero__inner">
