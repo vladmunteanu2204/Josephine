@@ -445,7 +445,7 @@ function TrailDetailCard({ trail, saved, onSave, onView, t }) {
 }
 
 /* ── Component ───────────────────────────────────────────────────────── */
-function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
+function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTrail, onSeedConsumed }) {
   const { currentUser } = useAuth();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const [lang, setLang] = useState(() => i18nInstance.language?.slice(0, 2) || 'en');
@@ -543,6 +543,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
   const sendMsgRef       = useRef(null); // keeps sendMessage fresh for mic closure
   const lastAlmanacRef   = useRef(null); // the almanac moment currently offered
   const almanacRestRef   = useRef([]);   // remaining moments for "what else?"
+  const seedConsumedRef  = useRef(false); // trail-seeded plan fires once
 
   /* ── Web Speech API ─────────────────────────────────────────────────── */
   const SpeechRecognitionAPI =
@@ -568,6 +569,8 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
   /* ── Opening message: live weather or welcome-back ──────────────────── */
   useEffect(() => {
     if (greetingShownRef.current) return;
+    // Seeded from a trail page → the seed effect drives the opening instead.
+    if (seedTrail?.id) return;
     greetingShownRef.current = true;
 
     // Restoring a saved conversation — nothing to do
@@ -632,6 +635,22 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin }) {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  /* ── Seeded from a trail page: open straight into a plan for that hike ── */
+  useEffect(() => {
+    if (!seedTrail?.id || seedConsumedRef.current) return;
+    seedConsumedRef.current = true;
+    greetingShownRef.current = true;
+    const name = seedTrail.name || tj('seedThisHike', 'this hike');
+    setMessages(prev => [...prev, {
+      id: Date.now(), from: 'user', type: 'text',
+      text: tj('seedUserMsg', 'Plan {{trail}} for me', { trail: name }),
+    }]);
+    requestPlan(tj('seedIntro', 'A perfect day on {{trail}}', { trail: name }),
+                { seed_trail_id: seedTrail.id });
+    onSeedConsumed && onSeedConsumed();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seedTrail]);
 
   useEffect(() => {
     const el = messagesRef.current;

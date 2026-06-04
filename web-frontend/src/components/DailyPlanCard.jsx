@@ -6,6 +6,11 @@ import './DailyPlanCard.css';
 // refusal (no trail). Voiced/dynamic text comes localized from the backend;
 // the static labels here use the chat's t() with English fallbacks.
 const SAFETY_ICON = { caution: '⚠', avoid: '⛔' };
+// Kept in sync with backend insights.INSIGHT_KINDS
+const INSIGHT_ICON = {
+  photo_spot: '📷', viewpoint: '◉', tip: '💡', food: '🍽',
+  hazard: '⚠', dog_tip: '🐾', sunrise_tip: '🌅', sunset_tip: '🌇',
+};
 
 export default function DailyPlanCard({ plan, t, onSave, onViewTrail, onAlt, saved }) {
   if (!plan) return null;
@@ -94,6 +99,20 @@ export default function DailyPlanCard({ plan, t, onSave, onViewTrail, onAlt, sav
         {plan.dog_note && <p className="dpc__note">🐾 {plan.dog_note}</p>}
         {plan.family_note && <p className="dpc__note">👨‍👩‍👧 {plan.family_note}</p>}
         {plan.local_tip && <p className="dpc__tip">💡 {plan.local_tip}</p>}
+
+        {plan.secrets?.length > 0 && (
+          <div className="dpc__secrets">
+            <p className="dpc__secrets-title">{tt('planSecretsTitle', "Josephine's secrets")}</p>
+            <ul className="dpc__secrets-list">
+              {plan.secrets.map((s) => (
+                <li key={s.id} className="dpc__secret">
+                  <span className="dpc__secret-icon">{INSIGHT_ICON[s.kind] || '✦'}</span>
+                  <span>{s.text}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {plan.alternatives?.length > 0 && (
           <div className="dpc__alts">

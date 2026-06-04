@@ -96,6 +96,7 @@ function App() {
   const [selectedTrail, setSelectedTrail] = useState(null);
   const [selectedRifugio, setSelectedRifugio] = useState(null);
   const [selectedMultiDayTrail, setSelectedMultiDayTrail] = useState(null);
+  const [seedTrail, setSeedTrail] = useState(null);   // "plan THIS hike with Josephine"
   const [catalogInitialTags, setCatalogInitialTags] = useState([]);
   const [rifugiosInitialType, setRifugiosInitialType] = useState('');
   const [rifugiosInitialStatus, setRifugiosInitialStatus] = useState('');
@@ -161,6 +162,12 @@ function App() {
     setPreviousView(currentView);
     setSelectedTrail(trail);
     setCurrentView('detail');
+  };
+
+  const openJosephineWithTrail = (trail) => {
+    setPreviousView(currentView);
+    setSeedTrail(trail);
+    setCurrentView('josephine');
   };
 
   const viewRifugio = (rifugio) => {
@@ -240,6 +247,7 @@ function App() {
               setIsGPSActive={setIsGPSActive}
               viewRifugio={viewRifugio}
               onShowLogin={() => setShowLoginModal(true)}
+              onPlanWithJosephine={openJosephineWithTrail}
             />
           )}
 
@@ -314,7 +322,7 @@ function App() {
           {/* JosephineChat is the single recommendation surface; the legacy
               'recommendations' hash is aliased to it so old links still work. */}
           {(currentView === 'josephine' || currentView === 'recommendations') && (
-            <JosephineChat onBack={goBack} setCurrentView={setCurrentView} viewTrail={viewTrail} onShowLogin={() => setShowLoginModal(true)} />
+            <JosephineChat onBack={goBack} setCurrentView={setCurrentView} viewTrail={viewTrail} onShowLogin={() => setShowLoginModal(true)} seedTrail={seedTrail} onSeedConsumed={() => setSeedTrail(null)} />
           )}
 
           {currentView === 'donate' && (
