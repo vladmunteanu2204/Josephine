@@ -72,6 +72,15 @@
   opacity: 1;
 }
 
+/* When the living (feathered) avatar is present, drop the container's ring/clip
+   so the character fades cleanly into the UI instead of sitting in a circle. */
+.jc-header__avatar:has(.jph-av--feather),
+.jc-msg__avatar:has(.jph-av--feather) {
+  background: none !important;
+  border: none !important;
+  overflow: visible !important;
+}
+
 .jc-header__name {
   font-size: 15px;
   font-weight: 600;

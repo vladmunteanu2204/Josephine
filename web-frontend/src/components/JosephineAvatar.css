@@ -1,0 +1,27 @@
+.jph-av {
+  display: inline-block;
+  border-radius: 50%;
+  overflow: hidden;
+  line-height: 0;
+}
+.jph-av--fill {
+  width: 100%;
+  height: 100%;
+}
+.jph-av__media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+/* Feathered: no hard frame — the character fades softly into the dark UI. */
+.jph-av--feather {
+  border-radius: 0;
+  overflow: visible;
+}
+.jph-av--feather .jph-av__media {
+  -webkit-mask-image: radial-gradient(circle at 50% 44%, #000 50%, rgba(0,0,0,0.45) 68%, transparent 80%);
+          mask-image: radial-gradient(circle at 50% 44%, #000 50%, rgba(0,0,0,0.45) 68%, transparent 80%);
+}
