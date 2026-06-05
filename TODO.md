@@ -81,14 +81,23 @@ Other v1 deferrals: web-push, offline **map tiles** (moments themselves are cach
 in `activeHikeSession`), condition-aware moment timing (e.g. sunset_tip only near
 sunset), full hut "call ahead" concierge hand-off on-trail.
 
-### 13b. Memory & proactivity (the relationship moat — highest differentiation)
-- Long-term per-user memory: dog's name, knees on descents, calm-vs-epic; surfaced
-  on return ("last time you wanted calm…").
-- Post-hike follow-up rating → reviews + sharpens her model of you.
-- Proactive "moments" push (the Almanac's promised P2 — owner owes a vetted list):
-  "the light at Seceda will be unreal in 2h."
-- Streaks/seasons ("5 valleys this summer, 2 left for the Pusteria set"),
-  re-engagement push ("first snow dusted the Dolomites overnight").
+### 13b. Memory & proactivity (the relationship moat) — v1 SHIPPED
+Owner decisions: **on-device** memory (localStorage, no server profile, GDPR-light),
+**structured signals only** (never LLM-extracted/invented), and **real web-push**.
+- **Memory** (`utils/memory.js`): visits/recency, last mood/difficulty/region/trail,
+  with-dog/family, interests, completed hikes (region, summit, rating). Captured from
+  delivered plans (`intent_summary`) + finished hikes. Clearable; nothing leaves the device.
+- **Proactive opener** (in-app): returning users get a warm, memory-aware greeting
+  ("How were the legs after X?", "Last time you wanted something calm — same vibe?")
+  + the live almanac moment. EN/IT/DE.
+- **Real web-push** wired end-to-end: `backend/push.py` (VAPID/pywebpush, guarded),
+  service worker (`public/sw.js`), Settings "Mountain moments" opt-in, content =
+  top active almanac moment. **Remaining manual pieces (see `docs/PUSH_SETUP.md`):**
+  set prod VAPID env, add a daily scheduler to hit `/api/admin/push/send`, and note
+  iOS only delivers to an installed PWA.
+- Still TODO: post-hike rating → reviews (rating is captured; not yet posted as a
+  review); streaks/seasons; the owner's bespoke vetted "moments" list (almanac is
+  the interim source).
 
 ### 13c. Booking concierge (the revenue)
 - Hut booking: inquiries → confirmed bookings; "found you a secret → shall I book
