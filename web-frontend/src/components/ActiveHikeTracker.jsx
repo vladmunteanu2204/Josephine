@@ -5,6 +5,7 @@ import SafetyDisclaimerModal from './SafetyDisclaimerModal';
 import CelebrationModal from './CelebrationModal';
 import TripSummary from './TripSummary';
 import HikeComplete from './HikeComplete';
+import { rememberCompletedHike } from '../utils/memory';
 import { ENABLE_GAMIFICATION } from '../featureFlags';
 import { checkNewBadges } from '../utils/gamification';
 import { useToast } from '../contexts/ToastContext';
@@ -1114,6 +1115,9 @@ function ActiveHikeTracker({ trail, onEnd }) {
     }) : null;
 
     setCompletedHikeData({ ...hikeData, gamification: gamificationResult });
+    // Remember this hike on-device (region, summit, how the legs felt).
+    rememberCompletedHike({ trailName: trail.name, region: trail.region,
+                            isSummit: hikeData.is_summit, rating });
     setShowRecap(false);
 
     if (ENABLE_GAMIFICATION) {

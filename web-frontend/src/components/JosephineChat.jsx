@@ -8,6 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
 import AuthPromptModal from './AuthPromptModal';
 import DailyPlanCard from './DailyPlanCard';
 import JosephineAvatar from './JosephineAvatar';
+import { recordVisit, rememberFromPlan, isReturning } from '../utils/memory';
 import './JosephineChat.css';
 
 const _seasonOverride = new URLSearchParams(window.location.search).get('season');
@@ -193,6 +194,38 @@ function buildWeatherGreeting(w) {
 
   const tempPart = temp > 0 ? `${temp}°C, ` : '';
   return tj('wgDefault', 'The weather is looking good for a mountain day. {{tempPart}}what kind of adventure are you after?', { tempPart });
+}
+
+/* Map a remembered mood to a short, localized "vibe" word for the opener. */
+function vibeWord(mood) {
+  const m = (mood || '').toLowerCase();
+  const key = {
+    peaceful: 'memVibePeaceful', calm: 'memVibePeaceful',
+    epic: 'memVibeEpic',
+    food: 'memVibeFood',
+    romantic: 'memVibeRomantic',
+    challenge: 'memVibeChallenge', hard: 'memVibeChallenge',
+    view: 'memVibeView', lake: 'memVibeWater', water: 'memVibeWater',
+  }[m];
+  if (!key) return null;
+  return tj(key, { memVibePeaceful: 'something calm', memVibeEpic: 'something epic',
+    memVibeFood: 'a good lunch stop', memVibeRomantic: 'something special',
+    memVibeChallenge: 'a real challenge', memVibeView: 'big views',
+    memVibeWater: 'lakes and water' }[key]);
+}
+
+/* A warm, memory-aware opener for a returning user — built only from structured
+   signals we actually captured (never invented). */
+function buildReturningOpener(mem) {
+  const lc = mem?.lastCompleted;
+  if (lc?.trailName) {
+    if (lc.rating === 3) return tj('memLegsTough', 'Welcome back ✦ Those legs recover after {{trail}}? Ready for the next one?', { trail: lc.trailName });
+    return tj('memLegs', 'Welcome back ✦ How were the legs after {{trail}}? Where to next?', { trail: lc.trailName });
+  }
+  const vibe = vibeWord(mem?.lastMood);
+  if (vibe) return tj('memVibe', 'Welcome back ✦ Last time you were after {{vibe}} — same vibe today, or something different?', { vibe });
+  if (mem?.lastRegion) return tj('memRegion', 'Welcome back ✦ Another day in {{region}}, or somewhere new today?', { region: mem.lastRegion });
+  return tj('memGeneric', 'Welcome back ✦ Good to see you again — where are we headed today?');
 }
 
 /* ── Crowd dispersal note — voices the backend `dispersal` signal ────────
@@ -577,41 +610,30 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
     // Restoring a saved conversation — nothing to do
     if (savedChatRef.current?.messages?.length > 1) return;
 
-    const prev = loadSession();
-
-    // Returning user: show personalised welcome-back (no weather needed)
-    if (prev?.lastTrail && prev?.lastDifficulty) {
-      const region = prev.lastRegion || 'the mountains';
-      const diff   = prev.lastDifficulty;
-      const text   = t('welcomeBack', 'Welcome back! Ready for another adventure?')
-        .replace('{{difficulty}}', diff)
-        .replace('{{region}}', region);
-      setMessages([
-        { id: 1, from: 'josephine', type: 'text', text: t('greeting'), chips: null },
-        { id: Date.now(), from: 'josephine', type: 'text', text,
-          chips: [t('chipSameVibe'), t('chipSomethingDifferent'), t('chipSurpriseMe')] },
-      ]);
-      return;
-    }
-
-    // Fresh start: request location → fetch weather → craft message 2
+    // Count the visit; a returning user gets a memory-aware opener instead of
+    // the generic weather greeting. Everyone still gets the live almanac moment.
+    const mem = recordVisit();
+    const returning = isReturning();
     setTyping(true);
 
     const showMessage = async (lat, lon) => {
       userLat = lat; userLon = lon;
-      let weatherData = null;
-      try {
-        const res = await axios.get('/api/weather/current', { params: { lat, lon } });
-        weatherData = res.data;
-      } catch { /* fall through — null gives a generic message */ }
-      const text = buildWeatherGreeting(weatherData);
+      let text, chips;
+      if (returning) {
+        text = buildReturningOpener(mem);
+        chips = [t('chipSameVibe'), t('chipSomethingDifferent'), tj('chipMoodPlan', 'Plan my perfect day ✦')];
+      } else {
+        let weatherData = null;
+        try {
+          const res = await axios.get('/api/weather/current', { params: { lat, lon } });
+          weatherData = res.data;
+        } catch { /* fall through — null gives a generic message */ }
+        text = buildWeatherGreeting(weatherData);
+        chips = [tj('chipMoodPlan', 'Plan my perfect day ✦'), t('chipPlanMyDay'), t('chipSurpriseMe'), t('chipShowMap')];
+      }
       setTyping(false);
       setMessages(prev => [...prev, {
-        id: Date.now(),
-        from: 'josephine',
-        type: 'text',
-        text,
-        chips: [tj('chipMoodPlan', 'Plan my perfect day ✦'), t('chipPlanMyDay'), t('chipSurpriseMe'), t('chipShowMap')],
+        id: Date.now(), from: 'josephine', type: 'text', text, chips,
       }]);
 
       // Living Almanac: if something fleeting is happening on the mountain right
@@ -709,6 +731,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
       setTyping(false);
       if (plan?.trail) {
         setApiResults([plan.trail]);   // keeps follow-up Q&A grounded on the pick
+        rememberFromPlan(plan);        // learn region/difficulty/mood for next visit
         appendJosephineMessage({ type: 'plan', plan, chips: null });
       } else {
         appendJosephineMessage({

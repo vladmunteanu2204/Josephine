@@ -598,6 +598,13 @@ def compose_plan(context, ranked, *, resolve_nearby_rifugios, dispersal_mod,
             'moment': moment,
             'insights': public_insights,
             'secrets': secrets,
+            'intent_summary': {           # structured signals for on-device memory
+                'mood': intent.get('mood'),
+                'difficulty': intent.get('difficulty'),
+                'with_dog': bool(intent.get('with_dog')),
+                'family': bool(intent.get('family')),
+                'interests': intent.get('interests') or [],
+            },
             'verification': {
                 'trail': verification_state(trail),
                 'hut': hut['verification'] if hut else None,
