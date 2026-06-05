@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { ArrowLeft, Settings as SettingsIcon, Globe, Ruler, Bell, User, Check } from 'lucide-react';
+import { pushStatus, enablePush, disablePush } from '../utils/push';
 import './Settings.css';
 
 function Settings({ onNavigate }) {
@@ -39,6 +40,37 @@ function Settings({ onNavigate }) {
     localStorage.setItem(key, newValue.toString());
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
+  };
+
+  const [pushOn, setPushOn] = useState(false);
+  const [pushAvail, setPushAvail] = useState(false);
+  const [pushBusy, setPushBusy] = useState(false);
+
+  useEffect(() => {
+    let alive = true;
+    pushStatus().then(s => {
+      if (!alive) return;
+      setPushAvail(s !== 'unsupported' && s !== 'disabled');
+      setPushOn(s === 'subscribed');
+    });
+    return () => { alive = false; };
+  }, []);
+
+  const handlePushToggle = async () => {
+    if (pushBusy) return;
+    setPushBusy(true);
+    try {
+      if (pushOn) {
+        await disablePush();
+        setPushOn(false);
+      } else {
+        const ok = await enablePush((i18n.language || 'en').slice(0, 2));
+        setPushOn(ok);
+        if (!ok) toast.info(t('settings.pushUnavailable', 'Notifications aren’t available here yet — on iPhone, add Josephine to your home screen first.'));
+      }
+    } finally {
+      setPushBusy(false);
+    }
   };
 
   const handleDeleteAccount = () => {
@@ -152,6 +184,25 @@ function Settings({ onNavigate }) {
           </div>
 
           <div className="toggle-list">
+            <div className="toggle-item">
+              <div className="toggle-content">
+                <div className="toggle-title">{t('settings.pushMoments', 'Mountain moments')}</div>
+                <div className="toggle-subtitle">
+                  {pushAvail
+                    ? t('settings.pushMomentsDescription', 'A gentle nudge when something fleeting is happening on the mountain — golden light, larch gold, a quiet window.')
+                    : t('settings.pushUnavailable', 'Notifications aren’t available here yet — on iPhone, add Josephine to your home screen first.')}
+                </div>
+              </div>
+              <label className="toggle-switch">
+                <input
+                  type="checkbox"
+                  checked={pushOn}
+                  disabled={!pushAvail || pushBusy}
+                  onChange={handlePushToggle}
+                />
+                <span className="toggle-slider"></span>
+              </label>
+            </div>
             <div className="toggle-item">
               <div className="toggle-content">
                 <div className="toggle-title">{t('settings.emailNotifications')}</div>
