@@ -48,3 +48,8 @@ backend/data/*.db-wal
 # Claude local files
 .local/
 attached_assets/
+
+# Web-push VAPID secrets + subscriptions (never commit)
+backend/vapid_private.pem
+backend/vapid_public.txt
+backend/data/push_subscriptions.json

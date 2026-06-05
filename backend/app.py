@@ -1449,6 +1449,69 @@ def get_almanac():
         return jsonify({'moments': []})
 
 
+# ── Web Push: proactive "moments" notifications ──────────────────────────────
+@app.route('/api/push/vapid-public', methods=['GET'])
+def push_vapid_public():
+    """The browser needs the VAPID application server key to subscribe. Returns
+    {enabled:false} when push isn't configured so the UI hides the opt-in."""
+    import push
+    return jsonify({'enabled': push.is_enabled(), 'key': push.public_key()})
+
+
+@app.route('/api/push/subscribe', methods=['POST'])
+def push_subscribe():
+    """Store a PushSubscription from the browser (+ preferred language)."""
+    import push
+    try:
+        body = request.json or {}
+        sub = body.get('subscription') or body
+        ok = push.add_subscription(sub, body.get('lang', 'en'))
+        return jsonify({'ok': ok})
+    except Exception as e:  # noqa: BLE001
+        print(f'[push] subscribe error: {e}')
+        return jsonify({'ok': False}), 200
+
+
+@app.route('/api/push/unsubscribe', methods=['POST'])
+def push_unsubscribe():
+    import push
+    try:
+        endpoint = (request.json or {}).get('endpoint')
+        if endpoint:
+            push.remove_subscription(endpoint)
+        return jsonify({'ok': True})
+    except Exception:  # noqa: BLE001
+        return jsonify({'ok': False}), 200
+
+
+@app.route('/api/admin/push/send', methods=['POST'])
+@require_admin_auth
+def push_send():
+    """Admin: fire a notification to all subscribers. With no title/body, pulls
+    the top active Living Almanac moment as the content (real, already-curated)."""
+    import push
+    try:
+        body = request.json or {}
+        title = body.get('title')
+        text = body.get('body')
+        url = body.get('url', '/')
+        lang = body.get('lang')
+        if not (title and text):
+            now_dt = _local_now(None)
+            weather = _almanac_weather(*_ALMANAC_DEFAULT_CENTER)
+            moments = almanac.active_moments(now_dt, weather, None, lang or 'en', 1)
+            if not moments:
+                return jsonify({'ok': False, 'reason': 'no_active_moment'})
+            mo = moments[0]
+            title = title or f"Josephine · {mo.get('emoji', '✦')}"
+            text = text or (mo.get('share') or mo.get('voice') or '')
+        result = push.send_to_all(title, text, url=url, lang=lang)
+        return jsonify({'ok': True, **result})
+    except Exception as e:  # noqa: BLE001
+        print(f'[push] send error: {e}')
+        return jsonify({'ok': False}), 200
+
+
 @app.route('/api/josephine/plan', methods=['POST'])
 def josephine_plan():
     """Phase 1 — the planning core. Mood-first prompt + context → ONE Daily Plan
