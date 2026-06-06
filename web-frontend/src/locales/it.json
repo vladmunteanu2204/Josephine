@@ -1400,5 +1400,43 @@
     "happyTrails": "Buon cammino!",
     "elevProfile": "Profilo altimetrico",
     "trailGuide": "GUIDA SENTIERO"
+  },
+  "trek": {
+    "guideTitle": "Guida del trek (PDF)",
+    "guideNote": "Scarica una guida multipagina curata per questo trek di rifugio in rifugio — mappa panoramica, dislivello, ogni tappa, rifugi, lista dell’attrezzatura e contatti d’emergenza. Perfetta da stampare o portare offline.",
+    "guideBuilding": "Sto preparando la tua guida…",
+    "guideDownload": "Scarica la guida del trek (PDF)"
+  },
+  "pdfMd": {
+    "footer": "Creato con amore da escursionisti, per escursionisti — Josephine.",
+    "trekGuide": "TREK DI PIÙ GIORNI",
+    "title": "Guida del Trek",
+    "curatedBy": "Di rifugio in rifugio, curato dalla tua compagna alpina",
+    "duration": "Durata",
+    "days": "giorni",
+    "nights": "notti",
+    "distance": "Distanza",
+    "ascent": "Dislivello positivo",
+    "descent": "Dislivello negativo",
+    "difficulty": "Difficoltà",
+    "routeOverview": "Panoramica del percorso",
+    "mapUnavailable": "Anteprima mappa non disponibile",
+    "elevProfile": "Profilo altimetrico dell’intero trek",
+    "highlights": "Punti salienti",
+    "bestSeason": "Stagione migliore",
+    "stages": "TAPPE",
+    "dayByDay": "Il tuo trek, giorno per giorno",
+    "day": "Giorno",
+    "overnight": "Pernottamento",
+    "food": "Cibo e bevande",
+    "planning": "PIANIFICAZIONE",
+    "beforeYouGo": "Prima di partire",
+    "equipment": "Lista attrezzatura",
+    "bookingTips": "Consigli di prenotazione",
+    "emergency": "Contatti d’emergenza",
+    "rescue": "Soccorso alpino",
+    "weather": "Previsioni meteo",
+    "police": "Polizia locale",
+    "euEmergency": "Numero unico di emergenza europeo"
   }
 }

@@ -439,3 +439,84 @@ export function deriveSchedule(trail, { startHour = 8 } = {}) {
   });
   return steps;
 }
+
+// ── multi-day trek helpers ───────────────────────────────────────────────────
+
+// Multi-day stages carry no dense polyline — only start/end points and a few
+// waypoints (each with lat/lon). Stitch them into one coarse [lon,lat] route so
+// the static map and the terrain-sampled elevation profile have something real
+// to work with.
+export function buildTrekRoutePolyline(trail) {
+  const stages = Array.isArray(trail?.stages) ? trail.stages : [];
+  const pts = [];
+  const push = (lon, lat) => {
+    if (!isFinite(lon) || !isFinite(lat)) return;
+    const last = pts[pts.length - 1];
+    if (!last || last[0] !== lon || last[1] !== lat) pts.push([lon, lat]);
+  };
+  stages.forEach((s) => {
+    if (s.start_point) push(s.start_point.lon, s.start_point.lat);
+    (s.waypoints || []).forEach((w) => push(w.lon, w.lat));
+    if (s.end_point) push(s.end_point.lon, s.end_point.lat);
+  });
+  return pts;
+}
+
+// Static overview map for the whole trek: gold route, green start pin, gold
+// overnight-rifugio pins. Reuses the single-trail static-map builder.
+export function buildTrekMapUrl(trail, opts = {}) {
+  const coordinates = buildTrekRoutePolyline(trail);
+  if (coordinates.length < 2) return null;
+  const pois = (trail?.stages || [])
+    .filter((s) => s.overnight_rifugio_name && s.end_point)
+    .map((s) => ({
+      name: s.overnight_rifugio_name,
+      coordinates: [s.end_point.lon, s.end_point.lat],
+    }));
+  return buildStaticRouteMapUrl({ coordinates, pois }, opts);
+}
+
+// Real terrain elevation across the whole trek, sampled along the stitched
+// route. Resolves to [{ distKm, ele }] (always resolves; synthetic fallback).
+export function sampleTrekElevation(trail, samples = 100) {
+  const coordinates = buildTrekRoutePolyline(trail);
+  return sampleRouteElevation(
+    { coordinates, elevation_gain_m: trail?.total_elevation_gain_m },
+    samples,
+  );
+}
+
+// Split stages into pages of `perPage` so each printed page stays within A4.
+export function chunkStages(stages, perPage = 3) {
+  const arr = Array.isArray(stages) ? stages : [];
+  const out = [];
+  for (let i = 0; i < arr.length; i += perPage) out.push(arr.slice(i, i + perPage));
+  return out;
+}
+
+// ── shared capture helpers (used by both download buttons) ───────────────────
+
+// Fetch a remote image and inline it as a data-URL so html2canvas never taints
+// the canvas. Resolves null on any failure so export still proceeds.
+export async function toDataUrl(url) {
+  if (!url) return null;
+  try {
+    const res = await fetch(url, { mode: 'cors' });
+    if (!res.ok) return null;
+    const blob = await res.blob();
+    return await new Promise((resolve) => {
+      const fr = new FileReader();
+      fr.onload = () => resolve(fr.result);
+      fr.onerror = () => resolve(null);
+      fr.readAsDataURL(blob);
+    });
+  } catch {
+    return null;
+  }
+}
+
+export function slugify(s) {
+  return (s || 'trek')
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'trek';
+}

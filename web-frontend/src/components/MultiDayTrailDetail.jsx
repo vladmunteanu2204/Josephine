@@ -11,6 +11,7 @@ import './MultiDayTrailDetail.css';
 
 import { API_URL } from '../api';
 import { onImgError } from '../utils/trailImage';
+import MultiDayDownload from './MultiDayDownload';
 
 const DIFFICULTY_COLORS = {
   easy:        { bg: 'rgba(74,222,128,0.15)',  text: '#4ade80' },
@@ -158,6 +159,11 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
               </div>
             </>
           )}
+        </div>
+
+        {/* Downloadable trek guide (PDF) */}
+        <div className="mdtd-section">
+          <MultiDayDownload trail={trail} />
         </div>
 
         {/* Stages */}

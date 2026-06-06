@@ -1400,5 +1400,43 @@
     "happyTrails": "Happy trails!",
     "elevProfile": "Elevation profile",
     "trailGuide": "TRAIL GUIDE"
+  },
+  "trek": {
+    "guideTitle": "Trek guide (PDF)",
+    "guideNote": "Download a designed multi-page guide for this hut-to-hut trek — overview map, elevation, every stage, rifugios, packing list and emergency contacts. Perfect to print or carry offline.",
+    "guideBuilding": "Preparing your trek guide…",
+    "guideDownload": "Download trek guide (PDF)"
+  },
+  "pdfMd": {
+    "footer": "Curated with love by hikers, for hikers — Josephine.",
+    "trekGuide": "MULTI-DAY TREK",
+    "title": "Trek Guide",
+    "curatedBy": "Hut-to-hut, curated by your alpine companion",
+    "duration": "Duration",
+    "days": "days",
+    "nights": "nights",
+    "distance": "Distance",
+    "ascent": "Total ascent",
+    "descent": "Total descent",
+    "difficulty": "Difficulty",
+    "routeOverview": "Route Overview",
+    "mapUnavailable": "Map preview unavailable",
+    "elevProfile": "Whole-trek elevation profile",
+    "highlights": "Trek Highlights",
+    "bestSeason": "Best season",
+    "stages": "STAGES",
+    "dayByDay": "Your trek, day by day",
+    "day": "Day",
+    "overnight": "Overnight",
+    "food": "Food & drink",
+    "planning": "TRIP PLANNING",
+    "beforeYouGo": "Before you go",
+    "equipment": "Equipment checklist",
+    "bookingTips": "Booking tips",
+    "emergency": "Emergency contacts",
+    "rescue": "Mountain rescue",
+    "weather": "Weather forecast",
+    "police": "Local police",
+    "euEmergency": "EU Alpine Emergency Number"
   }
 }

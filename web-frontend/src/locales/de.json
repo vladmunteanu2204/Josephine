@@ -1400,5 +1400,43 @@
     "happyTrails": "Schöne Wege!",
     "elevProfile": "Höhenprofil",
     "trailGuide": "TOUREN-GUIDE"
+  },
+  "trek": {
+    "guideTitle": "Trek-Guide (PDF)",
+    "guideNote": "Lade dir einen gestalteten mehrseitigen Guide für diese Hütten-zu-Hütten-Tour herunter — Übersichtskarte, Höhenprofil, alle Etappen, Hütten, Packliste und Notfallkontakte. Perfekt zum Ausdrucken oder offline dabei.",
+    "guideBuilding": "Dein Trek-Guide wird vorbereitet…",
+    "guideDownload": "Trek-Guide herunterladen (PDF)"
+  },
+  "pdfMd": {
+    "footer": "Mit Liebe von Wanderern für Wanderer — Josephine.",
+    "trekGuide": "MEHRTAGESTOUR",
+    "title": "Trek-Guide",
+    "curatedBy": "Hütte zu Hütte, kuratiert von deiner alpinen Begleiterin",
+    "duration": "Dauer",
+    "days": "Tage",
+    "nights": "Nächte",
+    "distance": "Distanz",
+    "ascent": "Aufstieg gesamt",
+    "descent": "Abstieg gesamt",
+    "difficulty": "Schwierigkeit",
+    "routeOverview": "Routenübersicht",
+    "mapUnavailable": "Kartenvorschau nicht verfügbar",
+    "elevProfile": "Höhenprofil der gesamten Tour",
+    "highlights": "Tour-Höhepunkte",
+    "bestSeason": "Beste Saison",
+    "stages": "ETAPPEN",
+    "dayByDay": "Deine Tour, Tag für Tag",
+    "day": "Tag",
+    "overnight": "Übernachtung",
+    "food": "Essen & Trinken",
+    "planning": "TOURENPLANUNG",
+    "beforeYouGo": "Bevor du losgehst",
+    "equipment": "Ausrüstungs-Checkliste",
+    "bookingTips": "Buchungstipps",
+    "emergency": "Notfallkontakte",
+    "rescue": "Bergrettung",
+    "weather": "Wettervorhersage",
+    "police": "Örtliche Polizei",
+    "euEmergency": "EU-Alpennotrufnummer"
   }
 }
