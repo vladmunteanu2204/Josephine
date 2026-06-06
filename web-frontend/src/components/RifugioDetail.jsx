@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import axios from 'axios';
-import { trailImg } from '../utils/trailImage';
+import { trailImg, onImgError } from '../utils/trailImage';
 import WeatherWidget from './WeatherWidget';
 import ReviewsSection from './ReviewsSection';
 import HutBookingSheet from './planner/HutBookingSheet';
@@ -114,6 +114,7 @@ function RifugioDetail({ rifugioId, onNavigate, onShowLogin }) {
           src={rifugio.photos?.[0] || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200'}
           alt={rifugio.name}
           className="rd-hero__img"
+          onError={onImgError}
         />
         <div className="rd-hero__overlay" />
 
@@ -260,7 +261,7 @@ function RifugioDetail({ rifugioId, onNavigate, onShowLogin }) {
               <h2 className="rd-section__title">{t('rifugio.gallery')}</h2>
               <div className="rd-gallery">
                 {rifugio.photos.slice(1).map((photo, i) => (
-                  <img key={i} src={photo} alt={`${rifugio.name} ${i + 1}`} className="rd-gallery__img" loading="lazy" />
+                  <img key={i} src={photo} alt={`${rifugio.name} ${i + 1}`} className="rd-gallery__img" loading="lazy" onError={onImgError} />
                 ))}
               </div>
             </section>
@@ -382,7 +383,7 @@ function RifugioDetail({ rifugioId, onNavigate, onShowLogin }) {
                 onClick={() => onNavigate('detail', trail.id)}
               >
                 <div className="rd-trail-card__img-wrap">
-                  <img src={trailImg(trail, 'thumb')} alt={trail.name} className="rd-trail-card__img" />
+                  <img src={trailImg(trail, 'thumb')} alt={trail.name} className="rd-trail-card__img" onError={onImgError} />
                 </div>
                 <div className="rd-trail-card__body">
                   <p className="rd-trail-card__region">{trail.region}</p>

@@ -10,6 +10,7 @@ import Home from './components/Home';
 import SplashScreen from './components/SplashScreen';
 import Footer from './components/Footer';
 import BottomNav from './components/BottomNav';
+import ActiveHikeTracker from './components/ActiveHikeTracker';
 
 // Route views — lazy-loaded on first visit
 const TrailCatalog         = lazy(() => import('./components/TrailCatalog'));
@@ -112,6 +113,7 @@ function App() {
     setShowSplash(false);
   }, []);
   const [isGPSActive, setIsGPSActive] = useState(false);
+  const [activeHikeTrail, setActiveHikeTrail] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   // Sync view to URL hash for back-button support and shareable links
@@ -139,6 +141,7 @@ function App() {
     if (hash !== currentView) {
       window.history.pushState(null, '', `#${currentView}`);
     }
+    window.scrollTo(0, 0);
   }, [currentView]);
 
   useEffect(() => {
@@ -258,6 +261,7 @@ function App() {
               onPlanWithJosephine={openJosephineWithTrail}
               autoStartHike={autoStartHike}
               onAutoStartConsumed={() => setAutoStartHike(false)}
+              onStartHike={(trail) => { setActiveHikeTrail(trail); setIsGPSActive(true); }}
             />
           )}
 
@@ -356,8 +360,15 @@ function App() {
           onShowLogin={() => setShowLoginModal(true)}
         />
 
-
-
+        {ENABLE_HIKE_TRACKING && activeHikeTrail && (
+          <ActiveHikeTracker
+            trail={activeHikeTrail}
+            onEnd={(hikeData) => {
+              setActiveHikeTrail(null);
+              setIsGPSActive(false);
+            }}
+          />
+        )}
 
         {showSplash && (
           <SplashScreen onComplete={handleSplashComplete} />

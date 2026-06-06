@@ -76,6 +76,14 @@ function HamburgerMenu({ isOpen, onClose, currentView, onNavigate, onLogout, nav
         <path d="M7 7H13M7 10H13M7 13H10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
       </svg>
     ),
+    'multiday-trails': (
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="4" cy="5" r="1.5" stroke="currentColor" strokeWidth="1.5"/>
+        <circle cx="10" cy="10" r="1.5" stroke="currentColor" strokeWidth="1.5"/>
+        <circle cx="16" cy="15" r="1.5" stroke="currentColor" strokeWidth="1.5"/>
+        <path d="M4 6.5C4 8 6 9 10 8.5M10 11.5C10 13 12 14 16 13.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      </svg>
+    ),
     logout: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M13 3H16C17.1 3 18 3.9 18 5V15C18 16.1 17.1 17 16 17H13M8 14L13 10L8 6M13 10H2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

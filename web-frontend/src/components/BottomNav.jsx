@@ -56,7 +56,14 @@ function BottomNav({ currentView, setCurrentView, onJosephineOpen, onShowLogin }
         aria-label="Talk to Josephine"
       >
         <div className="jph-bottom-nav__j-ring">
-          <img src="/logo.webp" alt="" className="jph-bottom-nav__j-mark" />
+          {/* Drop a circular/transparent hiker mark at /logo-mark.webp.
+              Until it exists, this falls back to the square app-icon. */}
+          <img
+            src="/logo-mark.webp"
+            alt=""
+            className="jph-bottom-nav__j-mark"
+            onError={e => { if (e.currentTarget.src.indexOf('logo-mark') !== -1) e.currentTarget.src = '/logo.webp'; }}
+          />
         </div>
       </button>
 

@@ -10,6 +10,7 @@ import {
 import './MultiDayTrailDetail.css';
 
 import { API_URL } from '../api';
+import { onImgError } from '../utils/trailImage';
 
 const DIFFICULTY_COLORS = {
   easy:        { bg: 'rgba(74,222,128,0.15)',  text: '#4ade80' },
@@ -442,7 +443,7 @@ function MultiDayTrailDetail({ trailId, onNavigate }) {
             <div className="mdtd-gallery">
               {trail.photos.map((photo, i) => (
                 <div key={i} className="mdtd-gallery__item">
-                  <img src={photo} alt={`${trail.name} ${i + 1}`} loading="lazy" />
+                  <img src={photo} alt={`${trail.name} ${i + 1}`} loading="lazy" onError={onImgError} />
                 </div>
               ))}
             </div>

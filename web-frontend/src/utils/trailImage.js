@@ -10,7 +10,24 @@
  *   <img src={trailImg(trail, 'card')} alt={trailImgAlt(trail)} />
  */
 
-const FALLBACK = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=70&auto=format';
+// Local, always-available fallback (bundled in /public). Used both as the
+// last resort when a trail/rifugio has no image, and by onImgError() below
+// when a remote image URL fails to load (e.g. a dead Unsplash link).
+export const IMG_FALLBACK = '/hero-alpine-summer.webp';
+const FALLBACK = IMG_FALLBACK;
+
+/**
+ * onError handler for <img> tags showing trail/rifugio photos.
+ * Swaps a broken remote image for the local fallback, guarding against loops.
+ *
+ * Usage:  <img src={trailImg(trail, 'card')} onError={onImgError} />
+ */
+export function onImgError(e) {
+  const el = e?.currentTarget || e?.target;
+  if (!el || el.dataset.fallbackApplied) return;
+  el.dataset.fallbackApplied = '1';
+  el.src = IMG_FALLBACK;
+}
 
 /**
  * @param {object} trail  - trail or rifugio object from the API

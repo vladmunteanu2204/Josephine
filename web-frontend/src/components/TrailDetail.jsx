@@ -3,11 +3,10 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useToast } from '../contexts/ToastContext';
 import { useAuth } from '../contexts/AuthContext';
-import { trailImg, trailImgAlt, trailGallery } from '../utils/trailImage';
+import { trailImg, trailImgAlt, trailGallery, onImgError } from '../utils/trailImage';
 import ReviewsSection from './ReviewsSection';
 import TrailMap from './TrailMap';
 import MediaGallery from './MediaGallery';
-import ActiveHikeTracker from './ActiveHikeTracker';
 import WeatherWidget from './WeatherWidget';
 import { ENABLE_HIKE_TRACKING } from '../featureFlags';
 import AuthPromptModal from './AuthPromptModal';
@@ -160,7 +159,7 @@ function NearbyRifugios({ ids, onViewRifugio }) {
                 src={rif.photos[0]}
                 alt={rif.name}
                 className="td-rifugio-card__img"
-                onError={e => { e.target.style.display = 'none'; }}
+                onError={onImgError}
               />
             )}
             <div className="td-rifugio-card__body">
@@ -181,14 +180,13 @@ function NearbyRifugios({ ids, onViewRifugio }) {
   );
 }
 
-function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin, onPlanWithJosephine, autoStartHike, onAutoStartConsumed }) {
+function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin, onPlanWithJosephine, autoStartHike, onAutoStartConsumed, onStartHike }) {
   const { t, i18n } = useTranslation();
   const toast = useToast();
   const { currentUser } = useAuth();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const [fullTrail, setFullTrail] = useState(trail);
   const [loading, setLoading]     = useState(false);
-  const [isHikeActive, setIsHikeActive] = useState(false);
   const [isSaved, setIsSaved]     = useState(false);
   const [parallaxOffset, setParallaxOffset] = useState(0);
   const [publicInsights, setPublicInsights] = useState([]);
@@ -235,8 +233,7 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin, 
   // Launched with "Start hike" from another surface → start tracking immediately.
   useEffect(() => {
     if (autoStartHike && ENABLE_HIKE_TRACKING && fullTrail?.name) {
-      setIsHikeActive(true);
-      if (setIsGPSActive) setIsGPSActive(true);
+      if (onStartHike) onStartHike(fullTrail);
       if (onAutoStartConsumed) onAutoStartConsumed();
     }
   }, [autoStartHike, fullTrail?.name]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -264,13 +261,6 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin, 
     setIsSaved(!isSaved);
   };
 
-  const handleHikeEnd = (hikeData) => {
-    setIsHikeActive(false);
-    if (setIsGPSActive) setIsGPSActive(false);
-    if (hikeData) {
-      toast.success(`Hike complete! ${hikeData.stats.distance_km.toFixed(2)} km · ${hikeData.stats.duration_hours.toFixed(1)}h`, 5000);
-    }
-  };
 
   const formatSeason = (s) => {
     if (!s) return 'Year-round';
@@ -292,10 +282,6 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin, 
     <div className="td-page"><button className="td-back" onClick={onBack}><ArrowLeft size={16} strokeWidth={2} /> {t('trail.backToTrails')}</button>
       <div className="td-state td-state--error">{t('common.error')}</div></div>
   );
-
-  if (ENABLE_HIKE_TRACKING && isHikeActive) {
-    return <ActiveHikeTracker trail={fullTrail} onEnd={handleHikeEnd} />;
-  }
 
   const diff = DIFFICULTY_CONFIG[fullTrail.difficulty] || DIFFICULTY_CONFIG.medium;
   const heroImg = trailImg(fullTrail, 'hero');
@@ -338,6 +324,7 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin, 
           alt={fullTrail.name}
           className="td-hero__img"
           style={{ transform: `translateY(${parallaxOffset}px)` }}
+          onError={onImgError}
         />
         <div className="td-hero__overlay" />
 
@@ -542,7 +529,7 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin, 
         <div className="td-cta-bar">
           <button
             className="td-cta-btn"
-            onClick={() => { setIsHikeActive(true); if (setIsGPSActive) setIsGPSActive(true); }}
+            onClick={() => { if (onStartHike) onStartHike(fullTrail); }}
           >
             {t('trail.startHike')}
           </button>

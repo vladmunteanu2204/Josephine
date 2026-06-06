@@ -10,6 +10,8 @@ export const SEASONS = {
     heroImage:    '/hero-alpine-summer.webp',
     splashImage:  '/splash-summer.webp',
     portrait:     '/josephine-portrait.webp',
+    naryaPortrait: '/narya.webp',
+    naryaWide:    '/josephine-with-narya.webp',
     heroPosition: '72% 50%',
 
     tokens: {
@@ -43,12 +45,12 @@ export const SEASONS = {
   },
 
   autumn: {
-    // Seasonal photos not yet provided — remove keys so seasonAsset falls back to summer.
-    // Add heroImage/splashImage/portrait here once you drop the files into public/.
     heroPosition: '72% 50%',
     fallbackHeroImage:   '/hero-alpine-summer.webp',
     fallbackSplashImage: '/splash-summer.webp',
-    fallbackPortrait:    '/josephine-portrait.webp',
+    portrait:            '/josephine-portrait-autumn.webp',
+    naryaPortrait:       '/narya-autumn.webp',
+    naryaWide:           '/josephine-with-narya-autumn.webp',
 
     tokens: {
       '--accent-primary':  '#c8782a',
@@ -84,7 +86,9 @@ export const SEASONS = {
     heroPosition: '72% 40%',
     fallbackHeroImage:   '/hero-alpine-summer.webp',
     fallbackSplashImage: '/splash-summer.webp',
-    fallbackPortrait:    '/josephine-portrait.webp',
+    portrait:            '/josephine-portrait-winter.webp',
+    naryaPortrait:       '/narya-winter.webp',
+    naryaWide:           '/josephine-with-narya-winter.webp',
 
     tokens: {
       '--accent-primary':  '#a0bcd0',
@@ -120,7 +124,9 @@ export const SEASONS = {
     heroPosition: '72% 50%',
     fallbackHeroImage:   '/hero-alpine-summer.webp',
     fallbackSplashImage: '/splash-summer.webp',
-    fallbackPortrait:    '/josephine-portrait.webp',
+    portrait:            '/josephine-portrait-spring.webp',
+    naryaPortrait:       '/narya-spring.webp',
+    naryaWide:           '/josephine-with-narya-spring.webp',
 
     tokens: {
       '--accent-primary':  '#6abf6a',

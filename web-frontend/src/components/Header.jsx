@@ -109,10 +109,11 @@ function Header({ currentView, setCurrentView, showLoginModal, setShowLoginModal
             aria-label="Josephine — home"
           >
             <img
-              src="/logo.webp"
+              src="/logo-mark.webp"
               alt="Josephine mark"
               className="jph-header__mark-img"
               aria-hidden="true"
+              onError={e => { if (e.currentTarget.src.indexOf('logo-mark') !== -1) e.currentTarget.src = '/logo.webp'; }}
             />
             <div className="jph-header__wordmark-block">
               <span className="jph-header__wordmark">Josephine</span>

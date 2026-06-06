@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { trailImg, trailImgAlt } from '../utils/trailImage';
+import { trailImg, trailImgAlt, onImgError } from '../utils/trailImage';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { ArrowLeft, Heart, Mountain, Ruler, Clock, TrendingUp, Star } from 'lucide-react';
@@ -102,9 +102,10 @@ function SavedTrails({ onNavigate, onStartHike }) {
                 <div key={trail.id} className="saved-trail-card">
                   <div className="card-image-wrapper">
                     <img 
-                      src={trailImg(trail, 'thumb')} 
+                      src={trailImg(trail, 'thumb')}
                       alt={trail.name}
                       className="card-image"
+                      onError={onImgError}
                     />
                     <button
                       onClick={(e) => {

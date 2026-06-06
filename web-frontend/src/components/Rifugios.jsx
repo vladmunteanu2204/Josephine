@@ -11,6 +11,7 @@ import { SegmentedControl } from './ui';
 import './Rifugios.css';
 
 import { API_URL } from '../api';
+import { onImgError } from '../utils/trailImage';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -110,7 +111,7 @@ function RifugioMap({ rifugios, onSelect }) {
           >
             <div className="rif-popup-inner">
               {popup.photos?.[0] && (
-                <img src={popup.photos[0]} alt={popup.name} className="rif-popup-img" />
+                <img src={popup.photos[0]} alt={popup.name} className="rif-popup-img" onError={onImgError} />
               )}
               <div className="rif-popup-body">
                 <span
@@ -307,7 +308,7 @@ function Rifugios({ onNavigate, initialType, onTypeConsumed, initialStatus, onSt
                   >
                     {/* Photo */}
                     <div className="rif-card__img-wrap">
-                      <img src={img} alt={r.name} loading="lazy" className="rif-card__img" />
+                      <img src={img} alt={r.name} loading="lazy" className="rif-card__img" onError={onImgError} />
                       <div className="rif-card__img-overlay" />
                       <span className="rif-card__type-badge">{TYPE_LABELS[r.type] || r.type}</span>
                     </div>

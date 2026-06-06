@@ -6,6 +6,33 @@ import App from './App';
 import './index.css';
 import i18n from './i18n';   // default export — pass concrete instance to provider
 import { reportWebVitals } from './vitals';
+import { IMG_FALLBACK } from './utils/trailImage';
+
+// ── Global broken-image safety net ──────────────────────────────────────
+// Per-element React onError handlers can miss images whose load fails *before*
+// React attaches its listener (fast 404s served from cache). This capture-phase
+// listener is registered before React mounts, so it catches those too. It swaps
+// any broken photo for the local fallback — but skips our small local UI icons
+// (logo / portrait / narya), which have their own handling and shouldn't become
+// a full-bleed mountain photo.
+const _IMG_SKIP = /logo|josephine-portrait\.webp|narya|app-icon|favicon|\/icon/i;
+document.addEventListener(
+  'error',
+  (e) => {
+    const el = e.target;
+    if (
+      el &&
+      el.tagName === 'IMG' &&
+      !el.dataset.fallbackApplied &&
+      !_IMG_SKIP.test(el.getAttribute('src') || '') &&
+      (el.getAttribute('src') || '').indexOf(IMG_FALLBACK) === -1
+    ) {
+      el.dataset.fallbackApplied = '1';
+      el.src = IMG_FALLBACK;
+    }
+  },
+  true, // capture — 'error' events do not bubble
+);
 
 // Initialise Sentry before rendering — only when DSN is configured
 if (import.meta.env.VITE_SENTRY_DSN) {

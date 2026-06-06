@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { trailImg } from '../utils/trailImage';
+import { trailImg, onImgError } from '../utils/trailImage';
 import i18nInstance from '../i18n';
 import axios from 'axios';
 import { detectSeason, getSeasonConfig } from '../hooks/useSeason';
@@ -404,7 +404,7 @@ function TrailDetailCard({ trail, saved, onSave, onView, t }) {
           src={trailImg(trail, 'card')}
           alt={trail.name}
           className="jc-trail-card__photo"
-          onError={e => { e.currentTarget.style.opacity = '0.2'; }}
+          onError={onImgError}
         />
         <div className="jc-trail-card__photo-overlay" />
         {trail.in_season === false && (
@@ -528,7 +528,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
     return (v && v !== full) ? v : (fb ?? k);
   };
   const makeInitialMessages = useCallback(() => [
-    { id: 1, from: 'josephine', type: 'text', text: t('greeting'), chips: null },
+    { id: 1, from: 'josephine', type: 'text', state: 'idle', text: t('greeting'), chips: null },
   ], [t]);
 
   /* ── State ──────────────────────────────────────────────────────────── */
@@ -536,9 +536,17 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
 
   const [messages, setMessages] = useState(() => {
     const saved = savedChatRef.current;
-    if (saved?.messages?.length > 1) return saved.messages;
+    if (saved?.messages?.length > 1) {
+      // The first josephine greeting must never restore in a sleeping pose —
+      // older sessions persisted it as 'peaceful'. Normalize it back to idle.
+      return saved.messages.map((m, i) =>
+        i === 0 && m.from === 'josephine' && m.state === 'peaceful'
+          ? { ...m, state: 'idle' }
+          : m
+      );
+    }
     return [
-      { id: 1, from: 'josephine', type: 'text', text: _t0('greeting'), chips: null },
+      { id: 1, from: 'josephine', type: 'text', state: 'idle', text: _t0('greeting'), chips: null },
     ];
   });
 
@@ -559,12 +567,33 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
   const [showMenu, setShowMenu]       = useState(false);
   const [copyFeedback, setCopyFeedback] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [headerAvatarState, setHeaderAvatarState] = useState('idle');
 
   /* ── Chip freezing: chips in messages older than the latest user msg ── */
   const lastUserMsgId = messages.reduce(
     (max, m) => m.from === 'user' ? Math.max(max, m.id) : max, 0
   );
   const isChipActive = (msg) => msg.id > lastUserMsgId;
+
+  /* ── The latest Josephine run's avatar is the "live" one (avatars only show
+        on the first message of a run), so it follows the idle/sleep timer. ── */
+  const lastJosephineAvatarId = messages.reduce((id, m, i) => {
+    const firstInRun = m.from === 'josephine' && messages[i - 1]?.from !== 'josephine';
+    return firstInRun ? m.id : id;
+  }, 0);
+
+  /* ── Idle sleep timer — Josephine dozes after 20s of no interaction ── */
+  const idleTimerRef = useRef(null);
+  const wakeJosephine = useCallback(() => {
+    if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    setHeaderAvatarState('idle');
+    idleTimerRef.current = setTimeout(() => setHeaderAvatarState('peaceful'), 20000);
+  }, []);
+  // Start timer on mount, clear on unmount
+  React.useEffect(() => {
+    wakeJosephine();
+    return () => { if (idleTimerRef.current) clearTimeout(idleTimerRef.current); };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* ── Refs ───────────────────────────────────────────────────────────── */
   const bottomRef        = useRef(null);
@@ -688,8 +717,28 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
   }, [showMenu]);
 
   /* ── Helpers ─────────────────────────────────────────────────────────── */
+  // Infer the right avatar clip from message type when no state is given explicitly.
+  const inferAvatarState = (partial) => {
+    if (partial.state) return partial.state;
+    switch (partial.type) {
+      case 'trail-card':
+      case 'options':    return 'hero';
+      case 'almanac':
+      case 'mood-intro':
+      case 'conditions': return 'idle';
+      default: {
+        // Detect apology / error / no-result text → concerned
+        const t = partial.text || '';
+        if (/couldn.t|can.t find|no trail|sorry|error|unfortunately|didn.t|nothing|no result/i.test(t))
+          return 'concerned';
+        return 'idle';
+      }
+    }
+  };
+
   const appendJosephineMessage = (partial) => {
-    setMessages(prev => [...prev, { id: Date.now() + Math.random(), from: 'josephine', ...partial }]);
+    const state = inferAvatarState(partial);
+    setMessages(prev => [...prev, { id: Date.now() + Math.random(), from: 'josephine', state, ...partial }]);
   };
   const appendUserMessage = (text) => {
     setMessages(prev => [...prev, { id: Date.now() + Math.random(), from: 'user', type: 'text', text, chips: null }]);
@@ -1232,6 +1281,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
   /* ── Freeform send ───────────────────────────────────────────────────── */
   const sendMessage = useCallback(async (text) => {
     if (!text.trim()) return;
+    wakeJosephine();
     const trimmed = text.trim();
     const tl = trimmed.toLowerCase();
     // The trail the conversation is currently centred on (an opened trail, or
@@ -1786,8 +1836,8 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
         </button>
         <div className="jc-header__identity">
           <div className="jc-header__avatar">
-            <img src="/josephine/portrait.png" alt="" className="jc-header__mark"
-              onError={e => { e.currentTarget.src='/josephine-portrait.webp'; }} />
+            <img className="jc-header__mark" src="/josephine-portrait.webp" alt="Josephine"
+                 onError={e => { e.currentTarget.src = '/logo.webp'; }} />
           </div>
           <div>
             <p className="jc-header__name">Josephine</p>
@@ -1848,12 +1898,13 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
               className={`jc-msg jc-msg--${msg.from}${
                 (msg.type === 'trail-card' || msg.type === 'options' || msg.type === 'conditions' ||
                  msg.type === 'itinerary' || msg.type === 'mood-intro' || msg.type === 'plan') ? ' jc-msg--card' : ''}${
-                isGrouped ? ' jc-msg--grouped' : ''}`}
+                isGrouped ? ' jc-msg--grouped' : ''}${
+                msg.id === lastJosephineAvatarId ? ' jc-msg--live' : ''}`}
             >
               {msg.from === 'josephine' && (
                 <div className="jc-msg__avatar" style={isFirstInRun ? {} : { visibility: 'hidden' }}>
                   {isFirstInRun
-                    ? <JosephineAvatar state="idle" />
+                    ? <JosephineAvatar state={(msg.id === lastJosephineAvatarId && headerAvatarState === 'peaceful') ? 'peaceful' : (msg.state || 'idle')} />
                     : <img src="/josephine-portrait.webp" alt="" onError={e => { e.currentTarget.src='/logo.webp'; }} />}
                 </div>
               )}

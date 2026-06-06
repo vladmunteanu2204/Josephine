@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { trailImg } from '../utils/trailImage';
+import { trailImg, onImgError } from '../utils/trailImage';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import Map, { Marker, Popup, NavigationControl } from 'react-map-gl';
@@ -301,7 +301,7 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
               return (
                 <Card key={trail.id} as="article" interactive className="tc-card" onClick={() => viewTrail(trail)}>
                   <div className="tc-card__media">
-                    <img src={trailImg(trail, 'thumb')} alt={trail.name} className="tc-card__img" loading="lazy" />
+                    <img src={trailImg(trail, 'thumb')} alt={trail.name} className="tc-card__img" loading="lazy" onError={onImgError} />
                     <div className="tc-card__scrim" />
                     {trail.difficulty && (
                       <span className={`tc-diff tc-diff--${trail.difficulty}`}>{t(`catalog.${trail.difficulty}`)}</span>

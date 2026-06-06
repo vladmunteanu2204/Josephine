@@ -6,7 +6,7 @@ import {
   ArrowLeft, Plus, X, Trash2, Download, Save, Search,
   ChevronUp, ChevronDown, Ruler, TrendingUp, Clock,
 } from 'lucide-react';
-import { trailImg } from '../../utils/trailImage';
+import { trailImg, onImgError } from '../../utils/trailImage';
 import EquipmentChecklist from '../EquipmentChecklist';
 import SafetyTips from '../SafetyTips';
 import { Modal, Sheet } from '../ui';
@@ -255,7 +255,7 @@ export default function DayByDayPlanner({ initial, onSave, onBack }) {
                 const added = addedIds.has(tr.id);
                 return (
                   <li key={tr.id} className="ddp-picker-item">
-                    <img src={trailImg(tr, 'thumb')} alt="" className="ddp-picker-item__img" loading="lazy" />
+                    <img src={trailImg(tr, 'thumb')} alt="" className="ddp-picker-item__img" loading="lazy" onError={onImgError} />
                     <div className="ddp-picker-item__body">
                       <p className="ddp-picker-item__name">{tr.name}</p>
                       <p className="ddp-picker-item__meta">{tr.region} · {num(tr.distance_km ?? tr.distance)} km · {(tr.difficulty || '')}</p>

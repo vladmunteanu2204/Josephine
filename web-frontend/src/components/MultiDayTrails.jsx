@@ -5,6 +5,7 @@ import { Mountain, CalendarRange, Ruler, TrendingUp, Footprints, MapPin, ArrowRi
 import './MultiDayTrails.css';
 
 import { API_URL } from '../api';
+import { onImgError } from '../utils/trailImage';
 
 const DIFFICULTY_COLORS = {
   easy:        { bg: 'rgba(74,222,128,0.15)',  text: '#4ade80' },
@@ -154,7 +155,7 @@ function MultiDayTrails({ onNavigate }) {
                   onClick={() => onNavigate('multiday-detail', trail.id)}
                 >
                   <div className="mdt-card__img">
-                    <img src={trail.hero_image || trail.thumbnail} alt={trail.name} loading="lazy" />
+                    <img src={trail.hero_image || trail.thumbnail} alt={trail.name} loading="lazy" onError={onImgError} />
                     <div className="mdt-card__img-overlay" />
                     <span className="mdt-card__type">
                       {typeLabel[trail.type] || trail.type}

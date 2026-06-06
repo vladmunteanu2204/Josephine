@@ -177,7 +177,7 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
         <div
           className="hp-hero__bg"
           ref={el => heroLayersRef.current.bg = el}
-          style={{ backgroundImage: `url('${heroBg}')`, backgroundPosition: config.heroPosition ?? '72% 50%' }}
+          style={!heroMotionOK ? { backgroundImage: `url('${heroBg}')`, backgroundPosition: config.heroPosition ?? '72% 50%' } : { backgroundPosition: config.heroPosition ?? '72% 50%' }}
         />
         {/* Living hero — Josephine + Narya walking, layered over the static image
             as a progressive enhancement (photo stays the instant LCP + poster). */}
@@ -227,7 +227,10 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
 
       {/* ══════════════════════════════════════════
           2. CINEMATIC TRAIL SHOWCASE — full viewport
+          Only render once featured trails have loaded, otherwise the section
+          would show as an empty black band (e.g. if the backend is unreachable).
       ══════════════════════════════════════════ */}
+      {featuredTrails.length > 0 && (
       <section
         className="hp-cinema"
         id="hp-cinema"
@@ -311,6 +314,7 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
           ))}
         </div>
       </section>
+      )}
 
       {/* ══════════════════════════════════════════
           3. JOSEPHINE CONVERSATION — full viewport
@@ -449,7 +453,7 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
         <div
           className="hp-paths__card"
           onClick={() => setCurrentView('multiday-trails')}
-          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=70&auto=format')` }}
+          style={{ backgroundImage: `url('/home/hut-to-hut.webp')` }}
         >
           <div className="hp-paths__scrim" />
           <div className="hp-paths__body">
@@ -471,14 +475,14 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
         <div
           className="hp-paths__card hp-paths__card--narya"
           onClick={() => navigateToCatalog ? navigateToCatalog(['dog-friendly']) : setCurrentView('catalog')}
-          style={{ backgroundImage: `url('/josephine-with-narya.webp')` }}
+          style={{ backgroundImage: `url('${seasonAsset(config, 'naryaWide')}')` }}
         >
           <div className="hp-paths__scrim hp-paths__scrim--narya" />
           <div className="hp-paths__body">
             {/* Narya character badge */}
             <div className="hp-narya-badge">
               <img
-                src="/narya.webp"
+                src={seasonAsset(config, 'naryaPortrait')}
                 alt="Narya"
                 className="hp-narya-badge__img"
                 onError={e => e.currentTarget.style.display = 'none'}

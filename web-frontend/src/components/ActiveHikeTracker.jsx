@@ -352,19 +352,8 @@ function ActiveHikeTracker({ trail, onEnd }) {
     }
   };
 
-  // Speak a line via the browser (locale voice); guarded + mute-aware.
-  const speakLine = (text) => {
-    try {
-      if (audioMuted || !text || !('speechSynthesis' in window)) return;
-      const u = new SpeechSynthesisUtterance(text.replace(/[^\p{L}\p{N}\s.,!?'’"—-]/gu, ''));
-      const lng = (i18n.language || 'en').split('-')[0];
-      u.lang = lng === 'it' ? 'it-IT' : lng === 'de' ? 'de-DE' : 'en-GB';
-      const v = window.speechSynthesis.getVoices().find(vo => vo.lang?.toLowerCase().startsWith(u.lang.toLowerCase().slice(0, 2)));
-      if (v) u.voice = v;
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(u);
-    } catch { /* no-op */ }
-  };
+  // Speak a line as Josephine — calm, Italian-accented female voice.
+  const speakLine = (_text) => { /* voice disabled */ };
 
   // Surface a moment: bubble + toast + notification + chime + voice.
   const announceMoment = (moment) => {

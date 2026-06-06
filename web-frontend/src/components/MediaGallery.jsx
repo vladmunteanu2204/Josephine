@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { onImgError } from '../utils/trailImage';
 import './MediaGallery.css';
 
 // Lazy Image Component with Intersection Observer and Blur-up
@@ -60,9 +61,10 @@ function LazyImage({ src, alt, onClick, className }) {
       {/* Actual image */}
       {isInView && (
         <img 
-          src={src} 
+          src={src}
           alt={alt}
           onLoad={() => setIsLoaded(true)}
+          onError={onImgError}
           style={{
             width: '100%',
             height: '100%',
@@ -233,9 +235,10 @@ function MediaGallery({ trail }) {
               ‹
             </button>
             
-            <img 
-              src={photos[lightboxIndex]} 
+            <img
+              src={photos[lightboxIndex]}
               alt={`${trail.name} - ${t('trail.photo')} ${lightboxIndex + 1}`}
+              onError={onImgError}
             />
             
             <button 

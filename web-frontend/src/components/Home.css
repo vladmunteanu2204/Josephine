@@ -27,6 +27,11 @@
   background-size: cover;
   background-position: 72% 50%;
   will-change: transform;
+  transition: opacity 0.3s ease;
+}
+.hp-hero--vid-ready .hp-hero__bg {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .hp-hero__video {
@@ -37,7 +42,7 @@
   object-fit: cover;
   object-position: 50% 50%;
   opacity: 0;
-  transition: opacity 1s ease;
+  transition: opacity 0.3s ease;
   pointer-events: none;
 }
 .hp-hero__video.is-ready { opacity: 1; }
@@ -67,7 +72,7 @@
 
 .hp-hero__left {
   flex: 0 0 auto;
-  max-width: 560px;
+  max-width: 640px;
 }
 
 .hp-hero__eyebrow {
@@ -81,11 +86,11 @@
 
 .hp-hero__title {
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(52px, 7vw, 96px);
+  font-size: clamp(40px, 4.6vw, 68px);
   font-weight: 300;
   color: #f0ece6;
-  line-height: 1.03;
-  margin: 0 0 24px;
+  line-height: 1.06;
+  margin: 0 0 20px;
   letter-spacing: -0.01em;
 }
 
@@ -98,8 +103,8 @@
   font-size: clamp(14px, 1.5vw, 16px);
   color: rgba(240, 236, 230, 0.6);
   line-height: 1.75;
-  margin: 0 0 44px;
-  max-width: 400px;
+  margin: 0 0 32px;
+  max-width: 440px;
 }
 
 .hp-hero__cta {
@@ -282,6 +287,15 @@
 @keyframes hpCueBounce {
   0%, 100% { transform: translateY(0); }
   50%       { transform: translateY(7px); }
+}
+
+/* On mobile the fixed bottom nav (and its floating Josephine button) sits at
+   the base of the first viewport — lift the scroll cue above it so they don't
+   overlap. The bottom nav appears at ≤899px. */
+@media (max-width: 899px) {
+  .hp-hero__cue {
+    padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 /* ── Hero responsive ── */
@@ -1134,8 +1148,12 @@
   }
 }
 
+/* ── Portrait video crop fix: anchor top on landscape viewports ── */
+@media (min-width: 769px) {
+  .hp-hero__video { object-position: 50% 0%; }
+}
+
 /* ── Phase 1/5: lucide affordance alignment ───────────────────────────── */
-.hp-cinema__nav { display: flex; align-items: center; justify-content: center; }
 .hp-hero__cue-arrow { display: block; margin: 0 auto; }
 .hp-huts__cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
 .hp-paths__link { display: inline-flex; align-items: center; gap: 6px; }

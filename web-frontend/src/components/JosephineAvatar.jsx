@@ -4,13 +4,14 @@ import './JosephineAvatar.css';
 // Living-avatar clip library — base paths; the player serves .mp4 first (iOS
 // Safari) then .webm. Add states here as clips are produced.
 const CLIPS = {
-  idle: '/josephine/idle',
-  thinking: '/josephine/thinking',
-  walking: '/josephine/walking',
-  peaceful: '/josephine/peaceful',
-  celebrate: '/josephine/celebrate',            // meadow joy (non-summit hikes)
-  celebrateSummit: '/josephine/celebrate-summit', // flag on the summit
-  hero: '/josephine/hero',
+  idle:            '/josephine/idle',
+  thinking:        '/josephine/thinking',
+  walking:         '/josephine/walking',
+  peaceful:        '/josephine/peaceful',
+  concerned:       '/josephine/concerned',
+  celebrate:       '/josephine/celebrate',
+  celebrateSummit: '/josephine/celebrate-summit',
+  hero:            '/josephine/hero',
 };
 
 const reducedMotion =

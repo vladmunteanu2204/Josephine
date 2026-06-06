@@ -5,7 +5,9 @@
 .jc-page {
   display: flex;
   flex-direction: column;
-  height: 100dvh;
+  /* Fit between the top header nav (80px padding on .main-content) and the
+     viewport bottom so the input bar never falls off-screen. */
+  height: calc(100dvh - 80px);
   width: 100%;
   max-width: 640px;
   margin: 0 auto;
@@ -14,6 +16,14 @@
   overflow: hidden;
   /* Subtle frame so the centered column reads as a panel on wide screens */
   box-shadow: 0 0 80px rgba(0,0,0,0.6);
+}
+
+/* On phones the top nav is 70px and a 64px bottom nav is fixed over the bottom —
+   reserve room for both so the composer sits just above the bottom nav. */
+@media (max-width: 899px) {
+  .jc-page {
+    height: calc(100dvh - 70px - 64px - env(safe-area-inset-bottom, 0px));
+  }
 }
 
 /* ── Header ── */
@@ -602,9 +612,18 @@
   max-width: 100%;
   width: 100%;
 }
-/* Rich cards use the full chat width — drop the avatar gutter so they aren't squeezed */
+/* Rich cards use the full chat width — drop the avatar gutter so they aren't squeezed.
+   Keep inner items left-aligned so short text bubbles size to their content instead
+   of stretching the whole column (which looked off on wide / 4K screens). */
 .jc-msg--card .jc-msg__avatar { display: none; }
-.jc-msg--card .jc-msg__content { width: 100%; }
+.jc-msg--card .jc-msg__content { width: 100%; align-items: flex-start; }
+.jc-msg--card .jc-bubble { max-width: 520px; }
+
+/* …but the most-recent Josephine card keeps her avatar so she never vanishes
+   from the conversation. Stack it above so the card stays full-width. */
+.jc-msg--card.jc-msg--live { flex-direction: column; align-items: flex-start; gap: 6px; }
+.jc-msg--card.jc-msg--live .jc-msg__avatar { display: block; }
+.jc-msg--card.jc-msg--live .jc-msg__content { width: 100%; }
 
 .jc-trail-card {
   width: 280px;

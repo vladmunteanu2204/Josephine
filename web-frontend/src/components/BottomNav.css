@@ -153,6 +153,11 @@
 .jph-bottom-nav__j-mark {
   width: 100%;
   height: 100%;
+  /* The emblem is a full-bleed circular badge that already carries its own
+     gold ring, so it fills the button edge-to-edge — its ring sits flush
+     behind the button's gold border instead of creating a gap/double-ring. */
   object-fit: cover;
+  padding: 0;
+  box-sizing: border-box;
   border-radius: 50%;
 }

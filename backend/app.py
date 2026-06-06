@@ -18,6 +18,15 @@ import unicodedata
 import difflib
 import jwt
 from datetime import datetime, timedelta, timezone
+
+# Load environment variables from a local .env file (if present) before any
+# os.environ lookups below. In production the platform injects these directly,
+# so this is a no-op there. Guarded so a missing python-dotenv never breaks boot.
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    pass
 try:
     from zoneinfo import ZoneInfo
     _TZ_LOCAL = ZoneInfo('Europe/Rome')   # South Tyrol local time

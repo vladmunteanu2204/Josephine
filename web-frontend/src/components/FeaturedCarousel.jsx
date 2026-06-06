@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { onImgError } from '../utils/trailImage';
 import './FeaturedCarousel.css';
 
 function FeaturedCarousel({ trails, onViewTrail }) {
@@ -49,9 +50,10 @@ function FeaturedCarousel({ trails, onViewTrail }) {
         <div className="carousel-slide">
           <div className="carousel-hero-section">
             <img 
-              src={currentTrail.image_url} 
+              src={currentTrail.image_url}
               alt={`${currentTrail.name} - ${currentTrail.region}`}
               className="carousel-hero-image"
+              onError={onImgError}
             />
             <div className="carousel-hero-gradient"></div>
             <span className="region-badge-floating">{currentTrail.region}</span>
