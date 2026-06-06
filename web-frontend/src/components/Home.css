@@ -18,7 +18,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  margin-top: -80px; /* pull hero up behind sticky header — eliminates the dead dark band */
+  margin-top: calc(-80px - var(--safe-top, 0px)); /* pull hero up behind sticky header (incl. notch) — eliminates the dead dark band */
 }
 
 .hp-hero__bg {
@@ -922,6 +922,25 @@
   position: relative;
 }
 
+/* Soft radial glow behind the portrait so she emerges from the dark backdrop
+   rather than sitting on it as a pasted-in rectangle. */
+.hp-meet__portrait-wrap::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(560px, 92%);
+  height: 115%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center,
+    rgba(201, 168, 76, 0.18) 0%,
+    rgba(201, 168, 76, 0.07) 38%,
+    transparent 68%);
+  filter: blur(8px);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .hp-meet__portrait-img {
   height: clamp(280px, 45vw, 420px);
   width: auto;
@@ -929,8 +948,17 @@
   object-position: bottom center;
   position: relative;
   z-index: 1;
-  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  /* Feather every edge into the background — top, bottom and both sides — so
+     the photo dissolves into the section instead of showing hard rectangle
+     borders. Two masks intersected fade the vertical and horizontal edges. */
+  -webkit-mask-image:
+    linear-gradient(to bottom, transparent 0%, #000 14%, #000 78%, transparent 100%),
+    linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to bottom, transparent 0%, #000 14%, #000 78%, transparent 100%),
+    linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  mask-composite: intersect;
 }
 
 /* Pillars */
@@ -944,24 +972,58 @@
 .hp-meet__pillar {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 22px 18px;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
+  gap: 10px;
+  padding: 26px 20px;
+  border-radius: 18px;
+  background:
+    linear-gradient(165deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.015) 100%);
+  border: 1px solid rgba(255,255,255,0.07);
   text-align: left;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
 }
 
+/* hairline gold accent along the top edge of each card */
+.hp-meet__pillar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.6), transparent);
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+
+.hp-meet__pillar:hover {
+  transform: translateY(-4px);
+  border-color: rgba(201,168,76,0.32);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+}
+
+.hp-meet__pillar:hover::before { opacity: 1; }
+
 .hp-meet__pillar-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
   font-size: 22px;
-  color: #c9a84c;
+  color: #e8cd7e;
+  background: radial-gradient(circle at 35% 30%, rgba(201,168,76,0.28), rgba(201,168,76,0.1));
+  border: 1px solid rgba(201,168,76,0.28);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
 }
 
 .hp-meet__pillar-title {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: #f0ece6;
-  margin: 0;
+  margin: 2px 0 0;
   line-height: 1.3;
 }
 

@@ -18,7 +18,7 @@
 }
 
 .main-content {
-  padding-top: 80px;
+  padding-top: calc(80px + var(--safe-top, 0px));
   padding-bottom: 40px;
   position: relative;
   z-index: 1;
@@ -392,7 +392,7 @@
   }
 
   .main-content {
-    padding-top: 70px;
+    padding-top: calc(70px + var(--safe-top, 0px));
     padding-bottom: 20px;
   }
 

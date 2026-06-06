@@ -482,6 +482,7 @@ function TrailDetailCard({ trail, saved, onSave, onView, t }) {
 function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTrail, onSeedConsumed, onStartHike }) {
   const { currentUser } = useAuth();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
+  const [authPromptMsg, setAuthPromptMsg] = useState('Sign in to save this hike to your favourites.');
   const [lang, setLang] = useState(() => i18nInstance.language?.slice(0, 2) || 'en');
   useEffect(() => {
     const handler = (lng) => setLang((lng || i18nInstance.language || 'en').slice(0, 2));
@@ -1141,12 +1142,27 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
     }, 500);
   };
 
+  /* "Go to this hike" → open full trail detail (guests are gated to a taste) */
+  const gotoHike = (trail) => {
+    if (!trail) return;
+    // Opening the full hike page is members-only; guests stay in the chat
+    // "taste" and get the sign-in prompt instead of navigating out.
+    if (!currentUser) {
+      setAuthPromptMsg('Sign in to open the full hike and start your adventure.');
+      setShowAuthPrompt(true);
+      return;
+    }
+    if (viewTrail) viewTrail(trail);
+    else showTrailDetail(trail);
+  };
+
   /* Save → persist + itinerary timeline with "View saved" CTA */
   const saveHike = (trail) => {
     if (!trail) return;
     // Saving is a members-only feature — guests get the sign-in prompt instead
     // of a silent localStorage write that never syncs to an account.
     if (!currentUser) {
+      setAuthPromptMsg('Sign in to save this hike to your favourites.');
       setShowAuthPrompt(true);
       return;
     }
@@ -1931,7 +1947,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
                     t={t}
                     saved={savedIds.includes(msg.plan?.trail?.id)}
                     onSave={(tr) => saveHike(tr)}
-                    onViewTrail={(tr) => (viewTrail ? viewTrail(tr) : showTrailDetail(tr))}
+                    onViewTrail={(tr) => gotoHike(tr)}
                     onAlt={handlePlanAlt}
                     onStartHike={onStartHike}
                   />
@@ -2023,7 +2039,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
                     trail={msg.trail}
                     saved={savedIds.includes(msg.trail.id)}
                     onSave={() => saveHike(msg.trail)}
-                    onView={() => viewTrail?.(msg.trail)}
+                    onView={() => gotoHike(msg.trail)}
                     t={t}
                   />
                 )}
@@ -2120,7 +2136,7 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
         isOpen={showAuthPrompt}
         onClose={() => setShowAuthPrompt(false)}
         onLogin={() => { setShowAuthPrompt(false); onShowLogin?.(); }}
-        message="Sign in to save this hike to your favourites."
+        message={authPromptMsg}
       />
     </div>
   );

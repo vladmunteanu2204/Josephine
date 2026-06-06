@@ -3,9 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Home as HomeIcon, Map as ExploreIcon, CalendarRange as PlanIcon, Heart as SavedIcon } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import AuthPromptModal from './AuthPromptModal';
+import { isGuestAllowed } from '../utils/access';
 import './BottomNav.css';
-
-const GATED_VIEWS = ['planner', 'savedTrails'];
 
 function BottomNav({ currentView, setCurrentView, onJosephineOpen, onShowLogin }) {
   const { t } = useTranslation();
@@ -14,11 +13,13 @@ function BottomNav({ currentView, setCurrentView, onJosephineOpen, onShowLogin }
   const [authPromptMsg, setAuthPromptMsg] = useState('');
 
   const handleTabClick = (key) => {
-    if (GATED_VIEWS.includes(key) && !currentUser) {
+    // Guests can only open Home and Josephine from the bar; Explore/My Plan/
+    // Saved prompt for sign-in (see utils/access).
+    if (!currentUser && !isGuestAllowed(key)) {
       setAuthPromptMsg(
         key === 'savedTrails'
           ? 'Sign in to save and revisit your favourite trails.'
-          : 'Sign in to access trip planning and personalised features.'
+          : 'Create a free account to explore trails and plan your trips.'
       );
       setShowAuthPrompt(true);
       return;

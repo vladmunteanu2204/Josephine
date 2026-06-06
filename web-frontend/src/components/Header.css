@@ -14,7 +14,11 @@
      when an ancestor establishes a scroll/overflow context. .main-content
      already reserves padding-top (80px desktop / 70px mobile) for it. */
   position: fixed;
-  top: var(--safe-top);
+  /* Sit at the very top and pad the status-bar / notch zone with the header's
+     own frosted background, so page content (hero image, etc.) no longer bleeds
+     up behind the clock & battery — that strip now reads as part of the bar. */
+  top: 0;
+  padding-top: var(--safe-top);
   left: 0;
   right: 0;
   z-index: var(--z-navbar);

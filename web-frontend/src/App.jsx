@@ -4,6 +4,7 @@ import { ENABLE_HIKE_TRACKING, ENABLE_GAMIFICATION } from './featureFlags';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { SeasonProvider } from './contexts/SeasonContext';
+import { isGuestAllowed } from './utils/access';
 // Always-visible shell (eager)
 import Header from './components/Header';
 import Home from './components/Home';
@@ -44,6 +45,23 @@ function GuestGuard({ setCurrentView, onShowLogin, children }) {
   }, [currentUser, setCurrentView, onShowLogin]);
   if (!currentUser) return null;
   return children;
+}
+
+// App-wide access backbone: bounces logged-out visitors off any members-only
+// view back to the Home teaser and opens the login modal. Rendered inside
+// AuthProvider (which holds children until auth resolves), so a logged-in user
+// refreshing on a deep link is never wrongly redirected. This catches every
+// navigation path — hash links, popstate, Home CTAs, programmatic setCurrentView
+// — that the per-nav prompts in Header/BottomNav don't intercept.
+function AccessGate({ currentView, setCurrentView, onShowLogin }) {
+  const { currentUser } = useAuth();
+  useEffect(() => {
+    if (!currentUser && !isGuestAllowed(currentView)) {
+      setCurrentView('home');
+      onShowLogin?.();
+    }
+  }, [currentUser, currentView, setCurrentView, onShowLogin]);
+  return null;
 }
 
 // All hash routes the app knows how to render. Anything else → NotFound.
@@ -225,6 +243,11 @@ function App() {
       <SeasonProvider>
       <ToastProvider>
         <AuthProvider>
+          <AccessGate
+            currentView={currentView}
+            setCurrentView={setCurrentView}
+            onShowLogin={() => setShowLoginModal(true)}
+          />
           {(!isGPSActive || !ENABLE_HIKE_TRACKING) && (
           <Header
             currentView={currentView}

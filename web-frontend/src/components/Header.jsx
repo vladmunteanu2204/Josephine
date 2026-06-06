@@ -7,6 +7,7 @@ import Login from './Login';
 import Signup from './Signup';
 import UserMenuPortal from './UserMenuPortal';
 import AuthPromptModal from './AuthPromptModal';
+import { isGuestAllowed } from '../utils/access';
 import './Header.css';
 
 const languageLabels = {
@@ -31,15 +32,14 @@ function Header({ currentView, setCurrentView, showLoginModal, setShowLoginModal
   const [authPromptMsg, setAuthPromptMsg] = useState('');
   const avatarButtonRef = useRef(null);
 
-  // Views that require login
-  const GATED_VIEWS = ['planner', 'savedTrails', 'profile', 'challenges', 'leaderboards'];
-
+  // Guests may only reach the Home teaser, Josephine, legal pages and Settings;
+  // everything else prompts for sign-in (see utils/access).
   const handleNavClick = useCallback((key) => {
-    if (GATED_VIEWS.includes(key) && !currentUser) {
+    if (!currentUser && !isGuestAllowed(key)) {
       setAuthPromptMsg(
         key === 'savedTrails'
           ? 'Sign in to save and revisit your favourite trails.'
-          : 'Sign in to access trip planning and personalised features.'
+          : 'Create a free account to explore trails, huts and trip planning.'
       );
       setShowAuthPrompt(true);
       return;

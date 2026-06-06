@@ -118,6 +118,27 @@
   color: rgba(240,236,230,0.4);
 }
 
+/* On phones the row no longer scrolls sideways (which clipped the duration
+   card); instead the stats wrap into a tidy grid and the value can break. */
+@media (max-width: 600px) {
+  .mdtd-stats {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
+  .mdtd-stat {
+    flex: 1 1 33%;
+    min-width: 0;
+    padding: 14px 10px;
+  }
+  .mdtd-stat + .mdtd-stat { border-left: none; }
+  .mdtd-stat__value {
+    font-size: 15px;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.2;
+  }
+}
+
 .mdtd-difficulty-badge {
   font-size: 11px;
   font-weight: 600;
@@ -621,17 +642,32 @@
   border-radius: 10px;
 }
 
+.mdtd-emergency-item {
+  /* allow the long-URL value to wrap instead of pushing past the screen edge */
+  align-items: flex-start;
+}
+
 .mdtd-emergency-item__label {
   font-size: 12px;
   font-weight: 600;
   color: rgba(240,236,230,0.4);
   min-width: 130px;
+  flex-shrink: 0;
 }
 
 .mdtd-emergency-item__value {
   font-size: 14px;
   color: rgba(240,236,230,0.82);
   font-weight: 500;
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+@media (max-width: 560px) {
+  .mdtd-emergency-item { flex-direction: column; gap: 4px; }
+  .mdtd-emergency-item__label { min-width: 0; }
 }
 
 /* ── Gallery ── */

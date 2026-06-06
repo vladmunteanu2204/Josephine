@@ -227,15 +227,21 @@
 }
 
 .tracker-controls {
-  position: absolute;
-  bottom: 2rem;
+  /* Fixed (not absolute) so the row is always anchored to the visible viewport
+     bottom — on iOS the map container can run taller than the visual viewport,
+     which previously pushed the "End Hike" button below the fold / home bar and
+     left the user unable to exit tracking. */
+  position: fixed;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 1.25rem);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
+  gap: 0.6rem;
+  flex-wrap: nowrap;
   justify-content: center;
-  max-width: 90%;
+  align-items: center;
+  width: max-content;
+  max-width: calc(100% - 24px);
   z-index: calc(var(--z-immersive) + 5);
 }
 
@@ -289,6 +295,14 @@
 .end-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* Keep all three controls on one reachable row on small phones */
+@media (max-width: 430px) {
+  .tracker-controls { gap: 0.45rem; }
+  .control-btn { padding: 0.6rem 0.85rem; font-size: 0.8rem; white-space: nowrap; }
+  .end-btn { padding: 0.6rem 1rem; font-size: 0.85rem; }
+  .mute-btn { padding: 0.6rem 0.7rem; }
 }
 
 .warning-banner {
