@@ -34,6 +34,7 @@ except Exception:                          # pragma: no cover
     _TZ_LOCAL = None
 from functools import wraps
 import media as media_module  # image upload / R2 delivery
+import firebase_auth  # optional, credential-gated ID-token verification
 from weather_service import weather_service
 import dispersal
 import almanac
@@ -289,6 +290,50 @@ def _server_error(e, code=500):
     print(f"[error] {type(e).__name__}: {e}")
     traceback.print_exc()
     return jsonify({'error': 'Internal server error'}), code
+
+
+def _bearer_token():
+    """Extract the raw Bearer token from the Authorization header, or None."""
+    auth = request.headers.get('Authorization', '')
+    return auth[7:] if auth.startswith('Bearer ') else None
+
+
+def _authenticated_user(data=None):
+    """Resolve the submitting user for user-content endpoints (reviews, hikes).
+
+    Two modes, chosen automatically by whether a Firebase service-account
+    credential is configured (see firebase_auth):
+
+    - **Verification ENABLED** — the request's Authorization Bearer *Firebase ID
+      token* is cryptographically verified; the VERIFIED uid/email is returned
+      and any client-sent `user_id` is ignored (it's forgeable). A missing or
+      invalid token yields None → the caller returns 401.
+    - **Verification DISABLED** (no creds) — legacy soft trust: the non-empty
+      client-sent `user_id` is accepted as-is, exactly as before. Zero
+      regression until the owner drops a credential in.
+
+    Returns {'uid', 'email', 'name', 'verified'} or None.
+    """
+    data = data or {}
+    if firebase_auth.is_enabled():
+        decoded = firebase_auth.verify_token(_bearer_token())
+        if not decoded:
+            return None
+        return {
+            'uid': decoded.get('uid') or decoded.get('user_id'),
+            'email': decoded.get('email'),
+            'name': decoded.get('name') or decoded.get('email'),
+            'verified': True,
+        }
+    uid = str(data.get('user_id', '')).strip()
+    if not uid:
+        return None
+    return {
+        'uid': uid,
+        'email': data.get('user_email'),
+        'name': data.get('user_name'),
+        'verified': False,
+    }
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TRAILS_PATH   = os.path.join(BASE_DIR, 'data', 'trails.json')
@@ -1302,17 +1347,20 @@ def add_trail_review(trail_id):
     try:
         data = request.json or {}
 
-        # Reviews are restricted to registered users — the client sends the
-        # authenticated Firebase uid. Reject anonymous submissions.
-        if not str(data.get('user_id', '')).strip():
+        # Reviews are restricted to authenticated users. When Firebase
+        # verification is enabled the identity is proven by the ID token;
+        # otherwise the client-sent uid is trusted (legacy). See
+        # _authenticated_user for the contract.
+        user = _authenticated_user(data)
+        if not user:
             return jsonify({'error': 'authentication_required',
                             'message': 'Please sign in to submit a review.'}), 401
 
         new_review = {
             'id': f"rev_{trail_id}_{datetime.now().timestamp()}",
             'trail_id': trail_id,
-            'user_id': data.get('user_id'),
-            'user_name': data.get('user_name', 'Anonymous'),
+            'user_id': user['uid'],
+            'user_name': data.get('user_name') or user.get('name') or 'Anonymous',
             'rating': data.get('rating', 5),
             'comment': data.get('comment', ''),
             'date': datetime.now().strftime('%Y-%m-%d'),
@@ -1335,11 +1383,19 @@ def save_hike():
     """Save a completed hike"""
     try:
         hike_data = request.json
-        
+
         if not hike_data:
             print("❌ No hike data received")
             return jsonify({'error': 'No hike data provided'}), 400
-        
+
+        # If Firebase verification is enabled and a valid ID token rode along,
+        # trust the VERIFIED email over whatever the client put in the body
+        # (stops one user from saving hikes under another's address). Guests /
+        # unverified clients are unaffected — the hike still saves as before.
+        _u = _authenticated_user(hike_data)
+        if _u and _u.get('verified') and _u.get('email'):
+            hike_data['user_email'] = _u['email']
+
         data_dir = os.path.join(BASE_DIR, 'data')
         hikes_path = os.path.join(data_dir, 'completed_hikes.json')
         
@@ -2813,15 +2869,17 @@ def add_rifugio_review(rifugio_id):
     """Submit a visitor review for a rifugio (registered users only)."""
     try:
         data = request.json or {}
-        # Reviews are restricted to registered users (Firebase uid required).
-        if not str(data.get('user_id', '')).strip():
+        # Reviews are restricted to authenticated users (verified ID token when
+        # Firebase verification is enabled, else legacy soft uid trust).
+        user = _authenticated_user(data)
+        if not user:
             return jsonify({'error': 'authentication_required',
                             'message': 'Please sign in to submit a review.'}), 401
         new_review = {
             'id': f"rev_{rifugio_id}_{datetime.now().timestamp()}",
             'rifugio_id': rifugio_id,
-            'user_id': data.get('user_id'),
-            'user_name': data.get('user_name', 'Anonymous'),
+            'user_id': user['uid'],
+            'user_name': data.get('user_name') or user.get('name') or 'Anonymous',
             'rating': data.get('rating', 5),
             'comment': data.get('comment', ''),
             'date': datetime.now().strftime('%Y-%m-%d'),

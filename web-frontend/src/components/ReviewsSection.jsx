@@ -73,11 +73,18 @@ function ReviewsSection({ trailId, rifugioId, onShowLogin }) {
 
     try {
       setSubmitting(true);
+      // Send the Firebase ID token so the backend can verify identity when
+      // server-side verification is enabled (falls back to user_id otherwise).
+      let authHeaders = {};
+      try {
+        const idToken = await currentUser.getIdToken();
+        if (idToken) authHeaders = { Authorization: `Bearer ${idToken}` };
+      } catch { /* token unavailable — backend falls back to user_id */ }
       const response = await axios.post(reviewsUrl, {
         ...formData,
         user_id: currentUser.uid,
         user_name: formData.user_name || currentUser.displayName || currentUser.email,
-      });
+      }, { headers: authHeaders });
       
       setReviews([response.data.review, ...reviews]);
       

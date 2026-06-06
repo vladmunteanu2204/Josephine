@@ -212,26 +212,29 @@ and the page switches from "coming soon" to a working checkout.
 Optional follow-ups (not built yet):
 - [ ] `/api/donate/webhook` to record completed donations / show a supporters count.
 
-## 3. Reviews — persistence + real auth (audit #4, #5) — DEFERRED
+## 3. Reviews — persistence + real auth (audit #4, #5) — DONE (verification credential-gated)
 
-Currently reviews are NOT persisted and NOT truly authenticated:
-- `POST /api/trails/<id>/reviews` and `/api/rifugios/<id>/reviews` return a
-  fabricated review object and write nothing to storage; the frontend shows it
-  optimistically, so it disappears on reload. (`backend/app.py`)
-- Auth is a soft check: any non-empty `user_id` is accepted (forgeable). The
-  backend never verifies Firebase identity anywhere (same gap affects saved
-  hikes).
-- `load_reviews()` returns a **list** in DB mode but the GET endpoints expect a
-  dict with `reviews` + `statistics` → will 500 review reads when Postgres is
-  active (audit #5).
+- [x] Persist reviews — `save_review` writes to the `reviews` table when
+      `DB_AVAILABLE`, else appends to nested `reviews.json`.
+- [x] `load_reviews()` returns the `{reviews, statistics}` nested shape in both
+      DB and JSON modes (fix #5).
+- [x] **Firebase ID-token verification** (`backend/firebase_auth.py`): a
+      credential-gated layer verifies the Authorization Bearer ID token and
+      pins reviews + saved hikes to the VERIFIED uid/email, ignoring the
+      forgeable client `user_id`. `_authenticated_user()` in `app.py` wires
+      `add_trail_review`, `add_rifugio_review`, and `save_hike`. The frontend
+      (`ReviewsSection.jsx`, `ActiveHikeTracker.jsx`) attaches
+      `await currentUser.getIdToken()` as the Bearer token.
 
-To do when revisited:
-- [ ] Persist reviews (JSON store, and a `reviews` table when `DB_AVAILABLE`).
-- [ ] Normalise `load_reviews()` to the `{reviews, statistics}` shape in DB mode
-      (fix #5).
-- [ ] Verify Firebase ID tokens on the backend (Firebase Admin SDK +
-      service-account credential) so reviews and saved hikes are genuinely
-      authenticated — then drop the forgeable `user_id` soft-check.
+**⚠️ OWNER ACTION to turn verification ON** (until then it stays OFF and the
+legacy soft `user_id` trust applies — zero regression):
+- [ ] Create a Firebase service-account key (Firebase console → Project settings
+      → Service accounts → Generate new private key).
+- [ ] Set ONE backend env var (Replit → Secrets):
+      `FIREBASE_CREDENTIALS_JSON` = the whole service-account JSON, **or**
+      `GOOGLE_APPLICATION_CREDENTIALS` = path to the JSON file.
+- [ ] `firebase-admin` is in `backend/requirements.txt`; redeploy so it installs.
+      On boot you'll see `[firebase] ID-token verification ENABLED` in the logs.
 
 ## 4. Remaining dependency notes (audit #6, #7)
 

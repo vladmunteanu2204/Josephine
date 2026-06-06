@@ -1218,9 +1218,16 @@ function ActiveHikeTracker({ trail, onEnd }) {
     };
 
     try {
+      // Attach the Firebase ID token so the backend can pin the hike to the
+      // verified account when server-side verification is enabled.
+      const saveHeaders = { 'Content-Type': 'application/json' };
+      try {
+        const idToken = currentUser && await currentUser.getIdToken();
+        if (idToken) saveHeaders['Authorization'] = `Bearer ${idToken}`;
+      } catch { /* token unavailable — guest/anon save proceeds unchanged */ }
       await fetch('/api/hikes/save', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: saveHeaders,
         body: JSON.stringify(hikeData)
       });
     } catch (error) {
