@@ -596,7 +596,20 @@ signal already returned by `/api/ai/recommend`.
   ranked alternatives. High trust, admin data-entry, no integration.
 - **Level 2 (real-time)** — see Decision C. Deferred.
 
-## 10. Josephine Layer-2 (`structured_answer`) full i18n — dedicated session
+## 10. Josephine Layer-2 (`structured_answer`) full i18n — ✅ DONE
+
+**Status: COMPLETE.** `backend/josephine_answers.py` ships with all **82 keys**
+fully translated in EN/IT/DE (no EN-only fallbacks remain). `structured_answer`
+in `backend/app.py` is fully refactored: every return path calls
+`_ans('key', lang, q, **vars)`; the only inline-string return left is an empty
+guard. Localizers `loc_month`/`loc_months`/`loc_enum`/`day_word` map data
+fragments to IT/DE. Verified: `ast.parse` clean on both files; all 82 keys have
+non-empty en/it/de; substitution, unknown-lang→en fallback, and localizers all
+functional. **Owner action before launch:** native-speaker review of the SAFETY
+keys (emergency, altitude, navigation, wxGearRain/Snow, technical) — translations
+are careful but unreviewed (see SAFETY NOTE in `josephine_answers.py` docstring).
+
+<details><summary>Original spec (kept for reference)</summary>
 
 From the Josephine audit: `structured_answer` in `backend/app.py` (≈lines
 3790–4290) is the offline, deterministic responder the chat hits BEFORE the LLM,
@@ -648,3 +661,5 @@ content is **alpine-safety-critical** and needs exactness + native review).
 - `structured_answer(q, 'it'/'de')` returns the translation (spot-check).
 - `python3 -c "import ast; ast.parse(open('backend/app.py').read())"`; chat smoke
   in all three languages.
+
+</details>
