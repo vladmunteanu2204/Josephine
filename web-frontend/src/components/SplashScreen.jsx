@@ -11,7 +11,13 @@ function SplashScreen({ onComplete }) {
   const [phase, setPhase] = useState('enter');
 
   useEffect(() => {
-    const minDisplayTime = 1300;
+    // How long the splash lingers so the hero video can be enjoyed. This is a
+    // floor: the splash also waits for window 'load', so on a slow/heavy load
+    // it stays longer, never shorter. Bump this one number to lengthen it.
+    const minDisplayTime = 3000;
+    // Must match the CSS opacity transition on .jph-splash (0.9s) so the fade
+    // finishes fully before the component unmounts — no abrupt cut mid-fade.
+    const exitFadeMs = 900;
     const startTime = Date.now();
     let t1, t2;
 
@@ -22,7 +28,7 @@ function SplashScreen({ onComplete }) {
         setPhase('exit');
         t2 = setTimeout(() => {
           if (onComplete) onComplete();
-        }, 600);
+        }, exitFadeMs);
       }, remainingTime);
     };
 
