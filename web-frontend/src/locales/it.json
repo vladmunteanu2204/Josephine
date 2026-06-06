@@ -1467,5 +1467,32 @@
     "happy": "Buon cammino!",
     "building": "Sto preparando il resoconto…",
     "download": "Scarica il resoconto (PDF)"
+  },
+  "recsForYou": {
+    "title": "Consigliati per te",
+    "titleCold": "Popolari ora",
+    "subtitle": "Selezionati tra i sentieri e i momenti che hai amato.",
+    "subtitleCold": "Amati dagli escursionisti dell’Alto Adige — un buon inizio.",
+    "view": "Vedi sentiero",
+    "reasonDifficulty": {
+      "easy": "Tranquillo, come piace a te",
+      "moderate": "Una difficoltà media giusta per te",
+      "hard": "Una vera sfida",
+      "expert": "Salita da esperti"
+    },
+    "reasonDifficultyGeneric": "Il tuo tipo di sentiero",
+    "reasonInterest": "Adori {{tag}}",
+    "reasonRegion": "Vicino ai tuoi preferiti",
+    "reasonDuration": "~{{hours}}h, il tuo ritmo",
+    "reasonRifugio": "Con rifugio",
+    "reasonDog": "Adatto ai cani",
+    "reasonRated": "Molto apprezzato",
+    "reasonPopular": "Popolare ora"
+  },
+  "notifPrefs": {
+    "weeklyTitle": "Scelta settimanale",
+    "weeklyDescription": "Un sentiero su misura, una volta a settimana.",
+    "weatherTitle": "Allerta meteo",
+    "weatherDescription": "Un avviso quando la pioggia minaccia un sentiero salvato."
   }
 }

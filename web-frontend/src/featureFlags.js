@@ -20,3 +20,13 @@ export const PERK_OFFLINE_DOWNLOAD = true;
 // to a one-page A4 PDF. Built OPEN for testing; the future host/subscription
 // gate wraps this single switch.
 export const PERK_PDF_ITINERARY = true;
+
+// Phase 17B — "Recommended for you": a personalised trail row on the homepage
+// for signed-in users, driven by their own behaviour (views, saves, completed
+// hikes). Self-hides for guests / when the backend has nothing to suggest.
+export const ENABLE_RECOMMENDATIONS = true;
+
+// Phase 17B — personalised push (weekly pick + saved-trail weather watch).
+// BUILT BUT GATED OFF: the opt-in/out UI lives behind this switch, and the
+// server only sends when ENABLE_PERSONALIZED_PUSH is set in its environment.
+export const ENABLE_PERSONALIZED_PUSH = false;

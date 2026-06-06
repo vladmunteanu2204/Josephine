@@ -12,6 +12,7 @@ import TrailheadDirections from './TrailheadDirections';
 import OfflineDownload from './OfflineDownload';
 import ItineraryDownload from './ItineraryDownload';
 import { ENABLE_HIKE_TRACKING } from '../featureFlags';
+import { trackTrailView, trackTrailSave } from '../utils/personalization';
 import AuthPromptModal from './AuthPromptModal';
 import { ArrowLeft, Heart, TrendingUp, TrendingDown } from 'lucide-react';
 import './TrailDetail.css';
@@ -219,6 +220,13 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin, 
     }
   }, [fullTrail]);
 
+  // Personalisation signal: record a view once per opened trail. Passes the
+  // signed-in user's email so it feeds the per-user recommender (Phase 17B);
+  // also bumps the aggregate view counter (one shared endpoint).
+  useEffect(() => {
+    if (fullTrail?.id) trackTrailView(fullTrail.id, currentUser?.email);
+  }, [fullTrail?.id, currentUser?.email]);
+
   // Insider insights: public list + count of chat-only secrets (the teaser)
   useEffect(() => {
     if (!fullTrail?.id) return;
@@ -254,6 +262,7 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin, 
     if (!currentUser) { setShowAuthPrompt(true); return; }
     const saved = JSON.parse(localStorage.getItem('savedTrails') || '[]');
     let next;
+    const action = isSaved ? 'unsave' : 'save';
     if (isSaved) {
       next = saved.filter(id => id !== fullTrail.id);
       toast.info(t('trail.trailUnsaved'));
@@ -263,6 +272,9 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin, 
     }
     localStorage.setItem('savedTrails', JSON.stringify(next));
     setIsSaved(!isSaved);
+    // Dual-write: mirror to the per-user server list (cross-device sync) and
+    // feed the recommender. localStorage above stays the offline source of truth.
+    trackTrailSave(fullTrail.id, currentUser?.email, action);
   };
 
 

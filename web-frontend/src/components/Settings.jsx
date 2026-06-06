@@ -4,6 +4,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { ArrowLeft, Settings as SettingsIcon, Globe, Ruler, Bell, User, Check } from 'lucide-react';
 import { pushStatus, enablePush, disablePush } from '../utils/push';
+import { ENABLE_PERSONALIZED_PUSH } from '../featureFlags';
+import { fetchNotificationPrefs, saveNotificationPrefs } from '../utils/personalization';
 import './Settings.css';
 
 function Settings({ onNavigate }) {
@@ -71,6 +73,25 @@ function Settings({ onNavigate }) {
     } finally {
       setPushBusy(false);
     }
+  };
+
+  // Phase 17B — personalised notification preferences (weekly pick, weather
+  // watch). Built but gated: only shown when the perk is switched on. Loaded
+  // from / saved to the backend, keyed by the signed-in user's email.
+  const [pnPrefs, setPnPrefs] = useState({ weekly_recs: true, weather_alerts: true });
+  useEffect(() => {
+    if (!ENABLE_PERSONALIZED_PUSH || !user?.email) return;
+    let alive = true;
+    fetchNotificationPrefs(user.email).then((p) => { if (alive) setPnPrefs(p); });
+    return () => { alive = false; };
+  }, [user?.email]);
+
+  const handlePnToggle = (key) => {
+    const next = { ...pnPrefs, [key]: !pnPrefs[key] };
+    setPnPrefs(next);
+    saveNotificationPrefs(user?.email, next);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
   };
 
   const handleDeleteAccount = () => {
@@ -203,6 +224,41 @@ function Settings({ onNavigate }) {
                 <span className="toggle-slider"></span>
               </label>
             </div>
+
+            {/* Personalised push (Phase 17B) — gated; only for signed-in users. */}
+            {ENABLE_PERSONALIZED_PUSH && user?.email && (
+              <>
+                <div className="toggle-item">
+                  <div className="toggle-content">
+                    <div className="toggle-title">{t('notifPrefs.weeklyTitle', 'Weekly trail pick')}</div>
+                    <div className="toggle-subtitle">{t('notifPrefs.weeklyDescription', 'A personalised trail suggestion once a week, chosen from the hikes and moments you love.')}</div>
+                  </div>
+                  <label className="toggle-switch">
+                    <input
+                      type="checkbox"
+                      checked={pnPrefs.weekly_recs}
+                      onChange={() => handlePnToggle('weekly_recs')}
+                    />
+                    <span className="toggle-slider"></span>
+                  </label>
+                </div>
+                <div className="toggle-item">
+                  <div className="toggle-content">
+                    <div className="toggle-title">{t('notifPrefs.weatherTitle', 'Weather watch')}</div>
+                    <div className="toggle-subtitle">{t('notifPrefs.weatherDescription', 'A heads-up when rough weather is forecast for one of your saved trails.')}</div>
+                  </div>
+                  <label className="toggle-switch">
+                    <input
+                      type="checkbox"
+                      checked={pnPrefs.weather_alerts}
+                      onChange={() => handlePnToggle('weather_alerts')}
+                    />
+                    <span className="toggle-slider"></span>
+                  </label>
+                </div>
+              </>
+            )}
+
             <div className="toggle-item">
               <div className="toggle-content">
                 <div className="toggle-title">{t('settings.emailNotifications')}</div>

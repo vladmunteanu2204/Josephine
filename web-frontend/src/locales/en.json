@@ -1467,5 +1467,32 @@
     "happy": "Happy trails!",
     "building": "Preparing recap…",
     "download": "Download recap (PDF)"
+  },
+  "recsForYou": {
+    "title": "Recommended for you",
+    "titleCold": "Popular right now",
+    "subtitle": "Hand-picked from the trails and moments you’ve loved.",
+    "subtitleCold": "Loved by hikers across South Tyrol — a place to start.",
+    "view": "View trail",
+    "reasonDifficulty": {
+      "easy": "Easygoing, like you like",
+      "moderate": "A moderate match",
+      "hard": "A proper challenge",
+      "expert": "Expert-level climb"
+    },
+    "reasonDifficultyGeneric": "Your kind of trail",
+    "reasonInterest": "You love {{tag}}",
+    "reasonRegion": "Near your favourites",
+    "reasonDuration": "~{{hours}}h, your pace",
+    "reasonRifugio": "Has a mountain hut",
+    "reasonDog": "Dog-friendly",
+    "reasonRated": "Highly rated",
+    "reasonPopular": "Popular right now"
+  },
+  "notifPrefs": {
+    "weeklyTitle": "Weekly trail pick",
+    "weeklyDescription": "A personalised trail suggestion, once a week.",
+    "weatherTitle": "Weather watch",
+    "weatherDescription": "A heads-up when rain threatens a saved trail."
   }
 }

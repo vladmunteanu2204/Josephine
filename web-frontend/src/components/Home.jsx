@@ -6,6 +6,7 @@ import { useSeason } from '../contexts/SeasonContext';
 import { seasonAsset } from '../hooks/useSeason';
 import { ChevronLeft, ChevronRight, ChevronDown, ArrowRight } from 'lucide-react';
 import './Home.css';
+import RecommendedForYou from './RecommendedForYou';
 
 import { API_URL } from '../api';
 
@@ -315,6 +316,12 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
         </div>
       </section>
       )}
+
+      {/* ══════════════════════════════════════════
+          2b. RECOMMENDED FOR YOU — personalised row
+          Self-hides for guests / when there's nothing to suggest.
+      ══════════════════════════════════════════ */}
+      <RecommendedForYou viewTrail={viewTrail} />
 
       {/* ══════════════════════════════════════════
           3. JOSEPHINE CONVERSATION — full viewport

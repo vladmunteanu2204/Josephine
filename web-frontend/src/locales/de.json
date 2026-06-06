@@ -1467,5 +1467,32 @@
     "happy": "Schöne Wege!",
     "building": "Rückblick wird vorbereitet…",
     "download": "Rückblick herunterladen (PDF)"
+  },
+  "recsForYou": {
+    "title": "Für dich empfohlen",
+    "titleCold": "Gerade beliebt",
+    "subtitle": "Handverlesen aus den Wegen und Momenten, die du liebst.",
+    "subtitleCold": "Von Wanderern in ganz Südtirol geliebt — ein Anfang.",
+    "view": "Weg ansehen",
+    "reasonDifficulty": {
+      "easy": "Gemütlich, ganz nach deinem Geschmack",
+      "moderate": "Mittelschwer, gut für dich",
+      "hard": "Eine echte Herausforderung",
+      "expert": "Aufstieg für Profis"
+    },
+    "reasonDifficultyGeneric": "Dein Art von Weg",
+    "reasonInterest": "Du liebst {{tag}}",
+    "reasonRegion": "Nahe deinen Favoriten",
+    "reasonDuration": "~{{hours}} Std., dein Tempo",
+    "reasonRifugio": "Mit Schutzhütte",
+    "reasonDog": "Hundefreundlich",
+    "reasonRated": "Top bewertet",
+    "reasonPopular": "Gerade beliebt"
+  },
+  "notifPrefs": {
+    "weeklyTitle": "Wöchentlicher Wegtipp",
+    "weeklyDescription": "Ein persönlicher Wegvorschlag, einmal pro Woche.",
+    "weatherTitle": "Wetter-Wächter",
+    "weatherDescription": "Ein Hinweis, wenn Regen einen gespeicherten Weg bedroht."
   }
 }

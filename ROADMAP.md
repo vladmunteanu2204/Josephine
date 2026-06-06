@@ -593,8 +593,26 @@ window.addEventListener('scroll', () => {
 
 ---
 
-### **Phase 17B: AI-Powered Personalized Recommendations** 🆕
+### **Phase 17B: AI-Powered Personalized Recommendations** 🚧 **IN PROGRESS**
 **Goal:** Transform recommendations from generic scoring to user-specific AI-driven suggestions
+
+> **Status (2026-06):** Core engine, behaviour tracking, "Recommended for You" homepage
+> row, dual-write persistence (Postgres + JSON fallback), and gated personalized push
+> are **built on branch `phase-17b-personalization`**. Remaining: enable personalized
+> push in production (set `ENABLE_PERSONALIZED_PUSH=1` + cron token + push keys in
+> Replit Secrets), and optional "Rifugios You Might Like".
+>
+> **Built:**
+> - `backend/recommender.py` — pure per-user scoring (difficulty, tag affinity, region,
+>   duration fit, rifugio/dog affinity, fitness, quality prior); localizable reason **codes**.
+> - `backend/behaviour_store.py` — DB-first / JSON-fallback behaviour + saves + notif prefs.
+> - DB tables (auto-created): `user_behaviour`, `saved_trails`, `user_preferences`, `notification_prefs`.
+> - APIs: `GET /api/recommendations/for-you`, `POST /api/behaviour`, `GET|POST /api/saved-trails`,
+>   `GET|POST /api/me/notification-prefs`, `POST /api/admin/push/personalized` (gated).
+> - Frontend: `RecommendedForYou` homepage row, dual-write tracking in `TrailDetail`,
+>   notification toggles in `Settings` (gated), full EN/IT/DE i18n.
+> - Push is built on the existing **Web Push / VAPID** stack and **gated off** via
+>   `ENABLE_PERSONALIZED_PUSH` (default false).
 
 #### **Database Migration to PostgreSQL**
 - Set up Replit PostgreSQL database
