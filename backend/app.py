@@ -123,10 +123,23 @@ Talisman(
     content_security_policy={
         'default-src': ["'self'"],
         'img-src':     ["'self'", 'data:', 'https:', 'blob:'],
-        'script-src':  ["'self'", "'unsafe-inline'"],
+        # apis.google.com + gstatic: Firebase Auth / Google sign-in client libs
+        'script-src':  ["'self'", "'unsafe-inline'",
+                        'https://apis.google.com', 'https://*.gstatic.com'],
         'style-src':   ["'self'", "'unsafe-inline'"],
+        # Firebase Auth (identitytoolkit/securetoken) + Firestore must be allowed
+        # here or createUserWithEmailAndPassword fails with
+        # auth/network-request-failed (surfaced in the UI as "Network error").
         'connect-src': ["'self'", 'https://api.mapbox.com',
-                        'https://events.mapbox.com', 'https://*.sentry.io'],
+                        'https://events.mapbox.com', 'https://*.sentry.io',
+                        'https://identitytoolkit.googleapis.com',
+                        'https://securetoken.googleapis.com',
+                        'https://firestore.googleapis.com',
+                        'https://*.googleapis.com',
+                        'https://*.firebaseio.com', 'wss://*.firebaseio.com'],
+        # Auth helper iframe (project.firebaseapp.com) + Google account chooser
+        'frame-src':   ["'self'", 'https://*.firebaseapp.com',
+                        'https://accounts.google.com'],
         'worker-src':  ["'self'", 'blob:'],
         'font-src':    ["'self'", 'data:', 'https:'],
     }
