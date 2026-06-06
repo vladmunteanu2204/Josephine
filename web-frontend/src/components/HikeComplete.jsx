@@ -13,19 +13,40 @@ const fmtDur = (h) => {
 };
 
 // On-brand post-hike close — Josephine sees you off the trail. No gamification.
-export default function HikeComplete({ hikeData, line, onDone, onAddReview, onExportGpx }) {
+// `completed` distinguishes a full finish (celebratory) from turning back early
+// (a calmer, encouraging close).
+export default function HikeComplete({ hikeData, line, completed = true, onDone, onAddReview, onExportGpx }) {
   const { t } = useTranslation();
   const stats = hikeData?.stats || {};
   const moments = hikeData?.visited_checkpoints || [];
 
-  const celebrateState = hikeData?.is_summit ? 'celebrateSummit' : 'celebrate';
+  // Full finish → celebrate (summit flag plants the flag). Early exit → peaceful.
+  const celebrateState = completed
+    ? (hikeData?.is_summit ? 'celebrateSummit' : 'celebrate')
+    : 'peaceful';
+  const eyebrow = completed
+    ? t('gps.completeEyebrow', 'Hike complete')
+    : t('gps.endedEyebrow', 'Hike ended');
+  const title = completed
+    ? t('gps.completeTitle', 'Beautiful work')
+    : t('gps.endedTitle', 'Good effort today');
+
+  // Ascent headline: for a *completed* planned trail we trust the official
+  // surveyed profile (the trail's stored gain) as the headline number, and show
+  // the GPS/DEM-measured track underneath as "your track". For early exits or
+  // free hikes (no official profile), the measured value is the headline.
+  const measuredAscent = Math.round(stats.elevation_gain_m || 0);
+  const officialAscent = stats.trail_elevation_gain_m != null
+    ? Math.round(stats.trail_elevation_gain_m) : null;
+  const useOfficialAscent = completed && officialAscent != null;
+  const ascentValue = useOfficialAscent ? officialAscent : measuredAscent;
 
   return (
-    <div className="hc-overlay">
+    <div className={`hc-overlay${completed ? '' : ' hc-overlay--partial'}`}>
       <div className="hc-card">
         <JosephineAvatar state={celebrateState} size={148} feather={false} className="hc-avatar" />
-        <p className="hc-eyebrow">{t('gps.completeEyebrow', 'Hike complete')}</p>
-        <h2 className="hc-title">{t('gps.completeTitle', 'Beautiful work')}</h2>
+        <p className="hc-eyebrow">{eyebrow}</p>
+        <h2 className="hc-title">{title}</h2>
         <p className="hc-trail">{hikeData?.trail_name}</p>
         {line && <p className="hc-line">“{line}”</p>}
 
@@ -42,8 +63,13 @@ export default function HikeComplete({ hikeData, line, onDone, onAddReview, onEx
           </div>
           <div className="hc-stat">
             <TrendingUp size={15} strokeWidth={2} />
-            <span className="hc-stat-v">{Math.round(stats.elevation_gain_m || 0)} m</span>
+            <span className="hc-stat-v">{ascentValue} m</span>
             <span className="hc-stat-l">{t('gps.completeAscent', 'Ascent')}</span>
+            {useOfficialAscent && (
+              <span className="hc-stat-sub">
+                {t('gps.completeYourTrack', 'Your track')}: {measuredAscent} m
+              </span>
+            )}
           </div>
         </div>
 

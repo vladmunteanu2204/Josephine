@@ -148,16 +148,18 @@
   max-width: 220px;
   margin-bottom: 8px;
   padding: 9px 12px;
-  background: rgba(26, 26, 26, 0.94);
-  border: 1px solid rgba(201, 168, 76, 0.45);
+  background: rgba(12, 22, 13, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(201, 168, 76, 0.35);
   border-radius: 14px;
   color: #f0ece6;
   font-size: 13px;
   line-height: 1.4;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
   animation: jph-bubble-in 0.25s ease;
 }
-.jph-bubble__icon { flex: 0 0 auto; }
+.jph-bubble__icon { flex: 0 0 auto; color: #c9a84c; }
 @keyframes jph-bubble-in {
   from { opacity: 0; transform: translateY(6px) scale(0.96); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
@@ -171,13 +173,13 @@
   top: 0 !important;
   left: 0 !important;
   right: 0 !important;
-  background: linear-gradient(180deg, rgba(20, 28, 24, 0.94) 0%, rgba(31, 45, 39, 0.88) 100%) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
+  background: rgba(12, 22, 13, 0.92) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
   padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px 12px !important;
-  border-bottom: 1px solid rgba(201, 168, 76, 0.35) !important;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.18) !important;
   z-index: var(--z-fullscreen) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45) !important;
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -310,18 +312,31 @@
   top: calc(env(safe-area-inset-top, 0px) + 92px);
   left: 50%;
   transform: translateX(-50%);
-  padding: 0.7rem 1.1rem;
-  background: rgba(140, 94, 30, 0.95);
-  color: #fdf6e8;
+  padding: 0.7rem 1rem 0.7rem 1.1rem;
+  background: rgba(12, 22, 13, 0.94);
+  color: #f0ece6;
   font-size: 0.85rem;
   font-weight: 600;
   text-align: left;
-  border: 1px solid rgba(201, 168, 76, 0.5);
+  border: 1px solid rgba(224, 162, 60, 0.28);
   border-radius: 14px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   z-index: 11;
   max-width: 86%;
-  backdrop-filter: blur(8px);
+  overflow: hidden;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Slim amber accent bar — matches the toast notification language */
+.warning-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 3px;
+  background: #e0a23c;
 }
 
 .warning-banner.off-trail-active {
@@ -332,13 +347,14 @@
 }
 
 @keyframes amber-glow {
-  0%, 100% { box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
-  50%      { box-shadow: 0 6px 26px rgba(201, 168, 76, 0.4); }
+  0%, 100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45); }
+  50%      { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), 0 0 22px rgba(224, 162, 60, 0.3); }
 }
 
 .warning-icon {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   line-height: 1;
+  color: #e0a23c;
 }
 
 .warning-title { font-weight: 700; font-size: 0.85rem; }

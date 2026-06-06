@@ -161,6 +161,37 @@
   cursor: not-allowed;
 }
 
+/* ── Password field with show/hide toggle ── */
+.password-field {
+  position: relative;
+}
+.password-field input {
+  /* leave room for the eye button so long passwords don't slide under it */
+  padding-right: 46px;
+}
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: rgba(240, 236, 230, 0.45);
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+}
+.password-toggle:hover {
+  color: #c9a84c;
+  background: rgba(255, 255, 255, 0.05);
+}
+
 /* ── Forgot password link ── */
 .auth-forgot {
   display: block;

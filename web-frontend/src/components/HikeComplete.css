@@ -11,6 +11,21 @@
   padding: 24px;
 }
 
+/* Turned-back-early close: calmer, cooler backdrop and a gentler card accent
+   (no golden "summit" celebration). */
+.hc-overlay--partial {
+  background: radial-gradient(120% 90% at 50% 0%, rgba(38,52,60,0.5), rgba(10,12,14,0.92));
+}
+.hc-overlay--partial .hc-card {
+  border-color: rgba(160, 180, 190, 0.28);
+}
+.hc-overlay--partial .hc-eyebrow {
+  color: #9fb3bd;
+}
+.hc-overlay--partial .hc-card .hc-avatar {
+  border-color: rgba(160, 180, 190, 0.4);
+}
+
 .hc-card {
   width: 100%;
   max-width: 380px;
@@ -98,6 +113,13 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(240, 236, 230, 0.5);
+}
+.hc-stat-sub {
+  margin-top: 2px;
+  font-size: 9.5px;
+  letter-spacing: 0.02em;
+  color: rgba(201, 168, 76, 0.7);
+  white-space: nowrap;
 }
 
 .hc-moments {

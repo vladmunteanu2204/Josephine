@@ -21,10 +21,73 @@ const OFF_TRAIL_DISTANCE = 30; // meters
 const POI_ALERT_DISTANCES = [500, 200]; // Alert at 500m and 200m
 const NOTIFICATION_THROTTLE_INTERVAL = 60000; // 60 seconds between checkpoint notifications
 const NOTIFICATION_DISTANCE_THRESHOLD = 50; // 50m movement to allow new notification
-const ELEVATION_NOISE_THRESHOLD = 5; // 5m threshold to filter GPS altitude noise
-const ELEVATION_SMOOTHING_WINDOW = 5; // Use last 5 altitude readings for median filter
 const CHECKPOINT_ARRIVAL_RADIUS = 30; // meters to mark as reached
 const CHECKPOINT_PASSED_RADIUS = 40; // meters to mark as passed after reaching
+const RESUME_PROMPT_THRESHOLD = 60000; // backgrounded ≥60s (phone in pocket) → ask "still on the trail?"
+const TRAIL_COMPLETE_PROGRESS = 98; // % of the route walked that counts the hike as finished
+// ── Elevation / distance accuracy ──
+// GPS *vertical* error is ±10–20m, so we don't trust GPS altitude. Instead we
+// read ground elevation from Mapbox's terrain DEM at each (accurate) horizontal
+// fix; GPS+Kalman is only an offline fallback when no DEM tiles are loaded.
+const DEM_DEADBAND = 2;        // m — DEM is smooth; small dead-band for gain/loss
+const GPS_DEADBAND = 4;        // m — Kalman-filtered GPS is still noisier
+const DISTANCE_MIN_MOVE = 5;   // m — ignore sub-5m GPS jitter for distance
+const DEM_COVERAGE_MIN = 0.6;  // use DEM as the primary source if ≥60% of fixes had it
+const ELEV_SMOOTH_WINDOW = 5;  // moving-average window for the final (batch) recompute
+
+// ── Elevation / distance helpers (pure) ──────────────────────────────────────
+
+// 1D Kalman filter for GPS altitude — only used as an offline fallback when the
+// terrain DEM isn't available. `accStd` is coords.altitudeAccuracy (m).
+function makeAltKalman() {
+  let x = null;   // estimate
+  let p = 1;      // estimate variance
+  const q = 0.6;  // process noise (m² per step)
+  return {
+    update(z, accStd) {
+      if (z == null || !isFinite(z)) return x;
+      const r = Math.pow(Math.max(4, accStd || 18), 2); // vertical variance
+      if (x == null) { x = z; p = r; return x; }
+      p += q;
+      const k = p / (p + r);
+      x += k * (z - x);
+      p = (1 - k) * p;
+      return x;
+    }
+  };
+}
+
+// Cumulative gain/loss from an elevation series, ratcheting only once the move
+// from the last reference clears a dead-band. Nulls are skipped, so the
+// reference holds across gaps (no fake jump when data resumes).
+function computeGainLoss(series, deadband) {
+  let gain = 0, loss = 0, ref = null;
+  for (let i = 0; i < series.length; i++) {
+    const e = series[i];
+    if (e == null || !isFinite(e)) continue;
+    if (ref == null) { ref = e; continue; }
+    const d = e - ref;
+    if (d >= deadband) { gain += d; ref = e; }
+    else if (d <= -deadband) { loss += -d; ref = e; }
+  }
+  return { gain, loss };
+}
+
+// Moving-average smoother that ignores nulls (used for the final recompute).
+function smoothSeries(series, win) {
+  const half = Math.floor(win / 2);
+  const out = new Array(series.length).fill(null);
+  for (let i = 0; i < series.length; i++) {
+    let sum = 0, n = 0;
+    for (let j = i - half; j <= i + half; j++) {
+      if (j < 0 || j >= series.length) continue;
+      const v = series[j];
+      if (v != null && isFinite(v)) { sum += v; n++; }
+    }
+    if (n > 0) out[i] = sum / n;
+  }
+  return out;
+}
 
 function ActiveHikeTracker({ trail, onEnd }) {
   const { t, i18n } = useTranslation();
@@ -53,6 +116,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
   const [activeMoment, setActiveMoment] = useState(null);   // current Josephine "moment" (avatar bubble)
   const [showRecap, setShowRecap] = useState(false);        // "how were the legs?" prompt
   const [showComplete, setShowComplete] = useState(false);  // on-brand Josephine close
+  const [showResumePrompt, setShowResumePrompt] = useState(false); // "still on the trail?" after pocket/background
   const [completeLine, setCompleteLine] = useState('');
   const [audioMuted, setAudioMuted] = useState(() => {
     try { return localStorage.getItem('companionMuted') === '1'; } catch { return false; }
@@ -65,8 +129,14 @@ function ActiveHikeTracker({ trail, onEnd }) {
   const autoPausedRef = useRef(false); // Track if auto-paused
   const wakeLockRef = useRef(null);
   const intervalRef = useRef(null);
-  const elevationGainBufferRef = useRef(0); // Accumulate positive elevation changes
-  const elevationLossBufferRef = useRef(0); // Accumulate negative elevation changes
+  // Elevation is read from the terrain DEM at each horizontal fix (preferred),
+  // with a Kalman-filtered GPS-altitude series kept as an offline fallback.
+  const demSeriesRef = useRef([]);       // ground elevation per on-trail fix (null if no DEM)
+  const kalmanSeriesRef = useRef([]);    // Kalman-filtered GPS altitude per on-trail fix
+  const demCoverageRef = useRef({ have: 0, total: 0 });
+  const altKalmanRef = useRef(makeAltKalman());
+  const mapRef = useRef(null);           // underlying mapbox-gl Map (for DEM queries)
+  const mapReadyRef = useRef(false);     // DEM source added + terrain set
   const offTrailStartTimeRef = useRef(null); // Track when user went off trail
   const totalOffTrailTimeRef = useRef(0); // Accumulate total off-trail time
   const lastOnTrailPointRef = useRef(null); // Track last on-trail GPS point for stat calculations
@@ -80,9 +150,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
   const momentStatesRef = useRef({});     // { [moment.id]: { state, lastDistance } }
   const momentNotifRef = useRef({});      // { [moment.id]: { time, position } } throttle
   const momentBubbleTimerRef = useRef(null);
-  const altitudeHistoryRef = useRef([]); // Sliding window for median filtering
-  const lastValidAltitudeRef = useRef(null); // Last validated altitude reading
-  
+
   // CRITICAL FIX: Use refs for gpsTrack and stats to ensure persistence captures latest data
   const gpsTrackRef = useRef([]);
   const statsRef = useRef({ distance: 0, elevation: 0, duration: 0, pace: 0 });
@@ -90,6 +158,11 @@ function ActiveHikeTracker({ trail, onEnd }) {
   // CRITICAL FIX: Use refs for off-trail and paused state to fix GPS callback closure bug
   const isOffTrailRef = useRef(false);
   const isPausedRef = useRef(false);
+
+  // Pocket/background + completion bookkeeping (read inside GPS/visibility closures)
+  const hiddenAtRef = useRef(null);       // when the page was last backgrounded during a hike
+  const completedFullRef = useRef(false); // user walked the whole route (≥ TRAIL_COMPLETE_PROGRESS)
+  const isEndingRef = useRef(false);      // guards against double-ending from async callbacks
   
   // Sync refs with state to fix closure bug in GPS callback
   useEffect(() => {
@@ -200,12 +273,46 @@ function ActiveHikeTracker({ trail, onEnd }) {
     return R * c; // Distance in meters
   };
 
-  // Median filter for altitude smoothing
-  const medianFilter = (values) => {
-    if (values.length === 0) return 0;
-    const sorted = [...values].sort((a, b) => a - b);
-    const mid = Math.floor(sorted.length / 2);
-    return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+  // Read ground elevation (m) from the terrain DEM at a horizontal position.
+  // Returns null when the DEM isn't ready or the tile isn't loaded yet — the
+  // caller then falls back to filtered GPS altitude. `exaggerated: false` gives
+  // the true elevation regardless of the (visual) terrain exaggeration.
+  const sampleDemElevation = (lon, lat) => {
+    const map = mapRef.current;
+    if (!map || !mapReadyRef.current) return null;
+    try {
+      const v = map.queryTerrainElevation([lon, lat], { exaggerated: false });
+      return (v != null && isFinite(v)) ? v : null;
+    } catch {
+      return null;
+    }
+  };
+
+  // Map onLoad: wire up the DEM (Digital Elevation Model) so we can read true
+  // ground elevation at any lat/lon. We trust GPS horizontal accuracy and read
+  // height from the terrain model — far steadier than GPS vertical (±10–20m).
+  // exaggeration: 0 keeps the map flat (pitch is 0 anyway) while still loading
+  // the DEM tiles that queryTerrainElevation reads from.
+  const handleMapLoad = (evt) => {
+    const map = evt?.target;
+    if (!map) return;
+    mapRef.current = map;
+    try {
+      if (!map.getSource('mapbox-dem')) {
+        map.addSource('mapbox-dem', {
+          type: 'raster-dem',
+          url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+          tileSize: 512,
+          maxzoom: 14,
+        });
+      }
+      map.setTerrain({ source: 'mapbox-dem', exaggeration: 0 });
+      mapReadyRef.current = true;
+    } catch (err) {
+      // If terrain setup fails we simply fall back to GPS+Kalman elevation.
+      console.warn('DEM terrain setup failed, using GPS altitude fallback', err);
+      mapReadyRef.current = false;
+    }
   };
 
   // Find nearest point on polyline and calculate distance along trail
@@ -669,133 +776,86 @@ function ActiveHikeTracker({ trail, onEnd }) {
       gpsTrackRef.current = updatedTrack;
       
       // Calculate stats ONLY if on trail
-      let elevationToAdd = 0;
       let segmentDistance = 0;
-      
+
       if (!currentlyOffTrail) {
-        // When on trail, use last on-trail point for calculations
+        // ── Distance: gate out sub-threshold GPS jitter ──
         const referencePoint = lastOnTrailPointRef.current;
-        
         if (referencePoint) {
-          // We have a previous on-trail point - calculate distance and elevation
-          segmentDistance = calculateDistance(
-            referencePoint.lat,
-            referencePoint.lon,
-            latitude,
-            longitude
-          );
-
-          // IMPROVED elevation calculation with median filtering and noise threshold
-          const accuracy = position.coords.accuracy;
-          const isAccurate = !accuracy || accuracy <= 20; // Skip if accuracy > 20m
-        
-        if (altitude && isAccurate) {
-          // Add to rolling history for median filter
-          altitudeHistoryRef.current.push(altitude);
-          if (altitudeHistoryRef.current.length > ELEVATION_SMOOTHING_WINDOW) {
-            altitudeHistoryRef.current.shift();
+          const seg = calculateDistance(referencePoint.lat, referencePoint.lon, latitude, longitude);
+          const gate = Math.max(DISTANCE_MIN_MOVE, position.coords.accuracy || 0);
+          if (seg >= gate) {
+            segmentDistance = seg;
+            lastOnTrailPointRef.current = newPoint; // advance reference only when the move counts
           }
-
-          // Apply median filter to smooth GPS noise
-          const smoothedAltitude = medianFilter(altitudeHistoryRef.current);
-
-          // Only process elevation if we have valid previous altitude
-          if (lastValidAltitudeRef.current !== null) {
-            const elevationChange = smoothedAltitude - lastValidAltitudeRef.current;
-
-            // Apply noise threshold: ignore changes smaller than 5m
-            if (Math.abs(elevationChange) >= ELEVATION_NOISE_THRESHOLD) {
-              if (elevationChange > 0) {
-                // Positive change: cancel any pending loss first, then add remainder to gain
-                if (elevationLossBufferRef.current > 0) {
-                  const cancellation = Math.min(elevationLossBufferRef.current, elevationChange);
-                  elevationLossBufferRef.current -= cancellation;
-                  const netChange = elevationChange - cancellation;
-                  if (netChange > 0) {
-                    elevationGainBufferRef.current += netChange;
-                  }
-                } else {
-                  elevationGainBufferRef.current += elevationChange;
-                }
-
-                // When accumulated gain exceeds threshold, count it and reset
-                if (elevationGainBufferRef.current >= ELEVATION_NOISE_THRESHOLD) {
-                  elevationToAdd = elevationGainBufferRef.current;
-                  elevationGainBufferRef.current = 0;
-                }
-              } else if (elevationChange < 0) {
-                // Negative change: cancel any pending gain first, then add remainder to loss
-                const absChange = Math.abs(elevationChange);
-                if (elevationGainBufferRef.current > 0) {
-                  const cancellation = Math.min(elevationGainBufferRef.current, absChange);
-                  elevationGainBufferRef.current -= cancellation;
-                  const netChange = absChange - cancellation;
-                  if (netChange > 0) {
-                    elevationLossBufferRef.current += netChange;
-                  }
-                } else {
-                  elevationLossBufferRef.current += absChange;
-                }
-
-                // If accumulated loss exceeds threshold, it's a real descent - reset both buffers
-                if (elevationLossBufferRef.current >= ELEVATION_NOISE_THRESHOLD) {
-                  elevationGainBufferRef.current = 0;
-                  elevationLossBufferRef.current = 0;
-                }
-              }
-
-              // Update last valid altitude after processing
-              lastValidAltitudeRef.current = smoothedAltitude;
-            }
-          } else {
-            // First valid altitude reading
-            lastValidAltitudeRef.current = smoothedAltitude;
-          }
+          // else: jitter — keep the reference so a slow, real walk still accumulates
+        } else {
+          lastOnTrailPointRef.current = newPoint;   // first on-trail fix
         }
 
-        // Calculate duration excluding off-trail time
-        let totalElapsedTime = Date.now() - startTimeRef.current;
-        let onTrailTime = totalElapsedTime - totalOffTrailTimeRef.current;
-        
-        // If currently off trail, also subtract current off-trail period
-        if (currentlyOffTrail && offTrailStartTimeRef.current) {
-          onTrailTime -= (Date.now() - offTrailStartTimeRef.current);
-        }
-        
-        // Update stats ref synchronously (ONLY when on trail)
+        // ── Elevation: read the ground from the terrain DEM at this horizontal
+        //    position (GPS vertical is unreliable). Keep a Kalman-filtered GPS
+        //    altitude series as the offline fallback. ──
+        const demEle = sampleDemElevation(longitude, latitude);
+        const gpsAlt = (altitude != null && isFinite(altitude)) ? altitude : null;
+        const kEle = altKalmanRef.current.update(gpsAlt, position.coords.altitudeAccuracy);
+
+        demSeriesRef.current.push(demEle != null ? demEle : null);
+        kalmanSeriesRef.current.push(kEle != null ? kEle : null);
+        demCoverageRef.current.total += 1;
+        if (demEle != null) demCoverageRef.current.have += 1;
+
+        // Stash on the point so a reload / end-of-hike recompute can reuse it
+        newPoint.demEle = demEle;
+        newPoint.kEle = kEle;
+        newPoint.acc = position.coords.accuracy;
+
+        // Live gain from whichever source has coverage — never mix the two
+        // (their absolute datums differ, which would fake a huge jump).
+        const cov = demCoverageRef.current.total
+          ? demCoverageRef.current.have / demCoverageRef.current.total : 0;
+        const liveSeries = cov >= DEM_COVERAGE_MIN ? demSeriesRef.current : kalmanSeriesRef.current;
+        const liveBand = cov >= DEM_COVERAGE_MIN ? DEM_DEADBAND : GPS_DEADBAND;
+        const liveGain = computeGainLoss(liveSeries, liveBand).gain;
+
+        // Duration excluding off-trail time
+        const onTrailTime = (Date.now() - startTimeRef.current) - totalOffTrailTimeRef.current;
+
         const updatedStats = {
           distance: statsRef.current.distance + segmentDistance,
-          elevation: statsRef.current.elevation + elevationToAdd,
+          elevation: liveGain,
           duration: Math.floor(onTrailTime / 1000),
           pace: speed || statsRef.current.pace
         };
         statsRef.current = updatedStats;
-        
-        // Update state for UI (async is fine here)
         setStats(updatedStats);
-        }
-        
-        // Update last on-trail point after successful stat calculation
-        lastOnTrailPointRef.current = newPoint;
       } else if (currentlyOffTrail) {
-        // Still update duration even when off-trail, but exclude off-trail time
-        let totalElapsedTime = Date.now() - startTimeRef.current;
-        let onTrailTime = totalElapsedTime - totalOffTrailTimeRef.current;
-        
+        // Off trail: keep the clock moving but pause distance/elevation
+        let onTrailTime = (Date.now() - startTimeRef.current) - totalOffTrailTimeRef.current;
         if (offTrailStartTimeRef.current) {
           onTrailTime -= (Date.now() - offTrailStartTimeRef.current);
         }
-        
-        const updatedStats = {
-          ...statsRef.current,
-          duration: Math.floor(onTrailTime / 1000)
-        };
+        const updatedStats = { ...statsRef.current, duration: Math.floor(onTrailTime / 1000) };
         statsRef.current = updatedStats;
         setStats(updatedStats);
       }
       
       // Update state for UI (async is fine here)
       setGpsTrack(updatedTrack);
+
+      // Auto-finish: the whole route has been walked. Only when genuinely on the
+      // trail (an off-trail projection can read near-100% misleadingly). This is a
+      // FULL completion → the celebratory close (vs. ending early).
+      if (!currentlyOffTrail && !completedFullRef.current && !isEndingRef.current) {
+        const poly = trailRoute?.geometry?.coordinates || trail.coordinates;
+        const progress = calculateTrailProgress(latitude, longitude, poly);
+        if (progress >= TRAIL_COMPLETE_PROGRESS) {
+          completedFullRef.current = true;
+          toast.success(t('gps.routeComplete', 'You reached the end of the trail! 🎉'));
+          sendNotification(t('gps.routeCompleteTitle', 'Trail complete! 🎉'), trail.name || '');
+          endHike(false);
+        }
+      }
 
       // Live Trail Companion: run the unified moment geofence. If the trail has
       // no moments, fall back to the legacy POI + checkpoint checks.
@@ -832,6 +892,9 @@ function ActiveHikeTracker({ trail, onEnd }) {
       totalOffTrailTime: totalOffTrailTimeRef.current,
       offTrailStartTime: offTrailStartTimeRef.current,
       lastOnTrailPoint: lastOnTrailPointRef.current,
+      demSeries: demSeriesRef.current,
+      kalmanSeries: kalmanSeriesRef.current,
+      demCoverage: demCoverageRef.current,
       timestamp: Date.now()
     };
 
@@ -866,7 +929,10 @@ function ActiveHikeTracker({ trail, onEnd }) {
       totalOffTrailTimeRef.current = session.totalOffTrailTime || 0;
       offTrailStartTimeRef.current = session.offTrailStartTime || null;
       lastOnTrailPointRef.current = session.lastOnTrailPoint || null;
-      
+      demSeriesRef.current = session.demSeries || [];
+      kalmanSeriesRef.current = session.kalmanSeries || [];
+      demCoverageRef.current = session.demCoverage || { have: 0, total: 0 };
+
       // Then restore state (async is fine)
       setGpsTrack(session.gpsTrack || []);
       setCurrentPosition(session.currentPosition);
@@ -962,6 +1028,32 @@ function ActiveHikeTracker({ trail, onEnd }) {
     }
   };
 
+  // ── Pocket / background resume ─────────────────────────────────────────────
+  // After the phone has been backgrounded for a while (GPS pauses while the
+  // screen is locked), we ask whether the hiker is still on the trail.
+
+  // "Yes, still going" → grab a fresh fix so the dot jumps to where they are now
+  // and the stats absorb whatever distance was walked while pocketed.
+  const handleStillOnTrail = () => {
+    setShowResumePrompt(false);
+    autoPausedRef.current = false;
+    setIsPaused(false);
+    lastMoveTimeRef.current = Date.now();
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => handlePositionUpdate(position),
+        (err) => { console.warn('Resume getCurrentPosition failed:', err); },
+        { enableHighAccuracy: true, timeout: 30000, maximumAge: 0 }
+      );
+    }
+  };
+
+  // "No, I've stopped" → end the hike quietly, no celebration.
+  const handleNotOnTrail = () => {
+    setShowResumePrompt(false);
+    endHike(false, { silent: true });
+  };
+
   // Generate emergency share link
   const generateShareLink = () => {
     if (!currentPosition) return;
@@ -1023,14 +1115,15 @@ function ActiveHikeTracker({ trail, onEnd }) {
     URL.revokeObjectURL(url);
   };
 
-  // End hike
-  const endHike = async (autoEnded = false) => {
-    // Prevent duplicate saves
-    if (isEnding) {
-      console.log('Already ending hike, ignoring duplicate click');
+  // End hike. `opts.silent` saves and leaves with NO celebration (used when the
+  // user says they're no longer on the trail after a pocket/background gap).
+  const endHike = async (autoEnded = false, opts = {}) => {
+    // Prevent duplicate saves (ref guard works inside async GPS callbacks too)
+    if (isEndingRef.current) {
+      console.log('Already ending hike, ignoring duplicate end');
       return;
     }
-    
+    isEndingRef.current = true;
     setIsEnding(true);
 
     // Stop tracking
@@ -1043,11 +1136,15 @@ function ActiveHikeTracker({ trail, onEnd }) {
     releaseWakeLock();
     try { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); } catch { /* no-op */ }
 
-    // Auto-ended (inactivity) → save straight away. A deliberate end → ask
-    // "how were the legs?" first so the rating rides along in the save payload.
-    if (autoEnded) {
+    if (opts.silent) {
+      // Quiet exit — record the hike, no recap, no celebration.
+      finalizeHike(null, null, true, { silent: true });
+    } else if (autoEnded) {
+      // Auto-ended after long inactivity (user gone) → save straight away.
       finalizeHike(null, null, true);
     } else {
+      // A deliberate end (or route fully walked) → ask "how were the legs?"
+      // first so the rating rides along in the save payload.
       setShowRecap(true);
     }
   };
@@ -1061,13 +1158,48 @@ function ActiveHikeTracker({ trail, onEnd }) {
       || /summit|peak|cima|vetta|gipfel|spitze|cir|sass|piz\b/i.test(trail.name || '');
   };
 
+  // Did the hiker walk the whole route? Drives full vs. early-exit celebration.
+  const _isRouteComplete = () => {
+    if (completedFullRef.current) return true;
+    const poly = trailRoute?.geometry?.coordinates || trail.coordinates;
+    if (!currentPosition || !poly) return false;
+    return calculateTrailProgress(currentPosition.lat, currentPosition.lon, poly) >= TRAIL_COMPLETE_PROGRESS;
+  };
+
   // Save the hike (with optional recap rating) → gamification → celebration.
-  const finalizeHike = async (rating, note, autoEnded) => {
+  // `opts.silent` saves and leaves immediately with no celebration card.
+  const finalizeHike = async (rating, note, autoEnded, opts = {}) => {
+    const isComplete = _isRouteComplete();
+
+    // ── Batch elevation recompute ──────────────────────────────────────────
+    // Live gain is a running counter; here we recompute the whole track once,
+    // cleanly. Pick ONE source for the entire hike (never mix datums): DEM if it
+    // covered enough fixes, otherwise Kalman-filtered GPS altitude. Smooth, then
+    // ratchet the ups past a small dead-band.
+    const cov = demCoverageRef.current.total
+      ? demCoverageRef.current.have / demCoverageRef.current.total : 0;
+    const useDem = cov >= DEM_COVERAGE_MIN && demSeriesRef.current.length > 1;
+    const rawSeries = useDem ? demSeriesRef.current : kalmanSeriesRef.current;
+    let measuredGain;
+    if (rawSeries && rawSeries.length > 1) {
+      const smoothed = smoothSeries(rawSeries, ELEV_SMOOTH_WINDOW);
+      measuredGain = computeGainLoss(smoothed, useDem ? DEM_DEADBAND : GPS_DEADBAND).gain;
+    } else {
+      // Restored session with no series, or too few points — keep the live value.
+      measuredGain = statsRef.current.elevation;
+    }
+    const elevationSource = (rawSeries && rawSeries.length > 1)
+      ? (useDem ? 'dem' : 'gps') : 'live';
+    // Official planned-trail ascent (the headline for completed planned hikes).
+    const trailGain = (trail?.elevation_gain_m != null && isFinite(trail.elevation_gain_m))
+      ? trail.elevation_gain_m : null;
+
     const hikeData = {
       user_email: currentUser?.email || null,
       trail_id: trail.id,
       trail_name: trail.name,
       is_summit: _isSummitHike(),
+      completed: isComplete,          // walked the whole route?
       start_time: new Date(startTimeRef.current).toISOString(),
       end_time: new Date().toISOString(),
       gps_track: gpsTrackRef.current,
@@ -1076,9 +1208,12 @@ function ActiveHikeTracker({ trail, onEnd }) {
       note: (note || '').trim() || null,
       stats: {
         distance_km: statsRef.current.distance / 1000,
-        elevation_gain_m: statsRef.current.elevation,
+        elevation_gain_m: measuredGain,
+        trail_elevation_gain_m: trailGain,   // official planned profile (if any)
+        elevation_source: elevationSource,   // 'dem' | 'gps' | 'live'
         duration_hours: statsRef.current.duration / 3600,
-        auto_ended: autoEnded
+        auto_ended: autoEnded,
+        completed: isComplete
       }
     };
 
@@ -1095,28 +1230,36 @@ function ActiveHikeTracker({ trail, onEnd }) {
     // Gamification (XP/badges) is not launched → only compute when enabled.
     const gamificationResult = ENABLE_GAMIFICATION ? checkNewBadges({
       distance: statsRef.current.distance,
-      elevation: statsRef.current.elevation,
+      elevation: measuredGain,
       duration: statsRef.current.duration,
       trailId: trail.id,
       startTime: startTimeRef.current,
       endTime: Date.now(),
-      completed: !autoEnded
+      completed: isComplete
     }) : null;
 
-    setCompletedHikeData({ ...hikeData, gamification: gamificationResult });
+    const fullData = { ...hikeData, gamification: gamificationResult };
+    setCompletedHikeData(fullData);
     // Remember this hike on-device (region, summit, how the legs felt).
     rememberCompletedHike({ trailName: trail.name, region: trail.region,
                             isSummit: hikeData.is_summit, rating });
     setShowRecap(false);
 
+    // Silent exit (e.g. "I'm no longer on the trail") — no celebration at all.
+    if (opts.silent) {
+      clearHikeSession();
+      onEnd(fullData);
+      return;
+    }
+
     if (ENABLE_GAMIFICATION) {
       setShowCelebration(true);
     } else {
       // On-brand close: Josephine sees you off the trail (no gamification).
-      const km = (statsRef.current.distance / 1000);
-      const line = (km >= 0.1
-        ? t('gps.completeLine', 'You gave {{trail}} a good day — that air and that light stay with you.')
-        : t('gps.completeLineShort', 'Every step on {{trail}} counts. Come back when you can.')
+      // The line differs for a full finish vs. turning back early.
+      const line = (isComplete
+        ? t('gps.completeLineFull', 'You walked every step of {{trail}} — that air and that light stay with you.')
+        : t('gps.completeLinePartial', 'You turned back on {{trail}} today — the mountain keeps. Come finish it when you can.')
       ).replace('{{trail}}', trail.name || '');
       setCompleteLine(line);
       speakLine(line);
@@ -1201,8 +1344,22 @@ function ActiveHikeTracker({ trail, onEnd }) {
       if (document.visibilityState === 'visible' && isTracking) {
         console.log('[GPS] Page visible - re-acquiring wake lock');
         await requestWakeLock();
+
+        // If we were backgrounded long enough that GPS likely paused (phone in
+        // pocket), confirm the hiker is still on the trail before trusting the
+        // resumed track. Skip if the hike is already wrapping up.
+        const hiddenFor = hiddenAtRef.current ? Date.now() - hiddenAtRef.current : 0;
+        hiddenAtRef.current = null;
+        if (
+          hiddenFor >= RESUME_PROMPT_THRESHOLD &&
+          !isEndingRef.current &&
+          !completedFullRef.current
+        ) {
+          setShowResumePrompt(true);
+        }
       } else if (document.visibilityState === 'hidden' && isTracking) {
         console.log('[GPS] Page hidden - GPS may pause on some devices');
+        hiddenAtRef.current = Date.now();
         sendNotification(
           'GPS Tracking Active',
           'Keep Josephine open to continue tracking your hike'
@@ -1239,6 +1396,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
           }}
           style={{ width: '100%', height: '100%' }}
           mapStyle="mapbox://styles/mapbox/outdoors-v12"
+          onLoad={handleMapLoad}
         >
           {/* Navigation controls - positioned top-left to avoid stats panel */}
           <NavigationControl position="top-left" showCompass={true} showZoom={true} />
@@ -1362,7 +1520,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
 
       {/* Controls — hidden once the hike is wrapping up so they don't bleed
           under the recap / celebration / completion card. */}
-      {!showRecap && !showCelebration && !showComplete && (
+      {!showRecap && !showCelebration && !showComplete && !showResumePrompt && (
       <div className="tracker-controls">
         <button
           className="control-btn pause-btn"
@@ -1398,13 +1556,32 @@ function ActiveHikeTracker({ trail, onEnd }) {
       )}
 
       {/* Off-trail warning banner */}
-      {isOffTrail && !showRecap && !showCelebration && !showComplete && (
+      {isOffTrail && !showRecap && !showCelebration && !showComplete && !showResumePrompt && (
         <div className="warning-banner off-trail-active">
           <div className="warning-icon">⚠️</div>
           <div className="warning-content">
             <div className="warning-title">{t('gps.offTrailAlert') || 'Off Trail'}</div>
             <div className="warning-message">
               {t('gps.statsPausedMessage') || 'Stats recording paused. Return to trail to resume.'}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* "Still on the trail?" — shown after the app was backgrounded long
+          enough that GPS likely paused (phone in pocket). */}
+      {showResumePrompt && (
+        <div className="recap-overlay">
+          <div className="recap-card">
+            <img src="/josephine-portrait.webp" alt="Josephine" className="recap-avatar" />
+            <p className="recap-q">{t('gps.resumeQuestion', 'Welcome back — are you still on the trail?')}</p>
+            <div className="recap-options">
+              <button className="recap-opt" onClick={handleStillOnTrail}>
+                <span>🥾</span>{t('gps.resumeYes', 'Still hiking')}
+              </button>
+              <button className="recap-opt" onClick={handleNotOnTrail}>
+                <span>🏁</span>{t('gps.resumeNo', "I've stopped")}
+              </button>
             </div>
           </div>
         </div>
@@ -1439,6 +1616,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
         <HikeComplete
           hikeData={completedHikeData}
           line={completeLine}
+          completed={completedHikeData.completed !== false}
           onExportGpx={() => { if (gpsTrackRef.current.length > 0) exportGPX(); }}
           onAddReview={() => { clearHikeSession(); setShowComplete(false); onEnd({ ...completedHikeData, showReviewForm: true }); }}
           onDone={() => { clearHikeSession(); setShowComplete(false); onEnd(completedHikeData); }}

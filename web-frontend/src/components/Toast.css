@@ -1,215 +1,127 @@
-/* Toast Container */
+/* ============================================================
+   Josephine — Toasts / Trail notifications
+   Deep-forest glass, real brand gold (#c9a84c), one soft shadow,
+   and a slim left accent bar that carries the per-type colour.
+   ============================================================ */
+
 .toast-container {
   position: fixed;
-  top: 80px;
-  right: 20px;
+  top: calc(80px + var(--safe-top, 0px));
+  right: 16px;
   z-index: var(--z-toast);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   pointer-events: none;
 }
 
 /* Individual Toast */
 .toast {
+  --toast-accent: #c9a84c;            /* default: brand gold */
+  --toast-accent-soft: rgba(201, 168, 76, 0.16);
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
-  min-width: 300px;
-  max-width: 400px;
-  padding: 16px 20px;
-  background: linear-gradient(135deg, rgba(26, 26, 26, 0.98) 0%, rgba(45, 74, 62, 0.95) 100%);
-  backdrop-filter: blur(20px);
-  border-radius: 12px;
-  border: 1px solid rgba(212, 165, 116, 0.3);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(255, 255, 255, 0.1) inset,
-    0 20px 60px rgba(212, 165, 116, 0.2);
-  color: #fff;
+  min-width: 280px;
+  max-width: 380px;
+  padding: 13px 16px 13px 18px;
+  background: rgba(12, 22, 13, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(201, 168, 76, 0.18);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  color: #f0ece6;
   pointer-events: all;
-  animation: toast-slide-in 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  transition: all 0.3s ease;
+  animation: toast-slide-in 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.toast:hover {
-  transform: translateX(-4px);
-  box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.7),
-    0 0 0 1px rgba(255, 255, 255, 0.15) inset,
-    0 24px 70px rgba(212, 165, 116, 0.3);
+/* Slim left accent bar — the only place colour lives */
+.toast::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--toast-accent);
 }
 
 @keyframes toast-slide-in {
-  from {
-    transform: translateX(120%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+  from { transform: translateX(16px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
 }
 
-/* Toast Icon */
+/* Icon — small gold chip, not a heavy circle */
 .toast-icon {
-  font-size: 24px;
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9px;
+  background: var(--toast-accent-soft);
+  color: var(--toast-accent);
 }
 
-/* Toast Message */
+/* Message */
 .toast-message {
   flex: 1;
-  font-size: 14px;
+  min-width: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13.5px;
   font-weight: 500;
-  line-height: 1.5;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  line-height: 1.45;
+  color: #ece8e1;
+  overflow-wrap: anywhere;
 }
 
-/* Toast Close Button */
+/* Close button */
 .toast-close {
+  flex-shrink: 0;
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 24px;
+  color: rgba(240, 236, 230, 0.45);
   cursor: pointer;
   padding: 0;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s ease;
+  border-radius: 6px;
+  transition: color 0.2s ease, background 0.2s ease;
 }
 
 .toast-close:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.07);
+  color: #f0ece6;
 }
 
-/* Toast Types */
-.toast-success {
-  border-color: rgba(74, 222, 128, 0.4);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(74, 222, 128, 0.2) inset,
-    0 20px 60px rgba(74, 222, 128, 0.2);
-}
+/* ── Types — each just sets the accent colour ── */
+.toast-success   { --toast-accent: #6abf69; --toast-accent-soft: rgba(106, 191, 105, 0.16); }
+.toast-error     { --toast-accent: #e0594f; --toast-accent-soft: rgba(224, 89, 79, 0.16); }
+.toast-warning   { --toast-accent: #e0a23c; --toast-accent-soft: rgba(224, 162, 60, 0.16); }
+.toast-info      { --toast-accent: #c9a84c; --toast-accent-soft: rgba(201, 168, 76, 0.16); }
+.toast-badge     { --toast-accent: #c9a84c; --toast-accent-soft: rgba(201, 168, 76, 0.18); }
+.toast-challenge { --toast-accent: #e0a23c; --toast-accent-soft: rgba(224, 162, 60, 0.16); }
+.toast-rifugio   { --toast-accent: #7bb0c9; --toast-accent-soft: rgba(123, 176, 201, 0.16); }
 
-.toast-success .toast-icon {
-  background: rgba(74, 222, 128, 0.2);
-  color: #4ade80;
-  animation: success-pulse 1s ease-out;
-}
-
-@keyframes success-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-}
-
-.toast-error {
-  border-color: rgba(239, 68, 68, 0.4);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(239, 68, 68, 0.2) inset,
-    0 20px 60px rgba(239, 68, 68, 0.2);
-}
-
-.toast-error .toast-icon {
-  background: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
-  animation: error-shake 0.5s ease-out;
-}
-
-@keyframes error-shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  75% { transform: translateX(4px); }
-}
-
-.toast-warning {
-  border-color: rgba(251, 191, 36, 0.4);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(251, 191, 36, 0.2) inset,
-    0 20px 60px rgba(251, 191, 36, 0.2);
-}
-
-.toast-warning .toast-icon {
-  background: rgba(251, 191, 36, 0.2);
-  color: #fbbf24;
-}
-
-.toast-badge {
-  border-color: rgba(212, 165, 116, 0.6);
-  background: linear-gradient(135deg, rgba(45, 45, 45, 0.98) 0%, rgba(74, 124, 158, 0.95) 100%);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(212, 165, 116, 0.3) inset,
-    0 20px 60px rgba(212, 165, 116, 0.4),
-    0 0 20px rgba(212, 165, 116, 0.3);
-}
-
-.toast-badge .toast-icon {
-  background: linear-gradient(135deg, #d4a574 0%, #e6c59f 100%);
-  color: #1a1a1a;
-  font-size: 20px;
-  animation: badge-glow 1.5s ease-in-out infinite;
-}
-
-@keyframes badge-glow {
-  0%, 100% { box-shadow: 0 0 10px rgba(212, 165, 116, 0.5); }
-  50% { box-shadow: 0 0 20px rgba(212, 165, 116, 0.8); }
-}
-
+/* The two "reward" types earn a touch more presence */
+.toast-badge,
 .toast-challenge {
-  border-color: rgba(251, 191, 36, 0.6);
-  background: linear-gradient(135deg, rgba(45, 45, 45, 0.98) 0%, rgba(251, 191, 36, 0.15) 100%);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(251, 191, 36, 0.3) inset,
-    0 20px 60px rgba(251, 191, 36, 0.3);
+  border-color: rgba(201, 168, 76, 0.32);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45),
+              0 0 22px rgba(201, 168, 76, 0.12);
 }
 
-.toast-challenge .toast-icon {
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  color: #1a1a1a;
-  font-size: 18px;
-  animation: challenge-bounce 0.6s ease-out;
-}
-
-@keyframes challenge-bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-.toast-rifugio {
-  border-color: rgba(74, 124, 158, 0.5);
-  background: linear-gradient(135deg, rgba(26, 26, 26, 0.98) 0%, rgba(74, 124, 158, 0.2) 100%);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(74, 124, 158, 0.2) inset,
-    0 20px 60px rgba(74, 124, 158, 0.2);
-}
-
-.toast-rifugio .toast-icon {
-  background: rgba(74, 124, 158, 0.3);
-  color: #60a5fa;
-  font-size: 18px;
-}
-
-/* Mobile Responsive */
+/* ── Mobile ── */
 @media (max-width: 768px) {
   .toast-container {
-    top: 60px;
+    top: calc(70px + var(--safe-top, 0px));
     right: 12px;
     left: 12px;
   }
@@ -217,34 +129,21 @@
   .toast {
     min-width: unset;
     max-width: unset;
-    padding: 14px 16px;
+    padding: 12px 14px 12px 16px;
   }
 
-  .toast-message {
-    font-size: 13px;
-  }
+  .toast-message { font-size: 13px; }
 
-  .toast-icon {
-    font-size: 20px;
-    width: 28px;
-    height: 28px;
-  }
+  .toast-icon { width: 28px; height: 28px; }
 }
 
-/* Accessibility - Reduced Motion */
+/* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
   .toast {
     animation: toast-fade-in 0.3s ease;
   }
-
   @keyframes toast-fade-in {
     from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  .toast-success .toast-icon,
-  .toast-badge .toast-icon,
-  .toast-challenge .toast-icon {
-    animation: none;
+    to   { opacity: 1; }
   }
 }
