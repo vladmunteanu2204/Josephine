@@ -20,17 +20,6 @@ const DIFFICULTY_LABEL = {
   expert: 'Expert',
 };
 
-// Render the elevation model as a self-contained SVG data-URL (rasterises
-// reliably through html2canvas, unlike a live inline <svg>).
-function elevImgSrc(elev) {
-  const svg =
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${elev.width} ${elev.height}" preserveAspectRatio="none">` +
-    `<path d="${elev.area}" fill="#0c160d" fill-opacity="0.10"/>` +
-    `<path d="${elev.line}" fill="none" stroke="#2f5233" stroke-width="2" stroke-linejoin="round"/>` +
-    `</svg>`;
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-}
-
 function fmtSeason(best) {
   if (!Array.isArray(best) || best.length === 0) return null;
   const short = (m) => (m || '').slice(0, 3);
@@ -89,12 +78,9 @@ function ItineraryExportSheet({ trail, heroImg, mapImg, elev, schedule = [] }) {
             <div className="ies-brand__tag">YOUR ALPINE COMPANION</div>
           </div>
         </div>
-        <div className="ies-badge">
-          <span className="ies-badge__crown">♛</span>
-          <div className="ies-badge__txt">
-            <div>SUBSCRIBER</div>
-            <div className="ies-badge__strong">ITINERARY EXPORT</div>
-          </div>
+        <div className="ies-mark">
+          <Mountain size={16} className="ies-gold" strokeWidth={2} />
+          <span className="ies-mark__txt">{t('pdf.trailGuide', 'TRAIL GUIDE')}</span>
         </div>
       </header>
 
@@ -137,12 +123,8 @@ function ItineraryExportSheet({ trail, heroImg, mapImg, elev, schedule = [] }) {
             : <div className="ies-route__map ies-route__map--empty">{t('pdf.mapUnavailable', 'Map preview unavailable')}</div>}
           {elev && (
             <div className="ies-elev">
-              <img className="ies-elev__svg" src={elevImgSrc(elev)} alt="" />
-              <div className="ies-elev__axis">
-                <span>0 km</span>
-                <span>{elev.minLabel} – {elev.maxLabel}</span>
-                <span>{elev.distLabel}</span>
-              </div>
+              <div className="ies-elev__label">{t('pdf.elevProfile', 'Elevation profile')}</div>
+              <img className="ies-elev__svg" src={elev.dataUrl} alt="" />
             </div>
           )}
         </div>

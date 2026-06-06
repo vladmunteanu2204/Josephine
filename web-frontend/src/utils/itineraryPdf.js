@@ -270,9 +270,11 @@ export function sampleRouteElevation(trail, samples = 64) {
   });
 }
 
-// Build an SVG path string + axis labels for an elevation series. Pure, so the
-// component can render it without recomputing geometry.
-export function elevationToSvg(series, { width = 560, height = 150, pad = 4 } = {}) {
+// Build a complete, self-contained elevation-profile SVG (gridlines + axis
+// labels baked in) for an elevation series, returned as a data-URL. Baking
+// everything into one <img> rasterises reliably through html2canvas and always
+// fills its container at full width.
+export function elevationToSvg(series, { width = 720, height = 138 } = {}) {
   if (!series || series.length < 2) return null;
   const eles = series.map((s) => s.ele);
   const minE = Math.min(...eles);
@@ -280,25 +282,61 @@ export function elevationToSvg(series, { width = 560, height = 150, pad = 4 } = 
   const span = Math.max(1, maxE - minE);
   const maxDist = series[series.length - 1].distKm || 1;
 
-  const x = (d) => pad + (d / maxDist) * (width - 2 * pad);
-  const y = (e) => height - pad - ((e - minE) / span) * (height - 2 * pad);
+  // plot area (gutters for axis labels)
+  const gutterL = 50;
+  const gutterB = 22;
+  const padT = 10;
+  const padR = 14;
+  const x0 = gutterL;
+  const x1 = width - padR;
+  const y0 = padT;
+  const y1 = height - gutterB;
+
+  const x = (d) => x0 + (d / maxDist) * (x1 - x0);
+  const y = (e) => y1 - ((e - minE) / span) * (y1 - y0);
 
   let line = '';
   series.forEach((s, i) => {
     line += `${i === 0 ? 'M' : 'L'}${x(s.distKm).toFixed(1)},${y(s.ele).toFixed(1)} `;
   });
-  const area = `${line}L${x(maxDist).toFixed(1)},${height - pad} L${pad},${height - pad} Z`;
+  const area = `${line}L${x1.toFixed(1)},${y1} L${x0.toFixed(1)},${y1} Z`;
 
-  // round axis labels to friendly steps
   const round = (v, step) => Math.round(v / step) * step;
+  const gridEle = [maxE, (maxE + minE) / 2, minE];
+  const gridlines = gridEle
+    .map((e) => {
+      const yy = y(e).toFixed(1);
+      return (
+        `<line x1="${x0}" y1="${yy}" x2="${x1}" y2="${yy}" stroke="#e3dac4" stroke-width="1"/>` +
+        `<text x="${x0 - 8}" y="${(y(e) + 4).toFixed(1)}" text-anchor="end" font-size="12" fill="#8a8067" font-family="sans-serif">${round(e, 50)} m</text>`
+      );
+    })
+    .join('');
+
+  const xVals = [0, maxDist / 2, maxDist];
+  const xlabels = xVals
+    .map((d, i) => {
+      const anchor = i === 0 ? 'start' : i === xVals.length - 1 ? 'end' : 'middle';
+      return `<text x="${x(d).toFixed(1)}" y="${height - 5}" text-anchor="${anchor}" font-size="12" fill="#8a8067" font-family="sans-serif">${d.toFixed(1)} km</text>`;
+    })
+    .join('');
+
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">` +
+    `<defs><linearGradient id="eg" x1="0" y1="0" x2="0" y2="1">` +
+    `<stop offset="0" stop-color="#2f5233" stop-opacity="0.30"/>` +
+    `<stop offset="1" stop-color="#2f5233" stop-opacity="0.04"/>` +
+    `</linearGradient></defs>` +
+    gridlines +
+    `<path d="${area.trim()}" fill="url(#eg)"/>` +
+    `<path d="${line.trim()}" fill="none" stroke="#2f5233" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>` +
+    xlabels +
+    `</svg>`;
+
   return {
     width,
     height,
-    line: line.trim(),
-    area: area.trim(),
-    minLabel: `${round(minE, 50)} m`,
-    maxLabel: `${round(maxE, 50)} m`,
-    distLabel: `${maxDist.toFixed(1)} km`,
+    dataUrl: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`,
     synthetic: !!series[0]?.synthetic,
   };
 }
