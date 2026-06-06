@@ -174,7 +174,11 @@
     "trailUnsaved": "Sentiero rimosso dai salvati",
     "elevationProfile": "Profilo Altimetrico",
     "startHike": "Inizia questa Escursione",
-    "gpsTrackingFeatures": "Tracciamento GPS con funzioni di sicurezza"
+    "gpsTrackingFeatures": "Tracciamento GPS con funzioni di sicurezza",
+    "itineraryTitle": "Cartolina itinerario",
+    "itineraryNote": "Scarica una guida di una pagina dal design curato per questa escursione — mappa del percorso, altimetria, punti salienti e le note di Josephine. Perfetta da stampare o condividere.",
+    "itineraryBuilding": "Stiamo preparando la tua guida…",
+    "itineraryDownload": "Scarica itinerario (PDF)"
   },
   "catalog": {
     "title": "Catalogo Sentieri",
@@ -1359,5 +1363,40 @@
     "chipShowAlternative": "Mostrami l'opzione più tranquilla",
     "chipPlanTomorrow": "Pianifica per domani",
     "chipGoAnyway": "Vado comunque"
+  },
+  "pdf": {
+    "dayHikeGuide": "Guida escursione giornaliera",
+    "curatedBy": "A cura della tua compagna alpina",
+    "distance": "Distanza",
+    "elevGain": "Dislivello",
+    "duration": "Durata",
+    "difficulty": "Difficoltà",
+    "dogFriendly": "Adatto ai cani",
+    "yes": "Sì",
+    "routeOverview": "Panoramica percorso",
+    "mapUnavailable": "Anteprima mappa non disponibile",
+    "highlights": "Punti salienti",
+    "bestTime": "Periodo migliore",
+    "atAGlance": "La tua giornata in breve",
+    "whatToPack": "Cosa portare",
+    "safetyNotes": "Note di sicurezza",
+    "emergency": "Numero emergenza alpina UE",
+    "photoSpots": "Migliori punti foto",
+    "photoAnywhere": "Ogni cresta e ogni prato è una cartolina — tieni la fotocamera pronta.",
+    "packBoots": "Scarponi e abbigliamento a strati",
+    "packWater": "Acqua (min. 1,5 L) e snack",
+    "packSun": "Protezione solare (cappello, crema, occhiali)",
+    "packRain": "Giacca antipioggia o antivento",
+    "packDog": "Per il cane: guinzaglio, acqua, snack, sacchetti",
+    "packCamera": "Macchina fotografica — la vorrai!",
+    "safetyWeather": "Controlla il meteo prima di partire",
+    "safetyRocky": "Alcuni tratti sono rocciosi — attenzione ai passi",
+    "safetyMarked": "Resta sui sentieri segnalati",
+    "safetyShade": "Poca ombra nei tratti esposti",
+    "safetyPlans": "Avvisa qualcuno dei tuoi programmi",
+    "footerL1": "Creato con amore da escursionisti, per escursionisti.",
+    "footerL2": "Altri sentieri, consigli e ispirazione nell’app Josephine.",
+    "footerThanks": "Grazie per aver camminato con noi.",
+    "happyTrails": "Buon cammino!"
   }
 }

@@ -174,7 +174,11 @@
     "gpsTrackingFeatures": "GPS tracking with safety features",
     "reviewFieldsRequired": "Please fill in all required fields",
     "reviewSubmitted": "Thank you for your review!",
-    "reviewError": "Failed to submit review. Please try again."
+    "reviewError": "Failed to submit review. Please try again.",
+    "itineraryTitle": "Itinerary postcard",
+    "itineraryNote": "Download a beautifully designed one-page guide for this hike — route map, elevation, highlights and Josephine’s notes. Perfect to print or share.",
+    "itineraryBuilding": "Preparing your guide…",
+    "itineraryDownload": "Download itinerary (PDF)"
   },
   "catalog": {
     "title": "Trail Catalog",
@@ -1359,5 +1363,40 @@
     "chipShowAlternative": "Show me the quieter option",
     "chipPlanTomorrow": "Plan it for tomorrow",
     "chipGoAnyway": "Go anyway"
+  },
+  "pdf": {
+    "dayHikeGuide": "Day Hike Guide",
+    "curatedBy": "Curated by your alpine companion",
+    "distance": "Distance",
+    "elevGain": "Elevation gain",
+    "duration": "Duration",
+    "difficulty": "Difficulty",
+    "dogFriendly": "Dog friendly",
+    "yes": "Yes",
+    "routeOverview": "Route Overview",
+    "mapUnavailable": "Map preview unavailable",
+    "highlights": "Highlights",
+    "bestTime": "Best time to hike",
+    "atAGlance": "Your day at a glance",
+    "whatToPack": "What to pack",
+    "safetyNotes": "Safety notes",
+    "emergency": "EU Alpine Emergency Number",
+    "photoSpots": "Best photo spots",
+    "photoAnywhere": "Every ridge and meadow is a postcard — keep your camera ready.",
+    "packBoots": "Hiking boots & comfortable layers",
+    "packWater": "Water (min. 1.5 L) & snacks",
+    "packSun": "Sun protection (hat, sunscreen, glasses)",
+    "packRain": "Rain jacket or windbreaker",
+    "packDog": "Dog essentials: leash, water, treats, waste bags",
+    "packCamera": "Camera — you’ll want it!",
+    "safetyWeather": "Check the weather before you go",
+    "safetyRocky": "Some sections are rocky — watch your step",
+    "safetyMarked": "Stay on marked trails",
+    "safetyShade": "Little shade on exposed sections",
+    "safetyPlans": "Let someone know your plans",
+    "footerL1": "Curated with love by hikers, for hikers.",
+    "footerL2": "More trails, tips & inspiration in the Josephine app.",
+    "footerThanks": "Thank you for hiking with us.",
+    "happyTrails": "Happy trails!"
   }
 }

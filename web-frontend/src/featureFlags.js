@@ -13,3 +13,10 @@ export const PERK_TURN_BY_TURN = true;
 // Generated client-side from the trail's coordinates + POIs ($0, works offline).
 // Built OPEN for testing; the single switch the future host/subscription gate wraps.
 export const PERK_OFFLINE_DOWNLOAD = true;
+
+// Perk — "itinerary postcard" (a designed Day Hike Guide PDF, branded
+// "Josephine — Your Alpine Companion"). Built fully client-side: static route
+// map (Mapbox Static Images) + terrain-sampled elevation profile, rasterised
+// to a one-page A4 PDF. Built OPEN for testing; the future host/subscription
+// gate wraps this single switch.
+export const PERK_PDF_ITINERARY = true;

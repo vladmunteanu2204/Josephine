@@ -1,0 +1,222 @@
+/* Josephine "Day Hike Guide" PDF sheet — fixed A4, off-screen rasterised.
+   Brand: forest #0c160d, gold #c9a84c, cream #f4ecdc. */
+
+.ies {
+  box-sizing: border-box;
+  position: relative;
+  padding: 30px 38px 0;
+  background:
+    radial-gradient(120% 80% at 100% 0%, #fbf7ee 0%, #f4ecdc 55%, #efe6d2 100%);
+  color: #243024;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.ies * { box-sizing: border-box; }
+
+.ies-green { color: #2f5233; }
+.ies-gold { color: #c9a84c; }
+
+/* ── header ── */
+.ies-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.ies-brand { display: flex; align-items: center; }
+.ies-brand__logo {
+  width: 44px; height: 44px; border-radius: 50%;
+  object-fit: cover; margin-right: 12px;
+  border: 2px solid #c9a84c;
+}
+.ies-brand__name {
+  font-size: 22px; font-weight: 800; letter-spacing: 3px;
+  color: #1f3b22; line-height: 1;
+}
+.ies-brand__tag {
+  font-size: 10px; letter-spacing: 3px; color: #b08f3c;
+  font-weight: 600; margin-top: 4px;
+}
+.ies-badge { display: flex; align-items: center; text-align: right; }
+.ies-badge__crown { font-size: 22px; color: #c9a84c; margin-right: 9px; }
+.ies-badge__txt { font-size: 10px; letter-spacing: 2px; color: #6b6453; font-weight: 600; }
+.ies-badge__strong { color: #1f3b22; font-weight: 800; margin-top: 2px; }
+
+/* ── title row ── */
+.ies-title-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+.ies-title-col { flex: 1; padding-right: 18px; }
+.ies-h1 {
+  font-size: 46px; font-weight: 800; color: #1f3b22;
+  margin: 0; line-height: 1; letter-spacing: -0.5px;
+}
+.ies-subtitle {
+  display: flex; align-items: center; gap: 6px;
+  font-style: italic; color: #6b6453; font-size: 14px; margin: 8px 0 0;
+}
+.ies-rule { width: 64px; height: 3px; background: #c9a84c; border-radius: 2px; margin: 12px 0; }
+.ies-trailname {
+  display: flex; align-items: center;
+  font-size: 26px; font-weight: 800; color: #1f3b22;
+}
+.ies-trailname span { margin-left: 8px; }
+.ies-region { font-size: 14px; color: #6b6453; margin-top: 4px; padding-left: 28px; }
+.ies-hero {
+  width: 290px; height: 168px; flex-shrink: 0;
+  border-radius: 14px; overflow: hidden;
+  border: 3px solid #fff; box-shadow: 0 6px 18px rgba(31, 59, 34, 0.18);
+}
+.ies-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ── stat strip ── */
+.ies-stats {
+  display: flex;
+  background: #fffdf8;
+  border: 1px solid #e6dcc4;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(31, 59, 34, 0.06);
+  margin-bottom: 14px;
+}
+.ies-stat {
+  flex: 1; text-align: center; padding: 14px 6px;
+  border-right: 1px solid #ece3cf;
+}
+.ies-stat:last-child { border-right: none; }
+.ies-stat__icon { color: #2f5233; display: flex; justify-content: center; margin-bottom: 6px; }
+.ies-stat__label {
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: #8a8067; font-weight: 700;
+}
+.ies-stat__value { font-size: 19px; font-weight: 800; color: #1f3b22; margin-top: 3px; }
+
+/* ── cards ── */
+.ies-card {
+  background: #fffdf8;
+  border: 1px solid #e6dcc4;
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 4px 12px rgba(31, 59, 34, 0.05);
+}
+.ies-card--soft { background: #eef2e6; border-color: #dbe3cb; }
+.ies-card__title {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12px; letter-spacing: 1px; text-transform: uppercase;
+  color: #2f5233; font-weight: 800; margin: 0 0 10px;
+}
+.ies-card__title svg { color: #2f5233; }
+
+/* ── mid: route + side ── */
+.ies-mid { display: flex; margin-bottom: 14px; }
+.ies-route { flex: 0 0 58%; margin-right: 14px; }
+.ies-route__map {
+  width: 100%; height: 196px; object-fit: cover;
+  border-radius: 10px; display: block; background: #e9e2d0;
+}
+.ies-route__map--empty {
+  display: flex; align-items: center; justify-content: center;
+  color: #8a8067; font-size: 13px;
+}
+.ies-elev { margin-top: 10px; }
+.ies-elev__svg { width: 100%; height: 74px; display: block; }
+.ies-elev__axis {
+  display: flex; justify-content: space-between;
+  font-size: 10px; color: #8a8067; margin-top: 4px; font-weight: 600;
+}
+.ies-side { flex: 1; display: flex; flex-direction: column; }
+.ies-side .ies-card:first-child { margin-bottom: 12px; flex: 1; }
+.ies-season { font-size: 18px; font-weight: 800; color: #1f3b22; }
+
+/* leaf bullets */
+.ies-leaf { list-style: none; margin: 0; padding: 0; }
+.ies-leaf li {
+  position: relative; padding-left: 20px; margin-bottom: 8px;
+  font-size: 13px; line-height: 1.32; color: #3a4239;
+}
+.ies-leaf li::before {
+  content: '❧'; position: absolute; left: 0; top: 0;
+  color: #4a7a3f; font-size: 12px;
+}
+.ies-leaf--sm li { font-size: 11.5px; margin-bottom: 6px; }
+.ies-check { list-style: none; margin: 0; padding: 0; }
+.ies-check li {
+  position: relative; padding-left: 20px; margin-bottom: 6px;
+  font-size: 11.5px; line-height: 1.3; color: #3a4239;
+}
+.ies-check li::before {
+  content: '✓'; position: absolute; left: 0; top: 0;
+  color: #4a7a3f; font-weight: 800;
+}
+
+/* ── day at a glance ── */
+.ies-glance { margin-bottom: 14px; }
+.ies-glance__title {
+  font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: #2f5233; font-weight: 800; margin: 0 0 10px;
+}
+.ies-timeline {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  background: #fffdf8; border: 1px solid #e6dcc4; border-radius: 14px;
+  padding: 14px 12px;
+}
+.ies-step { text-align: center; flex: 1; }
+.ies-step__icon {
+  width: 38px; height: 38px; margin: 0 auto 6px;
+  border-radius: 50%; background: #eef2e6;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; border: 1px solid #dbe3cb;
+}
+.ies-step__time { font-size: 14px; font-weight: 800; color: #1f3b22; }
+.ies-step__label { font-size: 10.5px; color: #3a4239; margin-top: 2px; font-weight: 600; line-height: 1.2; }
+.ies-step__sub { font-size: 9px; color: #8a8067; margin-top: 1px; text-transform: capitalize; }
+.ies-step__arrow { color: #c9a84c; font-size: 22px; align-self: center; padding: 0 2px; }
+
+/* ── three columns ── */
+.ies-cols { display: flex; margin-bottom: 12px; }
+.ies-cols .ies-card { flex: 1; }
+.ies-cols .ies-card:not(:last-child) { margin-right: 12px; }
+.ies-emergency {
+  display: flex; align-items: center; gap: 8px;
+  background: #f3ede0; border-radius: 9px; padding: 7px 10px; margin-top: 10px;
+  font-size: 10px; color: #6b6453; font-weight: 600;
+}
+.ies-emergency__num {
+  background: #2f5233; color: #fff; font-weight: 800; font-size: 13px;
+  border-radius: 6px; padding: 2px 8px;
+}
+.ies-photos { list-style: none; margin: 0; padding: 0; }
+.ies-photos li { display: flex; align-items: flex-start; margin-bottom: 8px; font-size: 11px; }
+.ies-photos__n {
+  flex-shrink: 0; width: 18px; height: 18px; margin-right: 8px;
+  background: #2f5233; color: #fff; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800;
+}
+.ies-photos strong { display: block; color: #1f3b22; font-size: 11.5px; }
+.ies-photos em { display: block; color: #6b6453; font-style: normal; font-size: 10px; line-height: 1.25; }
+.ies-muted { font-size: 11px; color: #8a8067; line-height: 1.4; margin: 0; }
+
+/* ── quote ── */
+.ies-quote {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  text-align: center; font-style: italic; color: #4a5247;
+  font-size: 13px; margin-bottom: 10px; padding: 0 30px;
+}
+.ies-quote__mark { font-size: 28px; color: #c9a84c; line-height: 0; margin-top: 8px; }
+
+/* ── footer ── */
+.ies-footer {
+  margin: auto -38px 0;
+  background: #1f3b22; color: #d8e0cf;
+  padding: 12px 38px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.ies-footer__left { display: flex; align-items: center; gap: 10px; font-size: 11px; }
+.ies-footer__left svg { color: #c9a84c; }
+.ies-footer__sub { color: #9fb097; font-size: 10px; }
+.ies-footer__right { display: flex; align-items: center; gap: 14px; font-size: 11px; }
+.ies-footer__happy { color: #c9a84c; font-style: italic; }
+.ies-footer__page {
+  background: #fffdf8; color: #1f3b22; font-weight: 800;
+  border-radius: 20px; padding: 4px 12px; font-size: 11px;
+}

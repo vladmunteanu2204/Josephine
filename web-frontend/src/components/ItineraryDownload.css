@@ -1,0 +1,71 @@
+/* ItineraryDownload — "Itinerary postcard" PDF card (perk) */
+
+.itin {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(201, 168, 76, 0.18);
+  border-radius: 14px;
+  padding: 16px 18px;
+}
+
+.itin__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.itin__head-icon { color: #c9a84c; }
+
+.itin__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #f4ecdc;
+}
+
+.itin__note {
+  margin: 0 0 14px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: rgba(244, 236, 220, 0.72);
+}
+
+.itin__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid rgba(201, 168, 76, 0.4);
+  background: transparent;
+  color: #f4ecdc;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.itin__btn:hover { background: rgba(201, 168, 76, 0.1); }
+.itin__btn:disabled { cursor: default; opacity: 0.85; }
+
+.itin__btn--done {
+  background: rgba(201, 168, 76, 0.15);
+  border-color: #c9a84c;
+  color: #c9a84c;
+  cursor: default;
+}
+
+.itin__spin { animation: itin-spin 0.9s linear infinite; }
+@keyframes itin-spin { to { transform: rotate(360deg); } }
+
+/* Off-screen render target — kept in the DOM (not display:none) so html2canvas
+   can measure & paint it, but pushed far out of view. */
+.itin__offscreen {
+  position: fixed;
+  left: -10000px;
+  top: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+}

@@ -174,7 +174,11 @@
     "trailUnsaved": "Route aus Gespeicherten entfernt",
     "elevationProfile": "Höhenprofil",
     "startHike": "Diese Wanderung starten",
-    "gpsTrackingFeatures": "GPS-Tracking mit Sicherheitsfunktionen"
+    "gpsTrackingFeatures": "GPS-Tracking mit Sicherheitsfunktionen",
+    "itineraryTitle": "Routen-Postkarte",
+    "itineraryNote": "Lade dir einen schön gestalteten Ein-Seiten-Guide für diese Tour herunter – Wegkarte, Höhenprofil, Highlights und Josephines Notizen. Perfekt zum Ausdrucken oder Teilen.",
+    "itineraryBuilding": "Dein Guide wird vorbereitet…",
+    "itineraryDownload": "Itinerar herunterladen (PDF)"
   },
   "catalog": {
     "title": "Wanderwege-Katalog",
@@ -1359,5 +1363,40 @@
     "chipShowAlternative": "Zeig mir die ruhigere Option",
     "chipPlanTomorrow": "Für morgen planen",
     "chipGoAnyway": "Trotzdem hin"
+  },
+  "pdf": {
+    "dayHikeGuide": "Tagestour-Guide",
+    "curatedBy": "Zusammengestellt von deiner Alpen-Begleiterin",
+    "distance": "Distanz",
+    "elevGain": "Höhenmeter",
+    "duration": "Dauer",
+    "difficulty": "Schwierigkeit",
+    "dogFriendly": "Hundefreundlich",
+    "yes": "Ja",
+    "routeOverview": "Routenübersicht",
+    "mapUnavailable": "Kartenvorschau nicht verfügbar",
+    "highlights": "Highlights",
+    "bestTime": "Beste Wanderzeit",
+    "atAGlance": "Dein Tag auf einen Blick",
+    "whatToPack": "Packliste",
+    "safetyNotes": "Sicherheitshinweise",
+    "emergency": "EU-Alpennotruf",
+    "photoSpots": "Beste Fotostellen",
+    "photoAnywhere": "Jeder Grat und jede Wiese ist ein Postkartenmotiv – halt deine Kamera bereit.",
+    "packBoots": "Wanderschuhe & bequeme Kleidungsschichten",
+    "packWater": "Wasser (mind. 1,5 L) & Snacks",
+    "packSun": "Sonnenschutz (Hut, Creme, Brille)",
+    "packRain": "Regenjacke oder Windbreaker",
+    "packDog": "Für den Hund: Leine, Wasser, Leckerli, Kotbeutel",
+    "packCamera": "Kamera – die willst du dabeihaben!",
+    "safetyWeather": "Prüfe vor dem Start das Wetter",
+    "safetyRocky": "Einige Abschnitte sind felsig – achte auf deine Schritte",
+    "safetyMarked": "Bleib auf markierten Wegen",
+    "safetyShade": "Wenig Schatten auf offenen Abschnitten",
+    "safetyPlans": "Sag jemandem, wohin du gehst",
+    "footerL1": "Mit Liebe gemacht von Wanderern, für Wanderer.",
+    "footerL2": "Mehr Touren, Tipps & Inspiration in der Josephine-App.",
+    "footerThanks": "Danke, dass du mit uns wanderst.",
+    "happyTrails": "Schöne Wege!"
   }
 }
