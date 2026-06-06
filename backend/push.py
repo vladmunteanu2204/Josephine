@@ -81,20 +81,30 @@ def _write_subs(subs):
         print(f'[push] could not persist subscriptions: {e}')
 
 
-def add_subscription(sub, lang='en'):
-    """Store a PushSubscription (dedup by endpoint). Returns True on success."""
+def add_subscription(sub, lang='en', email=None):
+    """Store a PushSubscription (dedup by endpoint). An optional `email` ties the
+    subscription to a signed-in user so personalised pushes (Phase 17B) can
+    target one person. Returns True on success."""
     try:
         endpoint = (sub or {}).get('endpoint')
         if not endpoint:
             return False
         subs = _read_subs()
         subs = [s for s in subs if s.get('sub', {}).get('endpoint') != endpoint]
-        subs.append({'sub': sub, 'lang': (lang or 'en')[:2], 'at': int(time.time())})
+        entry = {'sub': sub, 'lang': (lang or 'en')[:2], 'at': int(time.time())}
+        if email:
+            entry['email'] = email
+        subs.append(entry)
         _write_subs(subs)
         return True
     except Exception as e:  # noqa: BLE001
         print(f'[push] add_subscription failed: {e}')
         return False
+
+
+def subscriptions_for(email):
+    """All stored subscription entries belonging to one user email."""
+    return [s for s in _read_subs() if s.get('email') == email]
 
 
 def remove_subscription(endpoint):
@@ -142,4 +152,32 @@ def send_to_all(title, body, url='/', icon='/josephine/portrait.png', lang=None)
     if dead:
         remaining = [s for s in subs if s.get('sub', {}).get('endpoint') not in dead]
         _write_subs(remaining)
+    return {'sent': sent, 'failed': len(dead)}
+
+
+def send_to_user(email, title, body, url='/', icon='/josephine/portrait.png'):
+    """Send a notification to every device a single user has subscribed (Phase
+    17B personalised push). Prunes dead subscriptions. Returns {sent, failed}."""
+    if not is_enabled():
+        return {'sent': 0, 'failed': 0, 'disabled': True}
+    mine = subscriptions_for(email)
+    if not mine:
+        return {'sent': 0, 'failed': 0, 'no_subscription': True}
+    payload = {'title': title, 'body': body, 'url': url, 'icon': icon}
+    sent, dead = 0, []
+    for entry in mine:
+        try:
+            _send_one(entry['sub'], payload)
+            sent += 1
+        except WebPushException as e:  # noqa: BLE001
+            code = getattr(getattr(e, 'response', None), 'status_code', None)
+            if code in (404, 410):
+                dead.append(entry['sub'].get('endpoint'))
+            else:
+                print(f'[push] send_to_user error: {e}')
+        except Exception as e:  # noqa: BLE001
+            print(f'[push] send_to_user error: {e}')
+    if dead:
+        subs = [s for s in _read_subs() if s.get('sub', {}).get('endpoint') not in dead]
+        _write_subs(subs)
     return {'sent': sent, 'failed': len(dead)}

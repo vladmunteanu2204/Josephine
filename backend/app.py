@@ -42,6 +42,8 @@ import almanac
 import decision_engine
 import context_engine
 import insights as insights_engine
+import recommender                 # Phase 17B: per-user trail scoring
+import behaviour_store             # Phase 17B: behaviour / saved / prefs persistence
 from decision_engine import _season_status, _season_range_label, _MONTHS_ORDER  # noqa: F401
 from notifications import EMAIL_ENABLED, send_email, build_inquiry_text
 try:
@@ -1336,6 +1338,182 @@ def get_recommendations():
         traceback.print_exc()
         return _server_error(e)
 
+
+# ── Phase 17B: per-user personalised recommendations ─────────────────────────
+def _load_user_completed_hikes(user_email):
+    """Completed hikes for one user — DB table if available, else the JSON file
+    (same source /api/hikes serves). Used as the strongest preference signal."""
+    if not user_email:
+        return []
+    if DB_AVAILABLE:
+        try:
+            with get_db() as conn:
+                rows = conn.execute(_sql(
+                    "SELECT trail_id, data FROM completed_hikes WHERE user_email = :e"),
+                    {'e': user_email}).fetchall()
+            out = []
+            for r in rows:
+                h = dict(r.data) if r.data else {}
+                h.setdefault('trail_id', r.trail_id)
+                out.append(h)
+            return out
+        except Exception as e:  # noqa: BLE001
+            print(f"[recommend] completed-hikes DB read fell back to JSON: {e}")
+    path = os.path.join(BASE_DIR, 'data', 'completed_hikes.json')
+    if not os.path.exists(path):
+        return []
+    try:
+        with open(path) as f:
+            allh = json.load(f).get('hikes', [])
+        return [h for h in allh if h.get('user_email') == user_email]
+    except Exception:  # noqa: BLE001
+        return []
+
+
+def _personalised_card(item, current_month):
+    """Shape one recommend() result into a compact card for the UI's
+    "Recommended for you" row. Reasons stay as localisable codes."""
+    trail = process_trail_media(item['trail'])
+    best_image = (
+        trail.get('wallpaper')
+        or (trail.get('gallery') or [None])[0]
+        or trail.get('image_url') or trail.get('thumbnail') or ''
+    )
+    return {
+        'id': trail.get('id'),
+        'name': trail.get('name', ''),
+        'score': item['score'],
+        'reasons': item['reasons'],
+        'distance_km': trail.get('distance_km'),
+        'duration_hours': trail.get('duration_hours'),
+        'elevation_gain_m': trail.get('elevation_gain_m'),
+        'difficulty': trail.get('difficulty', 'medium'),
+        'region': trail.get('region', ''),
+        'rating': trail.get('rating', 0),
+        'dog_friendly': trail.get('dog_friendly', False),
+        'thumbnail': best_image,
+        'wallpaper': best_image,
+        'in_season': current_month in trail.get('best_season', [current_month]),
+    }
+
+
+def build_user_recommendations(user_email, limit=6):
+    """Core reusable path: behaviour + completed hikes → profile → ranked trails.
+    Returns (cards, profile). Shared by the API endpoint and personalised push."""
+    trails = load_complete_trails()['trails']
+    trails_by_id = {t.get('id'): t for t in trails if t.get('id')}
+    behaviour = behaviour_store.get_behaviour(user_email, limit=1000)
+    completed = _load_user_completed_hikes(user_email)
+
+    profile = recommender.build_profile(behaviour, completed, trails_by_id)
+    # Don't re-suggest what they've already done or saved.
+    exclude = set(profile.get('interacted_ids', []))
+    exclude.update(behaviour_store.get_saved(user_email))
+
+    ranked = recommender.recommend(trails, profile, exclude_ids=exclude, limit=limit)
+    current_month = datetime.now().strftime('%B')
+    cards = [_personalised_card(item, current_month) for item in ranked]
+    return cards, profile
+
+
+@app.route('/api/recommendations/for-you', methods=['GET'])
+def recommendations_for_you():
+    """Personalised "Recommended for you" row for a signed-in user (keyed by
+    ?email=). Cold-start users still get a curated popularity-led row, flagged
+    so the UI can soften the heading."""
+    try:
+        user_email = request.args.get('email')
+        if not user_email:
+            return jsonify({'results': [], 'reason': 'email_required'}), 400
+        try:
+            limit = min(max(int(request.args.get('limit', 6)), 1), 12)
+        except (TypeError, ValueError):
+            limit = 6
+        cards, profile = build_user_recommendations(user_email, limit=limit)
+        return jsonify({
+            'results': cards,
+            'cold_start': profile.get('cold_start', True),
+            'fitness_level': profile.get('fitness_level'),
+            'signal': round(profile.get('total_signal', 0), 1),
+        })
+    except Exception as e:  # noqa: BLE001
+        return _server_error(e)
+
+
+# ── Phase 17B: behaviour tracking + server-mirrored saved trails ─────────────
+@app.route('/api/behaviour', methods=['POST'])
+def track_behaviour():
+    """Record one per-user behaviour signal (view/save/plan/review). Best-effort:
+    always 200 so a tracking failure never surfaces in the UI. Trusts the
+    verified email when Firebase auth is enabled, else the client-sent email."""
+    try:
+        body = request.json or {}
+        email = body.get('user_email') or body.get('email')
+        u = _authenticated_user(body)
+        if u and u.get('verified') and u.get('email'):
+            email = u['email']
+        behaviour_store.record_behaviour(
+            email, body.get('trail_id'), body.get('action'), body.get('metadata'))
+        return jsonify({'ok': True})
+    except Exception as e:  # noqa: BLE001
+        print(f"[behaviour] track error: {e}")
+        return jsonify({'ok': False}), 200
+
+
+@app.route('/api/saved-trails', methods=['GET'])
+def saved_trails_get():
+    """Server-stored saved-trail ids for one user (cross-device mirror)."""
+    email = request.args.get('email')
+    if not email:
+        return jsonify({'error': 'email_required'}), 400
+    return jsonify({'trail_ids': behaviour_store.get_saved(email)})
+
+
+@app.route('/api/saved-trails', methods=['POST'])
+def saved_trails_set():
+    """Add/remove a saved trail on the server (dual-written with localStorage).
+    Body: {email, trail_id, action: 'save'|'unsave'}. Also logs the behaviour."""
+    try:
+        body = request.json or {}
+        email = body.get('user_email') or body.get('email')
+        u = _authenticated_user(body)
+        if u and u.get('verified') and u.get('email'):
+            email = u['email']
+        trail_id = body.get('trail_id')
+        action = str(body.get('action', 'save')).lower()
+        if not email or not trail_id:
+            return jsonify({'ok': False, 'error': 'email_and_trail_required'}), 400
+        behaviour_store.set_saved(email, trail_id, saved=(action != 'unsave'))
+        behaviour_store.record_behaviour(email, trail_id, action)
+        return jsonify({'ok': True})
+    except Exception as e:  # noqa: BLE001
+        print(f"[saved] set error: {e}")
+        return jsonify({'ok': False}), 200
+
+
+@app.route('/api/me/notification-prefs', methods=['GET', 'POST'])
+def notification_prefs():
+    """Get/set a user's push notification preferences (weekly recs, weather
+    alerts). Keyed by email; defaults to all-on."""
+    try:
+        if request.method == 'GET':
+            email = request.args.get('email')
+            if not email:
+                return jsonify({'error': 'email_required'}), 400
+            return jsonify({'prefs': behaviour_store.get_notification_prefs(email)})
+        body = request.json or {}
+        email = body.get('user_email') or body.get('email')
+        u = _authenticated_user(body)
+        if u and u.get('verified') and u.get('email'):
+            email = u['email']
+        if not email:
+            return jsonify({'error': 'email_required'}), 400
+        prefs = behaviour_store.set_notification_prefs(email, body.get('prefs') or body)
+        return jsonify({'ok': True, 'prefs': prefs})
+    except Exception as e:  # noqa: BLE001
+        return _server_error(e)
+
+
 @app.route('/api/trails/<trail_id>/reviews', methods=['GET'])
 def get_trail_reviews(trail_id):
     """Get reviews for a specific trail"""
@@ -1557,7 +1735,13 @@ def push_subscribe():
     try:
         body = request.json or {}
         sub = body.get('subscription') or body
-        ok = push.add_subscription(sub, body.get('lang', 'en'))
+        # Tie the subscription to the signed-in user (verified email wins) so
+        # personalised pushes can target them. Anonymous opt-ins still work.
+        email = body.get('user_email') or body.get('email')
+        u = _authenticated_user(body)
+        if u and u.get('verified') and u.get('email'):
+            email = u['email']
+        ok = push.add_subscription(sub, body.get('lang', 'en'), email=email)
         return jsonify({'ok': ok})
     except Exception as e:  # noqa: BLE001
         print(f'[push] subscribe error: {e}')
@@ -1602,6 +1786,148 @@ def push_send():
     except Exception as e:  # noqa: BLE001
         print(f'[push] send error: {e}')
         return jsonify({'ok': False}), 200
+
+
+# ── Phase 17B: personalised push (BUILT BUT GATED OFF) ───────────────────────
+# Disabled unless ENABLE_PERSONALIZED_PUSH is truthy in the environment, so it
+# never fires unattended. Two notification kinds: a weekly personalised trail
+# pick, and a weather watch for a user's saved trails. Localised server-side
+# using the language stored with each subscription.
+PERSONALISED_PUSH_ENABLED = os.environ.get('ENABLE_PERSONALIZED_PUSH', '').strip().lower() in ('1', 'true', 'yes', 'on')
+_CRON_TOKEN = os.environ.get('CRON_TOKEN', '').strip()
+
+_PUSH_COPY = {
+    'en': {
+        'weekly_title': "Josephine · This week's pick",
+        'weekly_body':  "{name} looks perfect for you right now.",
+        'weather_title': "Weather watch",
+        'weather_body':  "Rain likely on {name} around {date}. Maybe pick another day?",
+    },
+    'it': {
+        'weekly_title': "Josephine · Il consiglio della settimana",
+        'weekly_body':  "{name} è perfetto per te in questo momento.",
+        'weather_title': "Allerta meteo",
+        'weather_body':  "Pioggia probabile su {name} verso il {date}. Forse meglio un altro giorno?",
+    },
+    'de': {
+        'weekly_title': "Josephine · Tipp der Woche",
+        'weekly_body':  "{name} passt gerade perfekt zu dir.",
+        'weather_title': "Wetterwarnung",
+        'weather_body':  "Regen wahrscheinlich auf {name} um den {date}. Vielleicht ein anderer Tag?",
+    },
+}
+
+
+def _user_push_lang(email):
+    subs = push.subscriptions_for(email)
+    lang = (subs[0].get('lang') if subs else 'en') or 'en'
+    return lang if lang in _PUSH_COPY else 'en'
+
+
+def _trail_start_coord(trail):
+    """First [lon, lat] of a trail's polyline → (lat, lon), or None."""
+    coords = trail.get('coordinates') or []
+    if coords and isinstance(coords[0], (list, tuple)) and len(coords[0]) >= 2:
+        lon, lat = coords[0][0], coords[0][1]
+        return (lat, lon)
+    return None
+
+
+def _dispatch_personalised_push(kind='weekly', dry_run=False, limit_users=None):
+    """Build + (optionally) send personalised notifications. Returns a summary.
+    No-op (disabled) unless PERSONALISED_PUSH_ENABLED. `dry_run` builds the
+    messages without sending — useful for verifying content."""
+    if not PERSONALISED_PUSH_ENABLED:
+        return {'disabled': True, 'reason': 'ENABLE_PERSONALIZED_PUSH not set'}
+
+    trails = load_complete_trails()['trails']
+    trails_by_id = {t.get('id'): t for t in trails if t.get('id')}
+    emails = behaviour_store.users_with_behaviour()
+    if limit_users:
+        emails = emails[:limit_users]
+
+    built, sent_total = [], 0
+    for email in emails:
+        prefs = behaviour_store.get_notification_prefs(email)
+        lang = _user_push_lang(email)
+        copy = _PUSH_COPY[lang]
+
+        if kind == 'weekly':
+            if not prefs.get('weekly_recs', True):
+                continue
+            cards, _profile = build_user_recommendations(email, limit=1)
+            if not cards:
+                continue
+            top = cards[0]
+            msg = {
+                'email': email,
+                'title': copy['weekly_title'],
+                'body': copy['weekly_body'].format(name=top['name']),
+                'url': f"/?trail={top['id']}",
+            }
+        elif kind == 'weather':
+            if not prefs.get('weather_alerts', True):
+                continue
+            saved_ids = behaviour_store.get_saved(email)
+            msg = None
+            for tid in saved_ids:
+                trail = trails_by_id.get(tid)
+                coord = _trail_start_coord(trail) if trail else None
+                if not coord:
+                    continue
+                forecast = weather_service.get_forecast(*coord) or []
+                bad = next((d for d in forecast[1:3] if d.get('rain_probability', 0) > 70), None)
+                if bad:
+                    msg = {
+                        'email': email,
+                        'title': copy['weather_title'],
+                        'body': copy['weather_body'].format(name=trail.get('name', ''), date=bad['date']),
+                        'url': f"/?trail={tid}",
+                    }
+                    break
+            if not msg:
+                continue
+        else:
+            return {'error': f'unknown kind {kind}'}
+
+        built.append(msg)
+        if not dry_run:
+            res = push.send_to_user(email, msg['title'], msg['body'], url=msg['url'])
+            sent_total += res.get('sent', 0)
+
+    return {'kind': kind, 'dry_run': dry_run, 'users': len(emails),
+            'messages': len(built), 'sent': sent_total,
+            'sample': built[:3]}
+
+
+@app.route('/api/admin/push/personalized', methods=['POST'])
+def push_personalised():
+    """Trigger a personalised push run. Auth: admin JWT **or** a matching
+    X-Cron-Token header (for an unattended scheduler). Gated off by default —
+    returns {disabled:true} unless ENABLE_PERSONALIZED_PUSH is set."""
+    # Manual auth: admin bearer OR cron token (so a scheduler can call it too).
+    authorised = False
+    tok = _bearer_token()
+    if tok:
+        try:
+            jwt.decode(tok, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+            authorised = True
+        except jwt.InvalidTokenError:
+            authorised = False
+    if not authorised and _CRON_TOKEN and request.headers.get('X-Cron-Token') == _CRON_TOKEN:
+        authorised = True
+    if not authorised:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    body = request.json or {}
+    kind = body.get('kind', 'weekly')
+    dry_run = bool(body.get('dry_run', False))
+    try:
+        result = _dispatch_personalised_push(kind=kind, dry_run=dry_run,
+                                             limit_users=body.get('limit_users'))
+        return jsonify({'ok': True, **result})
+    except Exception as e:  # noqa: BLE001
+        return _server_error(e)
 
 
 @app.route('/api/josephine/plan', methods=['POST'])
@@ -2644,18 +2970,25 @@ atexit.register(_flush_analytics_buffer)
 
 @app.route('/api/analytics/trail/view', methods=['POST'])
 def track_trail_view():
-    """Track trail view — buffered, flushed every 30s."""
-    trail_id = (request.json or {}).get('trail_id')
+    """Track trail view — buffered, flushed every 30s. When an `email` rides
+    along (signed-in user) it doubles as a per-user behaviour signal for the
+    Phase 17B recommender, so the page needs only one tracking call."""
+    body     = request.json or {}
+    trail_id = body.get('trail_id')
     if not trail_id:
         return jsonify({'error': 'trail_id required'}), 400
     with _analytics_buf_lock:
         _analytics_buffer['views'][trail_id] = _analytics_buffer['views'].get(trail_id, 0) + 1
     _maybe_flush_analytics()
+    email = body.get('user_email') or body.get('email')
+    if email:
+        behaviour_store.record_behaviour(email, trail_id, 'view')
     return jsonify({'success': True})
 
 @app.route('/api/analytics/trail/save', methods=['POST'])
 def track_trail_save():
-    """Track trail save/unsave — buffered, flushed every 30s."""
+    """Track trail save/unsave — buffered, flushed every 30s. Also mirrors the
+    save to the per-user server list + behaviour log when an `email` is sent."""
     body     = request.json or {}
     trail_id = body.get('trail_id')
     action   = body.get('action', 'save')
@@ -2665,6 +2998,10 @@ def track_trail_save():
         delta = 1 if action == 'save' else -1
         _analytics_buffer['saves'][trail_id] = _analytics_buffer['saves'].get(trail_id, 0) + delta
     _maybe_flush_analytics()
+    email = body.get('user_email') or body.get('email')
+    if email:
+        behaviour_store.set_saved(email, trail_id, saved=(action != 'unsave'))
+        behaviour_store.record_behaviour(email, trail_id, action)
     return jsonify({'success': True})
 
 # Rifugio Management

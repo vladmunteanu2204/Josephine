@@ -171,6 +171,43 @@ CREATE TABLE IF NOT EXISTS booking_inquiries (
 );
 CREATE INDEX IF NOT EXISTS idx_bookings_rifugio ON booking_inquiries(rifugio_id);
 CREATE INDEX IF NOT EXISTS idx_bookings_user    ON booking_inquiries(user_email);
+
+-- ── Phase 17B: personalisation ──────────────────────────────────────────
+-- Per-user behaviour log (views/saves/plans/reviews) feeding the recommender.
+CREATE TABLE IF NOT EXISTS user_behaviour (
+    id         SERIAL PRIMARY KEY,
+    user_email TEXT NOT NULL,
+    trail_id   TEXT NOT NULL,
+    action     TEXT NOT NULL,
+    metadata   JSONB NOT NULL DEFAULT '{}',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_behaviour_user  ON user_behaviour(user_email);
+CREATE INDEX IF NOT EXISTS idx_behaviour_trail ON user_behaviour(trail_id);
+
+-- Server mirror of each user's saved/bookmarked trails (dual-written with the
+-- client's localStorage list for cross-device sync).
+CREATE TABLE IF NOT EXISTS saved_trails (
+    user_email TEXT NOT NULL,
+    trail_id   TEXT NOT NULL,
+    saved_at   TIMESTAMPTZ DEFAULT NOW(),
+    PRIMARY KEY (user_email, trail_id)
+);
+CREATE INDEX IF NOT EXISTS idx_saved_user ON saved_trails(user_email);
+
+-- Optional cached preference profile (recomputed lazily; not the source of truth).
+CREATE TABLE IF NOT EXISTS user_preferences (
+    user_email TEXT PRIMARY KEY,
+    data       JSONB NOT NULL DEFAULT '{}',
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Per-user push notification preferences (weekly recs, weather alerts).
+CREATE TABLE IF NOT EXISTS notification_prefs (
+    user_email TEXT PRIMARY KEY,
+    data       JSONB NOT NULL DEFAULT '{}',
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
 """
 
 

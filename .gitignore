@@ -53,3 +53,8 @@ attached_assets/
 backend/vapid_private.pem
 backend/vapid_public.txt
 backend/data/push_subscriptions.json
+
+# Phase 17B personalisation — dev JSON fallback stores (user behaviour data)
+data/user_behaviour.json
+data/saved_trails_server.json
+data/notification_prefs.json
