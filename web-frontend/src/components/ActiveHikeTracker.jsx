@@ -24,7 +24,17 @@ const NOTIFICATION_DISTANCE_THRESHOLD = 50; // 50m movement to allow new notific
 const CHECKPOINT_ARRIVAL_RADIUS = 30; // meters to mark as reached
 const CHECKPOINT_PASSED_RADIUS = 40; // meters to mark as passed after reaching
 const RESUME_PROMPT_THRESHOLD = 60000; // backgrounded ≥60s (phone in pocket) → ask "still on the trail?"
-const TRAIL_COMPLETE_PROGRESS = 98; // % of the route walked that counts the hike as finished
+// Completion is judged by *distance actually walked* vs the route length, NOT by
+// how close you are to the last polyline point. On a loop the last point sits on
+// top of the first, so a position-based check would "finish" you at the trailhead
+// the moment you start. Walked-distance is monotonic and immune to that.
+const TRAIL_COMPLETE_DISTANCE_FRACTION = 0.9; // walked ≥ 90% of the route length = done
+// Fixes worse than this (metres of reported accuracy) don't drive stats / off-trail
+// /completion — they're usually drift while the phone is pocketed or just-resumed.
+const GPS_ACCURACY_MAX = 50;
+// A single-fix jump bigger than this is a teleport (resume after a background gap),
+// not a walked segment — rebaseline instead of bridging a bogus straight line.
+const TELEPORT_GAP = 150;
 // ── Elevation / distance accuracy ──
 // GPS *vertical* error is ±10–20m, so we don't trust GPS altitude. Instead we
 // read ground elevation from Mapbox's terrain DEM at each (accurate) horizontal
@@ -87,6 +97,23 @@ function smoothSeries(series, win) {
     if (n > 0) out[i] = sum / n;
   }
   return out;
+}
+
+// Split the walked track into separate segments at every `break` point (a resume
+// after a background gap). Returns an array of [lon,lat][] for a MultiLineString,
+// so we never draw a straight bridge across a teleport.
+function buildTrackSegments(track) {
+  const segments = [];
+  let current = [];
+  for (const p of track) {
+    if (p.break && current.length > 0) {
+      segments.push(current);
+      current = [];
+    }
+    current.push([p.lon, p.lat]);
+  }
+  if (current.length > 0) segments.push(current);
+  return segments.filter(seg => seg.length > 1);
 }
 
 function ActiveHikeTracker({ trail, onEnd }) {
@@ -161,7 +188,11 @@ function ActiveHikeTracker({ trail, onEnd }) {
 
   // Pocket/background + completion bookkeeping (read inside GPS/visibility closures)
   const hiddenAtRef = useRef(null);       // when the page was last backgrounded during a hike
-  const completedFullRef = useRef(false); // user walked the whole route (≥ TRAIL_COMPLETE_PROGRESS)
+  const completedFullRef = useRef(false); // user walked the whole route (≥ TRAIL_COMPLETE_DISTANCE_FRACTION)
+  const lastAlongRef = useRef(null);      // user's last distance-along-trail (m) — continuity cursor so
+                                          // loops don't snap the projection across the start/end overlap
+  const teleportNextRef = useRef(false);  // next fix is a resume/teleport → rebaseline, don't bridge a line
+  const totalTrailLengthRef = useRef(null); // memoised route length (m)
   const isEndingRef = useRef(false);      // guards against double-ending from async callbacks
   
   // Sync refs with state to fix closure bug in GPS callback
@@ -315,62 +346,75 @@ function ActiveHikeTracker({ trail, onEnd }) {
     }
   };
 
-  // Find nearest point on polyline and calculate distance along trail
-  const findNearestPointOnPolyline = (userLat, userLon, polylineCoords) => {
+  // Find nearest point on polyline and the distance ALONG the trail to it.
+  //
+  // `preferAlong` (metres) biases the choice toward candidates near a known
+  // along-trail position. Without it, the globally-closest segment wins — which
+  // on a LOOP is ambiguous (start and end coincide), so the projection can snap
+  // from ~0 m to the full length and back. Passing the last known along-distance
+  // keeps the projection continuous as the hiker walks the loop.
+  const findNearestPointOnPolyline = (userLat, userLon, polylineCoords, preferAlong = null) => {
     if (!polylineCoords || polylineCoords.length < 2) {
       return { segmentIndex: 0, distanceToLine: Infinity, distanceAlongTrail: 0, projectedPoint: null };
     }
 
-    let minDistanceToLine = Infinity;
-    let bestSegmentIndex = 0;
-    let bestProjectedPoint = null;
-    let distanceAlongTrail = 0;
+    const LAMBDA = 0.05; // line-distance penalty per metre of along-trail discontinuity
+    let cum = 0;         // cumulative along-trail distance to the start of segment i
+    let best = { cost: Infinity, distToLine: Infinity, segIdx: 0, along: 0, proj: null };
 
     for (let i = 0; i < polylineCoords.length - 1; i++) {
       const [lon1, lat1] = polylineCoords[i];
       const [lon2, lat2] = polylineCoords[i + 1];
 
-      // Project user position onto line segment
       const dx = lon2 - lon1;
       const dy = lat2 - lat1;
-      const segmentLength = Math.sqrt(dx * dx + dy * dy);
-      
-      if (segmentLength === 0) continue;
+      const segLenDeg = Math.sqrt(dx * dx + dy * dy);
+      const segLenM = calculateDistance(lat1, lon1, lat2, lon2);
+      if (segLenDeg === 0) { continue; }
 
-      const t = Math.max(0, Math.min(1, 
-        ((userLon - lon1) * dx + (userLat - lat1) * dy) / (segmentLength * segmentLength)
+      const t = Math.max(0, Math.min(1,
+        ((userLon - lon1) * dx + (userLat - lat1) * dy) / (segLenDeg * segLenDeg)
       ));
+      const projLon = lon1 + t * dx;
+      const projLat = lat1 + t * dy;
+      const distToSeg = calculateDistance(userLat, userLon, projLat, projLon);
+      const along = cum + segLenM * t;
 
-      const projectedLon = lon1 + t * dx;
-      const projectedLat = lat1 + t * dy;
-      const distToSegment = calculateDistance(userLat, userLon, projectedLat, projectedLon);
-
-      if (distToSegment < minDistanceToLine) {
-        minDistanceToLine = distToSegment;
-        bestSegmentIndex = i;
-        bestProjectedPoint = { lat: projectedLat, lon: projectedLon };
+      const cost = distToSeg + (preferAlong != null ? LAMBDA * Math.abs(along - preferAlong) : 0);
+      if (cost < best.cost) {
+        best = { cost, distToLine: distToSeg, segIdx: i, along, proj: { lat: projLat, lon: projLon } };
       }
-    }
-
-    // Calculate cumulative distance along trail up to projected point
-    for (let i = 0; i < bestSegmentIndex; i++) {
-      const [lon1, lat1] = polylineCoords[i];
-      const [lon2, lat2] = polylineCoords[i + 1];
-      distanceAlongTrail += calculateDistance(lat1, lon1, lat2, lon2);
-    }
-
-    // Add partial distance within the segment
-    if (bestProjectedPoint) {
-      const [lon1, lat1] = polylineCoords[bestSegmentIndex];
-      distanceAlongTrail += calculateDistance(lat1, lon1, bestProjectedPoint.lat, bestProjectedPoint.lon);
+      cum += segLenM;
     }
 
     return {
-      segmentIndex: bestSegmentIndex,
-      distanceToLine: minDistanceToLine,
-      distanceAlongTrail,
-      projectedPoint: bestProjectedPoint
+      segmentIndex: best.segIdx,
+      distanceToLine: best.distToLine,
+      distanceAlongTrail: best.along,
+      projectedPoint: best.proj
     };
+  };
+
+  // Total route length in metres (memoised).
+  const getTotalTrailLength = () => {
+    if (totalTrailLengthRef.current != null) return totalTrailLengthRef.current;
+    const poly = trailRoute?.geometry?.coordinates || trail.coordinates || [];
+    let L = 0;
+    for (let i = 0; i < poly.length - 1; i++) {
+      const [lon1, lat1] = poly[i];
+      const [lon2, lat2] = poly[i + 1];
+      L += calculateDistance(lat1, lon1, lat2, lon2);
+    }
+    totalTrailLengthRef.current = L;
+    return L;
+  };
+
+  // Progress = how far the hiker has actually WALKED vs the route length.
+  // Monotonic and loop-safe (see TRAIL_COMPLETE_DISTANCE_FRACTION note).
+  const getProgressPercent = () => {
+    const L = getTotalTrailLength();
+    if (!L) return 0;
+    return Math.min(100, Math.max(0, (statsRef.current.distance / L) * 100));
   };
 
   // Calculate distance along polyline to a checkpoint
@@ -390,33 +434,6 @@ function ActiveHikeTracker({ trail, onEnd }) {
     const distanceAlongTrail = Math.abs(checkpointProjection.distanceAlongTrail - userProjection.distanceAlongTrail);
 
     return distanceAlongTrail;
-  };
-
-  // Calculate progress percentage along trail
-  const calculateTrailProgress = (userLat, userLon, polylineCoords) => {
-    if (!polylineCoords || polylineCoords.length < 2) return 0;
-
-    // Calculate total trail length
-    let totalLength = 0;
-    for (let i = 0; i < polylineCoords.length - 1; i++) {
-      const [lon1, lat1] = polylineCoords[i];
-      const [lon2, lat2] = polylineCoords[i + 1];
-      totalLength += calculateDistance(lat1, lon1, lat2, lon2);
-    }
-
-    // Find user's distance along trail
-    const { distanceAlongTrail } = findNearestPointOnPolyline(userLat, userLon, polylineCoords);
-
-    return Math.min(100, Math.max(0, (distanceAlongTrail / totalLength) * 100));
-  };
-
-  // Calculate accurate distance from point to trail polyline (for off-trail detection)
-  const distanceToTrail = (point, trailCoordinates) => {
-    if (!trailCoordinates || trailCoordinates.length < 2) return Infinity;
-    
-    // Use existing findNearestPointOnPolyline for accurate projection-based distance
-    const projection = findNearestPointOnPolyline(point.lat, point.lon, trailCoordinates);
-    return projection.distanceToLine;
   };
 
   // Find next POI and distance to it
@@ -477,13 +494,27 @@ function ActiveHikeTracker({ trail, onEnd }) {
   // Geofence loop over moments (mirrors the checkpoint state-machine + throttle).
   // Returns true if it handled proximity (so the caller can skip the legacy
   // checkpoint/POI checks); false when there are no moments (use fallback).
-  const checkMomentProximity = (position) => {
+  const checkMomentProximity = (position, offTrail = false) => {
     const moments = momentsRef.current;
     if (!moments || moments.length === 0) return false;
 
+    const poly = trailRoute?.geometry?.coordinates || trail.coordinates;
+    // Project the hiker onto the route once (continuity-biased so loops don't snap
+    // to the wrong lap). We measure proximity to each moment *along the trail*, not
+    // as the crow flies — a waypoint 400m downslope but 2km away on the path must
+    // NOT trigger. We also require the hiker to actually be ON the trail.
+    const userProj = findNearestPointOnPolyline(
+      position.latitude, position.longitude, poly, lastAlongRef.current
+    );
+    const userOnTrail = !offTrail && userProj.distanceToLine <= OFF_TRAIL_DISTANCE;
+
     moments.forEach((m) => {
-      const distance = calculateDistance(position.latitude, position.longitude, m.lat, m.lon);
       const key = m.id;
+      // Cache each moment's own distance-along-trail once.
+      if (m.__along == null) {
+        m.__along = findNearestPointOnPolyline(m.lat, m.lon, poly).distanceAlongTrail;
+      }
+      const distance = Math.abs(m.__along - userProj.distanceAlongTrail);
       if (!momentStatesRef.current[key]) {
         momentStatesRef.current[key] = { state: 'approaching', lastDistance: Infinity };
       }
@@ -507,7 +538,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
         shouldNotify = dt > NOTIFICATION_THROTTLE_INTERVAL || dd > NOTIFICATION_DISTANCE_THRESHOLD;
       }
 
-      if (st.state === 'approaching' && distance <= radius && shouldNotify) {
+      if (st.state === 'approaching' && distance <= radius && userOnTrail && shouldNotify) {
         announceMoment(m);
         momentNotifRef.current[key] = { time: now, position: { lat: position.latitude, lon: position.longitude } };
       }
@@ -517,21 +548,31 @@ function ActiveHikeTracker({ trail, onEnd }) {
   };
 
   // Check POI proximity and send alerts
-  const checkPOIProximity = (position) => {
+  const checkPOIProximity = (position, offTrail = false) => {
     const pois = trail.points_of_interest || trail.pois;
     if (!pois) return;
 
+    const poly = trailRoute?.geometry?.coordinates || trail.coordinates;
+    const userProj = findNearestPointOnPolyline(
+      position.latitude, position.longitude, poly, lastAlongRef.current
+    );
+    const userOnTrail = !offTrail && userProj.distanceToLine <= OFF_TRAIL_DISTANCE;
+    // Off the trail → don't fire "approaching" alerts (a POI can be 400m straight-line
+    // but kilometres away along the path). Arrival is also gated below.
+    if (!userOnTrail) return;
+
     pois.forEach((poi, index) => {
-      const distance = calculateDistance(
-        position.latitude,
-        position.longitude,
-        poi.coordinates[1],
-        poi.coordinates[0]
-      );
+      // Distance measured ALONG the trail, not straight-line.
+      if (poi.__along == null) {
+        poi.__along = findNearestPointOnPolyline(
+          poi.coordinates[1], poi.coordinates[0], poly
+        ).distanceAlongTrail;
+      }
+      const distance = Math.abs(poi.__along - userProj.distanceAlongTrail);
 
       POI_ALERT_DISTANCES.forEach(alertDist => {
         const poiKey = `${index}-${alertDist}`;
-        
+
         if (distance <= alertDist && distance > alertDist - 50 && !alertedPOIs.has(poiKey)) {
           sendNotification(
             `${alertDist}m until ${poi.name}`,
@@ -692,6 +733,39 @@ function ActiveHikeTracker({ trail, onEnd }) {
 
     setCurrentPosition(newPoint);
 
+    const acc = position.coords.accuracy || 0;
+
+    // ── Bug #3a: reject low-confidence fixes ──
+    // A fix with huge reported accuracy (phone pocketed, just resumed, indoors)
+    // must not drive stats / off-trail / completion. We still moved the blue dot
+    // above so the user sees *something*, but we don't trust this point.
+    if (acc > GPS_ACCURACY_MAX && lastPositionForMovementRef.current && !teleportNextRef.current) {
+      return;
+    }
+
+    // ── Bug #3b: detect a teleport (resume after a background gap) ──
+    // Either we were explicitly told the next fix is a resume, or this single fix
+    // jumped further than any real walk between updates. Rebaseline instead of
+    // bridging a bogus straight line across the gap (which faked the huge
+    // "off-trail" detour seen in the field).
+    let isTeleport = teleportNextRef.current;
+    if (!isTeleport && lastPositionForMovementRef.current) {
+      const jump = calculateDistance(
+        lastPositionForMovementRef.current.lat, lastPositionForMovementRef.current.lon,
+        latitude, longitude
+      );
+      if (jump > TELEPORT_GAP) isTeleport = true;
+    }
+    if (isTeleport) {
+      teleportNextRef.current = false;
+      lastOnTrailPointRef.current = null;   // don't add the gap to walked distance
+      lastAlongRef.current = null;          // re-acquire along-trail position fresh
+      newPoint.break = true;                // split the drawn GPS track here (no bridge)
+      lastPositionForMovementRef.current = newPoint;
+      lastMoveTimeRef.current = Date.now();
+      // fall through: record the point & re-detect off-trail from scratch.
+    }
+
     // Check for movement (for auto-pause detection)
     let hasMoved = false;
     if (lastPositionForMovementRef.current) {
@@ -739,10 +813,15 @@ function ActiveHikeTracker({ trail, onEnd }) {
     if (!isPausedRef.current) {
       // Check if user is off trail FIRST (before updating any stats)
       let currentlyOffTrail = false;
-      if (trail.coordinates || trailRoute?.geometry?.coordinates) {
-        const distToTrail = distanceToTrail(newPoint, trail.coordinates || trailRoute.geometry.coordinates);
+      const poly = trailRoute?.geometry?.coordinates || trail.coordinates;
+      if (poly && poly.length >= 2) {
+        // Project once, continuity-biased, and advance the along-trail cursor while
+        // on-trail (so loops & waypoint proximity track the correct lap).
+        const proj = findNearestPointOnPolyline(newPoint.lat, newPoint.lon, poly, lastAlongRef.current);
+        const distToTrail = proj.distanceToLine;
         currentlyOffTrail = distToTrail > OFF_TRAIL_DISTANCE;
-        
+        if (!currentlyOffTrail) lastAlongRef.current = proj.distanceAlongTrail;
+
         // Handle off-trail state transitions (READ FROM REF to get current state - fixes notification spam)
         if (currentlyOffTrail && !isOffTrailRef.current) {
           // Just went off trail - clear last on-trail point so we don't bridge the gap when returning
@@ -847,9 +926,12 @@ function ActiveHikeTracker({ trail, onEnd }) {
       // trail (an off-trail projection can read near-100% misleadingly). This is a
       // FULL completion → the celebratory close (vs. ending early).
       if (!currentlyOffTrail && !completedFullRef.current && !isEndingRef.current) {
-        const poly = trailRoute?.geometry?.coordinates || trail.coordinates;
-        const progress = calculateTrailProgress(latitude, longitude, poly);
-        if (progress >= TRAIL_COMPLETE_PROGRESS) {
+        // Bug #2: judge completion by distance actually WALKED, not by how close
+        // we are to the last polyline point. On a loop the last point sits on the
+        // first, so a position check "finishes" you at the trailhead the moment
+        // you start. Walked-distance is monotonic and loop-safe.
+        const L = getTotalTrailLength();
+        if (L && statsRef.current.distance >= TRAIL_COMPLETE_DISTANCE_FRACTION * L) {
           completedFullRef.current = true;
           toast.success(t('gps.routeComplete', 'You reached the end of the trail! 🎉'));
           sendNotification(t('gps.routeCompleteTitle', 'Trail complete! 🎉'), trail.name || '');
@@ -858,9 +940,10 @@ function ActiveHikeTracker({ trail, onEnd }) {
       }
 
       // Live Trail Companion: run the unified moment geofence. If the trail has
-      // no moments, fall back to the legacy POI + checkpoint checks.
-      if (!checkMomentProximity(position.coords)) {
-        checkPOIProximity(position.coords);
+      // no moments, fall back to the legacy POI + checkpoint checks. Pass the
+      // off-trail flag so waypoint alerts only fire when we're actually on-path.
+      if (!checkMomentProximity(position.coords, currentlyOffTrail)) {
+        checkPOIProximity(position.coords, currentlyOffTrail);
         checkCheckpointProximity(position.coords);
       }
 
@@ -1039,6 +1122,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
     autoPausedRef.current = false;
     setIsPaused(false);
     lastMoveTimeRef.current = Date.now();
+    teleportNextRef.current = true; // next fix is a resume → rebaseline, don't bridge the gap
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => handlePositionUpdate(position),
@@ -1161,9 +1245,10 @@ function ActiveHikeTracker({ trail, onEnd }) {
   // Did the hiker walk the whole route? Drives full vs. early-exit celebration.
   const _isRouteComplete = () => {
     if (completedFullRef.current) return true;
-    const poly = trailRoute?.geometry?.coordinates || trail.coordinates;
-    if (!currentPosition || !poly) return false;
-    return calculateTrailProgress(currentPosition.lat, currentPosition.lon, poly) >= TRAIL_COMPLETE_PROGRESS;
+    // Walked-distance based (loop-safe) — see TRAIL_COMPLETE_DISTANCE_FRACTION.
+    const L = getTotalTrailLength();
+    if (!L) return false;
+    return statsRef.current.distance >= TRAIL_COMPLETE_DISTANCE_FRACTION * L;
   };
 
   // Save the hike (with optional recap rating) → gamification → celebration.
@@ -1362,6 +1447,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
           !isEndingRef.current &&
           !completedFullRef.current
         ) {
+          teleportNextRef.current = true; // first fix after a long background gap → rebaseline
           setShowResumePrompt(true);
         }
       } else if (document.visibilityState === 'hidden' && isTracking) {
@@ -1434,10 +1520,33 @@ function ActiveHikeTracker({ trail, onEnd }) {
                   }}
                 />
               )}
+              {/* Bug #1: which way do I go? Arrowheads ride along the route in the
+                  direction the line is drawn (coordinate order = hiking direction),
+                  so loops are no longer ambiguous. */}
+              <Layer
+                id="route-direction"
+                type="symbol"
+                layout={{
+                  'symbol-placement': 'line',
+                  'symbol-spacing': 90,
+                  'text-field': '▶',
+                  'text-size': 15,
+                  'text-keep-upright': false,
+                  'text-allow-overlap': true,
+                  'text-rotation-alignment': 'map',
+                  'text-pitch-alignment': 'map'
+                }}
+                paint={{
+                  'text-color': '#0c160d',
+                  'text-halo-color': '#c9a84c',
+                  'text-halo-width': 1.6,
+                  'text-opacity': 0.9
+                }}
+              />
             </Source>
           )}
 
-          {/* User's GPS track */}
+          {/* User's GPS track — split at teleport/resume breaks (Bug #3) */}
           {gpsTrack.length > 1 && (
             <Source
               id="gps-track"
@@ -1445,8 +1554,8 @@ function ActiveHikeTracker({ trail, onEnd }) {
               data={{
                 type: 'Feature',
                 geometry: {
-                  type: 'LineString',
-                  coordinates: gpsTrack.map(p => [p.lon, p.lat])
+                  type: 'MultiLineString',
+                  coordinates: buildTrackSegments(gpsTrack)
                 }
               }}
             >
@@ -1513,7 +1622,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
         </div>
         <div className="stat-row">
           <span>📊</span>
-          <span>{currentPosition ? Math.round(calculateTrailProgress(currentPosition.lat, currentPosition.lon, trailRoute?.geometry?.coordinates || trail.coordinates)) : 0}%</span>
+          <span>{Math.round(getProgressPercent())}%</span>
         </div>
         <div className="stat-row">
           <span>⏱️</span>
