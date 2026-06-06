@@ -1,0 +1,75 @@
+/* OfflineDownload — "take it offline" GPX card (perk) */
+
+.ofd {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(201, 168, 76, 0.18);
+  border-radius: 14px;
+  padding: 16px 18px;
+}
+
+.ofd__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.ofd__head-icon { color: #c9a84c; }
+
+.ofd__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #f4ecdc;
+}
+
+.ofd__note {
+  margin: 0 0 12px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: rgba(244, 236, 220, 0.72);
+}
+
+.ofd__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 14px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(244, 236, 220, 0.55);
+}
+
+.ofd__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ofd__meta-item svg { color: #c9a84c; }
+
+.ofd__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid rgba(201, 168, 76, 0.4);
+  background: transparent;
+  color: #f4ecdc;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.ofd__btn:hover { background: rgba(201, 168, 76, 0.1); }
+
+.ofd__btn--done {
+  background: rgba(201, 168, 76, 0.15);
+  border-color: #c9a84c;
+  color: #c9a84c;
+  cursor: default;
+}

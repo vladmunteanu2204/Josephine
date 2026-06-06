@@ -9,6 +9,7 @@ import TrailMap from './TrailMap';
 import MediaGallery from './MediaGallery';
 import WeatherWidget from './WeatherWidget';
 import TrailheadDirections from './TrailheadDirections';
+import OfflineDownload from './OfflineDownload';
 import { ENABLE_HIKE_TRACKING } from '../featureFlags';
 import AuthPromptModal from './AuthPromptModal';
 import { ArrowLeft, Heart, TrendingUp, TrendingDown } from 'lucide-react';
@@ -486,6 +487,11 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin, 
           <div className="td-map-wrap">
             <TrailMap trail={fullTrail} drivingRoute={drivingRoute} />
           </div>
+        </section>
+
+        {/* Take it offline (Perk — GPX track download) */}
+        <section className="td-section">
+          <OfflineDownload trail={fullTrail} />
         </section>
 
         {/* Media */}
