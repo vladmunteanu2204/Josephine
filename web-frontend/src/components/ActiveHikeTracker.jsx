@@ -1731,6 +1731,7 @@ function ActiveHikeTracker({ trail, onEnd }) {
       {showComplete && completedHikeData && (
         <HikeComplete
           hikeData={completedHikeData}
+          trail={trail}
           line={completeLine}
           completed={completedHikeData.completed !== false}
           onExportGpx={() => { if (gpsTrackRef.current.length > 0) exportGPX(); }}

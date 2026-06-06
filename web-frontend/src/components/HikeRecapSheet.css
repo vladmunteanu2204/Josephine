@@ -1,0 +1,109 @@
+/* Josephine post-hike "Trip Recap" PDF — fixed A4, off-screen rasterised.
+   Brand: forest #1f3b22, gold #c9a84c, cream #f4ecdc. */
+
+.rcp {
+  box-sizing: border-box;
+  position: relative;
+  padding: 30px 38px 0;
+  background:
+    radial-gradient(120% 80% at 0% 0%, #fbf7ee 0%, #f4ecdc 55%, #efe6d2 100%);
+  color: #243024;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.rcp * { box-sizing: border-box; }
+
+.rcp-green { color: #2f5233; }
+.rcp-gold { color: #c9a84c; }
+
+/* ── header ── */
+.rcp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.rcp-brand { display: flex; align-items: center; gap: 12px; }
+.rcp-brand__logo { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #c9a84c; }
+.rcp-brand__name { font-size: 22px; font-weight: 800; letter-spacing: 3px; color: #1f3b22; line-height: 1; }
+.rcp-brand__tag { font-size: 10px; letter-spacing: 3px; color: #b08f3c; font-weight: 600; margin-top: 4px; }
+.rcp-mark { display: flex; align-items: center; gap: 7px; }
+.rcp-mark__txt { font-size: 11px; letter-spacing: 3px; font-weight: 800; color: #1f3b22; }
+
+/* ── title ── */
+.rcp-title { margin-bottom: 16px; }
+.rcp-h1 { font-size: 52px; font-weight: 800; color: #1f3b22; margin: 0 0 6px; line-height: 1; letter-spacing: -1px; }
+.rcp-trailname { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 800; color: #1f3b22; }
+.rcp-region { font-weight: 600; color: #6b6453; font-size: 17px; }
+.rcp-date { font-size: 13px; color: #8a8067; margin-top: 4px; padding-left: 26px; }
+.rcp-tagline { display: flex; align-items: center; gap: 6px; font-style: italic; color: #b08f3c; font-size: 15px; margin: 10px 0 0; font-family: Georgia, 'Times New Roman', serif; }
+
+/* ── cards ── */
+.rcp-card {
+  background: #fffdf8; border: 1px solid #e6dcc4; border-radius: 14px;
+  padding: 14px 16px; box-shadow: 0 4px 12px rgba(31, 59, 34, 0.05);
+}
+.rcp-card--soft { background: #eef2e6; border-color: #dbe3cb; }
+.rcp-card--wide { flex: 1; }
+.rcp-card__title {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12px; letter-spacing: 1px; text-transform: uppercase;
+  color: #2f5233; font-weight: 800; margin: 0 0 10px;
+}
+
+/* ── overview stats ── */
+.rcp-overview { background: #fffdf8; border: 1px solid #e6dcc4; border-radius: 14px; padding: 14px 16px; margin-bottom: 14px; box-shadow: 0 4px 14px rgba(31, 59, 34, 0.06); }
+.rcp-stats { display: flex; }
+.rcp-stat { flex: 1; text-align: center; padding: 6px; border-right: 1px solid #ece3cf; }
+.rcp-stat:last-child { border-right: none; }
+.rcp-stat__icon { color: #2f5233; display: flex; justify-content: center; margin-bottom: 6px; }
+.rcp-stat__label { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: #8a8067; font-weight: 700; }
+.rcp-stat__value { font-size: 22px; font-weight: 800; color: #1f3b22; margin-top: 3px; }
+
+/* ── mid: route + side minis ── */
+.rcp-mid { display: flex; gap: 14px; margin-bottom: 14px; }
+.rcp-route { flex: 0 0 64%; }
+.rcp-route__map { width: 100%; height: 196px; object-fit: cover; border-radius: 10px; display: block; background: #e9e2d0; }
+.rcp-route__elev { width: 100%; height: auto; display: block; margin-top: 8px; }
+.rcp-side { flex: 1; display: flex; flex-direction: column; gap: 10px; justify-content: center; }
+.rcp-mini { display: flex; align-items: center; gap: 10px; background: #fffdf8; border: 1px solid #e6dcc4; border-radius: 10px; padding: 9px 12px; }
+.rcp-mini__icon { width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; background: #eef2e6; color: #2f5233; display: flex; align-items: center; justify-content: center; }
+.rcp-mini__label { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: #8a8067; font-weight: 700; }
+.rcp-mini__value { font-size: 16px; font-weight: 800; color: #1f3b22; }
+
+/* ── two-column rows ── */
+.rcp-cols { display: flex; gap: 14px; margin-bottom: 14px; align-items: stretch; }
+.rcp-cols > .rcp-card { flex: 1; }
+
+.rcp-check { list-style: none; margin: 0; padding: 0; }
+.rcp-check li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; line-height: 1.35; color: #3a4239; margin-bottom: 8px; }
+.rcp-check li svg { flex-shrink: 0; margin-top: 2px; color: #4a7a3f; }
+
+.rcp-leaf { list-style: none; margin: 0; padding: 0; }
+.rcp-leaf li { position: relative; padding-left: 20px; margin-bottom: 8px; font-size: 13px; line-height: 1.32; color: #3a4239; }
+.rcp-leaf li::before { content: '❧'; position: absolute; left: 0; top: 0; color: #4a7a3f; font-size: 12px; }
+
+.rcp-reflections { flex: 0 0 48%; }
+.rcp-reflections__txt { font-style: italic; color: #4a5247; font-size: 14px; line-height: 1.55; margin: 0; font-family: Georgia, 'Times New Roman', serif; }
+
+/* ── photos ── */
+.rcp-photos { display: flex; gap: 8px; }
+.rcp-photos__item { flex: 1; height: 92px; border-radius: 9px; overflow: hidden; border: 2px solid #fff; box-shadow: 0 3px 8px rgba(31, 59, 34, 0.12); }
+.rcp-photos__item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ── quote ── */
+.rcp-quote {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  text-align: center; font-style: italic; color: #4a5247;
+  font-size: 13px; margin-bottom: 10px; padding: 0 30px;
+}
+.rcp-quote__mark { font-size: 28px; color: #c9a84c; line-height: 0; margin-top: 8px; }
+
+/* ── footer ── */
+.rcp-footer {
+  margin: auto -38px 0;
+  background: #1f3b22; color: #d8e0cf;
+  padding: 12px 38px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.rcp-footer__left { display: flex; align-items: center; gap: 10px; font-size: 11px; }
+.rcp-footer__left svg { color: #c9a84c; }
+.rcp-footer__sub { color: #9fb097; font-size: 10px; }
+.rcp-footer__happy { color: #c9a84c; font-style: italic; font-size: 13px; }

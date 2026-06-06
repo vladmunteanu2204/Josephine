@@ -520,3 +520,100 @@ export function slugify(s) {
     .normalize('NFD').replace(/[̀-ͯ]/g, '')
     .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'trek';
 }
+
+// ── post-hike recap helpers (from the live GPS track) ────────────────────────
+
+// GPS track points are { lat, lon, alt, timestamp }. Keep only the valid ones.
+function cleanTrack(gpsTrack) {
+  return (Array.isArray(gpsTrack) ? gpsTrack : []).filter(
+    (p) => p && isFinite(p.lat) && isFinite(p.lon),
+  );
+}
+
+/**
+ * Derive recap stats from the recorded track: moving time (excludes long
+ * stationary gaps), highest/lowest point and ascent/descent (from measured
+ * altitude with a small dead-band to reject GPS noise).
+ */
+export function recapStatsFromTrack(gpsTrack) {
+  const pts = cleanTrack(gpsTrack);
+  if (pts.length < 2) return null;
+
+  let movingSec = 0;
+  for (let i = 1; i < pts.length; i++) {
+    const dt = (pts[i].timestamp - pts[i - 1].timestamp) / 1000;
+    if (!(dt > 0) || dt > 600) continue; // skip backwards/huge gaps (pocket/pause)
+    const d = haversine(pts[i - 1].lat, pts[i - 1].lon, pts[i].lat, pts[i].lon);
+    if (d >= 2) movingSec += dt; // counts only while actually moving
+  }
+
+  const alts = pts.map((p) => p.alt).filter((a) => isFinite(a));
+  let highestM = null;
+  let lowestM = null;
+  let ascentM = 0;
+  let descentM = 0;
+  if (alts.length >= 2) {
+    highestM = Math.max(...alts);
+    lowestM = Math.min(...alts);
+    const DEAD = 3; // metres — ignore jitter below this
+    let ref = alts[0];
+    for (let i = 1; i < alts.length; i++) {
+      const diff = alts[i] - ref;
+      if (diff > DEAD) { ascentM += diff; ref = alts[i]; }
+      else if (diff < -DEAD) { descentM += -diff; ref = alts[i]; }
+    }
+  }
+
+  return {
+    movingSec: Math.round(movingSec),
+    highestM: highestM != null ? Math.round(highestM) : null,
+    lowestM: lowestM != null ? Math.round(lowestM) : null,
+    ascentM: Math.round(ascentM),
+    descentM: Math.round(descentM),
+  };
+}
+
+// Static map of the actually-walked track: green route, green start pin, gold
+// finish pin. Returns null without a token / enough points.
+export function buildTrackMapUrl(gpsTrack, { width = 640, height = 360 } = {}) {
+  if (!MAPBOX_TOKEN) return null;
+  const pts = cleanTrack(gpsTrack);
+  if (pts.length < 2) return null;
+
+  const latLon = decimate(pts.map((p) => [p.lat, p.lon]), 120);
+  const encoded = encodeURIComponent(encodePolyline(latLon));
+  const start = pts[0];
+  const end = pts[pts.length - 1];
+  const overlays = [
+    `path-4+2f5233-0.9(${encoded})`,
+    `pin-s+2f5233(${start.lon.toFixed(5)},${start.lat.toFixed(5)})`,
+    `pin-s+c9a84c(${end.lon.toFixed(5)},${end.lat.toFixed(5)})`,
+  ].join(',');
+
+  return (
+    `https://api.mapbox.com/styles/v1/mapbox/outdoors-v12/static/${overlays}` +
+    `/auto/${width}x${height}@2x?padding=44&access_token=${MAPBOX_TOKEN}`
+  );
+}
+
+// Elevation series for the recap chart, straight from the recorded altitudes
+// (cumulative distance vs. measured alt). Feed the result to elevationToSvg.
+export function trackElevationSeries(gpsTrack) {
+  const pts = cleanTrack(gpsTrack).filter((p) => isFinite(p.alt));
+  if (pts.length < 2) return [];
+  const out = [];
+  let cumM = 0;
+  out.push({ distKm: 0, ele: pts[0].alt });
+  for (let i = 1; i < pts.length; i++) {
+    cumM += haversine(pts[i - 1].lat, pts[i - 1].lon, pts[i].lat, pts[i].lon);
+    out.push({ distKm: cumM / 1000, ele: pts[i].alt });
+  }
+  // Down-sample to ~80 points so the SVG path stays light.
+  if (out.length > 90) {
+    const step = (out.length - 1) / 79;
+    const ds = [];
+    for (let k = 0; k < 80; k++) ds.push(out[Math.round(k * step)]);
+    return ds;
+  }
+  return out;
+}

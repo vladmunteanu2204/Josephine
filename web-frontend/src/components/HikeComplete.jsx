@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { MapPin, Clock, TrendingUp } from 'lucide-react';
 import JosephineAvatar from './JosephineAvatar';
+import HikeRecapDownload from './HikeRecapDownload';
 import './HikeComplete.css';
 
 const fmtDist = (km) => (km < 1 ? `${Math.round((km || 0) * 1000)} m` : `${km.toFixed(1)} km`);
@@ -15,7 +16,7 @@ const fmtDur = (h) => {
 // On-brand post-hike close — Josephine sees you off the trail. No gamification.
 // `completed` distinguishes a full finish (celebratory) from turning back early
 // (a calmer, encouraging close).
-export default function HikeComplete({ hikeData, line, completed = true, onDone, onAddReview, onExportGpx }) {
+export default function HikeComplete({ hikeData, trail, line, completed = true, onDone, onAddReview, onExportGpx }) {
   const { t } = useTranslation();
   const stats = hikeData?.stats || {};
   const moments = hikeData?.visited_checkpoints || [];
@@ -98,6 +99,7 @@ export default function HikeComplete({ hikeData, line, completed = true, onDone,
               </button>
             )}
           </div>
+          <HikeRecapDownload hikeData={hikeData} trail={trail} />
         </div>
       </div>
     </div>
