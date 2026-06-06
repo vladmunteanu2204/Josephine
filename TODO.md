@@ -260,10 +260,13 @@ removal, atexit analytics flush, `_chat_cache` cap, generic 500 responses,
 dead `X-Admin-Password` header removed.
 
 **Won't-fix / needs-infra (consciously accepted, not oversights):**
-- **CSP `'unsafe-inline'`** stays for `style-src`/`script-src`: the UI uses
-  inline `style={{}}` pervasively; removing it needs a nonce/hash pipeline
-  (build-system change) or a large inline-style refactor. Revisit if/when a
-  CSP-hardening pass is scoped.
+- **CSP partially hardened.** Added `object-src 'none'`, `base-uri 'self'`,
+  `form-action 'self'`, `frame-ancestors 'none'` — pure wins that don't touch
+  inline content. `'unsafe-inline'` STILL stays on `style-src`/`script-src`: the
+  UI uses inline `style={{}}` pervasively, so removing it needs a build-time
+  nonce/hash pipeline AND live verification that Firebase/Google sign-in still
+  loads (a broken auth path can't be risked without testing). Revisit with that
+  pipeline.
 - **Per-worker in-memory rate limits / lockout** (`_booking_rate_ok`,
   `_failed_attempts`, chat limiter): correct within one worker, but not shared
   across gunicorn workers. Making them global needs Redis or a DB-backed
@@ -276,15 +279,14 @@ context to end prop-drilling. User-invisible and high-risk; best done in a
 dedicated session with heavy incremental testing rather than bundled with
 feature work.
 
-**Deferred — remaining modal a11y (low priority):** two overlays were left on
-their bespoke implementations rather than the shared `Modal`/`Sheet` primitives:
-- `CelebrationModal` — entangled with the active-hike tracker's `z-index:
-  999999` fullscreen; portaling it to the primitive risks it rendering behind
-  the still-mounted map. Needs a real GPS-hike to verify. Single action button,
-  so the focus-trap value is low.
-- `MediaGallery` lightbox — already has Escape + arrow-key nav + click-to-close;
-  it's a full-bleed image viewer, an awkward fit for the centred card primitive.
-  Could gain a focus trap + `aria-modal` if revisited.
+**Modal a11y — DONE (in place, not via the card primitive).** Rather than force
+the two bespoke overlays onto the centred-card `Modal` (which is exactly the
+risky/awkward part — `CelebrationModal`'s `z-index: 999999` fullscreen, the
+lightbox being full-bleed), the a11y *behaviour* was extracted into
+`ui/useDialogA11y.js` (focus trap, focus save/restore, optional Escape) and
+applied in place. Both now carry `role="dialog"` + `aria-modal="true"` + an
+accessible label and trap Tab focus. `MediaGallery` keeps its own Escape/arrow
+handler (hook's `escClose:false`). Visual/stacking behaviour unchanged.
 
 **Won't-do — emoji→lucide (by design):** the conversion was functional-only.
 Colour-coded weather *conditions* (☀️🌧️❄️), celebration 🎉🏆, mood tiles,

@@ -123,8 +123,21 @@ Talisman(
     x_content_type_options=True,
     content_security_policy={
         'default-src': ["'self'"],
+        # Pure hardening (no nonce pipeline needed, no effect on inline styles):
+        #   object-src none  → no <object>/<embed>/<applet> (Flash-era vectors)
+        #   base-uri self    → blocks <base> tag injection redirecting relative URLs
+        #   form-action self → forms can only POST back to our own origin
+        #   frame-ancestors  → modern clickjacking guard (mirrors frame_options DENY)
+        'object-src':       ["'none'"],
+        'base-uri':         ["'self'"],
+        'form-action':      ["'self'"],
+        'frame-ancestors':  ["'none'"],
         'img-src':     ["'self'", 'data:', 'https:', 'blob:'],
-        # apis.google.com + gstatic: Firebase Auth / Google sign-in client libs
+        # apis.google.com + gstatic: Firebase Auth / Google sign-in client libs.
+        # NOTE: 'unsafe-inline' stays on script-src/style-src. Removing it needs a
+        # build-time nonce/hash pipeline (the UI uses inline style={{}} widely) and
+        # live verification that Google sign-in still loads — see TODO §5. The
+        # directives above harden everything that DOESN'T touch inline content.
         'script-src':  ["'self'", "'unsafe-inline'",
                         'https://apis.google.com', 'https://*.gstatic.com'],
         'style-src':   ["'self'", "'unsafe-inline'"],

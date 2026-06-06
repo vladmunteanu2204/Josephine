@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import useDialogA11y from './ui/useDialogA11y';
 import './CelebrationModal.css';
 
 function CelebrationModal({ hikeData, gamification, onClose }) {
   const { t } = useTranslation();
   const [showConfetti, setShowConfetti] = useState(true);
   const [animationPhase, setAnimationPhase] = useState('entering');
+  // Accessibility: trap focus, restore it on close, and let Escape dismiss.
+  const dialogRef = useDialogA11y(true, onClose);
 
   useEffect(() => {
     // Start animation sequence
@@ -29,7 +32,14 @@ function CelebrationModal({ hikeData, gamification, onClose }) {
 
   return (
     <div className="celebration-overlay">
-      <div className={`celebration-modal ${animationPhase}`}>
+      <div
+        className={`celebration-modal ${animationPhase}`}
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={t('celebration.congratulations')}
+        tabIndex={-1}
+      >
         {/* Confetti effect */}
         {showConfetti && (
           <div className="confetti-container">

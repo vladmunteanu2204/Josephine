@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { onImgError } from '../utils/trailImage';
+import useDialogA11y from './ui/useDialogA11y';
 import './MediaGallery.css';
 
 // Lazy Image Component with Intersection Observer and Blur-up
@@ -140,6 +141,11 @@ function MediaGallery({ trail }) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [lightboxIndex]);
 
+  // Accessibility for the lightbox: trap Tab focus + restore focus on close.
+  // Escape/arrow keys are already handled by handleKeyDown above, so escClose
+  // is off here to avoid a double dismiss.
+  const lightboxRef = useDialogA11y(lightboxIndex !== null, closeLightbox, { escClose: false });
+
   return (
     <div className="media-gallery">
       <div className="media-gallery-header">
@@ -223,8 +229,16 @@ function MediaGallery({ trail }) {
 
       {lightboxIndex !== null && (
         <div className="lightbox-overlay" onClick={closeLightbox}>
-          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
-            <button className="lightbox-close" onClick={closeLightbox}>
+          <div
+            className="lightbox-content"
+            onClick={(e) => e.stopPropagation()}
+            ref={lightboxRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t('trail.mediaGallery')}
+            tabIndex={-1}
+          >
+            <button className="lightbox-close" onClick={closeLightbox} aria-label={t('common.close', 'Close')}>
               ✕
             </button>
             
