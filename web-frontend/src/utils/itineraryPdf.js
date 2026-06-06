@@ -1,11 +1,12 @@
 // Helpers for the "Josephine — Your Alpine Companion" itinerary PDF export.
 //
 // Everything here is client-side: the static route map is fetched from the Mapbox
-// Static Images API (works with the public VITE_MAPBOX_TOKEN), and the elevation
-// profile is sampled from the terrain DEM via a throwaway off-screen mapbox-gl map.
-import mapboxgl from 'mapbox-gl';
-
+// Static Images API, and the elevation profile is decoded directly from Mapbox
+// Terrain-RGB raster tiles (deterministic — no map instance, no timing races).
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
+
+// Terrain-RGB tile zoom. z14 @2x ≈ ~5 m/px in the Alps — plenty for a profile.
+const TILE_ZOOM = 14;
 
 // ── geometry helpers ─────────────────────────────────────────────────────────
 
@@ -142,7 +143,44 @@ export function buildStaticRouteMapUrl(trail, { width = 640, height = 420 } = {}
   return url;
 }
 
-// ── elevation profile (terrain DEM sampling) ─────────────────────────────────
+// ── elevation profile (Terrain-RGB tile decoding) ────────────────────────────
+
+// Slippy-map tile maths. Returns fractional tile coordinates so we can also
+// recover the exact pixel within the tile.
+function lonToTileX(lon, z) {
+  return ((lon + 180) / 360) * 2 ** z;
+}
+function latToTileY(lat, z) {
+  const r = (lat * Math.PI) / 180;
+  return ((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2) * 2 ** z;
+}
+
+// Fetch one Terrain-RGB tile and return its decoded ImageData (512×512 → @2x
+// makes it 1024×1024). Resolves null on any failure.
+async function fetchTerrainTile(z, x, y) {
+  if (!MAPBOX_TOKEN) return null;
+  const url =
+    `https://api.mapbox.com/v4/mapbox.terrain-rgb/${z}/${x}/${y}@2x.pngraw` +
+    `?access_token=${MAPBOX_TOKEN}`;
+  try {
+    const res = await fetch(url, { mode: 'cors' });
+    if (!res.ok) return null;
+    const blob = await res.blob();
+    const bmp = await createImageBitmap(blob);
+    const canvas = document.createElement('canvas');
+    canvas.width = bmp.width;
+    canvas.height = bmp.height;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(bmp, 0, 0);
+    const data = ctx.getImageData(0, 0, bmp.width, bmp.height);
+    try { bmp.close(); } catch { /* no-op */ }
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+
 
 function fillNulls(series) {
   const out = series.map((s) => ({ ...s }));
@@ -186,88 +224,56 @@ function fallbackProfile(trail, pts) {
 }
 
 /**
- * Sample ground elevation along the route from Mapbox's terrain DEM.
- * Resolves to [{ distKm, ele }] (metres). Always resolves (falls back to a
- * synthetic profile) and never rejects, so PDF generation can't be blocked by it.
+ * Sample ground elevation along the route by decoding Mapbox Terrain-RGB tiles
+ * directly. Deterministic: each resampled point reads its exact pixel from the
+ * elevation raster — no map instance, no idle/timing races. Always resolves to
+ * [{ distKm, ele }] (metres), falling back to a synthetic profile if the tiles
+ * can't be fetched, so PDF generation is never blocked.
  */
-export function sampleRouteElevation(trail, samples = 64) {
+export async function sampleRouteElevation(trail, samples = 80) {
   const coords = getCoords(trail);
   const pts = resampleByDistance(coords, samples);
-  if (pts.length === 0) return Promise.resolve([]);
-  if (!MAPBOX_TOKEN || !mapboxgl) return Promise.resolve(fallbackProfile(trail, pts));
+  if (pts.length === 0) return [];
+  if (!MAPBOX_TOKEN) return fallbackProfile(trail, pts);
 
-  return new Promise((resolve) => {
-    let done = false;
-    let map = null;
-    const container = document.createElement('div');
-    container.style.cssText =
-      'position:absolute;left:-9999px;top:0;width:600px;height:600px;pointer-events:none;';
-    document.body.appendChild(container);
+  // Decode Terrain-RGB: ele = -10000 + (R*256² + G*256 + B) * 0.1
+  const decode = (img, px, py) => {
+    const i = (py * img.width + px) * 4;
+    const r = img.data[i];
+    const g = img.data[i + 1];
+    const b = img.data[i + 2];
+    return -10000 + (r * 65536 + g * 256 + b) * 0.1;
+  };
 
-    const finish = (result) => {
-      if (done) return;
-      done = true;
-      try { map && map.remove(); } catch { /* no-op */ }
-      try { container.remove(); } catch { /* no-op */ }
-      resolve(result);
-    };
+  const tileCache = new Map(); // "x/y" → ImageData | null (cached failures too)
+  const getTile = async (tx, ty) => {
+    const key = `${tx}/${ty}`;
+    if (tileCache.has(key)) return tileCache.get(key);
+    const img = await fetchTerrainTile(TILE_ZOOM, tx, ty);
+    tileCache.set(key, img);
+    return img;
+  };
 
-    const timeout = setTimeout(() => finish(fallbackProfile(trail, pts)), 12000);
-
-    try {
-      map = new mapboxgl.Map({
-        container,
-        accessToken: MAPBOX_TOKEN,
-        style: 'mapbox://styles/mapbox/outdoors-v12',
-        interactive: false,
-        attributionControl: false,
-        preserveDrawingBuffer: false,
-      });
-    } catch {
-      clearTimeout(timeout);
-      return finish(fallbackProfile(trail, pts));
+  const out = [];
+  for (const p of pts) {
+    const fx = lonToTileX(p.lon, TILE_ZOOM);
+    const fy = latToTileY(p.lat, TILE_ZOOM);
+    const tx = Math.floor(fx);
+    const ty = Math.floor(fy);
+    const img = await getTile(tx, ty); // eslint-disable-line no-await-in-loop
+    let ele = null;
+    if (img) {
+      const px = Math.min(img.width - 1, Math.max(0, Math.floor((fx - tx) * img.width)));
+      const py = Math.min(img.height - 1, Math.max(0, Math.floor((fy - ty) * img.height)));
+      const v = decode(img, px, py);
+      if (isFinite(v) && v > -5000 && v < 9000) ele = v;
     }
+    out.push({ distKm: p.distKm, ele });
+  }
 
-    map.on('error', () => { /* swallow tile errors; handled by timeout/idle */ });
-
-    map.on('load', () => {
-      try {
-        map.addSource('dem', {
-          type: 'raster-dem',
-          url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
-          tileSize: 512,
-          maxzoom: 14,
-        });
-        map.setTerrain({ source: 'dem', exaggeration: 1 });
-      } catch { /* terrain unavailable → idle handler will fallback */ }
-
-      const bounds = new mapboxgl.LngLatBounds(
-        [pts[0].lon, pts[0].lat],
-        [pts[0].lon, pts[0].lat]
-      );
-      pts.forEach((p) => bounds.extend([p.lon, p.lat]));
-      try {
-        map.fitBounds(bounds, { padding: 60, animate: false });
-      } catch { /* single-point route */ }
-
-      map.once('idle', () => {
-        // Give the DEM tiles a beat to decode before querying.
-        setTimeout(() => {
-          const out = pts.map((p) => {
-            let ele = null;
-            try {
-              ele = map.queryTerrainElevation([p.lon, p.lat], { exaggerated: false });
-            } catch { /* point outside loaded tiles */ }
-            return { distKm: p.distKm, ele: ele != null && isFinite(ele) ? ele : null };
-          });
-          clearTimeout(timeout);
-          const good = out.filter((o) => o.ele != null).length;
-          if (good < pts.length * 0.5) return finish(fallbackProfile(trail, pts));
-          finish(fillNulls(out));
-        }, 450);
-      });
-    });
-  });
+  const good = out.filter((o) => o.ele != null).length;
+  if (good < pts.length * 0.5) return fallbackProfile(trail, pts);
+  return fillNulls(out);
 }
 
 // Build a complete, self-contained elevation-profile SVG (gridlines + axis
