@@ -35,6 +35,7 @@ except Exception:                          # pragma: no cover
 from functools import wraps
 import media as media_module  # image upload / R2 delivery
 import firebase_auth  # optional, credential-gated ID-token verification
+import directions as directions_module  # trailhead routing (Mapbox Directions, credential-gated)
 from weather_service import weather_service
 import dispersal
 import almanac
@@ -1703,9 +1704,70 @@ def get_weather_suitability():
             'alerts': alerts,
             'suitability': suitability
         })
-    
+
     except Exception as e:
         return _server_error(e)
+
+
+# Per-IP throttle for the directions proxy — generous (routing is cheap-ish and
+# cached), just enough to stop a hammered token. Reuses the rate_log table.
+MAX_DIRECTIONS_PER_HOUR = 60
+
+def _directions_rate_allowed(ip: str) -> bool:
+    now = time.time()
+    hour = now - 3600
+    tag = f'dir:{ip}'
+    with _db_lock:
+        row = _db_conn.execute(
+            'SELECT COUNT(*) FROM rate_log WHERE ip=? AND ts>?', (tag, hour)
+        ).fetchone()
+        count = row[0] if row else 0
+        if count >= MAX_DIRECTIONS_PER_HOUR:
+            return False
+        _db_conn.execute('INSERT INTO rate_log(ip, ts) VALUES(?,?)', (tag, now))
+        _db_conn.commit()
+    return True
+
+
+@app.route('/api/directions', methods=['GET'])
+def get_directions_route():
+    """Driving (or walking) route from an origin to a trailhead.
+
+    Powers the "get me to the trailhead" preview. Coordinates are GeoJSON order
+    (lon, lat), matching trails.json. When no Mapbox token is configured this
+    returns {enabled: false} (HTTP 200, not an error) so the client cleanly
+    falls back to a native-maps deep link.
+    """
+    try:
+        if not directions_module.is_enabled():
+            return jsonify({'enabled': False})
+
+        from_lon = request.args.get('from_lon', type=float)
+        from_lat = request.args.get('from_lat', type=float)
+        to_lon   = request.args.get('to_lon', type=float)
+        to_lat   = request.args.get('to_lat', type=float)
+        profile  = request.args.get('profile', 'driving')
+
+        if None in (from_lon, from_lat, to_lon, to_lat):
+            return jsonify({'error': 'from_lon, from_lat, to_lon, to_lat required'}), 400
+        # Sanity bounds (greater-Alpine region) — never route across the globe.
+        if not (4 <= from_lon <= 18 and 43 <= from_lat <= 49 and
+                4 <= to_lon <= 18 and 43 <= to_lat <= 49):
+            return jsonify({'error': 'coordinates out of supported region'}), 400
+
+        ip = request.headers.get('X-Forwarded-For', request.remote_addr or '').split(',')[0].strip()
+        if not _directions_rate_allowed(ip):
+            return jsonify({'error': 'rate_limited'}), 429
+
+        route = directions_module.get_directions(from_lon, from_lat, to_lon, to_lat, profile)
+        if not route:
+            # Token present but no route / upstream issue — let client hand off.
+            return jsonify({'enabled': True, 'route': None})
+        return jsonify({'enabled': True, 'route': route})
+
+    except Exception as e:
+        return _server_error(e)
+
 
 # ===== ADMIN API ENDPOINTS =====
 

@@ -5,7 +5,7 @@ import './TrailMap.css';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
-function TrailMap({ trail }) {
+function TrailMap({ trail, drivingRoute }) {
   const mapRef = useRef();
   const [viewState, setViewState] = useState({
     longitude: trail.coordinates?.[0]?.[0] || 12.0,
@@ -51,6 +51,23 @@ function TrailMap({ trail }) {
       'line-color': '#ffffff',
       'line-width': 6,
       'line-opacity': 0.4
+    }
+  };
+
+  // Driving route to the trailhead (Perk #1) — dashed gold so it reads as
+  // "approach by car" and stays distinct from the solid hiking line.
+  const drivingRouteGeoJSON = drivingRoute && drivingRoute.coordinates?.length
+    ? { type: 'Feature', geometry: drivingRoute }
+    : null;
+
+  const drivingLineStyle = {
+    id: 'driving-line',
+    type: 'line',
+    paint: {
+      'line-color': '#c9a84c',
+      'line-width': 3,
+      'line-opacity': 0.85,
+      'line-dasharray': [2, 1.5]
     }
   };
 
@@ -117,6 +134,12 @@ function TrailMap({ trail }) {
           <Source id="trail-route" type="geojson" data={trailLineGeoJSON}>
             <Layer {...lineOutlineStyle} />
             <Layer {...lineStyle} />
+          </Source>
+        )}
+
+        {drivingRouteGeoJSON && (
+          <Source id="driving-route" type="geojson" data={drivingRouteGeoJSON}>
+            <Layer {...drivingLineStyle} />
           </Source>
         )}
 

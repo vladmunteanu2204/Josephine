@@ -1,0 +1,118 @@
+/* TrailheadDirections — "get me to the trailhead" card (Perk #1) */
+
+.thd {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(201, 168, 76, 0.18);
+  border-radius: 14px;
+  padding: 16px 18px;
+}
+
+.thd__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.thd__head-icon { color: #c9a84c; }
+
+.thd__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #f4ecdc;
+}
+
+.thd__parking {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0 0 12px;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: rgba(244, 236, 220, 0.72);
+}
+
+.thd__parking svg { flex: 0 0 auto; margin-top: 2px; color: #c9a84c; }
+
+/* Preview stats row */
+.thd__preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0 14px;
+  padding: 10px 14px;
+  background: rgba(201, 168, 76, 0.08);
+  border-radius: 10px;
+}
+
+.thd__preview-stat {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.thd__preview-stat strong {
+  font-size: 1.15rem;
+  color: #f4ecdc;
+  font-weight: 700;
+}
+
+.thd__preview-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(244, 236, 220, 0.55);
+}
+
+.thd__preview-divider { color: rgba(201, 168, 76, 0.5); font-size: 1.2rem; }
+
+.thd__note {
+  margin: 2px 0 12px;
+  font-size: 0.82rem;
+  color: rgba(244, 236, 220, 0.6);
+}
+
+.thd__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.thd__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+}
+
+.thd__btn:disabled { opacity: 0.6; cursor: default; }
+
+.thd__btn--primary {
+  background: #c9a84c;
+  color: #0c160d;
+  flex: 1 1 auto;
+}
+
+.thd__btn--primary:hover { background: #d8b85c; }
+
+.thd__btn--ghost {
+  background: transparent;
+  color: #f4ecdc;
+  border-color: rgba(201, 168, 76, 0.4);
+}
+
+.thd__btn--ghost:hover:not(:disabled) { background: rgba(201, 168, 76, 0.1); }
+
+.thd__spin { animation: thd-spin 0.9s linear infinite; }
+
+@keyframes thd-spin {
+  to { transform: rotate(360deg); }
+}

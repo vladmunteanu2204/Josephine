@@ -106,6 +106,47 @@ Owner decisions: **on-device** memory (localStorage, no server profile, GDPR-lig
   (B2B2C wedge + tourism-board door-opener).
 - Affiliate rails booked inside the plan: cable-car tickets, guided via-ferrata, gear.
 
+#### Subscription perk tiers (the B2B hook — gate by HOST, never by guest data)
+Model: a hotel's **active subscription unlocks a premium feature set for ANY
+guest who enters via its `?host=<slug>` link** — no guest PII, no profiling
+(GDPR-trivial). The app checks one thing: `host.subscription_active` → switch on
+perk flags. Guest just gets a better app; the hotel pays for the upgrade. Gating
+mechanism: build once (`host.subscription_active` → feature flags in
+`HostContext`), then ship perks behind it incrementally.
+
+**KEEP THE FREE TIER USEFUL** (non-negotiable — it's the consumer top-of-funnel):
+free / non-hotel users still get Today-Near-Me, browse trails & rifugios, basic
+forecast, view-only maps, capped Josephine chat, reviews, gamification. The perks
+below *enhance*, they don't *unlock the basics*. Never strip free so bare the
+walk-in finds the app useless.
+
+Perks (★ = strongest concierge hooks / costs real money per use → best to gate;
+◆ = backbone already exists, cheap to ship):
+- ★ **Turn-by-turn to the trailhead** from hotel / current location (Mapbox
+  Directions costs per request → natural gate).
+- ★ **Public-transport routing with Guest Pass awareness** — "8:10 SAD bus, free
+  with your pass, last bus back 17:40."
+- ★ **Parking-slot intelligence** — Braies/Seiser Alm reservation slots, "take the
+  shuttle instead" (overtourism-aligned).
+- ★◆ **Hut "call-ahead" concierge hand-off** — one tap sends a booking inquiry to
+  the *verified* rifugio contact on the guest's behalf (Phase-0 contacts paying off).
+- ◆ **Offline map / GPS-track download** — free = view-only; subscriber = download
+  for no-signal stretches.
+- ◆ **Multi-day adventure planner + recovery routing** unlocked (exit routes already
+  in `structured_answer`).
+- **Unlimited Josephine chat** — free has a daily cap, subscriber unlimited.
+- **"Insider" / quiet-alternative trails** — curated less-crowded layer free users
+  don't see (perceived exclusivity, ~zero cost).
+- **Sunrise / enrosadira & golden-hour timing** per viewpoint.
+- **Downloadable PDF "postcard" itinerary** — feels like a hotel amenity.
+- **Full 7-day weather + "plan B if it rains"** auto-suggestion (free = basic forecast).
+- ◆ **Saved itineraries & full gamification/badges** (built — just gate persistence).
+- **Ad-free / priority / no rate limits** — SaaS table stakes.
+
+Pitch priority to hotels: turn-by-turn + transport routing + offline download +
+hut call-ahead — the four that feel like a *concierge* and are hard to fake with a
+free map app.
+
 ### 13d. Live data + safety (Open Data Hub at runtime — MASTERPLAN Phase 4)
 - Real-time lift status, parking-fill, trail closures, events, weather/avalanche
   warnings surfaced in chat & on-trail (upgrades dispersal from heuristics → truth).

@@ -8,6 +8,7 @@ import ReviewsSection from './ReviewsSection';
 import TrailMap from './TrailMap';
 import MediaGallery from './MediaGallery';
 import WeatherWidget from './WeatherWidget';
+import TrailheadDirections from './TrailheadDirections';
 import { ENABLE_HIKE_TRACKING } from '../featureFlags';
 import AuthPromptModal from './AuthPromptModal';
 import { ArrowLeft, Heart, TrendingUp, TrendingDown } from 'lucide-react';
@@ -191,6 +192,7 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin, 
   const [parallaxOffset, setParallaxOffset] = useState(0);
   const [publicInsights, setPublicInsights] = useState([]);
   const [secretCount, setSecretCount] = useState(0);
+  const [drivingRoute, setDrivingRoute] = useState(null);
   const heroRef = useRef(null);
 
   // Fetch full trail if only ID passed
@@ -473,11 +475,16 @@ function TrailDetail({ trail, onBack, setIsGPSActive, viewRifugio, onShowLogin, 
           </section>
         )}
 
+        {/* Getting there (Perk #1 — turn-by-turn to the trailhead) */}
+        <section className="td-section">
+          <TrailheadDirections trail={fullTrail} onRoute={setDrivingRoute} />
+        </section>
+
         {/* Map */}
         <section className="td-section">
           <h2 className="td-section__title">{t('trail.interactiveMap')}</h2>
           <div className="td-map-wrap">
-            <TrailMap trail={fullTrail} />
+            <TrailMap trail={fullTrail} drivingRoute={drivingRoute} />
           </div>
         </section>
 
