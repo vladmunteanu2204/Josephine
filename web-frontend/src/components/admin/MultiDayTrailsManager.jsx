@@ -21,9 +21,7 @@ function MultiDayTrailsManager({ adminPassword }) {
   const fetchTrails = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_URL}/admin/multi-day-trails`, {
-        headers: {  }
-      });
+      const response = await axios.get(`${API_URL}/admin/multi-day-trails`);
       setTrails(response.data.trails || []);
       setError(null);
     } catch (err) {
@@ -87,14 +85,10 @@ function MultiDayTrailsManager({ adminPassword }) {
       };
 
       if (isCreating) {
-        await axios.post(`${API_URL}/admin/multi-day-trails`, trailToSave, {
-          headers: {  }
-        });
+        await axios.post(`${API_URL}/admin/multi-day-trails`, trailToSave);
         setSuccessMessage(t('admin.trailCreatedSuccess'));
       } else {
-        await axios.put(`${API_URL}/admin/multi-day-trails/${editingTrail.id}`, trailToSave, {
-          headers: {  }
-        });
+        await axios.put(`${API_URL}/admin/multi-day-trails/${editingTrail.id}`, trailToSave);
         setSuccessMessage(t('admin.trailUpdatedSuccess'));
       }
 
@@ -113,9 +107,7 @@ function MultiDayTrailsManager({ adminPassword }) {
     }
 
     try {
-      await axios.delete(`${API_URL}/admin/multi-day-trails/${trailId}`, {
-        headers: {  }
-      });
+      await axios.delete(`${API_URL}/admin/multi-day-trails/${trailId}`);
       setSuccessMessage(t('admin.trailDeletedSuccess'));
       await fetchTrails();
       setTimeout(() => setSuccessMessage(''), 3000);

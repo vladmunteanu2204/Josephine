@@ -51,9 +51,7 @@ export default function Dashboard({ adminPassword, onNavigateToTrail }) {
   const load = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('/api/admin/dashboard', {
-        headers: {  }
-      });
+      const res = await axios.get('/api/admin/dashboard');
       setData(res.data);
     } catch (e) {
       setError(e.response?.data?.error || e.message);

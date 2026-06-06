@@ -48,10 +48,7 @@ export default function BookingInquiries({ adminPassword }) {
       if (filters.date_from) params.date_from = filters.date_from;
       if (filters.date_to)   params.date_to   = filters.date_to;
 
-      const res = await axios.get('/api/admin/booking-inquiries', {
-        headers: {  },
-        params,
-      });
+      const res = await axios.get('/api/admin/booking-inquiries', { params });
       setInquiries(res.data.inquiries || []);
       setError(null);
     } catch (e) {
@@ -66,10 +63,7 @@ export default function BookingInquiries({ adminPassword }) {
   const cycleStatus = async (inq) => {
     const next = NEXT_STATUS[inq.status] || 'pending';
     try {
-      await axios.put(`/api/admin/booking-inquiries/${inq.id}`,
-        { status: next },
-        { headers: {  } }
-      );
+      await axios.put(`/api/admin/booking-inquiries/${inq.id}`, { status: next });
       showToast(`Marked as ${next}`);
       load();
     } catch (e) {
@@ -81,10 +75,7 @@ export default function BookingInquiries({ adminPassword }) {
     if (!selected) return;
     setSaving(true);
     try {
-      await axios.put(`/api/admin/booking-inquiries/${selected.id}`,
-        { admin_notes: notes },
-        { headers: {  } }
-      );
+      await axios.put(`/api/admin/booking-inquiries/${selected.id}`, { admin_notes: notes });
       showToast('Notes saved');
       setSelected(prev => ({ ...prev, admin_notes: notes }));
       load();
@@ -98,9 +89,7 @@ export default function BookingInquiries({ adminPassword }) {
   const deleteInquiry = async (id) => {
     if (!confirm('Delete this booking inquiry?')) return;
     try {
-      await axios.delete(`/api/admin/booking-inquiries/${id}`, {
-        headers: {  }
-      });
+      await axios.delete(`/api/admin/booking-inquiries/${id}`);
       showToast('Inquiry deleted');
       if (selected?.id === id) setSelected(null);
       load();

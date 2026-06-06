@@ -105,10 +105,7 @@ function TrailManager({ adminPassword }) {
 
   const handlePublish = async (trailId, newStatus) => {
     try {
-      await axios.post(`/api/admin/trails/${trailId}/publish`,
-        { status: newStatus },
-        { headers: {  } }
-      );
+      await axios.post(`/api/admin/trails/${trailId}/publish`, { status: newStatus });
       loadTrails();
     } catch (error) {
       alert('Failed to update status: ' + (error.response?.data?.error || error.message));

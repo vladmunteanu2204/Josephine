@@ -17,9 +17,7 @@ function TrailAnalytics({ adminPassword }) {
   const loadAnalytics = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/admin/analytics/trails', {
-        headers: {  }
-      });
+      const response = await axios.get('/api/admin/analytics/trails');
       setAnalytics(response.data);
     } catch (error) {
       console.error('Error loading analytics:', error);

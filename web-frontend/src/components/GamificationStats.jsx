@@ -15,9 +15,7 @@ function GamificationStats({ adminPassword }) {
   const loadStats = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/admin/analytics/gamification', {
-        headers: {  }
-      });
+      const response = await axios.get('/api/admin/analytics/gamification');
       setStats(response.data);
     } catch (error) {
       console.error('Error loading gamification stats:', error);
