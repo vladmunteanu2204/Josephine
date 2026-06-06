@@ -123,7 +123,14 @@ walk-in finds the app useless.
 Perks (★ = strongest concierge hooks / costs real money per use → best to gate;
 ◆ = backbone already exists, cheap to ship):
 - ★ **Turn-by-turn to the trailhead** from hotel / current location (Mapbox
-  Directions costs per request → natural gate).
+  Directions costs per request → natural gate). **✅ BUILT (Perk #1, hybrid):**
+  in-app branded preview (distance + time + dashed route line via backend-proxied
+  Mapbox Directions) → native Apple/Google Maps handoff for the drive. Gated behind
+  `PERK_TURN_BY_TURN` (open for testing). Degrades to handoff-only when location is
+  denied or no token is set.
+  **⚠️ OWNER ACTION:** add a Directions-scoped **`MAPBOX_SERVER_TOKEN`** to Replit
+  Secrets to enable the in-app preview + route line. Until then the feature runs in
+  native-handoff-only mode (button works, no preview/map line).
 - ★ **Public-transport routing with Guest Pass awareness** — "8:10 SAD bus, free
   with your pass, last bus back 17:40."
 - ★ **Parking-slot intelligence** — Braies/Seiser Alm reservation slots, "take the
