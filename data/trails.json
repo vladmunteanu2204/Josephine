@@ -9908,6 +9908,499 @@
         "Orchard and village scenery",
         "Family-friendly playground stop"
       ]
+    },
+    {
+      "id": "schutzhaus_bockerhuette_schwamm_bloder",
+      "name": "Schutzhaus Bockerhütte via Schwamm Bloder",
+      "region": "Merano & Surroundings",
+      "difficulty": "hard",
+      "tagline": "A relentless 1000-metre climb to a quiet mountain refuge",
+      "distance_km": 5.9,
+      "duration_hours": 3.0,
+      "elevation_gain_m": 1037,
+      "elevation_loss_m": 59,
+      "trail_type": "out-and-back",
+      "interests": [
+        "mountain hut",
+        "panoramic views",
+        "forest"
+      ],
+      "description": "A demanding ascent from the Haslach district above Merano up to the Schutzhaus Bockerhütte, climbing roughly 1000 metres over 5.9 km via the Schwamm Bloder route. The path gains height steadily and almost without respite through forest and open alpine slopes, passing the Gasthaus Longfall before reaching the refuge at around 1697 m. Strenuous but rewarding, with the Texel group and the Adige valley opening up behind you as you climb.",
+      "coordinates": [
+        [
+          11.157126,
+          46.699849
+        ],
+        [
+          11.158897,
+          46.699862
+        ],
+        [
+          11.159893,
+          46.700114
+        ],
+        [
+          11.159922,
+          46.7006
+        ],
+        [
+          11.158765,
+          46.701265
+        ],
+        [
+          11.15807,
+          46.70141
+        ],
+        [
+          11.157905,
+          46.702062
+        ],
+        [
+          11.158011,
+          46.70267
+        ],
+        [
+          11.157612,
+          46.703199
+        ],
+        [
+          11.157477,
+          46.703451
+        ],
+        [
+          11.157548,
+          46.704087
+        ],
+        [
+          11.157225,
+          46.704942
+        ],
+        [
+          11.157004,
+          46.705464
+        ],
+        [
+          11.156751,
+          46.706201
+        ],
+        [
+          11.156278,
+          46.706864
+        ],
+        [
+          11.155948,
+          46.707632
+        ],
+        [
+          11.155478,
+          46.708375
+        ],
+        [
+          11.154986,
+          46.709154
+        ],
+        [
+          11.154579,
+          46.709811
+        ],
+        [
+          11.153901,
+          46.710847
+        ],
+        [
+          11.152942,
+          46.711694
+        ],
+        [
+          11.151851,
+          46.712496
+        ],
+        [
+          11.150913,
+          46.713271
+        ],
+        [
+          11.150031,
+          46.713888
+        ],
+        [
+          11.149392,
+          46.714335
+        ],
+        [
+          11.148556,
+          46.714878
+        ],
+        [
+          11.147645,
+          46.715243
+        ],
+        [
+          11.145916,
+          46.715893
+        ],
+        [
+          11.144598,
+          46.716563
+        ],
+        [
+          11.143823,
+          46.717136
+        ],
+        [
+          11.142827,
+          46.717735
+        ],
+        [
+          11.141556,
+          46.718154
+        ],
+        [
+          11.140086,
+          46.718863
+        ],
+        [
+          11.139311,
+          46.719026
+        ],
+        [
+          11.138335,
+          46.719557
+        ],
+        [
+          11.137468,
+          46.720186
+        ],
+        [
+          11.137079,
+          46.72045
+        ],
+        [
+          11.136969,
+          46.720142
+        ],
+        [
+          11.136753,
+          46.719859
+        ],
+        [
+          11.136611,
+          46.72009
+        ],
+        [
+          11.136326,
+          46.7204
+        ],
+        [
+          11.136039,
+          46.72063
+        ],
+        [
+          11.135889,
+          46.720332
+        ],
+        [
+          11.135627,
+          46.719408
+        ],
+        [
+          11.135224,
+          46.719333
+        ],
+        [
+          11.134689,
+          46.720125
+        ],
+        [
+          11.134245,
+          46.720407
+        ],
+        [
+          11.134082,
+          46.720221
+        ],
+        [
+          11.133884,
+          46.720302
+        ],
+        [
+          11.133819,
+          46.720799
+        ],
+        [
+          11.133292,
+          46.721122
+        ],
+        [
+          11.132826,
+          46.72139
+        ],
+        [
+          11.132212,
+          46.721716
+        ],
+        [
+          11.131696,
+          46.722386
+        ],
+        [
+          11.131099,
+          46.722844
+        ],
+        [
+          11.130519,
+          46.723156
+        ],
+        [
+          11.129836,
+          46.723374
+        ],
+        [
+          11.129671,
+          46.723535
+        ],
+        [
+          11.129625,
+          46.723772
+        ],
+        [
+          11.129303,
+          46.723822
+        ],
+        [
+          11.129233,
+          46.723633
+        ],
+        [
+          11.128889,
+          46.723567
+        ],
+        [
+          11.12825,
+          46.723988
+        ],
+        [
+          11.127879,
+          46.72424
+        ],
+        [
+          11.127609,
+          46.724446
+        ],
+        [
+          11.127213,
+          46.724655
+        ],
+        [
+          11.126873,
+          46.724857
+        ],
+        [
+          11.126527,
+          46.72501
+        ],
+        [
+          11.126291,
+          46.724742
+        ],
+        [
+          11.126082,
+          46.724598
+        ],
+        [
+          11.125892,
+          46.724436
+        ],
+        [
+          11.125705,
+          46.724269
+        ],
+        [
+          11.125652,
+          46.724475
+        ],
+        [
+          11.125692,
+          46.724683
+        ],
+        [
+          11.125446,
+          46.724693
+        ],
+        [
+          11.125228,
+          46.724602
+        ],
+        [
+          11.12505,
+          46.724641
+        ],
+        [
+          11.124867,
+          46.724812
+        ],
+        [
+          11.124643,
+          46.725035
+        ],
+        [
+          11.124528,
+          46.72526
+        ],
+        [
+          11.124439,
+          46.725371
+        ],
+        [
+          11.124793,
+          46.725512
+        ],
+        [
+          11.124708,
+          46.725816
+        ],
+        [
+          11.124085,
+          46.726186
+        ],
+        [
+          11.123481,
+          46.726612
+        ],
+        [
+          11.122858,
+          46.726764
+        ],
+        [
+          11.122552,
+          46.726954
+        ],
+        [
+          11.122209,
+          46.726797
+        ],
+        [
+          11.121849,
+          46.726685
+        ],
+        [
+          11.121582,
+          46.726752
+        ],
+        [
+          11.121316,
+          46.726848
+        ],
+        [
+          11.12105,
+          46.726832
+        ],
+        [
+          11.12091,
+          46.726922
+        ],
+        [
+          11.120627,
+          46.726895
+        ],
+        [
+          11.120282,
+          46.726907
+        ],
+        [
+          11.119973,
+          46.726924
+        ],
+        [
+          11.119671,
+          46.726746
+        ],
+        [
+          11.119618,
+          46.726414
+        ]
+      ],
+      "pois": [
+        {
+          "name": "Gasthaus Longfall",
+          "type": "refreshment",
+          "coordinates": [
+            11.142986,
+            46.717726
+          ],
+          "description": "Welcoming inn roughly two-thirds of the way up — a natural rest and refreshment stop before the final pull."
+        },
+        {
+          "name": "Schutzhaus Bockerhütte",
+          "type": "rifugio",
+          "coordinates": [
+            11.119976,
+            46.726205
+          ],
+          "description": "The destination refuge at ~1697 m, on the edge of the Texel Group nature park."
+        }
+      ],
+      "rating": null,
+      "reviews_count": 0,
+      "image_url": "",
+      "thumbnail": "",
+      "gallery": [],
+      "difficulty_details": {
+        "technical": "low",
+        "fitness": "high",
+        "exposure": "low"
+      },
+      "best_season": [
+        "June",
+        "July",
+        "August",
+        "September",
+        "October"
+      ],
+      "facilities": [
+        "mountain hut",
+        "refreshments"
+      ],
+      "dog_friendly": true,
+      "family_friendly": false,
+      "tags": [
+        "mountain hut",
+        "strenuous climb",
+        "Texel group"
+      ],
+      "josephineNote": {
+        "en": "This one is all about the climb — nearly a thousand metres up with very little flat to catch your breath. Pace yourself, carry water, and stop at the Longfall on the way up. The Bockerhütte at the top is the reward.",
+        "it": "Qui conta solo la salita — quasi mille metri di dislivello con pochissimo piano per riprendere fiato. Vai con calma, porta acqua e fermati al Longfall lungo il percorso. La Bockerhütte in cima è la ricompensa.",
+        "de": "Hier zählt nur der Aufstieg — fast tausend Höhenmeter mit kaum flachen Stücken zum Verschnaufen. Teile dir die Kräfte gut ein, nimm Wasser mit und kehr unterwegs beim Longfall ein. Die Bockerhütte oben ist die Belohnung."
+      },
+      "status": "published",
+      "transport": {
+        "car": "Drive to the Haslach district of Merano/Tirolo; park near the trailhead on Haslachstrasse and start on foot from there.",
+        "bus": "Reachable by Merano town bus to the Haslach area, then continue on foot."
+      },
+      "trailhead_info": {
+        "parking": "Roadside parking in the Haslach/Tirolo district at the start (~700 m).",
+        "facilities": "None at the trailhead; refreshments at Gasthaus Longfall and the Bockerhütte en route/at the top."
+      },
+      "nearby_rifugios": [],
+      "crowding": {
+        "level": "low",
+        "peak_months": [
+          "July",
+          "August"
+        ],
+        "quiet_tip": "A steep local approach rather than a tour-bus route — usually quiet on weekdays."
+      },
+      "weather_notes": "A big sustained climb — start early in summer to avoid afternoon heat and possible thunderstorms. Check that the Bockerhütte is open before relying on it for food/drink.",
+      "highlights": [
+        "Nearly 1000 m of continuous ascent",
+        "Rest stop at Gasthaus Longfall",
+        "Schutzhaus Bockerhütte refuge at ~1697 m on the edge of the Texel Group"
+      ],
+      "source": {
+        "gpx": "outdooractive r/343309111",
+        "added_via": "gpx-import"
+      }
     }
   ]
 }
