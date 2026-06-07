@@ -266,12 +266,54 @@ def score_trail(trail, profile, *, top_tag_set=None):
     return score, [r for _, r in reasons]
 
 
-def recommend(trails, profile, *, exclude_ids=None, limit=6):
+# Month name/abbrev/number → 1..12, so a trail's `best_season` (stored as full
+# month names like "June") can be matched however it's written in the wild.
+_MONTH_INDEX = {}
+for _i, (_full, _abbr) in enumerate((
+    ('january', 'jan'), ('february', 'feb'), ('march', 'mar'), ('april', 'apr'),
+    ('may', 'may'), ('june', 'jun'), ('july', 'jul'), ('august', 'aug'),
+    ('september', 'sep'), ('october', 'oct'), ('november', 'nov'), ('december', 'dec'),
+), start=1):
+    _MONTH_INDEX[_full] = _i
+    _MONTH_INDEX[_abbr] = _i
+    _MONTH_INDEX[str(_i)] = _i
+
+
+def _month_num(value):
+    """Coerce a month token ('June', 'jun', 6, '06') to 1..12, or None."""
+    if value is None:
+        return None
+    if isinstance(value, (int, float)):
+        n = int(value)
+        return n if 1 <= n <= 12 else None
+    key = str(value).strip().lower().lstrip('0') or '0'
+    return _MONTH_INDEX.get(key) or _MONTH_INDEX.get(str(value).strip().lower())
+
+
+def _in_season(trail, season_month) -> bool:
+    """True when `season_month` falls inside the trail's best_season window.
+    Trails without a best_season are treated as all-season (neutral, no boost)."""
+    month_n = _month_num(season_month)
+    if month_n is None:
+        return False
+    best = trail.get('best_season')
+    if not best:
+        return False
+    if isinstance(best, str):
+        best = [best]
+    return any(_month_num(m) == month_n for m in best)
+
+
+def recommend(trails, profile, *, exclude_ids=None, limit=6, season_month=None):
     """Rank published trails for a user. Returns [{trail, score, reasons}].
 
     Completed/interacted trails are excluded so the row stays fresh and forward-
     looking. On a cold start (no signal) we fall back to a popularity prior so
     the user still sees a curated, non-empty row.
+
+    season_month (optional) lets the row favour trails that are *in season right
+    now* — a strong nudge on the cold-start/guest row (where we have no personal
+    signal to go on) and a gentle tiebreak for personalised users.
     """
     exclude = set(exclude_ids or [])
     cold = profile.get('cold_start', True)
@@ -283,6 +325,7 @@ def recommend(trails, profile, *, exclude_ids=None, limit=6):
             continue
         if str(trail.get('status', 'published')) != 'published':
             continue
+        in_season = _in_season(trail, season_month)
         if cold:
             # Popularity prior: rating-led, lightly fitness-aware.
             rating = trail.get('rating') or 0
@@ -290,10 +333,16 @@ def recommend(trails, profile, *, exclude_ids=None, limit=6):
             reasons = [{'code': 'popularPick'}]
             if rating and rating >= 4.5:
                 reasons = [{'code': 'highlyRated'}]
+            if in_season:
+                s += 1.2  # enough to lift an in-season trail above an off-season one
+                reasons.insert(0, {'code': 'inSeasonNow'})
         else:
             s, reasons = score_trail(trail, profile)
             if s <= 0:
                 continue
+            if in_season:
+                s += 0.6  # a tiebreak, not a takeover, for personalised picks
+                reasons.append({'code': 'inSeasonNow'})
         scored.append({'trail': trail, 'score': round(s, 3), 'reasons': reasons[:2]})
 
     scored.sort(key=lambda x: x['score'], reverse=True)

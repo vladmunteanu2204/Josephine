@@ -66,7 +66,7 @@ function Settings({ onNavigate }) {
         await disablePush();
         setPushOn(false);
       } else {
-        const ok = await enablePush((i18n.language || 'en').slice(0, 2));
+        const ok = await enablePush((i18n.language || 'en').slice(0, 2), user?.email);
         setPushOn(ok);
         if (!ok) toast.info(t('settings.pushUnavailable', 'Notifications aren’t available here yet — on iPhone, add Josephine to your home screen first.'));
       }

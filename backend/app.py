@@ -1413,8 +1413,9 @@ def build_user_recommendations(user_email, limit=6):
     if user_email:
         exclude.update(behaviour_store.get_saved(user_email))
 
-    ranked = recommender.recommend(trails, profile, exclude_ids=exclude, limit=limit)
     current_month = datetime.now().strftime('%B')
+    ranked = recommender.recommend(trails, profile, exclude_ids=exclude,
+                                   limit=limit, season_month=current_month)
     cards = [_personalised_card(item, current_month) for item in ranked]
     return cards, profile
 

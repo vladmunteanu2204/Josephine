@@ -612,7 +612,20 @@ window.addEventListener('scroll', () => {
 > - Frontend: `RecommendedForYou` homepage row, dual-write tracking in `TrailDetail`,
 >   notification toggles in `Settings` (gated), full EN/IT/DE i18n.
 > - Push is built on the existing **Web Push / VAPID** stack and **gated off** via
->   `ENABLE_PERSONALIZED_PUSH` (default false).
+>   `ENABLE_PERSONALIZED_PUSH` (default false). Opt-in subscriptions are now tied
+>   to the user's email, and the cold-start / guest row is **season-aware** (favours
+>   trails in season for the current month).
+>
+> **To activate the weekly push (when ready):**
+> 1. Replit Secrets: `ENABLE_PERSONALIZED_PUSH=1`, `CRON_TOKEN=<random-string>`,
+>    and the VAPID keys (`VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`).
+> 2. Frontend: flip `ENABLE_PERSONALIZED_PUSH = true` in `featureFlags.js` to reveal
+>    the Settings toggles, rebuild & redeploy.
+> 3. Schedule a weekly call (Replit Scheduled Deployment or any external cron):
+>    `POST /api/admin/push/personalized` with header `X-Cron-Token: <CRON_TOKEN>`
+>    and JSON body `{"kind":"weekly"}` (use `{"kind":"weekly","dry_run":true}` to
+>    preview content without sending; `{"kind":"weather"}` for the saved-trail
+>    rain watch).
 
 #### **Database Migration to PostgreSQL**
 - Set up Replit PostgreSQL database

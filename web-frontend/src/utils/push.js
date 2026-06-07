@@ -50,8 +50,12 @@ export async function pushStatus() {
   }
 }
 
-/** Ask permission + subscribe + register with the server. Returns true on success. */
-export async function enablePush(lang = 'en') {
+/**
+ * Ask permission + subscribe + register with the server. Returns true on success.
+ * Pass the signed-in user's `email` so the subscription is tied to them and
+ * personalised pushes (weekly pick, weather watch) can target the right person.
+ */
+export async function enablePush(lang = 'en', email = null) {
   if (!pushSupported()) return false;
   try {
     const cfg = await pushServerConfig();
@@ -68,7 +72,9 @@ export async function enablePush(lang = 'en') {
         applicationServerKey: urlBase64ToUint8Array(cfg.key),
       });
     }
-    await axios.post('/api/push/subscribe', { subscription: sub.toJSON(), lang });
+    const payload = { subscription: sub.toJSON(), lang };
+    if (email) payload.email = email;
+    await axios.post('/api/push/subscribe', payload);
     return true;
   } catch (e) {
     console.warn('[push] enable failed:', e);
