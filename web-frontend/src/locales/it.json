@@ -1072,7 +1072,9 @@
     "published": "Pubblicato"
   },
   "cinema": {
-    "exploreCta": "Scopri questo sentiero →"
+    "exploreCta": "Scopri questo sentiero →",
+    "forYou": "Scelti per te",
+    "trending": "Popolari in Alto Adige"
   },
   "convo": {
     "eyebrow": "UNA CONVERSAZIONE CON JOSEPHINE",

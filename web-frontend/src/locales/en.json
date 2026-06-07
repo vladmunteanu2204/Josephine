@@ -1072,7 +1072,9 @@
     "published": "Published"
   },
   "cinema": {
-    "exploreCta": "Explore this trail →"
+    "exploreCta": "Explore this trail →",
+    "forYou": "Chosen for you",
+    "trending": "Trending in South Tyrol"
   },
   "convo": {
     "eyebrow": "A CONVERSATION WITH JOSEPHINE",

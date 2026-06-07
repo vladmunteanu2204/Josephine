@@ -1072,7 +1072,9 @@
     "published": "Veröffentlicht"
   },
   "cinema": {
-    "exploreCta": "Wanderweg entdecken →"
+    "exploreCta": "Wanderweg entdecken →",
+    "forYou": "Für dich ausgewählt",
+    "trending": "Beliebt in Südtirol"
   },
   "convo": {
     "eyebrow": "EIN GESPRÄCH MIT JOSEPHINE",

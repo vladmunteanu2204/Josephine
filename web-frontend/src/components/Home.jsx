@@ -6,15 +6,21 @@ import { useSeason } from '../contexts/SeasonContext';
 import { seasonAsset } from '../hooks/useSeason';
 import { ChevronLeft, ChevronRight, ChevronDown, ArrowRight } from 'lucide-react';
 import './Home.css';
-import RecommendedForYou from './RecommendedForYou';
+import { useAuth } from '../contexts/AuthContext';
+import { ENABLE_RECOMMENDATIONS } from '../featureFlags';
+import { fetchRecommendations } from '../utils/personalization';
 
 import { API_URL } from '../api';
 
 function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail }) {
   const { t } = useTranslation();
   const { config } = useSeason();
+  const { currentUser } = useAuth();
 
   const [featuredTrails, setFeaturedTrails] = useState([]);
+  // True when the hero showcase is personalised to the signed-in user (vs. the
+  // popularity-led "trending" fallback for guests / cold-start users).
+  const [heroPersonalized, setHeroPersonalized] = useState(false);
   const [activeTrail, setActiveTrail] = useState(0);
   const [multiDayTrail, setMultiDayTrail] = useState(null);
   const [dogFriendlyCount, setDogFriendlyCount] = useState(null);
@@ -127,12 +133,35 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
           axios.get(`${API_URL}/rifugios`).catch(() => null),
         ]);
         if (trailsRes?.data?.trails?.length > 0) {
-          const top = trailsRes.data.trails
+          const all = trailsRes.data.trails;
+          const byId = {};
+          all.forEach(tr => { if (tr.id) byId[tr.id] = tr; });
+          const topRated = [...all]
             .sort((a, b) => (b.rating || 0) - (a.rating || 0))
             .slice(0, 5);
-          setFeaturedTrails(top);
-          startTrailTimer(top);
-          setDogFriendlyCount(trailsRes.data.trails.filter(t => t.dog_friendly).length);
+          setDogFriendlyCount(all.filter(t => t.dog_friendly).length);
+
+          // The hero showcase is the single personalisation surface. Known users
+          // with real history get their picks driving the cinematic slides;
+          // everyone else (guests / cold-start) keeps the top-rated "trending"
+          // showcase. We map recommendation ids back to the full trail objects
+          // so the slides keep their rich fields (tagline, gallery, etc.).
+          let hero = topRated;
+          let personal = false;
+          const email = currentUser?.email;
+          if (ENABLE_RECOMMENDATIONS && email) {
+            try {
+              const recs = await fetchRecommendations(email, 5);
+              if (recs && !recs.cold_start
+                  && Array.isArray(recs.results) && recs.results.length > 0) {
+                hero = recs.results.map(r => byId[r.id] || r);
+                personal = true;
+              }
+            } catch { /* keep the top-rated fallback */ }
+          }
+          setFeaturedTrails(hero);
+          setHeroPersonalized(personal);
+          startTrailTimer(hero);
         }
         if (rifugiosRes?.data?.rifugios) {
           const rifs = rifugiosRes.data.rifugios;
@@ -156,7 +185,7 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
     };
     load();
     return () => clearInterval(trailTimerRef.current);
-  }, [startTrailTimer]);
+  }, [startTrailTimer, currentUser?.email]);
 
   const getGreeting = () => {
     const h = new Date().getHours();
@@ -258,6 +287,11 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
         {/* Trail info */}
         {currentTrail && (
           <div className="hp-cinema__content">
+            <p className="hp-cinema__eyebrow">
+              {heroPersonalized
+                ? t('cinema.forYou', 'Chosen for you')
+                : t('cinema.trending', 'Trending in South Tyrol')}
+            </p>
             <p className="hp-cinema__region">{currentTrail.region}</p>
             <h2 className="hp-cinema__title">{currentTrail.name}</h2>
             {currentTrail.tagline && (
@@ -316,12 +350,6 @@ function Home({ setCurrentView, navigateToCatalog, navigateToRifugios, viewTrail
         </div>
       </section>
       )}
-
-      {/* ══════════════════════════════════════════
-          2b. RECOMMENDED FOR YOU — personalised row
-          Self-hides for guests / when there's nothing to suggest.
-      ══════════════════════════════════════════ */}
-      <RecommendedForYou viewTrail={viewTrail} />
 
       {/* ══════════════════════════════════════════
           3. JOSEPHINE CONVERSATION — full viewport
