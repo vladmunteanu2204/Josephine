@@ -55,12 +55,14 @@ export function trackBehaviour(trailId, action, email, metadata) {
   }).catch(() => {});
 }
 
-/** Personalised "Recommended for you" for a signed-in user. [] on any failure. */
+/**
+ * "Recommended for you" row. Pass an email for history-driven picks; omit it
+ * and guests get the popularity-led cold-start row. [] on any failure.
+ */
 export async function fetchRecommendations(email, limit = 6) {
-  if (!email) return { results: [], cold_start: true };
   try {
     const res = await axios.get(`${API_URL}/recommendations/for-you`, {
-      params: { email, limit },
+      params: email ? { email, limit } : { limit },
     });
     return res.data || { results: [], cold_start: true };
   } catch {

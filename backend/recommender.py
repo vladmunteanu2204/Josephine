@@ -90,10 +90,11 @@ def build_profile(behaviour, completed_hikes, trails_by_id) -> dict:
     rifugio_pos = 0.0
     dog_pos = 0.0
     total_pos = 0.0
+    strong_pos = 0.0           # positive signal from intentful acts (not passive views)
     interacted = set()         # trail ids the user has touched at all
 
-    def add_signal(trail, weight):
-        nonlocal rifugio_pos, dog_pos, total_pos
+    def add_signal(trail, weight, *, strong=False):
+        nonlocal rifugio_pos, dog_pos, total_pos, strong_pos
         if weight == 0:
             return
         diff_w[canon_difficulty(trail.get('difficulty'))] += weight
@@ -107,19 +108,25 @@ def build_profile(behaviour, completed_hikes, trails_by_id) -> dict:
             duration_acc.append((weight, float(dur)))
         if weight > 0:
             total_pos += weight
+            if strong:
+                strong_pos += weight
             if _has_rifugio(trail):
                 rifugio_pos += weight
             if trail.get('dog_friendly'):
                 dog_pos += weight
 
-    # Behaviour events
+    # Behaviour events. A "view" is passive browsing; save/plan/review/complete
+    # are intentful — only the latter (plus completed hikes) flip a user out of
+    # the popularity-led cold-start fallback.
     for ev in behaviour or []:
         tid = ev.get('trail_id')
         trail = trails_by_id.get(tid)
         if not trail:
             continue
         interacted.add(tid)
-        add_signal(trail, ACTION_WEIGHTS.get(ev.get('action'), 0.0))
+        action = ev.get('action')
+        add_signal(trail, ACTION_WEIGHTS.get(action, 0.0),
+                   strong=(action not in ('view',)))
 
     # Completed hikes — strongest signal + fitness evidence
     gains, dists = [], []
@@ -129,7 +136,7 @@ def build_profile(behaviour, completed_hikes, trails_by_id) -> dict:
             interacted.add(tid)
         trail = trails_by_id.get(tid)
         if trail:
-            add_signal(trail, ACTION_WEIGHTS['complete'])
+            add_signal(trail, ACTION_WEIGHTS['complete'], strong=True)
         stats = h.get('stats') or {}
         g = stats.get('trail_elevation_gain_m') or stats.get('elevation_gain_m')
         d = stats.get('distance_km')
@@ -165,8 +172,12 @@ def build_profile(behaviour, completed_hikes, trails_by_id) -> dict:
         'dog_affinity': (dog_pos / total_pos) if total_pos else 0.0,
         'completed_count': len(completed_hikes or []),
         'total_signal': total_pos,
+        'strong_signal': strong_pos,
         'interacted_ids': sorted(interacted),
-        'cold_start': total_pos < 1.0,
+        # Stay in the popularity-led fallback until the user does something
+        # intentful (one save/plan/review/complete) OR browses a fair bit
+        # (~5 trail views). A single curious click no longer flips the row.
+        'cold_start': strong_pos < 1.0 and total_pos < 5.0,
     }
 
 

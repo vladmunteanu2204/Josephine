@@ -1402,13 +1402,16 @@ def build_user_recommendations(user_email, limit=6):
     Returns (cards, profile). Shared by the API endpoint and personalised push."""
     trails = load_complete_trails()['trails']
     trails_by_id = {t.get('id'): t for t in trails if t.get('id')}
-    behaviour = behaviour_store.get_behaviour(user_email, limit=1000)
-    completed = _load_user_completed_hikes(user_email)
+    # Guests (no email) get a pure cold-start, popularity-led row — no history
+    # to read, nothing to exclude.
+    behaviour = behaviour_store.get_behaviour(user_email, limit=1000) if user_email else []
+    completed = _load_user_completed_hikes(user_email) if user_email else []
 
     profile = recommender.build_profile(behaviour, completed, trails_by_id)
     # Don't re-suggest what they've already done or saved.
     exclude = set(profile.get('interacted_ids', []))
-    exclude.update(behaviour_store.get_saved(user_email))
+    if user_email:
+        exclude.update(behaviour_store.get_saved(user_email))
 
     ranked = recommender.recommend(trails, profile, exclude_ids=exclude, limit=limit)
     current_month = datetime.now().strftime('%B')
@@ -1418,13 +1421,11 @@ def build_user_recommendations(user_email, limit=6):
 
 @app.route('/api/recommendations/for-you', methods=['GET'])
 def recommendations_for_you():
-    """Personalised "Recommended for you" row for a signed-in user (keyed by
-    ?email=). Cold-start users still get a curated popularity-led row, flagged
-    so the UI can soften the heading."""
+    """Personalised "Recommended for you" row. Signed-in users (keyed by
+    ?email=) get history-driven picks; guests and cold-start users get a
+    curated popularity-led row, flagged so the UI can soften the heading."""
     try:
-        user_email = request.args.get('email')
-        if not user_email:
-            return jsonify({'results': [], 'reason': 'email_required'}), 400
+        user_email = request.args.get('email') or None
         try:
             limit = min(max(int(request.args.get('limit', 6)), 1), 12)
         except (TypeError, ValueError):

@@ -62,11 +62,12 @@ export default function RecommendedForYou({ viewTrail }) {
 
   useEffect(() => {
     let cancelled = false;
-    if (!ENABLE_RECOMMENDATIONS || !email) {
+    if (!ENABLE_RECOMMENDATIONS) {
       setResults([]); setLoaded(true);
       return;
     }
     setLoaded(false);
+    // email may be null — guests get the popularity-led cold-start row.
     fetchRecommendations(email, 8).then((data) => {
       if (cancelled) return;
       setResults(Array.isArray(data.results) ? data.results : []);
@@ -76,7 +77,7 @@ export default function RecommendedForYou({ viewTrail }) {
     return () => { cancelled = true; };
   }, [email]);
 
-  if (!ENABLE_RECOMMENDATIONS || !email) return null;
+  if (!ENABLE_RECOMMENDATIONS) return null;
   if (!loaded || results.length === 0) return null;
 
   const heading = coldStart
