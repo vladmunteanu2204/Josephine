@@ -11,6 +11,11 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  /* Opaque alpine base so the splash is fully covering from the very first
+     frame — the photo/video backdrops load asynchronously and the gradient
+     above them is translucent, so without this the preloaded Home hero would
+     briefly flash *through* the splash before those assets paint. */
+  background-color: #050c06;
   /* Cinematic alpine photo — female hiker at golden hour */
   background-size: cover;
   background-position: center 40%;
