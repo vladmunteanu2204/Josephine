@@ -199,6 +199,21 @@ input, select, textarea {
   caret-color: var(--accent-primary);
 }
 
+/* iOS Safari auto-zooms the viewport when a focused field's font-size is < 16px,
+   and frequently doesn't reset that zoom on blur — leaving the whole layout
+   scaled up (header crowding, clipped controls). Pin every focusable field to
+   16px on touch devices so the zoom is never triggered. Scoped to coarse
+   pointers so desktop sizing is untouched; !important to beat component rules
+   (e.g. .tc-search__input: 15px, hut booking inputs: 14px). Pinch-to-zoom stays
+   available — only the unwanted focus-zoom is suppressed. */
+@media (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
 .btn-primary {
   background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-warm) 100%);
   color: #fff;
