@@ -1,4 +1,9 @@
 :root {
+  /* The whole app is a dark theme. Declaring this stops iOS/Android Safari from
+     light-theming native form controls when the device is in Light Mode — which
+     otherwise paints a light background behind our translucent inputs and makes
+     the cream input text invisible on mobile. */
+  color-scheme: dark;
   --bg-primary: #080e08;
   --bg-secondary: #0f180f;
   --bg-card: #141e14;
@@ -185,9 +190,13 @@ button:active {
   transform: translateY(0);
 }
 
-input, select {
+input, select, textarea {
   font-family: inherit;
   font-size: 16px;
+  /* Force typed text + caret to follow the CSS `color` rather than any
+     OS-imposed default (fixes invisible search text on iOS Light Mode). */
+  -webkit-text-fill-color: currentColor;
+  caret-color: var(--accent-primary);
 }
 
 .btn-primary {
