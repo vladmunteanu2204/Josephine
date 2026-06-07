@@ -4369,6 +4369,21 @@ _db_conn.execute('''CREATE TABLE IF NOT EXISTS knowledge_gaps (
     sample_reply TEXT
 )''')
 _db_conn.execute('CREATE INDEX IF NOT EXISTS idx_gap_hits ON knowledge_gaps(hits)')
+# Learned intents (Layer 2.5): admin-approved answers promoted from knowledge
+# gaps without a code deploy. Consulted at runtime AFTER the hand-curated
+# structured_answer() returns None and the jailbreak guard passes, but BEFORE
+# the paid LLM — so a recurring gap, once approved, is answered for free and
+# in Josephine's voice. keywords is a JSON list of lowercase trigger phrases.
+_db_conn.execute('''CREATE TABLE IF NOT EXISTS learned_intents (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    keywords TEXT NOT NULL,
+    answer_en TEXT NOT NULL,
+    answer_it TEXT,
+    answer_de TEXT,
+    source_question TEXT,
+    hits INTEGER NOT NULL DEFAULT 0,
+    created_at REAL NOT NULL
+)''')
 _db_conn.commit()
 _db_lock = threading.Lock()
 
@@ -4443,6 +4458,76 @@ def _log_knowledge_gap(question: str, lang: str, mode: str, reply: str = ''):
             _db_conn.commit()
     except Exception as e:  # noqa: BLE001
         print(f"[knowledge_gap] log failed: {e}")
+
+
+# ── Layer 2.5: admin-approved "learned" intents ──────────────────────────────
+# Cached in-process so the common case (a chat message) doesn't hit SQLite every
+# call. Busted on any write (approve / delete) so changes are live immediately.
+_learned_cache = {'rows': None, 'built_at': 0.0}
+_LEARNED_TTL = 60  # seconds
+
+
+def _bust_learned_cache():
+    _learned_cache['rows'] = None
+    _learned_cache['built_at'] = 0.0
+
+
+def _load_learned_intents(force: bool = False):
+    """Return cached list of approved learned intents as dicts with a parsed
+    `kw` list. Refreshed at most once per _LEARNED_TTL."""
+    now = time.time()
+    if (not force and _learned_cache['rows'] is not None
+            and now - _learned_cache['built_at'] < _LEARNED_TTL):
+        return _learned_cache['rows']
+    rows = []
+    try:
+        with _db_lock:
+            raw = _db_conn.execute(
+                'SELECT id, keywords, answer_en, answer_it, answer_de, source_question, hits '
+                'FROM learned_intents ORDER BY id ASC').fetchall()
+        for r in raw:
+            try:
+                kw = [str(k).lower().strip() for k in json.loads(r[1]) if str(k).strip()]
+            except Exception:
+                kw = []
+            if not kw:
+                continue
+            rows.append({'id': r[0], 'kw': kw, 'en': r[2], 'it': r[3],
+                         'de': r[4], 'source_question': r[5], 'hits': r[6]})
+    except Exception as e:  # noqa: BLE001
+        print(f"[learned_intents] load failed: {e}")
+        rows = _learned_cache['rows'] or []
+    _learned_cache['rows'] = rows
+    _learned_cache['built_at'] = now
+    return rows
+
+
+def _match_learned_intent(question: str, lang: str = 'en'):
+    """If a message matches an approved learned intent's keywords, return its
+    localized answer (EN fallback) and bump its hit count. Else None.
+
+    Same substring convention as structured_answer(): any keyword phrase present
+    in the lowercased message matches. Curated Layer 2 is always tried first by
+    the caller, so these only ever fill genuine gaps."""
+    if not question:
+        return None
+    q = question.lower().strip()
+    if not q:
+        return None
+    for row in _load_learned_intents():
+        if any(k in q for k in row['kw']):
+            reply = row.get(lang[:2].lower()) or row.get('en')
+            if not reply:
+                continue
+            try:
+                with _db_lock:
+                    _db_conn.execute(
+                        'UPDATE learned_intents SET hits=hits+1 WHERE id=?', (row['id'],))
+                    _db_conn.commit()
+            except Exception:
+                pass
+            return reply
+    return None
 
 
 def _build_system_prompt() -> str:
@@ -6056,6 +6141,14 @@ def josephine_chat():
         _log_knowledge_gap(message, lang, 'guardrail', reply)
         return jsonify({'reply': reply, 'mode': 'guardrail'})
 
+    # ── Layer 2.5: admin-approved learned intents (free, deterministic) ──
+    # Recurring gaps an admin has reviewed and promoted — answered without an
+    # LLM call. Tried after curated Layer 2 misses and the jailbreak guard
+    # passes, so it only ever fills genuine gaps.
+    learned = _match_learned_intent(message, lang)
+    if learned:
+        return jsonify({'reply': learned, 'mode': 'learned'})
+
     # ── Layer 3: Claude Haiku (paid, with cache + rate limit) ──────────
     if not ANTHROPIC_API_KEY:
         default_no_key = _vary(message, [
@@ -6175,6 +6268,180 @@ def admin_knowledge_gaps_delete():
             _db_conn.commit()
         return jsonify({'ok': True, 'cleared': qn})
     return jsonify({'error': 'specify id=<qnorm> or all=1'}), 400
+
+
+# ── Learned intents: draft → approve → publish (Layer 2.5) ───────────────────
+# The gap queue tells us what hikers ask that the deterministic layers miss.
+# Rather than hand-coding each new intent and redeploying, an admin can ask the
+# LLM to DRAFT a Josephine-voice answer (EN/IT/DE) + trigger keywords from a gap
+# question, review/edit it, and APPROVE it. Approved intents live in the
+# `learned_intents` table and are served for free by _match_learned_intent()
+# BEFORE the paid LLM — no code deploy needed. The human approve-gate is what
+# protects Josephine's "never invent facts" rule for machine-drafted answers.
+
+_DRAFT_SYSTEM = (
+    "You are a content tool helping curate answers for Josephine, a warm, "
+    "concise alpine-hiking companion for South Tyrol / the Dolomites. Her world "
+    "is hiking, trails, rifugios, mountain huts, weather, gear, transport, local "
+    "food and culture, safety and trip planning in THAT region only.\n\n"
+    "Given one hiker question, produce a JSON object (and NOTHING else) with:\n"
+    '  "offscope": true if the question is outside Josephine\'s world (code, '
+    "politics, other regions, medical/legal/financial advice, etc.) — if so, set "
+    "the answers to empty strings and keywords to [].\n"
+    '  "keywords": 3-7 lowercase trigger phrases (substrings that would appear in '
+    "similar questions; short, distinctive, no punctuation).\n"
+    '  "answer_en", "answer_it", "answer_de": Josephine\'s answer in English, '
+    "Italian (informal 'tu'), and German (informal 'du'). 1-3 warm sentences "
+    "each. Practical and friendly.\n\n"
+    "CRITICAL: Never invent specific facts you cannot be sure of (exact prices, "
+    "opening hours, phone numbers, trail names, timetables). If the honest answer "
+    "depends on such specifics, give helpful GENERAL guidance and tell the hiker "
+    "how/where to confirm, rather than fabricating a number. Output ONLY the JSON."
+)
+
+
+def _parse_draft_json(text: str):
+    """Best-effort parse of the model's draft JSON; tolerates code fences and
+    surrounding prose. Returns a dict or None."""
+    if not text:
+        return None
+    t = text.strip()
+    # Strip ```json ... ``` fences if present.
+    if t.startswith('```'):
+        t = re.sub(r'^```[a-zA-Z]*\s*', '', t)
+        t = re.sub(r'\s*```$', '', t).strip()
+    try:
+        return json.loads(t)
+    except Exception:
+        pass
+    # Fall back to the first {...} block.
+    m = re.search(r'\{.*\}', t, re.DOTALL)
+    if m:
+        try:
+            return json.loads(m.group(0))
+        except Exception:
+            return None
+    return None
+
+
+def _draft_intent_from_question(question: str):
+    """Ask the LLM to draft a learned-intent (keywords + EN/IT/DE answer) for a
+    gap question. Returns a normalized dict, or raises on hard failure."""
+    if not _anthropic_client:
+        raise RuntimeError('no_api_key')
+    resp = _anthropic_client.with_options(timeout=30.0).messages.create(
+        model='claude-haiku-4-5',
+        max_tokens=700,
+        temperature=0.3,
+        system=_DRAFT_SYSTEM,
+        messages=[{'role': 'user', 'content': question.strip()[:500]}],
+    )
+    raw = resp.content[0].text if resp.content else ''
+    data = _parse_draft_json(raw) or {}
+    kws = data.get('keywords') or []
+    if not isinstance(kws, list):
+        kws = []
+    kws = [str(k).lower().strip() for k in kws if str(k).strip()][:7]
+    return {
+        'offscope': bool(data.get('offscope')),
+        'keywords': kws,
+        'answer_en': (data.get('answer_en') or '').strip(),
+        'answer_it': (data.get('answer_it') or '').strip(),
+        'answer_de': (data.get('answer_de') or '').strip(),
+    }
+
+
+@app.route('/api/admin/knowledge-gaps/draft', methods=['POST'])
+@require_admin_auth
+def admin_draft_intent():
+    """Draft (do NOT save) a Josephine-voice answer + keywords for a gap
+    question. The admin reviews/edits the result before approving."""
+    if not _anthropic_client:
+        return jsonify({'error': 'no_api_key',
+                        'message': 'No ANTHROPIC_API_KEY configured — cannot draft.'}), 503
+    data = request.get_json(silent=True) or {}
+    question = (data.get('question') or '').strip()
+    if not question:
+        return jsonify({'error': 'question required'}), 400
+    try:
+        draft = _draft_intent_from_question(question)
+    except Exception as e:  # noqa: BLE001
+        print(f"[learned_intents] draft failed: {e}")
+        return jsonify({'error': 'draft_failed',
+                        'message': 'Could not draft an answer — try again.'}), 502
+    return jsonify({'draft': draft, 'question': question})
+
+
+@app.route('/api/admin/learned-intents', methods=['GET'])
+@require_admin_auth
+def admin_learned_intents_list():
+    """List approved learned intents (the live Layer-2.5 store)."""
+    rows = _db_conn.execute(
+        'SELECT id, keywords, answer_en, answer_it, answer_de, source_question, hits, created_at '
+        'FROM learned_intents ORDER BY id DESC').fetchall()
+    items = []
+    for r in rows:
+        try:
+            kw = json.loads(r[1])
+        except Exception:
+            kw = []
+        items.append({
+            'id': r[0], 'keywords': kw, 'answer_en': r[2], 'answer_it': r[3],
+            'answer_de': r[4], 'source_question': r[5], 'hits': r[6],
+            'created_at': r[7],
+        })
+    return jsonify({'intents': items, 'count': len(items)})
+
+
+@app.route('/api/admin/learned-intents', methods=['POST'])
+@require_admin_auth
+def admin_learned_intents_create():
+    """Approve & publish a learned intent. Body: keywords[], answer_en (req),
+    answer_it, answer_de, source_question. Goes live immediately (cache busted)."""
+    data = request.get_json(silent=True) or {}
+    kws = data.get('keywords') or []
+    if not isinstance(kws, list):
+        kws = []
+    kws = [str(k).lower().strip() for k in kws if str(k).strip()][:10]
+    answer_en = (data.get('answer_en') or '').strip()
+    if not kws:
+        return jsonify({'error': 'at least one keyword is required'}), 400
+    if not answer_en:
+        return jsonify({'error': 'answer_en is required'}), 400
+    answer_it = (data.get('answer_it') or '').strip() or None
+    answer_de = (data.get('answer_de') or '').strip() or None
+    source_q = (data.get('source_question') or '').strip()[:500] or None
+    with _db_lock:
+        cur = _db_conn.execute(
+            'INSERT INTO learned_intents '
+            '(keywords, answer_en, answer_it, answer_de, source_question, hits, created_at) '
+            'VALUES (?, ?, ?, ?, ?, 0, ?)',
+            (json.dumps(kws), answer_en, answer_it, answer_de, source_q, time.time()))
+        new_id = cur.lastrowid
+        _db_conn.commit()
+    _bust_learned_cache()
+    return jsonify({'ok': True, 'id': new_id})
+
+
+@app.route('/api/admin/learned-intents', methods=['DELETE'])
+@require_admin_auth
+def admin_learned_intents_delete():
+    """Retire a learned intent (?id=N) or clear all (?all=1)."""
+    if request.args.get('all') == '1':
+        with _db_lock:
+            _db_conn.execute('DELETE FROM learned_intents')
+            _db_conn.commit()
+        _bust_learned_cache()
+        return jsonify({'ok': True, 'cleared': 'all'})
+    try:
+        rid = int(request.args.get('id', ''))
+    except (TypeError, ValueError):
+        return jsonify({'error': 'specify id=N or all=1'}), 400
+    with _db_lock:
+        _db_conn.execute('DELETE FROM learned_intents WHERE id=?', (rid,))
+        _db_conn.commit()
+    _bust_learned_cache()
+    return jsonify({'ok': True, 'cleared': rid})
 
 
 # ── Donations (Lemon Squeezy "buy me a coffee") ──────────────────────────────
