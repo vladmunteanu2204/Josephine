@@ -58,3 +58,6 @@ backend/data/push_subscriptions.json
 data/user_behaviour.json
 data/saved_trails_server.json
 data/notification_prefs.json
+
+# Local safety snapshot of cleared seed data (not for the repo — recoverable via git history)
+.cleanup_backup_*/

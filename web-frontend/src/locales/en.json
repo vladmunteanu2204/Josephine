@@ -99,6 +99,18 @@
     "goTo": "Go to"
   },
   "trail": {
+    "share": "Share",
+    "mapRoute": "Map & Route",
+    "viewMapRoute": "View Map & Route",
+    "gallery": "Gallery",
+    "dogNotes": "Dog Notes",
+    "seeAll": "See all",
+    "readReviews": "Read & write reviews",
+    "noRatingYet": "No ratings yet",
+    "dogGeneric": "This trail is dog friendly. Keep dogs on a leash around livestock and grazed areas.",
+    "signInToSave": "Sign in to save and track your hikes.",
+    "linkCopied": "Link copied",
+    "onLeash": "On leash",
     "distance": "Distance",
     "duration": "Duration",
     "elevation": "Elevation",

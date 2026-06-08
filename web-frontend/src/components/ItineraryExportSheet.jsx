@@ -2,9 +2,20 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   MapPin, Mountain, Clock, BarChart3, Dog, Heart, Sun, Camera,
-  ShieldCheck, Backpack, Flag,
+  ShieldCheck, Backpack, Flag, Home, Utensils, Droplet, Church, Trees,
 } from 'lucide-react';
 import './ItineraryExportSheet.css';
+
+// Schedule-step icon key → lucide icon (matches itineraryPdf.iconKeyForType).
+const STEP_ICON = {
+  start: MapPin, finish: Flag, peak: Mountain, hut: Home,
+  food: Utensils, water: Droplet, cultural: Church, forest: Trees, pin: MapPin,
+};
+
+function StepIcon({ k }) {
+  const Icon = STEP_ICON[k] || MapPin;
+  return <Icon size={17} strokeWidth={2} />;
+}
 
 // Fixed A4 portrait canvas (96dpi). The sheet is rendered off-screen and
 // rasterised by html2canvas, so everything here is sized to fit one A4 page.
@@ -153,7 +164,7 @@ function ItineraryExportSheet({ trail, heroImg, mapImg, elev, schedule = [] }) {
             {schedule.map((s, i) => (
               <React.Fragment key={i}>
                 <div className="ies-step">
-                  <div className="ies-step__icon">{s.icon}</div>
+                  <div className="ies-step__icon"><StepIcon k={s.iconKey} /></div>
                   <div className="ies-step__time">{s.time}</div>
                   <div className="ies-step__label">{s.label}</div>
                   {s.sub && <div className="ies-step__sub">{s.sub}</div>}

@@ -327,6 +327,18 @@ export function elevationToSvg(series, { width = 720, height = 138 } = {}) {
     })
     .join('');
 
+  // Mark the high point on the curve (skip if it sits at an endpoint).
+  let peakMark = '';
+  const peakI = eles.indexOf(maxE);
+  if (peakI > 0 && peakI < series.length - 1) {
+    const px = x(series[peakI].distKm);
+    const py = y(maxE);
+    const lblX = Math.min(Math.max(px, x0 + 26), x1 - 26);
+    peakMark =
+      `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="3.2" fill="#2f5233" stroke="#f4ecdc" stroke-width="1.5"/>` +
+      `<text x="${lblX.toFixed(1)}" y="${(py - 7).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="700" fill="#2f5233" font-family="sans-serif">▲ ${Math.round(maxE)} m</text>`;
+  }
+
   const svg =
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">` +
     `<defs><linearGradient id="eg" x1="0" y1="0" x2="0" y2="1">` +
@@ -336,6 +348,7 @@ export function elevationToSvg(series, { width = 720, height = 138 } = {}) {
     gridlines +
     `<path d="${area.trim()}" fill="url(#eg)"/>` +
     `<path d="${line.trim()}" fill="none" stroke="#2f5233" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>` +
+    peakMark +
     xlabels +
     `</svg>`;
 
@@ -349,25 +362,17 @@ export function elevationToSvg(series, { width = 720, height = 138 } = {}) {
 
 // ── "your day at a glance" schedule (derived) ────────────────────────────────
 
-const POI_ICON = {
-  viewpoint: '🏔️',
-  summit: '🏔️',
-  peak: '🏔️',
-  refuge: '🏠',
-  rifugio: '🏠',
-  hut: '🏠',
-  food: '🍽️',
-  restaurant: '🍽️',
-  lake: '💧',
-  water: '💧',
-  cultural: '⛪',
-  church: '⛪',
-  park: '🌲',
-  forest: '🌲',
-};
-
-function iconForType(type) {
-  return POI_ICON[(type || '').toLowerCase()] || '📍';
+// Canonical icon key per POI type. The export sheet maps these to lucide icons
+// (no emoji), so the printed timeline matches the rest of the app's iconography.
+function iconKeyForType(type) {
+  const t = (type || '').toLowerCase();
+  if (/summit|peak|viewpoint/.test(t)) return 'peak';
+  if (/refuge|rifugio|hut|cabin/.test(t)) return 'hut';
+  if (/food|restaurant|eat|inn/.test(t)) return 'food';
+  if (/lake|water|spring/.test(t)) return 'water';
+  if (/cultural|church|chapel|castle/.test(t)) return 'cultural';
+  if (/forest|park|wood/.test(t)) return 'forest';
+  return 'pin';
 }
 
 function fmtTime(hoursFromMidnight) {
@@ -376,11 +381,20 @@ function fmtTime(hoursFromMidnight) {
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
 }
 
-// Nearest route-vertex index for ordering POIs along the trail.
-function nearestIndex(coords, lon, lat) {
-  let best = 0;
+// Cumulative metres at each [lon,lat] vertex.
+function cumulativeMetres(coords) {
+  const cum = [0];
+  for (let i = 1; i < coords.length; i++) {
+    cum.push(cum[i - 1] + haversine(coords[i - 1][1], coords[i - 1][0], coords[i][1], coords[i][0]));
+  }
+  return cum;
+}
+
+// Nearest route-vertex index within [lo, hi] (inclusive) for ordering POIs.
+function nearestIndexInRange(coords, lon, lat, lo, hi) {
+  let best = lo;
   let bestD = Infinity;
-  for (let i = 0; i < coords.length; i++) {
+  for (let i = lo; i <= hi; i++) {
     const d = haversine(lat, lon, coords[i][1], coords[i][0]);
     if (d < bestD) { bestD = d; best = i; }
   }
@@ -388,29 +402,97 @@ function nearestIndex(coords, lon, lat) {
 }
 
 /**
- * Rough "08:00 Start → … → Finish" timeline derived from duration + POI order.
- * Honest about being an estimate (the caller labels it "at a glance").
- * Returns [{ time, label, sub, icon }].
+ * Climb-aware "08:00 Start → … → Finish" timeline.
+ *
+ * The naive version spaced POIs by their route-vertex index and assumed a
+ * constant pace — which on an out-and-back put the summit at the halfway *index*
+ * (~50% of the time, far too early) and snapped start-side viewpoints to the
+ * descent leg (so they printed *after* the summit). This version instead:
+ *   • models pace with Naismith's rule (flat speed + an ascent penalty), so the
+ *     summit lands at the right fraction of the day, not the middle;
+ *   • detects routes that return to their start and places the high point at the
+ *     turnaround, snapping each POI to the *ascent* leg so it reads "on the way up".
+ * Still an estimate (the caller labels it "at a glance"). Returns
+ * [{ time, label, sub, iconKey }].
  */
 export function deriveSchedule(trail, { startHour = 8 } = {}) {
   const coords = getCoords(trail);
   if (coords.length < 2) return [];
-  const duration = Number(trail?.duration_hours) || 3;
   const lastIdx = coords.length - 1;
+  const cum = cumulativeMetres(coords);
+  const total = cum[lastIdx];
+  if (total === 0) return [];
 
-  const pois = getPois(trail)
-    .map((poi) => ({
-      poi,
-      idx: nearestIndex(coords, poi.coordinates[0], poi.coordinates[1]),
-    }))
+  const gain = Math.max(0, Number(trail?.elevation_gain_m) || 0);
+
+  // Does the route come back to (near) where it started?
+  const backToStart =
+    trail?.trail_type === 'out_and_back' ||
+    trail?.trail_type === 'loop' ||
+    haversine(coords[0][1], coords[0][0], coords[lastIdx][1], coords[lastIdx][0]) < 120;
+
+  // Turnaround / high point. Prefer an explicit summit|peak POI; else the
+  // cumulative-distance midpoint for return trips; else the route end.
+  const allPois = getPois(trail);
+  const summitPoi = allPois.find((p) => /summit|peak/i.test(p?.type || ''));
+  let turnIdx;
+  if (!backToStart) {
+    turnIdx = lastIdx;
+  } else if (summitPoi) {
+    turnIdx = nearestIndexInRange(coords, summitPoi.coordinates[0], summitPoi.coordinates[1], 1, lastIdx - 1);
+  } else {
+    turnIdx = cum.findIndex((d) => d >= total / 2);
+    if (turnIdx <= 0) turnIdx = Math.floor(lastIdx / 2);
+  }
+
+  // Naismith pace model (hours). Flat speed + ascent penalty; descent gets a
+  // gentle penalty so it isn't treated as free.
+  const FLAT = 4.2;     // km/h on the flat
+  const CLIMB = 600;    // metres of ascent per hour
+  const DESC = 1200;    // metres of descent per hour of *extra* time
+  const upDistKm = cum[turnIdx] / 1000;
+  const downDistKm = (total - cum[turnIdx]) / 1000;
+  const tUp = upDistKm / FLAT + gain / CLIMB;
+  const tDown = downDistKm / FLAT + (backToStart ? gain : 0) / DESC;
+  const tMove = Math.max(0.1, tUp + tDown);
+  const upFrac = tUp / tMove;
+
+  // Total span: trust the trail's stated duration if present so the timeline and
+  // the PDF stat strip agree; otherwise use the modelled moving time.
+  const span = Number(trail?.duration_hours) > 0 ? Number(trail.duration_hours) : tMove;
+  const summitHour = startHour + span * upFrac;
+
+  const timeAtIdx = (idx) => {
+    if (idx <= turnIdx) {
+      const f = cum[turnIdx] > 0 ? cum[idx] / cum[turnIdx] : 0;
+      return startHour + span * upFrac * f;
+    }
+    const denom = total - cum[turnIdx];
+    const f = denom > 0 ? (cum[idx] - cum[turnIdx]) / denom : 1;
+    return summitHour + span * (1 - upFrac) * f;
+  };
+
+  // Snap POIs to the route. Return trips snap to the ascent leg (so a trailhead
+  // viewpoint reads as an early stop, not a late one); the summit sits at the
+  // turnaround. Point-to-point routes use the full route.
+  const hi = backToStart ? Math.max(1, turnIdx) : Math.max(1, lastIdx - 1);
+  let interior = allPois
+    .map((poi) => {
+      const isSummit = summitPoi && poi === summitPoi;
+      const idx = isSummit ? turnIdx : nearestIndexInRange(coords, poi.coordinates[0], poi.coordinates[1], 1, hi);
+      return { poi, idx, isSummit };
+    })
     .filter((p) => p.idx > 0 && p.idx < lastIdx)
     .sort((a, b) => a.idx - b.idx);
 
-  // keep up to 4 interior stops, evenly spread if there are more
-  let interior = pois;
-  if (pois.length > 4) {
-    const stride = pois.length / 4;
-    interior = [0, 1, 2, 3].map((k) => pois[Math.floor(k * stride)]);
+  // Keep up to 4 interior stops, but always keep the summit if present.
+  if (interior.length > 4) {
+    const must = interior.filter((s) => s.isSummit);
+    const others = interior.filter((s) => !s.isSummit);
+    const keepN = Math.max(0, 4 - must.length);
+    const stride = keepN > 0 ? others.length / keepN : others.length;
+    const picked = keepN > 0 ? Array.from({ length: keepN }, (_, k) => others[Math.floor(k * stride)]) : [];
+    interior = [...must, ...picked].sort((a, b) => a.idx - b.idx);
   }
 
   const steps = [];
@@ -418,24 +500,21 @@ export function deriveSchedule(trail, { startHour = 8 } = {}) {
     time: fmtTime(startHour),
     label: trail.name?.split('–')[0]?.trim() || 'Start',
     sub: 'Trailhead',
-    icon: '📍',
+    iconKey: 'start',
   });
   interior.forEach(({ poi, idx }) => {
-    const frac = idx / lastIdx;
     steps.push({
-      time: fmtTime(startHour + duration * frac),
+      time: fmtTime(timeAtIdx(idx)),
       label: poi.name,
       sub: poi.type ? poi.type.replace(/_/g, ' ') : '',
-      icon: iconForType(poi.type),
+      iconKey: iconKeyForType(poi.type),
     });
   });
   steps.push({
-    time: fmtTime(startHour + duration),
-    label: trail.trail_type === 'loop' || trail.trail_type === 'out_and_back'
-      ? 'Back to start'
-      : 'Finish',
+    time: fmtTime(startHour + span),
+    label: backToStart ? 'Back to start' : 'Finish',
     sub: 'Trail end',
-    icon: '🏁',
+    iconKey: 'finish',
   });
   return steps;
 }

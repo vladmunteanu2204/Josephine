@@ -99,6 +99,18 @@
     "goTo": "Gehe zu"
   },
   "trail": {
+    "share": "Teilen",
+    "mapRoute": "Karte & Route",
+    "viewMapRoute": "Karte & Route öffnen",
+    "gallery": "Galerie",
+    "dogNotes": "Hunde-Hinweise",
+    "seeAll": "Alle ansehen",
+    "readReviews": "Bewertungen lesen & schreiben",
+    "noRatingYet": "Noch keine Bewertungen",
+    "dogGeneric": "Dieser Weg ist hundefreundlich. Halte deinen Hund in der Nähe von Vieh und Weiden an der Leine.",
+    "signInToSave": "Melde dich an, um deine Touren zu speichern und zu verfolgen.",
+    "linkCopied": "Link kopiert",
+    "onLeash": "An der Leine",
     "distance": "Entfernung",
     "duration": "Dauer",
     "elevation": "Höhenunterschied",

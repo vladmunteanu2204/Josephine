@@ -1,9 +1,24 @@
 import React, { useState, useRef, useCallback } from 'react';
 import Map, { Marker, Source, Layer, NavigationControl, FullscreenControl } from 'react-map-gl';
+import {
+  Eye, Mountain, Home, Droplet, Trees, Waves, Church, MapPin, Flag,
+} from 'lucide-react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './TrailMap.css';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
+
+// Clean lucide icon per POI type (replaces the old emoji badges).
+const POI_ICONS = {
+  lake: Droplet,
+  viewpoint: Eye,
+  cabin: Home,
+  cultural: Church,
+  peak: Mountain,
+  waterfall: Waves,
+  forest: Trees,
+  trailhead: Flag,
+};
 
 function TrailMap({ trail, drivingRoute }) {
   const mapRef = useRef();
@@ -13,18 +28,7 @@ function TrailMap({ trail, drivingRoute }) {
     zoom: 13
   });
 
-  const getPoiIcon = (type) => {
-    const icons = {
-      lake: '💧',
-      viewpoint: '👁️',
-      cabin: '🏠',
-      cultural: '⛪',
-      peak: '⛰️',
-      waterfall: '🌊',
-      forest: '🌲'
-    };
-    return icons[type] || '📍';
-  };
+  const getPoiIcon = (type) => POI_ICONS[type] || MapPin;
 
   const trailLineGeoJSON = trail.coordinates && trail.coordinates.length > 0 ? {
     type: 'Feature',
@@ -145,6 +149,7 @@ function TrailMap({ trail, drivingRoute }) {
 
         {trail.pois && trail.pois.map((poi, index) => {
           if (!poi.coordinates || poi.coordinates.length < 2) return null;
+          const Icon = getPoiIcon(poi.type);
           return (
             <Marker
               key={index}
@@ -152,9 +157,12 @@ function TrailMap({ trail, drivingRoute }) {
               latitude={poi.coordinates[1]}
               anchor="bottom"
             >
-              <div className="poi-marker" title={poi.name}>
-                <div className="poi-marker-icon">{getPoiIcon(poi.type)}</div>
-                <div className="poi-marker-label">{poi.name}</div>
+              <div className="poi-pin" title={poi.name}>
+                <span className="poi-pin__label">{poi.name}</span>
+                <div className="poi-pin__badge">
+                  <Icon size={15} strokeWidth={2.25} aria-hidden="true" />
+                </div>
+                <div className="poi-pin__tip" />
               </div>
             </Marker>
           );

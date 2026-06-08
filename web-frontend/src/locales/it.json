@@ -99,6 +99,18 @@
     "goTo": "Vai a"
   },
   "trail": {
+    "share": "Condividi",
+    "mapRoute": "Mappa e percorso",
+    "viewMapRoute": "Apri mappa e percorso",
+    "gallery": "Galleria",
+    "dogNotes": "Note sui cani",
+    "seeAll": "Vedi tutto",
+    "readReviews": "Leggi e scrivi recensioni",
+    "noRatingYet": "Ancora nessuna valutazione",
+    "dogGeneric": "Questo sentiero è adatto ai cani. Tieni il cane al guinzaglio vicino al bestiame e ai pascoli.",
+    "signInToSave": "Accedi per salvare e seguire le tue escursioni.",
+    "linkCopied": "Link copiato",
+    "onLeash": "Al guinzaglio",
     "distance": "Distanza",
     "duration": "Durata",
     "elevation": "Dislivello",

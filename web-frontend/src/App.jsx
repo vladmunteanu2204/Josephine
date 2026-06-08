@@ -1,6 +1,6 @@
 import React, { useState, useEffect, lazy, Suspense, useCallback } from 'react';
 import './App.css';
-import { ENABLE_HIKE_TRACKING, ENABLE_GAMIFICATION } from './featureFlags';
+import { ENABLE_HIKE_TRACKING, ENABLE_GAMIFICATION, NEW_TRAIL_DETAIL } from './featureFlags';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { SeasonProvider } from './contexts/SeasonContext';
@@ -15,7 +15,8 @@ import ActiveHikeTracker from './components/ActiveHikeTracker';
 
 // Route views — lazy-loaded on first visit
 const TrailCatalog         = lazy(() => import('./components/TrailCatalog'));
-const TrailDetail          = lazy(() => import('./components/TrailDetail'));
+const TrailDetail          = lazy(() => import(
+  NEW_TRAIL_DETAIL ? './components/TrailDetailV2' : './components/TrailDetail'));
 const Profile              = lazy(() => import('./components/Profile'));
 const SavedTrails          = lazy(() => import('./components/SavedTrails'));
 const Settings             = lazy(() => import('./components/Settings'));
@@ -376,12 +377,17 @@ function App() {
             redundant while the user is already in the chat — hide it there. */}
         {currentView !== 'josephine' && currentView !== 'recommendations' && <Footer setCurrentView={setCurrentView} />}
 
-        <BottomNav
-          currentView={currentView}
-          setCurrentView={setCurrentView}
-          onJosephineOpen={() => setCurrentView('josephine')}
-          onShowLogin={() => setShowLoginModal(true)}
-        />
+        {/* The redesigned hike page (V2) uses its own sticky Start/Save/Share bar
+            on mobile; hide the global tab bar there so they don't stack. Back
+            button + hamburger menu keep navigation available. */}
+        {!(currentView === 'detail' && NEW_TRAIL_DETAIL) && (
+          <BottomNav
+            currentView={currentView}
+            setCurrentView={setCurrentView}
+            onJosephineOpen={() => setCurrentView('josephine')}
+            onShowLogin={() => setShowLoginModal(true)}
+          />
+        )}
 
         {ENABLE_HIKE_TRACKING && activeHikeTrail && (
           <ActiveHikeTracker

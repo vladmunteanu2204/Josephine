@@ -4539,7 +4539,7 @@ def _build_system_prompt() -> str:
     # --- Trails: strip heavy fields not needed for Q&A ---
     KEEP_TRAIL = {'id','name','region','difficulty','tagline','distance_km','duration_hours',
                   'elevation_gain_m','elevation_loss_m','trail_type','interests','tags',
-                  'description','josephineNote','dog_friendly','family_friendly',
+                  'description','josephineNote','dog_friendly','dog_note','family_friendly',
                   'best_season','access_info','difficulty_details','rating','facilities',
                   'pois','transport','trailhead_info','nearby_rifugios','crowding',
                   'weather_notes','highlights','opening_season','year_round'}

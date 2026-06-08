@@ -30,7 +30,7 @@ const INSIGHT_ICON = {
 };
 
 /* ── Elevation Profile ─────────────────────────────────────── */
-function ElevationProfile({ trail }) {
+export function ElevationProfile({ trail }) {
   const W = 500, H = 90;
   const coords = trail.coordinates || [];
   const gain   = trail.elevation_gain_m || 0;

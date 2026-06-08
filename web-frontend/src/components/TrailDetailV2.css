@@ -1,0 +1,267 @@
+/* TrailDetailV2 — compact bento-grid hike page.
+   Palette: deep green canvas, gold accents, warm cream text. */
+.tdx {
+  --bg: #0c1610;
+  --card: rgba(22, 34, 26, 0.66);
+  --card-brd: rgba(201, 168, 76, 0.18);
+  --gold: #c9a84c;
+  --gold-soft: #d7bd6e;
+  --green: #1f3b22;
+  --ink: #ece7d8;
+  --ink-dim: #a9b3a3;
+  --ink-mute: #7f8a7c;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  padding-bottom: 96px; /* room for sticky bar on mobile */
+}
+
+.tdx-state { padding: 120px 24px; text-align: center; color: var(--ink-dim); font-size: 16px; }
+.tdx-state--error { color: #e0794f; }
+.tdx-floatback {
+  margin: 20px; display: inline-flex; gap: 8px; align-items: center;
+  background: none; border: none; color: var(--gold); cursor: pointer; font-size: 15px;
+}
+
+/* ── HERO ───────────────────────────────────────────────── */
+.tdx-hero { position: relative; min-height: 420px; display: flex; align-items: flex-end; overflow: hidden; }
+.tdx-hero__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.tdx-hero__scrim {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(90deg, rgba(8,14,10,0.92) 0%, rgba(8,14,10,0.55) 42%, rgba(8,14,10,0.15) 70%),
+    linear-gradient(0deg, rgba(8,14,10,0.95) 0%, rgba(8,14,10,0.10) 55%);
+}
+.tdx-hero__back {
+  position: absolute; top: 18px; left: 18px; z-index: 3;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(12,18,14,0.6); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.14); color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.tdx-hero__inner {
+  position: relative; z-index: 2; width: 100%;
+  max-width: 1200px; margin: 0 auto; padding: 28px 28px 30px;
+  display: grid; grid-template-columns: 1fr minmax(380px, 460px); gap: 28px; align-items: end;
+}
+.tdx-hero__main { min-width: 0; }
+
+.tdx-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.tdx-chip {
+  font-size: 13px; font-weight: 600; color: var(--ink);
+  background: rgba(12,18,14,0.5); border: 1px solid rgba(255,255,255,0.12);
+  padding: 4px 11px; border-radius: 999px; display: inline-flex; align-items: center; gap: 5px;
+}
+.tdx-chip--star { color: var(--gold); }
+
+.tdx-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(34px, 5vw, 58px); line-height: 1.02; font-weight: 700;
+  margin: 0 0 10px; color: #fff; letter-spacing: -0.5px;
+}
+.tdx-loc { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-dim); font-size: 15px; margin: 0 0 18px; }
+.tdx-loc svg { color: var(--gold); }
+
+.tdx-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.tdx-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-size: 15px; font-weight: 700; padding: 12px 20px; border-radius: 12px;
+  cursor: pointer; border: 1px solid transparent; transition: transform .12s ease, background .2s ease;
+}
+.tdx-btn:active { transform: translateY(1px); }
+.tdx-btn--primary { background: var(--gold); color: #1a1205; }
+.tdx-btn--primary:hover { background: var(--gold-soft); }
+.tdx-btn--ghost { background: rgba(12,18,14,0.45); color: var(--ink); border-color: rgba(201,168,76,0.4); }
+.tdx-btn--ghost:hover { border-color: var(--gold); }
+.tdx-btn--ghost.is-saved { color: var(--gold); border-color: var(--gold); }
+.tdx-btn--block { flex: 1; }
+
+/* Josephine card overlapping the hero */
+.tdx-jph {
+  position: relative; overflow: hidden;
+  background: rgba(14,24,17,0.82); backdrop-filter: blur(10px);
+  border: 1px solid var(--card-brd); border-radius: 18px; padding: 18px 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+}
+/* faint edelweiss watermark, like the mockup */
+.tdx-jph::after {
+  content: ""; position: absolute; right: -18px; top: 50%; transform: translateY(-50%);
+  width: 150px; height: 150px; opacity: 0.12; pointer-events: none;
+  background: url('/edelweiss.svg') no-repeat center / contain;
+}
+.tdx-jph > * { position: relative; z-index: 1; }
+.tdx-jph__head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.tdx-jph__avatar { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
+.tdx-jph__label { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); }
+.tdx-jph__text { font-family: Georgia, serif; font-style: italic; font-size: 15px; line-height: 1.5; color: var(--ink); margin: 0 0 14px; }
+.tdx-jph__cta {
+  display: inline-flex; align-items: center; gap: 7px; width: 100%; justify-content: center;
+  background: none; border: 1px solid rgba(201,168,76,0.5); color: var(--gold);
+  font-size: 13px; font-weight: 700; padding: 9px 14px; border-radius: 10px; cursor: pointer;
+}
+.tdx-jph__cta:hover { background: rgba(201,168,76,0.1); }
+
+/* ── BODY ───────────────────────────────────────────────── */
+.tdx-body { max-width: 1200px; margin: 0 auto; padding: 26px 28px 40px; }
+.tdx-h2 { font-family: Georgia, serif; font-size: 24px; font-weight: 700; color: var(--ink); margin: 0 0 12px; }
+
+/* Overview + stats */
+.tdx-overview { margin-bottom: 30px; }
+.tdx-overview__text { max-width: 820px; margin-bottom: 20px; }
+.tdx-overview__text p { color: var(--ink-dim); font-size: 15px; line-height: 1.65; margin: 0; }
+.tdx-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  background: var(--card); border: 1px solid var(--card-brd); border-radius: 16px; overflow: hidden;
+}
+.tdx-stat { display: flex; align-items: center; gap: 12px; padding: 18px 16px; border-left: 1px solid rgba(255,255,255,0.05); }
+.tdx-stat:first-child { border-left: none; }
+.tdx-stat__icon { color: var(--gold); flex-shrink: 0; }
+.tdx-stat__value { font-size: 18px; font-weight: 800; color: var(--ink); line-height: 1.15; }
+.tdx-stat__label { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+
+/* Good to know */
+.tdx-gtk { margin-bottom: 28px; }
+.tdx-gtk__row { display: flex; flex-wrap: wrap; gap: 12px; }
+.tdx-gtk__item {
+  display: flex; align-items: center; gap: 11px; flex: 1; min-width: 180px;
+  background: var(--card); border: 1px solid var(--card-brd); border-radius: 14px; padding: 12px 16px;
+}
+.tdx-gtk__icon { color: var(--gold); flex-shrink: 0; }
+.tdx-gtk__label { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--ink-mute); }
+.tdx-gtk__value { font-size: 14px; font-weight: 600; color: var(--ink); margin-top: 1px; }
+
+/* ── BENTO GRID ─────────────────────────────────────────── */
+/* Real 2-col grid: cards pair by source order (Map|Weather, POI|Gallery,
+   Dog|Reviews). align-items:start so a card takes its natural height instead of
+   stretching to its neighbour. The itinerary spans full width to close the grid
+   cleanly (no lonely card / empty corner). */
+.tdx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+.tdx-card {
+  background: var(--card); border: 1px solid var(--card-brd); border-radius: 18px; padding: 18px 20px;
+  min-width: 0; /* let cards shrink below their content's min-width so inner rails
+                   scroll instead of forcing the grid wider than the viewport */
+}
+.tdx-card--full { grid-column: 1 / -1; } /* only when itinerary would be a lonely odd card */
+.tdx-card__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.tdx-card__title {
+  display: flex; align-items: center; gap: 8px; margin: 0 0 14px;
+  font-size: 12px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gold);
+}
+.tdx-card__head .tdx-card__title { margin: 0; }
+.tdx-seeall { background: none; border: none; color: var(--gold); font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.tdx-seeall:hover { text-decoration: underline; }
+
+/* Map thumbnail */
+.tdx-mapthumb { position: relative; width: 100%; padding: 0; border: none; border-radius: 12px; overflow: hidden; cursor: pointer; background: #0f1c15; display: block; }
+.tdx-mapthumb img { width: 100%; height: 240px; object-fit: cover; display: block; }
+.tdx-mapthumb__empty { height: 240px; display: flex; align-items: center; justify-content: center; color: var(--ink-mute); }
+.tdx-mapthumb__cta {
+  position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%);
+  display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+  background: rgba(12,18,14,0.85); border: 1px solid rgba(201,168,76,0.5); color: var(--gold);
+  font-size: 14px; font-weight: 700; padding: 9px 18px; border-radius: 10px;
+}
+.tdx-mapthumb:disabled { cursor: default; }
+
+/* Rails (POI + gallery) */
+.tdx-rail { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+.tdx-rail::-webkit-scrollbar { height: 6px; }
+.tdx-rail::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.3); border-radius: 3px; }
+.tdx-poi { flex: 0 0 120px; }
+.tdx-poi__tile {
+  width: 120px; height: 80px; border-radius: 10px; background: rgba(201,168,76,0.08);
+  border: 1px solid var(--card-brd); display: flex; align-items: center; justify-content: center; color: var(--gold); margin-bottom: 7px;
+}
+.tdx-poi__name { font-size: 13px; font-weight: 700; color: var(--ink); line-height: 1.25; }
+.tdx-poi__sub { font-size: 11px; color: var(--ink-mute); text-transform: capitalize; margin-top: 1px; }
+.tdx-shot { flex: 0 0 130px; height: 92px; padding: 0; border: none; border-radius: 10px; overflow: hidden; cursor: pointer; background: #0f1c15; }
+.tdx-shot img { width: 130px; height: 92px; object-fit: cover; display: block; }
+
+/* Dog + reviews + itinerary */
+.tdx-dog__text { color: var(--ink-dim); font-size: 14px; line-height: 1.55; margin: 0; }
+.tdx-reviews__peek { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: none; border: none; cursor: pointer; padding: 0; }
+.tdx-reviews__score { display: inline-flex; align-items: center; gap: 8px; font-size: 26px; font-weight: 800; color: var(--gold); }
+.tdx-reviews__score--muted { font-size: 15px; color: var(--ink-mute); font-weight: 600; }
+.tdx-reviews__cta { display: inline-flex; align-items: center; gap: 4px; color: var(--ink-dim); font-size: 13px; font-weight: 600; }
+.tdx-card--itin :is(.itin) { background: none; border: none; padding: 0; }
+
+/* ── STICKY ACTION BAR (mobile) ─────────────────────────── */
+.tdx-stickybar {
+  display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  gap: 10px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  background: linear-gradient(0deg, rgba(8,14,10,0.98), rgba(8,14,10,0.86));
+  border-top: 1px solid var(--card-brd); backdrop-filter: blur(10px);
+}
+.tdx-stickybar .tdx-btn--ghost { padding: 12px 14px; }
+
+/* ── OVERLAY SHEETS ─────────────────────────────────────── */
+.tdx-sheet {
+  /* Sheet portals to <body>, OUTSIDE .tdx — so redeclare the palette here or
+     the panel renders with undefined vars (transparent / invisible). */
+  --bg: #0c1610; --card: rgba(22, 34, 26, 0.66); --card-brd: rgba(201, 168, 76, 0.18);
+  --gold: #c9a84c; --green: #1f3b22; --ink: #ece7d8; --ink-dim: #a9b3a3; --ink-mute: #7f8a7c;
+  position: fixed; inset: 0; margin: auto; width: min(900px, 100vw); height: 100vh;
+  z-index: 9991; /* above .ui-sheet-backdrop (9990) */
+  background: var(--bg); color: var(--ink); display: flex; flex-direction: column;
+  outline: none; box-shadow: 0 0 80px rgba(0, 0, 0, 0.6);
+}
+.tdx-sheet__head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-bottom: 1px solid var(--card-brd); flex-shrink: 0;
+}
+.tdx-sheet__head h3 { font-family: Georgia, serif; font-size: 20px; margin: 0; color: var(--ink); }
+.tdx-sheet__close { width: 36px; height: 36px; border-radius: 50%; background: var(--card); border: 1px solid var(--card-brd); color: var(--ink); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.tdx-sheet__body { flex: 1; overflow-y: auto; padding: 18px 20px 40px; display: flex; flex-direction: column; gap: 20px; }
+.tdx-sheet__map { height: 60vh; min-height: 360px; border-radius: 16px; overflow: hidden; }
+.tdx-sheet__map > * { height: 100%; }
+
+.tdx-poilist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.tdx-poilist__item { display: flex; align-items: center; gap: 14px; background: var(--card); border: 1px solid var(--card-brd); border-radius: 12px; padding: 12px 14px; }
+.tdx-poilist__item .tdx-poi__tile { width: 44px; height: 44px; margin: 0; }
+.tdx-insights { background: var(--card); border: 1px solid var(--card-brd); border-radius: 14px; padding: 14px 18px; }
+.tdx-insights__title { font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); margin: 0 0 8px; }
+.tdx-insights ul { margin: 0; padding-left: 18px; color: var(--ink-dim); font-size: 14px; line-height: 1.6; }
+
+/* ── RESPONSIVE ─────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .tdx-hero__inner { grid-template-columns: 1fr; }
+  .tdx-overview { grid-template-columns: 1fr; gap: 16px; }
+  .tdx-overview__text p { font-size: 14px; }
+}
+@media (max-width: 720px) {
+  .tdx { padding-bottom: calc(82px + env(safe-area-inset-bottom)); }
+  .tdx-hero { min-height: 340px; }
+  .tdx-hero__inner { padding: 20px 18px 22px; gap: 18px; }
+  .tdx-hero__back { top: 14px; left: 14px; }
+  .tdx-hero__main { padding-top: 44px; }   /* clear the floating back button */
+  .tdx-title { font-size: clamp(30px, 8vw, 42px); }
+  .tdx-jph { padding: 16px; }
+  .tdx-jph__text { font-size: 14px; }
+  .tdx-body { padding: 22px 16px 36px; }
+  .tdx-h2 { font-size: 21px; }
+  /* Actions move to the sticky bar (global tab bar is hidden on this page). */
+  .tdx-actions { display: none; }
+  .tdx-stickybar { display: flex; }
+  /* 2-col grid: big cards span full width, so only Dog + Reviews pair up. */
+  .tdx-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .tdx-card--map, .tdx-card--weather, .tdx-card--rail, .tdx-card--itin, .tdx-card--full { grid-column: 1 / -1; }
+  .tdx-stats { grid-template-columns: repeat(2, 1fr); }
+  .tdx-stat:nth-child(3), .tdx-stat:nth-child(4) { border-top: 1px solid rgba(255,255,255,0.05); }
+  .tdx-stat:nth-child(odd) { border-left: none; }
+  .tdx-gtk__row { gap: 10px; }
+  .tdx-gtk__item { min-width: 0; flex-basis: calc(50% - 5px); }
+  /* paired Dog|Reviews are narrow — stack their inner content so nothing collides */
+  .tdx-card__head { flex-wrap: wrap; row-gap: 4px; }
+  .tdx-card__title { letter-spacing: 0.8px; }
+  .tdx-reviews__peek { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .tdx-sheet { width: 100vw; }
+  .tdx-sheet__head { padding: 14px 16px; }
+  .tdx-sheet__body { padding: 14px 16px 36px; }
+  .tdx-sheet__map { height: 46vh; min-height: 280px; }
+}
+
+@media (max-width: 420px) {
+  .tdx-title { font-size: 28px; }
+  .tdx-stickybar .tdx-btn--primary { font-size: 14px; padding: 12px 14px; }
+}

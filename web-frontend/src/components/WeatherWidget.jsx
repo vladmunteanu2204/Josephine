@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { Wind, Droplet, Cloud, Eye, Check, AlertTriangle, X, Zap, ChevronDown, ChevronRight } from 'lucide-react';
 import './WeatherWidget.css';
 
-function WeatherWidget({ lat, lon, difficulty = 'moderate' }) {
+function WeatherWidget({ lat, lon, difficulty = 'moderate', compact = false }) {
   const { t } = useTranslation();
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showForecast, setShowForecast] = useState(true);
+  const [showForecast, setShowForecast] = useState(!compact);
 
   useEffect(() => {
     if (lat && lon) {
@@ -90,6 +90,55 @@ function WeatherWidget({ lat, lon, difficulty = 'moderate' }) {
     const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
     return directions[Math.round(degrees / 45) % 8];
   };
+
+  // ── Compact card (for the redesigned trail page bento grid) ──────────────
+  if (compact) {
+    const sLabel = !suitability ? null
+      : suitability.score >= 80 ? t('weather.excellent', 'Excellent')
+      : suitability.score >= 60 ? t('weather.fair', 'Fair')
+      : t('weather.poor', 'Poor');
+    return (
+      <div className="weather-widget weather-widget--compact">
+        <div className="ww-c-top">
+          <div className="ww-c-temp">{current.temperature}<span className="ww-c-unit">°C</span></div>
+          <div className="ww-c-meta">
+            <div className="ww-c-desc">{current.description}</div>
+            <div className="ww-c-feels">{t('weather.feelsLike', 'Feels like')} {current.feels_like}°C</div>
+          </div>
+          {suitability && (
+            <div className="ww-c-pill" style={{ color: getSuitabilityColor(suitability.score), borderColor: getSuitabilityColor(suitability.score) }}>
+              {sLabel}
+            </div>
+          )}
+        </div>
+
+        <div className="ww-c-stats">
+          <span><Wind size={15} strokeWidth={1.9} aria-hidden="true" /> {current.wind_speed} km/h {getWindDirection(current.wind_direction)}</span>
+          <span><Droplet size={15} strokeWidth={1.9} aria-hidden="true" /> {current.humidity}%</span>
+          <span><Cloud size={15} strokeWidth={1.9} aria-hidden="true" /> {current.clouds}%</span>
+        </div>
+
+        {alerts && alerts.length > 0 && (
+          <div className="ww-c-alert">
+            <AlertTriangle size={14} strokeWidth={2} aria-hidden="true" /> {alerts[0].message}
+          </div>
+        )}
+
+        {forecast && forecast.length > 0 && (
+          <div className="ww-c-forecast">
+            {forecast.slice(0, 7).map((day, i) => (
+              <div key={i} className="ww-c-day">
+                <span className="ww-c-day__name">{i === 0 ? t('weather.today', 'Today') : new Date(day.date).toLocaleDateString(undefined, { weekday: 'short' })}</span>
+                <span className="ww-c-day__hi">{day.temp_max}°</span>
+                <span className="ww-c-day__lo">{day.temp_min}°</span>
+                {day.rain_probability > 30 && <span className="ww-c-day__rain"><Droplet size={10} strokeWidth={2} /> {day.rain_probability}%</span>}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="weather-widget">

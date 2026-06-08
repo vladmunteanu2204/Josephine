@@ -278,3 +278,85 @@
     grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
   }
 }
+
+/* ── Compact variant (redesigned trail page bento card) ─────────────────── */
+.weather-widget--compact {
+  background: none;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.ww-c-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.ww-c-temp {
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1;
+  color: #fff;
+}
+.ww-c-temp .ww-c-unit { font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.7); }
+.ww-c-meta { flex: 1; min-width: 0; }
+.ww-c-desc { font-size: 14px; font-weight: 600; color: #ece7d8; text-transform: capitalize; }
+.ww-c-feels { font-size: 12px; color: #8a8067; margin-top: 1px; }
+.ww-c-pill {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  background: rgba(255,255,255,0.04);
+  white-space: nowrap;
+}
+.ww-c-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  font-size: 13px;
+  color: #a9b3a3;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(201,168,76,0.14);
+}
+.ww-c-stats span { display: inline-flex; align-items: center; gap: 6px; }
+.ww-c-stats svg { color: #c9a84c; }
+.ww-c-alert {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  font-size: 12.5px;
+  color: #e0b658;
+  background: rgba(224,182,88,0.1);
+  border: 1px solid rgba(224,182,88,0.25);
+  border-radius: 8px;
+  padding: 8px 11px;
+}
+.ww-c-forecast {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  margin-top: 14px;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+}
+.ww-c-forecast::-webkit-scrollbar { height: 5px; }
+.ww-c-forecast::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.3); border-radius: 3px; }
+.ww-c-day {
+  flex: 1 0 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  border-radius: 10px;
+  background: rgba(201,168,76,0.06);
+  border: 1px solid rgba(201,168,76,0.12);
+}
+.ww-c-day__name { font-size: 11px; font-weight: 700; color: #c9a84c; }
+.ww-c-day__hi { font-size: 14px; font-weight: 800; color: #ece7d8; }
+.ww-c-day__lo { font-size: 12px; color: #8a8067; }
+.ww-c-day__rain { display: inline-flex; align-items: center; gap: 2px; font-size: 10px; color: #6fa8d4; margin-top: 1px; }

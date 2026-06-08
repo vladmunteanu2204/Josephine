@@ -4,6 +4,12 @@
 export const ENABLE_HIKE_TRACKING = true; // GPS tracking, Start Hike, ActiveHikeTracker + Live Trail Companion
 export const ENABLE_GAMIFICATION = false;  // XP, levels, badges, challenges, leaderboards
 
+// Redesigned trail detail page — compact bento-grid layout (hero + cards +
+// on-demand overlay sheets) replacing the long single-column scroll. Built as a
+// parallel component (TrailDetailV2) behind this switch so the old page stays
+// intact for side-by-side comparison. Flip to false to fall back instantly.
+export const NEW_TRAIL_DETAIL = true;
+
 // Perk #1 — "get me to the trailhead" (in-app preview + native-maps handoff).
 // Built OPEN for testing; this is the single switch the future host/subscription
 // gate will wrap so it can become a paid-host perk without code changes.

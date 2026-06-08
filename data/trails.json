@@ -1,3 +1,110 @@
 {
-  "trails": []
+  "trails": [
+    {
+      "id": "tirolo-mutspitze",
+      "name": "Mutspitze (Cima Muta)",
+      "region": "Merano & Surroundings",
+      "tagline": "The bold rock summit above Dorf Tirol.",
+      "difficulty": "hard",
+      "trail_type": "out_and_back",
+      "distance_km": 7.87,
+      "duration_hours": 4,
+      "elevation_gain_m": 930,
+      "elevation_loss_m": 930,
+      "best_season": ["Jun", "Oct"],
+      "dog_friendly": true,
+      "dog_note": "Dogs welcome on the trail, but on the Hochmuth cable car the dog must wear a muzzle.",
+      "family_friendly": false,
+      "facilities": ["Mountain inn (Mutkopf)", "Cable-car restaurant"],
+      "trailhead_info": {
+        "parking": "Take the Hochmuth cable car up from Dorf Tirol (park near the valley station in the village)."
+      },
+      "crowding": {
+        "level": "Busy in season",
+        "quiet_tip": "Go early morning or in the afternoon (summer weather permitting)."
+      },
+      "tags": ["panoramic views"],
+      "interests": ["panoramic views", "summit"],
+      "highlights": [
+        "Sweeping summit panorama over Merano, the Adige valley and the Texel Group",
+        "Gentle alpine-pasture walking as far as the Mutkopf inn",
+        "Short, steep final climb eased by wooden steps set into the ground",
+        "Quick access via the Hochmuth cable car from Dorf Tirol",
+        "Dog-friendly (muzzle required on the cable car)"
+      ],
+      "description": "From the top station of the Hochmuth cable car, route 23 sets off across open alpine pasture toward the Mutspitze. The walking is genuinely pleasant and not too hard all the way to Mutkopf — green slopes, wide views, an easy rhythm. From Mutkopf the character changes: after about 15 minutes the path tips into a steep, strenuous climb to the summit. Wooden steps set into the ground take some of the sting out of the ascent, and the final stretch — steep but short — brings you to the summit cross sooner than the effort suggests.\n\nFrom the top the panorama is the reward: Merano and the Adige valley laid out below, the Vinschgau opening to the west toward the glaciated Ortler, the Sarntal Alps and the Ifinger to the east, and the crest of the Texel Group to the north. (Panorama peak-naming still to be fact-checked by the local.)\n\nMany hikers continue along the ridge and descend to the Oberkaserhütte rather than returning the same way — that line will be added as a separate variant.",
+      "josephineNote": {
+        "en": "This one's right on my doorstep. Take it easy and enjoy the meadows up to Mutkopf — stop for a drink there — then dig in for the steep last push. The wooden steps help more than you'd think, and the view from the cross is one of my favourites above Merano.",
+        "it": "Questa ce l'ho proprio dietro casa. Vai con calma e goditi i prati fino al Mutkopf — fermati per qualcosa da bere — poi stringi i denti per l'ultimo strappo ripido. I gradini di legno aiutano più di quanto pensi, e il panorama dalla croce è uno dei miei preferiti sopra Merano.",
+        "de": "Den hab ich direkt vor der Haustür. Lass es bis zum Mutkopf gemütlich angehen und genieß die Wiesen — kehr dort auf einen Schluck ein — und beiß dann beim steilen Schlussanstieg die Zähne zusammen. Die Holzstufen helfen mehr, als du denkst, und der Blick vom Gipfelkreuz ist einer meiner liebsten über Meran."
+      },
+      "coordinates": [[11.131443, 46.702249], [11.131034, 46.702575], [11.130383, 46.702768], [11.129832, 46.703128], [11.130631, 46.704158], [11.132654, 46.705284], [11.132536, 46.707983], [11.133809, 46.709523], [11.137602, 46.710911], [11.137547, 46.711284], [11.136737, 46.711723], [11.135199, 46.711729], [11.134687, 46.712007], [11.134203, 46.712089], [11.133184, 46.712256], [11.132788, 46.712779], [11.132196, 46.71261], [11.131415, 46.712571], [11.130754, 46.712601], [11.129985, 46.712558], [11.129419, 46.712565], [11.128725, 46.712522], [11.128035, 46.712429], [11.126976, 46.712305], [11.125823, 46.712361], [11.124989, 46.712303], [11.124493, 46.712153], [11.123953, 46.712175], [11.12318, 46.712083], [11.122343, 46.712156], [11.121566, 46.712388], [11.121674, 46.712364], [11.122593, 46.712156], [11.123457, 46.711999], [11.124053, 46.712144], [11.124587, 46.712227], [11.12515, 46.712329], [11.126032, 46.712378], [11.127241, 46.712332], [11.128122, 46.712507], [11.128894, 46.71253], [11.129497, 46.712687], [11.130121, 46.712545], [11.130866, 46.712643], [11.131532, 46.712585], [11.132363, 46.712682], [11.13296, 46.712629], [11.133437, 46.712266], [11.134355, 46.712214], [11.134893, 46.71195], [11.13558, 46.711723], [11.136911, 46.711621], [11.137747, 46.711116], [11.136955, 46.711048], [11.133384, 46.709423], [11.132293, 46.707251], [11.131668, 46.705212], [11.129957, 46.703942], [11.129844, 46.702988], [11.130411, 46.702633], [11.131137, 46.702596], [11.131483, 46.702245]],
+      "pois": [
+        {
+          "name": "Panoramic deck (Masi della Muta)",
+          "type": "viewpoint",
+          "coordinates": [11.129762, 46.703000],
+          "source": "local"
+        },
+        {
+          "name": "Mutkopf inn",
+          "type": "cabin",
+          "coordinates": [11.137905, 46.710934],
+          "source": "local"
+        },
+        {
+          "name": "Mutspitze summit",
+          "type": "peak",
+          "coordinates": [11.121005, 46.712478],
+          "source": "local"
+        }
+      ],
+      "curated": {
+        "village": "Tirolo",
+        "villages": ["Tirolo"],
+        "area": "Texelgruppe / Gruppo di Tessa",
+        "verified_by_local": true,
+        "elevation_summit_m": 2291,
+        "elevation_summit_m_source": "OSM (tourism sites 2,294–2,295 m; GPX measured 2,292 m)",
+        "provenance": {
+          "distance_km": "measured from corrected local GPX (route 23, full round-trip = 7.87 km)",
+          "elevation_gain_m": "measured from corrected local GPX (net climb 1,362 m → 2,292 m = 930 m)",
+          "duration_hours": "needs-verify (placeholder, awaiting local's actual time)",
+          "description_panorama": "needs local fact-check"
+        },
+        "variants": [
+          {
+            "id": "via-hochmuth-route23",
+            "name": "Via Hochmuth cable car (route 23)",
+            "primary": true,
+            "verified_by_local": true,
+            "start": "Hochmuth cable-car top station (Muthöfe)",
+            "start_coordinates": [11.131443, 46.702249],
+            "end": "Mutspitze summit",
+            "end_coordinates": [11.121005, 46.712478],
+            "distance_km_one_way": 3.94,
+            "ascent_m": 930,
+            "loop": false,
+            "notes": "Take the Hochmuth funivia from Dorf Tirol to the top station, then follow route 23. Out-and-back, returning the same way to the cable car. Geometry is the trail's top-level coordinates."
+          },
+          {
+            "id": "ridge-to-oberkaserhutte",
+            "name": "Continue the ridge to the Oberkaserhütte",
+            "primary": false,
+            "verified_by_local": false,
+            "status": "stub",
+            "notes": "Local-recommended onward line: from the summit, continue along the ridge and descend to the Oberkaserhütte instead of returning to the cable car. To be built out as a full variant by the local."
+          },
+          {
+            "id": "taufenscharte-loop-vellau",
+            "name": "Taufenscharte loop from Vellau",
+            "primary": false,
+            "verified_by_local": false,
+            "status": "stub",
+            "notes": "Alternative approach from Vellau via the Taufenscharte. Needs research and verification."
+          }
+        ]
+      }
+    }
+  ]
 }

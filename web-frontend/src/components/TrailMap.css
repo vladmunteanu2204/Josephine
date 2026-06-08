@@ -61,58 +61,66 @@
     0 0 20px rgba(212, 165, 116, 0.2);
 }
 
-.poi-marker {
+/* Pin: the TIP at the bottom sits exactly on the POI coordinate (anchor="bottom").
+   The label is absolutely positioned so it never shifts the anchor point. */
+.poi-pin {
+  position: relative;
   cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
+  /* badge (26) + tip (7) — keeps transform-origin at the tip */
   transform-origin: bottom center;
+  transition: transform 0.2s ease;
 }
 
-.poi-marker:hover {
-  transform: translateY(-4px) scale(1.1);
+.poi-pin:hover {
+  transform: scale(1.08);
 }
 
-.poi-marker-icon {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(145deg, rgba(36, 36, 36, 0.95), rgba(26, 26, 26, 0.9));
-  backdrop-filter: blur(16px);
+.poi-pin__badge {
+  width: 26px;
+  height: 26px;
+  background: #1f1d1a;
   border: 2px solid #d4a574;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.5),
-    0 0 20px rgba(212, 165, 116, 0.3);
-  margin: 0 auto 4px;
-  transition: all 0.3s ease;
+  color: #d4a574;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
 }
 
-.poi-marker:hover .poi-marker-icon {
+.poi-pin__tip {
+  width: 2px;
+  height: 7px;
+  margin: 0 auto;
+  background: #d4a574;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.poi-pin:hover .poi-pin__badge {
   border-color: #ffffff;
-  box-shadow: 
-    0 6px 16px rgba(0, 0, 0, 0.6),
-    0 0 30px rgba(212, 165, 116, 0.5);
+  color: #ffffff;
 }
 
-.poi-marker-label {
-  background: linear-gradient(145deg, rgba(36, 36, 36, 0.95), rgba(26, 26, 26, 0.9));
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(212, 165, 116, 0.3);
-  color: rgba(255, 255, 255, 0.9);
-  padding: 4px 10px;
-  border-radius: 8px;
-  font-size: 12px;
+.poi-pin__label {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20, 19, 17, 0.95);
+  border: 1px solid rgba(212, 165, 116, 0.35);
+  color: rgba(255, 255, 255, 0.92);
+  padding: 3px 8px;
+  border-radius: 7px;
+  font-size: 11px;
   font-weight: 600;
   white-space: nowrap;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
 }
 
-.poi-marker:hover .poi-marker-label {
+.poi-pin:hover .poi-pin__label {
   opacity: 1;
 }
 
@@ -172,14 +180,13 @@
     font-size: 13px;
   }
 
-  .poi-marker-icon {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
+  .poi-pin__badge {
+    width: 24px;
+    height: 24px;
   }
 
-  .poi-marker-label {
-    font-size: 11px;
-    padding: 3px 8px;
+  .poi-pin__label {
+    font-size: 10px;
+    padding: 2px 7px;
   }
 }
