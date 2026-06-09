@@ -1,0 +1,128 @@
+{
+  "tirolo-mutspitze": {
+    "distance_km": 7.7,
+    "duration_hours": 4.42,
+    "elevation_gain_m": 908,
+    "elevation_loss_m": 908
+  },
+  "lagundo-algunder-waalweg": {
+    "distance_km": 8.9,
+    "duration_hours": 2.7,
+    "elevation_gain_m": 149,
+    "elevation_loss_m": 148
+  },
+  "tirolo-schloss-tirol-brunnenburg": {
+    "distance_km": 7.2,
+    "duration_hours": 1.8,
+    "elevation_gain_m": 346,
+    "elevation_loss_m": 353
+  },
+  "tirolo-panorama-promenades": {
+    "distance_km": 1.2,
+    "duration_hours": 0.33,
+    "elevation_gain_m": 46,
+    "elevation_loss_m": 46
+  },
+  "tirolo-meraner-hoehenweg-hochganghaus": {
+    "distance_km": 10.7,
+    "duration_hours": 5.0,
+    "elevation_gain_m": 476,
+    "elevation_loss_m": 457
+  },
+  "tirolo-spronser-seen": {
+    "distance_km": 12.9,
+    "duration_hours": 5.83,
+    "elevation_gain_m": 749,
+    "elevation_loss_m": 749
+  },
+  "tirolo-vellauer-felsenweg": {
+    "distance_km": 5.2,
+    "duration_hours": 2.58,
+    "elevation_gain_m": 360,
+    "elevation_loss_m": 360
+  },
+  "tirolo-longfall-wasserfall": {
+    "distance_km": 7.9,
+    "duration_hours": 2.92,
+    "elevation_gain_m": 464,
+    "elevation_loss_m": 465
+  },
+  "tirolo-schenna-connector": {
+    "distance_km": 11.8,
+    "duration_hours": 3.92,
+    "elevation_gain_m": 513,
+    "elevation_loss_m": 513
+  },
+  "tirolo-riffian-connector": {
+    "distance_km": 7.7,
+    "duration_hours": 2.67,
+    "elevation_gain_m": 294,
+    "elevation_loss_m": 294
+  },
+  "tirolo-kuens-waalweg": {
+    "distance_km": 9.8,
+    "duration_hours": 3.5,
+    "elevation_gain_m": 401,
+    "elevation_loss_m": 403
+  },
+  "tirolo-bockerhuette": {
+    "distance_km": 11.1,
+    "duration_hours": 5.0,
+    "elevation_gain_m": 910,
+    "elevation_loss_m": 910
+  },
+  "tirolo-mutspitze-ridge-spronser": {
+    "distance_km": 13.9,
+    "duration_hours": 6.67,
+    "elevation_gain_m": 964,
+    "elevation_loss_m": 964
+  },
+  "tirolo-spronser-seen-rundtour": {
+    "distance_km": 17.3,
+    "duration_hours": 8.17,
+    "elevation_gain_m": 1105,
+    "elevation_loss_m": 1105
+  },
+  "tirolo-spronser-roetelspitze": {
+    "distance_km": 16.9,
+    "duration_hours": 8.67,
+    "elevation_gain_m": 1242,
+    "elevation_loss_m": 1242
+  },
+  "tirolo-apfelweg": {
+    "distance_km": 3.5,
+    "duration_hours": 1.07,
+    "elevation_gain_m": 130,
+    "elevation_loss_m": 130
+  },
+  "tirolo-tappeinerweg": {
+    "distance_km": 3.7,
+    "duration_hours": 1.07,
+    "elevation_gain_m": 1,
+    "elevation_loss_m": 123
+  },
+  "tirolo-weinweg": {
+    "distance_km": 2.0,
+    "duration_hours": 0.63,
+    "elevation_gain_m": 98,
+    "elevation_loss_m": 98
+  },
+  "tirolo-fitnessweg": {
+    "distance_km": 1.9,
+    "duration_hours": 0.67,
+    "elevation_gain_m": 80,
+    "elevation_loss_m": 80
+  },
+  "tirolo-mutkopf": {
+    "distance_km": 10.2,
+    "duration_hours": 5.33,
+    "elevation_gain_m": 1070,
+    "elevation_loss_m": 1070
+  },
+  "tirolo-kulturweg": {
+    "distance_km": 7.0,
+    "duration_hours": 2.67,
+    "elevation_gain_m": 341,
+    "elevation_loss_m": 338
+  }
+}

@@ -1,0 +1,4 @@
+# Test/dev-only dependencies (not installed in production).
+-r requirements.txt
+pytest>=8.0
+freezegun>=1.4
