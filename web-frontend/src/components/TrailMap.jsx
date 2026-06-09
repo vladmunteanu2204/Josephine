@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import Map, { Marker, Source, Layer, NavigationControl, FullscreenControl } from 'react-map-gl';
 import {
-  Eye, Mountain, Home, Droplet, Trees, Waves, Church, MapPin, Flag,
+  Eye, Mountain, Home, Droplet, Trees, Waves, Church, MapPin, Flag, Utensils,
 } from 'lucide-react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './TrailMap.css';
@@ -18,6 +18,7 @@ const POI_ICONS = {
   waterfall: Waves,
   forest: Trees,
   trailhead: Flag,
+  food: Utensils,
 };
 
 function TrailMap({ trail, drivingRoute }) {

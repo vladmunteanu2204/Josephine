@@ -10,6 +10,8 @@ import {
 } from 'lucide-react';
 import { useToast } from '../contexts/ToastContext';
 import { useAuth } from '../contexts/AuthContext';
+import { fmtDuration } from '../utils/format';
+import { ACTIVITY, ACTIVITY_ORDER, activityMeta, gradeLabel } from '../utils/activity';
 import AuthPromptModal from './AuthPromptModal';
 import { Card, Chip, SegmentedControl, Sheet } from './ui';
 import { API_URL } from '../api';
@@ -91,7 +93,7 @@ function CatalogMap({ trails, onViewTrail }) {
                 <p className="cmp-region">{popup.region}</p>
                 <p className="cmp-name">{popup.name}</p>
                 <p className="cmp-stats">
-                  {popup.distance_km} km · {popup.duration_hours}h · {popup.elevation_gain_m} m
+                  {popup.distance_km} km · {fmtDuration(popup.duration_hours) || '—'} h · {popup.elevation_gain_m} m
                 </p>
                 <button className="cmp-btn" onClick={() => { setPopup(null); onViewTrail(popup); }}>
                   View trail <ArrowRight size={14} strokeWidth={2} />
@@ -113,6 +115,7 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
   const [trails, setTrails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
+  const [selectedActivity, setSelectedActivity] = useState('all');
   const [selectedTags, setSelectedTags] = useState(initialTags);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'map'
@@ -154,6 +157,9 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
     if (selectedDifficulty !== 'all') {
       filtered = filtered.filter(t => t.difficulty?.toLowerCase() === selectedDifficulty);
     }
+    if (selectedActivity !== 'all') {
+      filtered = filtered.filter(t => (t.activity_type || '').toLowerCase() === selectedActivity);
+    }
     if (selectedTags.length > 0) {
       filtered = filtered.filter(trail => {
         const trailTags = trail.tags || trail.interests || [];
@@ -171,7 +177,7 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
       );
     }
     return filtered;
-  }, [trails, selectedDifficulty, selectedTags, searchQuery]);
+  }, [trails, selectedDifficulty, selectedActivity, selectedTags, searchQuery]);
 
   const toggleTag = (tag) => {
     setSelectedTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
@@ -195,7 +201,7 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
 
   const isTrailSaved = (trailId) => savedTrailIds.includes(trailId);
 
-  const clearAll = () => { setSelectedDifficulty('all'); setSelectedTags([]); setSearchQuery(''); };
+  const clearAll = () => { setSelectedDifficulty('all'); setSelectedActivity('all'); setSelectedTags([]); setSearchQuery(''); };
 
   const allTags = ['alpine lakes', 'panoramic views', 'forests', 'family friendly', 'loop trail', 'cultural routes'];
 
@@ -210,7 +216,7 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
     { value: 'map',  label: t('catalog.mapView', 'Map'),  icon: MapIcon },
   ];
 
-  const activeCount = (selectedDifficulty !== 'all' ? 1 : 0) + selectedTags.length;
+  const activeCount = (selectedDifficulty !== 'all' ? 1 : 0) + (selectedActivity !== 'all' ? 1 : 0) + selectedTags.length;
   const hasActive = activeCount > 0 || !!searchQuery.trim();
 
   return (
@@ -264,6 +270,11 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
                 {t(`catalog.${selectedDifficulty}`)}
               </Chip>
             )}
+            {selectedActivity !== 'all' && ACTIVITY[selectedActivity] && (
+              <Chip active removable onRemove={() => setSelectedActivity('all')}>
+                {t(`catalog.act_${selectedActivity}`, ACTIVITY[selectedActivity].label)}
+              </Chip>
+            )}
             {selectedTags.map(tag => (
               <Chip key={tag} active removable onRemove={() => toggleTag(tag)} className="tc-cap">
                 {tag}
@@ -298,11 +309,20 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
           <div className="tc-grid">
             {filteredTrails.map(trail => {
               const saved = isTrailSaved(trail.id);
+              const act = activityMeta(trail.activity_type);
+              const grade = gradeLabel(trail);
               return (
                 <Card key={trail.id} as="article" interactive className="tc-card" onClick={() => viewTrail(trail)}>
                   <div className="tc-card__media">
                     <img src={trailImg(trail, 'thumb')} alt={trail.name} className="tc-card__img" loading="lazy" onError={onImgError} />
                     <div className="tc-card__scrim" />
+                    {act && (
+                      <span className="tc-act" style={{ '--act-color': act.color }} title={t(`catalog.act_${act.key}`, act.label)}>
+                        <act.Icon size={12} strokeWidth={2.25} />
+                        {t(`catalog.act_${act.key}`, act.label)}
+                        {grade && <span className="tc-act__grade">{grade}</span>}
+                      </span>
+                    )}
                     {trail.difficulty && (
                       <span className={`tc-diff tc-diff--${trail.difficulty}`}>{t(`catalog.${trail.difficulty}`)}</span>
                     )}
@@ -320,7 +340,7 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
                     <h3 className="tc-card__name">{trail.name}</h3>
                     <div className="tc-card__metrics">
                       <span className="tc-metric"><Ruler size={14} strokeWidth={2} />{trail.distance_km} km</span>
-                      <span className="tc-metric"><Clock size={14} strokeWidth={2} />{trail.duration_hours}h</span>
+                      <span className="tc-metric"><Clock size={14} strokeWidth={2} />{fmtDuration(trail.duration_hours) || '—'} h</span>
                       <span className="tc-metric"><TrendingUp size={14} strokeWidth={2} />{trail.elevation_gain_m} m</span>
                       {trail.rating ? (
                         <span className="tc-metric tc-metric--rating"><Star size={14} strokeWidth={2} fill="currentColor" />{trail.rating}</span>
@@ -351,6 +371,21 @@ function TrailCatalog({ viewTrail, initialTags = [], onTagsConsumed, onShowLogin
               <button className="tc-sheet__close" onClick={() => setShowFilters(false)} aria-label={t('catalog.clearFilters')}>
                 <X size={20} strokeWidth={2} />
               </button>
+            </div>
+
+            <div className="tc-sheet__section">
+              <label className="tc-sheet__label">{t('catalog.filterByActivity', 'Activity')}</label>
+              <div className="tc-sheet__tags">
+                {ACTIVITY_ORDER.map(k => {
+                  const m = ACTIVITY[k];
+                  return (
+                    <Chip key={k} active={selectedActivity === k}
+                      onClick={() => setSelectedActivity(selectedActivity === k ? 'all' : k)}>
+                      <m.Icon size={13} strokeWidth={2.25} /> {t(`catalog.act_${k}`, m.label)}
+                    </Chip>
+                  );
+                })}
+              </div>
             </div>
 
             <div className="tc-sheet__section">

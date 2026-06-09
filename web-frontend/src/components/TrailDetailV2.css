@@ -53,6 +53,9 @@
   padding: 4px 11px; border-radius: 999px; display: inline-flex; align-items: center; gap: 5px;
 }
 .tdx-chip--star { color: var(--gold); }
+.tdx-chip--act { color: var(--act-color, var(--ink)); border-color: color-mix(in srgb, var(--act-color, #fff) 40%, transparent); }
+.tdx-chip--act svg { color: var(--act-color, var(--ink)); }
+.tdx-chip--grade { font-weight: 800; letter-spacing: 0.03em; }
 
 .tdx-title {
   font-family: Georgia, 'Times New Roman', serif;
@@ -142,7 +145,11 @@
   min-width: 0; /* let cards shrink below their content's min-width so inner rails
                    scroll instead of forcing the grid wider than the viewport */
 }
-.tdx-card--full { grid-column: 1 / -1; } /* only when itinerary would be a lonely odd card */
+/* Horizontal-rail cards (POI / Gallery) span full width — they read as bands and
+   keep the short cards (Dog | Reviews) pairing with each other instead of a tall
+   rail leaving a gap beside a short card. */
+.tdx-card--rail { grid-column: 1 / -1; }
+.tdx-card--full { grid-column: 1 / -1; } /* itinerary, when it would be a lonely odd card */
 .tdx-card__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
 .tdx-card__title {
   display: flex; align-items: center; gap: 8px; margin: 0 0 14px;
@@ -180,6 +187,15 @@
 
 /* Dog + reviews + itinerary */
 .tdx-dog__text { color: var(--ink-dim); font-size: 14px; line-height: 1.55; margin: 0; }
+/* Narya as the Dog-Notes "icon": a circular seasonal portrait with a soft
+   radial fade so its edge melts into the card. */
+.tdx-card__title--dog { gap: 9px; }
+.tdx-dog__avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  object-fit: cover; object-position: center 26%;
+  -webkit-mask-image: radial-gradient(circle, #000 50%, transparent 100%);
+  mask-image: radial-gradient(circle, #000 50%, transparent 100%);
+}
 .tdx-reviews__peek { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: none; border: none; cursor: pointer; padding: 0; }
 .tdx-reviews__score { display: inline-flex; align-items: center; gap: 8px; font-size: 26px; font-weight: 800; color: var(--gold); }
 .tdx-reviews__score--muted { font-size: 15px; color: var(--ink-mute); font-weight: 600; }

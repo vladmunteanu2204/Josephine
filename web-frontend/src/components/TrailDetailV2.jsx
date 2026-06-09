@@ -9,7 +9,10 @@ import {
 } from 'lucide-react';
 import { useToast } from '../contexts/ToastContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useSeason } from '../contexts/SeasonContext';
 import { trailImg, trailGallery, onImgError } from '../utils/trailImage';
+import { fmtDuration } from '../utils/format';
+import { activityMeta, gradeLabel, gradeTitle } from '../utils/activity';
 import { buildStaticRouteMapUrl } from '../utils/itineraryPdf';
 import { trackTrailView, trackTrailSave } from '../utils/personalization';
 import { ENABLE_HIKE_TRACKING } from '../featureFlags';
@@ -59,6 +62,7 @@ function TrailDetailV2({
   const { t, i18n } = useTranslation();
   const toast = useToast();
   const { currentUser } = useAuth();
+  const naryaSrc = useSeason()?.config?.naryaPortrait || '/narya.webp';
   const lang = (i18n.language || 'en').split('-')[0];
 
   const [full, setFull] = useState(trail);
@@ -149,6 +153,9 @@ function TrailDetailV2({
 
   const diff = DIFFICULTY[(full.difficulty || 'moderate').toLowerCase()] || DIFFICULTY.moderate;
   const typeLabel = TRAIL_TYPE_LABEL[full.trail_type] || '';
+  const act = activityMeta(full.activity_type);
+  const grade = gradeLabel(full);
+  const gradeTip = gradeTitle(full);
   const heroImg = trailImg(full, 'hero');
   const note = (full.josephineNote && (full.josephineNote[lang] || full.josephineNote.en)) || full.tagline || '';
   const gallery = trailGallery(full) || [];
@@ -164,13 +171,12 @@ function TrailDetailV2({
   const mapThumb = buildStaticRouteMapUrl(full, { width: 560, height: 300 });
   const hasCoords = Array.isArray(full.coordinates) && full.coordinates.length > 1;
 
-  // Bento cards before the itinerary: Map + Reviews (always) + the conditional
-  // ones. If that count is even, the itinerary would start a lonely row → span
-  // it full-width; if odd, it pairs with the trailing card (no empty corner).
-  const cardsBeforeItin = 2 + (hasCoords ? 1 : 0)
-    + (pois.length > 0 || insights.length > 0 ? 1 : 0)
-    + (hasGallery ? 1 : 0) + (full.dog_friendly ? 1 : 0);
-  const itineraryFull = cardsBeforeItin % 2 === 0;
+  // Itinerary spans full width only if it would otherwise be a lonely odd card.
+  // Count only the cards in the 2-col flow — the rails (POI/Gallery) span full
+  // width and don't take a column slot. Flow cards = Map + Reviews (always) +
+  // Weather + Dog when present.
+  const flowCardsBeforeItin = 2 + (hasCoords ? 1 : 0) + (full.dog_friendly ? 1 : 0);
+  const itineraryFull = flowCardsBeforeItin % 2 === 0;
 
   const gtk = [
     season && { icon: CalendarDays, label: t('trail.gtkBestTime', 'Best season'), value: season },
@@ -200,6 +206,12 @@ function TrailDetailV2({
           <div className="tdx-hero__main">
             <div className="tdx-chips">
               {full.rating != null && <span className="tdx-chip tdx-chip--star"><Star size={13} fill="currentColor" strokeWidth={0} /> {full.rating}</span>}
+              {act && (
+                <span className="tdx-chip tdx-chip--act" style={{ '--act-color': act.color }}>
+                  <act.Icon size={13} strokeWidth={2.25} /> {t(`catalog.act_${act.key}`, act.label)}
+                </span>
+              )}
+              {grade && <span className="tdx-chip tdx-chip--grade" title={gradeTip || undefined}>{grade}</span>}
               {typeLabel && <span className="tdx-chip">{diff.label} {typeLabel.toLowerCase()}</span>}
               {full.distance_km != null && <span className="tdx-chip">{full.distance_km} km</span>}
             </div>
@@ -249,8 +261,8 @@ function TrailDetailV2({
           <div className="tdx-stats">
             <Stat icon={Ruler} value={`${full.distance_km ?? '—'} km`} label={typeLabel || t('pdf.distance', 'Distance')} />
             <Stat icon={TrendingUp} value={`${full.elevation_gain_m ?? '—'} m`} label={t('pdf.elevGain', 'Gain')} />
-            <Stat icon={Clock} value={full.duration_hours ? `${full.duration_hours} h` : '—'} label={t('pdf.duration', 'Duration')} />
-            <Stat icon={BarChart3} value={diff.label} label={t('pdf.difficulty', 'Difficulty')} valueColor={diff.color} />
+            <Stat icon={Clock} value={fmtDuration(full.duration_hours) ? `${fmtDuration(full.duration_hours)} h` : '—'} label={t('pdf.duration', 'Duration')} />
+            <Stat icon={BarChart3} value={diff.label} label={grade ? `${t('pdf.difficulty', 'Difficulty')} · ${grade}` : t('pdf.difficulty', 'Difficulty')} valueColor={diff.color} />
           </div>
         </section>
 
@@ -335,7 +347,11 @@ function TrailDetailV2({
           {/* Dog notes */}
           {full.dog_friendly && (
             <article className="tdx-card tdx-card--dog">
-              <h3 className="tdx-card__title"><Dog size={15} /> {t('trail.dogNotes', 'Dog Notes')}</h3>
+              <h3 className="tdx-card__title tdx-card__title--dog">
+                <img className="tdx-dog__avatar" src={naryaSrc} alt="Narya"
+                  loading="lazy" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                {t('trail.dogNotes', 'Dog Notes')}
+              </h3>
               <p className="tdx-dog__text">{full.dog_note || t('trail.dogGeneric', 'This trail is dog friendly. Keep dogs on a leash around livestock and grazed areas.')}</p>
             </article>
           )}

@@ -4,6 +4,7 @@ import {
   MapPin, Mountain, Clock, BarChart3, Dog, Heart, Sun, Camera,
   ShieldCheck, Backpack, Flag, Home, Utensils, Droplet, Church, Trees,
 } from 'lucide-react';
+import { fmtDuration } from '../utils/format';
 import './ItineraryExportSheet.css';
 
 // Schedule-step icon key → lucide icon (matches itineraryPdf.iconKeyForType).
@@ -118,7 +119,7 @@ function ItineraryExportSheet({ trail, heroImg, mapImg, elev, schedule = [] }) {
       <section className="ies-stats">
         <Stat icon={<MapPin size={22} />} label={t('pdf.distance', 'Distance')} value={`${trail.distance_km} km`} />
         <Stat icon={<Mountain size={22} />} label={t('pdf.elevGain', 'Elevation gain')} value={`+${trail.elevation_gain_m} m`} />
-        <Stat icon={<Clock size={22} />} label={t('pdf.duration', 'Duration')} value={`${trail.duration_hours} h`} />
+        <Stat icon={<Clock size={22} />} label={t('pdf.duration', 'Duration')} value={`${fmtDuration(trail.duration_hours) || '—'} h`} />
         <Stat icon={<BarChart3 size={22} />} label={t('pdf.difficulty', 'Difficulty')} value={diffLabel} />
         {trail.dog_friendly && (
           <Stat icon={<Dog size={22} />} label={t('pdf.dogFriendly', 'Dog friendly')} value={t('pdf.yes', 'Yes')} valueClass="ies-gold" />

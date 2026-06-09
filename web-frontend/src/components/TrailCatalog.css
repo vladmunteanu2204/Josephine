@@ -132,6 +132,22 @@
   pointer-events: none;
 }
 
+.tc-act {
+  position: absolute; left: 12px; top: 12px;
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 9px; border-radius: var(--radius-pill);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
+  color: var(--act-color, #fff);
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(6px);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--act-color, #fff) 45%, transparent);
+}
+.tc-act svg { color: var(--act-color, #fff); }
+.tc-act__grade {
+  margin-left: 1px; padding: 1px 6px; border-radius: var(--radius-pill);
+  font-size: 10px; font-weight: 800; color: #fff;
+  background: color-mix(in srgb, var(--act-color, #fff) 38%, transparent);
+}
+
 .tc-diff {
   position: absolute; left: 12px; bottom: 12px;
   padding: 4px 10px; border-radius: var(--radius-pill);
