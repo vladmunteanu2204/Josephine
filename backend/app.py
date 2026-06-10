@@ -36,6 +36,7 @@ from functools import wraps
 import media as media_module  # image upload / R2 delivery
 import firebase_auth  # optional, credential-gated ID-token verification
 import directions as directions_module  # trailhead routing (Mapbox Directions, credential-gated)
+import day_plan as day_plan_engine       # realistic departure-anchored day-plan timeline
 from weather_service import weather_service
 import dispersal
 import almanac
@@ -2001,6 +2002,65 @@ def josephine_plan():
         lang = (request.get_json(silent=True) or {}).get('lang', 'en')
         return jsonify({'plan': decision_engine._refusal_plan(
             {'lang': lang}, "Something went sideways planning that — try again in a moment.")})
+
+
+@app.route('/api/josephine/day-plan', methods=['POST'])
+def josephine_day_plan():
+    """Realistic, departure-anchored day plan for ONE chosen hike.
+
+    Body: {trail_id, departure_time:'HH:MM', origin:{lat,lon}|{area}, pace?,
+           want_lunch?, lang}. Returns {day_plan} (see day_plan.build_day_plan).
+    Drive time is real (Mapbox) when a token is set, else a labelled estimate;
+    sunset is the trailhead's; lunch is named only from real on-route data."""
+    try:
+        body = request.json or {}
+        trail_id = body.get('trail_id')
+        trails = load_complete_trails().get('trails', [])
+        trail = next((t for t in trails if t.get('id') == trail_id
+                      and t.get('status', 'published') == 'published'), None)
+        if not trail:
+            return jsonify({'error': 'trail_not_found'}), 404
+
+        # Origin: explicit GPS, else a named place resolved to coords.
+        origin = None
+        o = body.get('origin') or {}
+        if o.get('lat') is not None and o.get('lon') is not None:
+            origin = (float(o['lat']), float(o['lon']))
+        else:
+            area = o.get('area') or body.get('start_area') or body.get('origin_text')
+            ll = _resolve_area_coords(area) if area else None
+            if ll:
+                origin = (ll[0], ll[1])
+
+        # Sunset local to the trailhead (daylight safety).
+        th = day_plan_engine._trailhead_latlon(trail)
+        weather = _almanac_weather(*th) if th else None
+        sunset = (weather or {}).get('sunset')
+
+        def get_drive_min(origin_ll, dest_ll):
+            r = directions_module.get_directions(origin_ll[1], origin_ll[0],
+                                                 dest_ll[1], dest_ll[0], 'driving')
+            if r and r.get('duration_s'):
+                return (r['duration_s'] / 60.0, 'mapbox')
+            return None
+
+        huts = _resolve_nearby_rifugios(trail.get('nearby_rifugios') or [])
+
+        plan = day_plan_engine.build_day_plan(
+            trail,
+            departure=body.get('departure_time') or body.get('departure') or '08:00',
+            origin=origin,
+            sunset=sunset,
+            pace=body.get('pace', 'average'),
+            want_lunch=bool(body.get('want_lunch', True)),
+            get_drive_min=get_drive_min,
+            huts=huts,
+            lang=body.get('lang', 'en'),
+        )
+        return jsonify({'day_plan': plan})
+    except Exception as e:  # noqa: BLE001
+        print(f"[josephine_day_plan] error: {e}")
+        return jsonify({'error': 'plan_failed'}), 200
 
 
 @app.route('/api/weather/forecast', methods=['GET'])
