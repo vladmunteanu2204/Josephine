@@ -138,6 +138,33 @@ def test_handles_trail_without_geometry():
     assert any(s["kind"] == "finish" for s in plan["steps"])
 
 
+def test_point_to_point_arrives_at_destination_eats_there_no_drive_back():
+    one_way = {
+        "id": "p2p", "name": "Village A to Village B", "trail_type": "point_to_point",
+        "duration_hours": 4.0, "elevation_gain_m": 500,
+        "coordinates": [[11.10, 46.60], [11.15, 46.63], [11.20, 46.66]],
+        "pois": [],
+    }
+    plan = DP.build_day_plan(
+        one_way, departure="9:00", origin=MERANO, sunset="21:00",
+        get_drive_min=drive_24, want_lunch=True, huts=[],
+        reverse_place=lambda lat, lon: "Schenna",
+    )
+    finish = next(s for s in plan["steps"] if s["kind"] == "finish")
+    assert "Schenna" in finish["label"]                     # arrive IN the destination
+    lunch = next(s for s in plan["steps"] if s["kind"] == "lunch")
+    assert lunch["place"] == "Schenna"                      # you eat in the destination village
+    assert all(s["kind"] != "drive_back" for s in plan["steps"])  # no fabricated drive home
+    assert "one_way_return" in plan["warnings"]
+
+
+def test_loop_still_returns_to_trailhead():
+    plan = DP.build_day_plan(TRAIL, departure="8:00", origin=MERANO, sunset="21:00",
+                             get_drive_min=drive_24, reverse_place=lambda a, b: "Nowhere")
+    finish = next(s for s in plan["steps"] if s["kind"] == "finish")
+    assert finish["label"] == "Back at the trailhead"       # loop unaffected by reverse_place
+
+
 def test_bad_departure_defaults_to_eight():
     plan = DP.build_day_plan(TRAIL, departure="garbage", sunset="21:00")
     assert plan["departure"] == "8:00"

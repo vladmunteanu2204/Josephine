@@ -127,14 +127,14 @@ def _hike_offsets(trail, pace_factor):
     if len(coords) < 2:
         # No geometry: a single block of duration, no interior stops.
         span_h = float(trail.get('duration_hours') or 2.0) * pace_factor
-        return span_h * 60.0, []
+        return span_h * 60.0, [], True
 
     last = len(coords) - 1
     cum = _cumulative_m(coords)
     total = cum[last]
     if total <= 0:
         span_h = float(trail.get('duration_hours') or 2.0) * pace_factor
-        return span_h * 60.0, []
+        return span_h * 60.0, [], True
 
     gain = max(0.0, float(trail.get('elevation_gain_m') or 0))
     ttype = trail.get('trail_type')
@@ -180,11 +180,12 @@ def _hike_offsets(trail, pace_factor):
         if 0 < idx < last:
             placed.append((offset_min(idx), p))
     placed.sort(key=lambda x: x[0])
-    return span_min, placed     # selection/capping happens in build_day_plan
+    return span_min, placed, back_to_start   # selection/capping happens in build_day_plan
 
 
 def build_day_plan(trail, *, departure, origin=None, sunset=None, pace='average',
-                   want_lunch=True, get_drive_min=None, huts=None, lang='en'):
+                   want_lunch=True, get_drive_min=None, huts=None, reverse_place=None,
+                   lang='en'):
     """Build the realistic day-plan timeline. See module docstring.
 
     departure   : 'HH:MM'
@@ -229,8 +230,20 @@ def build_day_plan(trail, *, departure, origin=None, sunset=None, pace='average'
     hike_start = clock + _PARK_BUFFER_MIN
 
     # 3) hike spine + on-route stops, with dwell accumulating
-    span_min, placed = _hike_offsets(trail, pace_factor)
-    lunch_offset = span_min * 0.5   # midday-ish anchor
+    span_min, placed, back_to_start = _hike_offsets(trail, pace_factor)
+
+    # For a one-way (point-to-point) hike you END somewhere else — you don't
+    # return to the trailhead. Name the destination so lunch/finish are honest:
+    # you'd eat in the destination town at the end, not at the midpoint.
+    coords = trail.get('coordinates') or []
+    destination = None
+    if not back_to_start and reverse_place and len(coords) >= 2:
+        end = coords[-1]
+        try:
+            destination = reverse_place(end[1], end[0])   # nearest settlement to the finish
+        except Exception:  # noqa: BLE001
+            destination = None
+    lunch_offset = span_min * (0.5 if back_to_start else 0.85)   # midday for loops; near the end for one-way
 
     # Classify placed POIs: scenic (viewpoint/summit/photo) vs food-like. Skip
     # trailhead markers and anything that blurs into the start/finish.
@@ -254,7 +267,14 @@ def build_day_plan(trail, *, departure, origin=None, sunset=None, pace='average'
     # don't stop to eat four times).
     lunch_hut = next((h for h in (huts or []) if h.get('open_now') is not False), None)
     if want_lunch:
-        if food:
+        if not back_to_start and destination:
+            # one-way hike ending in a village → you eat in the village, at the end
+            events.append((lunch_offset, {
+                'kind': 'lunch', 'icon': _ICON['lunch'], 'label': f'Lunch in {destination}',
+                'place': destination, 'sub': "the village has plenty of options",
+                'verified': True, 'dwell': _LUNCH_MIN, 'coordinates': None,
+            }))
+        elif food:
             off, p = min(food, key=lambda x: abs(x[0] - lunch_offset))
             events.append((off, {
                 'kind': 'lunch', 'icon': _ICON['lunch'], 'label': p.get('name'),
@@ -304,18 +324,25 @@ def build_day_plan(trail, *, departure, origin=None, sunset=None, pace='average'
         steps.append(ev)
         accrued += dwell
 
-    # 4) finish back at the trailhead (includes all dwell)
+    # 4) finish — back at the trailhead (loop) OR arrive at the destination (one-way)
     finish = hike_start + span_min + accrued
-    steps.append({'kind': 'finish', 'icon': _ICON['finish'], 'minutes': int(round(finish)),
-                  'time': _fmt_min(finish),
-                  'label': 'Back at the trailhead', 'sub': 'Hike complete'})
-
-    # 5) optional drive home
-    if origin and th and drive_min:
-        steps.append({'kind': 'drive_back', 'icon': _ICON['drive_back'],
-                      'minutes': int(round(finish + drive_min)),
-                      'time': _fmt_min(finish + drive_min),
-                      'label': 'Drive back', 'sub': f'~{drive_min} min to where you started'})
+    if back_to_start:
+        steps.append({'kind': 'finish', 'icon': _ICON['finish'], 'minutes': int(round(finish)),
+                      'time': _fmt_min(finish),
+                      'label': 'Back at the trailhead', 'sub': 'Hike complete'})
+        # drive home (you return to your car at the trailhead)
+        if origin and th and drive_min:
+            steps.append({'kind': 'drive_back', 'icon': _ICON['drive_back'],
+                          'minutes': int(round(finish + drive_min)),
+                          'time': _fmt_min(finish + drive_min),
+                          'label': 'Drive back', 'sub': f'~{drive_min} min to where you started'})
+    else:
+        # one-way: you ARRIVE somewhere else — don't claim a drive back to the car.
+        steps.append({'kind': 'finish', 'icon': _ICON['finish'], 'minutes': int(round(finish)),
+                      'time': _fmt_min(finish),
+                      'label': f'Arrive in {destination}' if destination else 'Arrive at the finish',
+                      'sub': "trail's end — one-way hike"})
+        warnings.append('one_way_return')   # the UI/Josephine notes the return is on you
 
     # 6) daylight validation (be off the mountain before dusk)
     sunset_min = _parse_hhmm(sunset)

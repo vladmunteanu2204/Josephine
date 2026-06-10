@@ -1252,23 +1252,15 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
       try { localStorage.setItem(SAVED_KEY, JSON.stringify(next)); } catch {}
       return next;
     });
+    // Saving no longer fabricates a crude fixed itinerary. We confirm the save
+    // and offer the REAL departure-anchored day plan (which asks the time +
+    // start point and computes an honest, route-aware timeline).
+    lastPlanTrailRef.current = trail;
     appendJosephineMessage({
-      type: 'itinerary', trail, steps: buildItinerary(trail),
-      chips: [t('chipViewSaved'), t('chipStartOver')],
+      type: 'text',
+      text: tj('savedConfirm', "Saved ✦ — it's in your hikes. Want me to plan the day around it?"),
+      chips: [tj('chipPlanDay', 'Plan my day around this ✦'), t('chipViewSaved'), t('chipStartOver')],
     });
-  };
-
-  const buildItinerary = (trail) => {
-    const dur = trail.duration_hours || 3;
-    const fmt = (h) => `${String(Math.floor(h)).padStart(2,'0')}:${String(Math.round((h - Math.floor(h)) * 60)).padStart(2,'0')}`;
-    const start = 9;
-    const stopName = trail.pois?.[0]?.name || t('itinStop', 'Rest & refuel');
-    return [
-      { time: fmt(start),              label: t('itinStart',  'Set off'),      place: trail.region || '' },
-      { time: fmt(start + 0.2),        label: t('itinTrail',  'On the trail'), place: trail.name },
-      { time: fmt(start + dur * 0.55), label: t('itinStop',   'Rest & refuel'), place: stopName },
-      { time: fmt(start + dur),        label: t('itinReturn', 'Head home'),    place: '' },
-    ];
   };
 
   const goodToKnowRows = (trail) => {

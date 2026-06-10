@@ -2055,6 +2055,7 @@ def josephine_day_plan():
             want_lunch=bool(body.get('want_lunch', True)),
             get_drive_min=get_drive_min,
             huts=huts,
+            reverse_place=_reverse_place_name,
             lang=body.get('lang', 'en'),
         )
         return jsonify({'day_plan': plan})
