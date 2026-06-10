@@ -7,6 +7,7 @@ import { checkDistanceFromGPS, checkDistanceWarning, buildTransportNote } from '
 import { useAuth } from '../contexts/AuthContext';
 import AuthPromptModal from './AuthPromptModal';
 import DailyPlanCard from './DailyPlanCard';
+import DayPlanTimeline from './DayPlanTimeline';
 import JosephineAvatar from './JosephineAvatar';
 import { recordVisit, rememberFromPlan, isReturning } from '../utils/memory';
 import './JosephineChat.css';
@@ -608,6 +609,9 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
   const lastAlmanacRef   = useRef(null); // the almanac moment currently offered
   const almanacRestRef   = useRef([]);   // remaining moments for "what else?"
   const seedConsumedRef  = useRef(false); // trail-seeded plan fires once
+  const lastPlanTrailRef = useRef(null);  // the trail the latest plan card is about
+  const dayPlanFlowRef   = useRef(null);  // {trailId, departure} during the day-plan ask
+  const requestDayPlanRef = useRef(null); // keeps requestDayPlan fresh for sendMessage's closure
 
   /* ── Web Speech API ─────────────────────────────────────────────────── */
   const SpeechRecognitionAPI =
@@ -782,7 +786,8 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
       if (plan?.trail) {
         setApiResults([plan.trail]);   // keeps follow-up Q&A grounded on the pick
         rememberFromPlan(plan);        // learn region/difficulty/mood for next visit
-        appendJosephineMessage({ type: 'plan', plan, chips: null });
+        lastPlanTrailRef.current = plan.trail;   // enable "Plan my day around this"
+        appendJosephineMessage({ type: 'plan', plan, chips: [tj('chipPlanDay', 'Plan my day around this ✦')] });
       } else {
         appendJosephineMessage({
           type: 'text',
@@ -794,6 +799,68 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
       setTyping(false);
       appendJosephineMessage({ type: 'text', text: t('windError'), chips: [t('chipStartOver')] });
     }
+  };
+
+  /* ── Realistic day plan (departure-anchored timeline) ────────────────── */
+  const startDayPlanAsk = (trailId, prompt) => {
+    dayPlanFlowRef.current = { trailId, departure: null };
+    appendJosephineMessage({
+      type: 'text',
+      text: prompt,
+      chips: [tj('chipSunrise', 'Sunrise'), '7:00', '8:00', '9:00', '10:00'],
+    });
+  };
+  const askDayPlanOrigin = () => {
+    const chips = [];
+    if (userLat != null && userLon != null) chips.push(tj('chipUseLocation', 'Use my location'));
+    chips.push('Merano', 'Lana', 'Bolzano', 'Bressanone');
+    appendJosephineMessage({
+      type: 'text',
+      text: tj('askOrigin', 'And where are you setting off from? Tap a town or type your village or hotel.'),
+      chips,
+    });
+  };
+  const requestDayPlan = async ({ trailId, departure, origin }) => {
+    setTyping(true);
+    try {
+      const body = { trail_id: trailId, departure_time: departure, lang, now: new Date().toISOString() };
+      if (origin?.lat != null && origin?.lon != null) body.origin = { lat: origin.lat, lon: origin.lon };
+      else if (origin?.area) body.origin = { area: origin.area };
+      const res = await axios.post('/api/josephine/day-plan', body);
+      const dayPlan = res.data?.day_plan;
+      setTyping(false);
+      if (dayPlan?.steps?.length) {
+        appendJosephineMessage({
+          type: 'day-plan', dayPlan,
+          chips: [tj('chipAdjustTime', 'Try another time'), t('chipStartOver')],
+        });
+      } else {
+        appendJosephineMessage({ type: 'text', text: t('windError'), chips: [t('chipStartOver')] });
+      }
+    } catch {
+      setTyping(false);
+      appendJosephineMessage({ type: 'text', text: t('windError'), chips: [t('chipStartOver')] });
+    }
+  };
+  requestDayPlanRef.current = requestDayPlan;
+
+  // Advance the two-step day-plan ask given a user's answer (chip text or typed).
+  // Returns true if the answer was consumed by an active flow.
+  const advanceDayPlanFlow = (answer) => {
+    const flow = dayPlanFlowRef.current;
+    if (!flow) return false;
+    if (!flow.departure) {
+      flow.departure = answer === tj('chipSunrise', 'Sunrise') ? '06:00' : answer.trim();
+      askDayPlanOrigin();
+    } else {
+      const { trailId, departure } = flow;
+      const origin = (answer === tj('chipUseLocation', 'Use my location') && userLat != null)
+        ? { lat: userLat, lon: userLon }
+        : { area: answer.trim() };
+      dayPlanFlowRef.current = null;
+      requestDayPlan({ trailId, departure, origin });
+    }
+    return true;
   };
 
   const handlePlanAlt = (a) => {
@@ -1299,6 +1366,29 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
     if (!text.trim()) return;
     wakeJosephine();
     const trimmed = text.trim();
+    // Typed answer to the day-plan ask (custom time / origin). Uses refs so this
+    // useCallback stays correct without re-binding.
+    if (dayPlanFlowRef.current) {
+      appendUserMessage(trimmed);
+      setInput('');
+      const flow = dayPlanFlowRef.current;
+      if (!flow.departure) {
+        flow.departure = /sunrise/i.test(trimmed) ? '06:00' : trimmed;
+        const chips = [];
+        if (userLat != null && userLon != null) chips.push(tj('chipUseLocation', 'Use my location'));
+        chips.push('Merano', 'Lana', 'Bolzano', 'Bressanone');
+        appendJosephineMessage({
+          type: 'text',
+          text: tj('askOrigin', 'And where are you setting off from? Tap a town or type your village or hotel.'),
+          chips,
+        });
+      } else {
+        const { trailId, departure } = flow;
+        dayPlanFlowRef.current = null;
+        requestDayPlanRef.current?.({ trailId, departure, origin: { area: trimmed } });
+      }
+      return;
+    }
     const tl = trimmed.toLowerCase();
     // The trail the conversation is currently centred on (an opened trail, or
     // the top recommendation). Used for context-aware Q&A and to ground Haiku.
@@ -1605,6 +1695,24 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
 
   /* ── Chip handler ────────────────────────────────────────────────────── */
   const handleChip = (chip) => {
+    // ── Realistic day-plan flow ──────────────────────────────────────────
+    if (chip === tj('chipPlanDay', 'Plan my day around this ✦') && lastPlanTrailRef.current) {
+      appendUserMessage(chip);
+      startDayPlanAsk(lastPlanTrailRef.current.id,
+        tj('askDeparture', 'Lovely. What time are you leaving? Tap a time or type your own.'));
+      return;
+    }
+    if (chip === tj('chipAdjustTime', 'Try another time') && lastPlanTrailRef.current) {
+      appendUserMessage(chip);
+      startDayPlanAsk(lastPlanTrailRef.current.id,
+        tj('askDeparture2', 'What time would you leave instead?'));
+      return;
+    }
+    if (dayPlanFlowRef.current) {   // an answer to the departure/origin question
+      appendUserMessage(chip);
+      advanceDayPlanFlow(chip);
+      return;
+    }
     if ([t('chipShowMap'), 'Open map', 'Show me on the map', 'Show me the map'].includes(chip)) {
       appendUserMessage(chip);
       setCurrentView?.('catalog');
@@ -1951,6 +2059,10 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
                     onAlt={handlePlanAlt}
                     onStartHike={onStartHike}
                   />
+                )}
+
+                {msg.type === 'day-plan' && msg.dayPlan && (
+                  <DayPlanTimeline plan={msg.dayPlan} t={t} />
                 )}
 
                 {/* Mood intro: text bubble + grid in one message (fix 16) */}
