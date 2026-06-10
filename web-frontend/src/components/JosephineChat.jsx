@@ -663,22 +663,20 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
           weatherData = res.data;
         } catch { /* fall through — null gives a generic message */ }
         text = buildWeatherGreeting(weatherData);
-        chips = [tj('chipMoodPlan', 'Plan my perfect day ✦'), t('chipPlanMyDay'), t('chipSurpriseMe'), t('chipShowMap')];
+        // Capability-first chips: the opening doubles as a menu of what Josephine
+        // can do, so a new user immediately sees her range. The almanac is no
+        // longer auto-dumped on launch — it lives behind "What's special now".
+        chips = [
+          tj('chipMoodPlan', 'Plan my perfect day ✦'),
+          tj('chipFindTrail', 'Find me a trail'),
+          tj('chipAskAnything', 'Ask me anything'),
+          tj('chipWhatsNow', "What's special now"),
+        ];
       }
       setTyping(false);
       setMessages(prev => [...prev, {
         id: Date.now(), from: 'josephine', type: 'text', text, chips,
       }]);
-
-      // Living Almanac: if something fleeting is happening on the mountain right
-      // now, Josephine leads with it — the "told to you" soul moment.
-      const moments = await fetchAlmanac(lat, lon, 3);
-      if (moments.length) {
-        almanacRestRef.current = moments.slice(1);
-        // Append directly (not via the tracked `after` timer) so StrictMode's
-        // mount/unmount cleanup can't clear it before it fires.
-        showAlmanacMoment(moments[0]);
-      }
     };
 
     if (typeof navigator !== 'undefined' && navigator.geolocation) {
@@ -772,6 +770,22 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
       const res = await axios.get('/api/almanac', { params });
       return res.data?.moments || [];
     } catch { return []; }
+  };
+  // On-demand (behind the "What's special now" chip) — no longer auto-shown.
+  const showWhatsNow = async () => {
+    setTyping(true);
+    const moments = await fetchAlmanac(userLat, userLon, 3);
+    setTyping(false);
+    if (moments.length) {
+      almanacRestRef.current = moments.slice(1);
+      showAlmanacMoment(moments[0]);
+    } else {
+      appendJosephineMessage({
+        type: 'text',
+        text: tj('nothingFleeting', "Nothing fleeting on the mountain right this moment — just good, solid hiking. Want me to find you a trail?"),
+        chips: [tj('chipFindTrail', 'Find me a trail')],
+      });
+    }
   };
 
   /* ── Mood-first planning → the Daily Plan Card ───────────────────────── */
@@ -1712,6 +1726,23 @@ function JosephineChat({ onBack, setCurrentView, viewTrail, onShowLogin, seedTra
       appendUserMessage(chip);
       advanceDayPlanFlow(chip);
       return;
+    }
+    // ── Capability chips (the opening menu) ──────────────────────────────
+    if (chip === tj('chipFindTrail', 'Find me a trail')) {
+      appendUserMessage(chip); startPlanningFlow(); return;
+    }
+    if (chip === tj('chipAskAnything', 'Ask me anything')) {
+      appendUserMessage(chip);
+      appendJosephineMessage({
+        type: 'text',
+        text: tj('askAnythingPrompt', "Ask away — a trail, a rifugio, the weather, how to get there. I'll tell you straight, and say so when I'm not sure."),
+        chips: null,
+      });
+      inputRef.current?.focus?.();
+      return;
+    }
+    if (chip === tj('chipWhatsNow', "What's special now")) {
+      appendUserMessage(chip); showWhatsNow(); return;
     }
     if ([t('chipShowMap'), 'Open map', 'Show me on the map', 'Show me the map'].includes(chip)) {
       appendUserMessage(chip);
