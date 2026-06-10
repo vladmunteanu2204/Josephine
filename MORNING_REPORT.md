@@ -50,3 +50,25 @@ cd web-frontend && npm test                      # 15 passed
 - When ready, **P1 tests** (insights gating, decision_engine, dispersal, recommender, mood, the IDOR gate) per `TEST_PLAN.md`.
 
 Sleep well — the seatbelt's on. ☺
+
+---
+
+## Update — P1 layer also done (same night)
+
+Since no action was needed from you, I continued into the P1 unit layer (task #43). Same rules: pure-function tests, green before commit, document-don't-fix.
+
+**Now: backend 125 passed / 4 xfailed, frontend 15 passed — all green, still < 2s.**
+
+New backend tests (77 passing + 3 xfail):
+- `test_mood.py` (12) — emotional-prompt parsing (peaceful/dog/family/epic/challenge, EN/IT/DE).
+- `test_dispersal.py` (18) — haversine, hotspot matching (id/keyword/radius), crowd pressure, the beat-crowds/peak-today/plan-tomorrow/daylight-risk decision logic.
+- `test_recommender.py` (15) — difficulty canonicalisation, profile building, cold-start, scoring, in-season boost, exclusions.
+- `test_insights.py` (14) — **the verification gate**: unverified hidden, editorial shown, **hazards require `verified`**, visibility filtering, condition gating, geo_moments.
+- `test_decision_engine.py` (14) — season in/shoulder/out, verification state + **stale downgrade**, localization.
+- `test_system_prompt.py` (4) — builds from real data, **KEEP_TRAIL actually filters non-whitelisted fields**, size ceiling, no known user emails leak.
+- `test_auth_idor.py` (3, **xfail**) — security regression for task **#17**: asserts anonymous callers can't read another user's hikes/saved/prefs by `?email=`. Currently xfail (the hole is real); flips to xpass when #17 is fixed. Read-only, no data written.
+
+Additional minor finding (documented, not fixed):
+- **`mood.py` IT/DE stem matching quirk** — stems like `tranquill`/`gemütlich` are wrapped in `\b(...)\b`, so inflected forms (`tranquilla`, `gemütliche`) don't match. Base forms work. Low impact (mood is a soft fallback). Worth a tidy-up when convenient.
+
+So the net surfaced **two pre-existing issues** (sunset-hike routing #42, the IDOR #17) and one minor quirk — exactly what a seatbelt is for. Everything is on `test/p0-safety-net`, ready to review/merge.
