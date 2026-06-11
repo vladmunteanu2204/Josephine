@@ -327,15 +327,11 @@ def build_day_plan(trail, *, departure, origin=None, sunset=None, pace='average'
     # 4) finish — back at the trailhead (loop) OR arrive at the destination (one-way)
     finish = hike_start + span_min + accrued
     if back_to_start:
+        # The hike ends where you parked. No "drive back" step — it's obvious and
+        # only clutters the plan; the drive time already lives in the header.
         steps.append({'kind': 'finish', 'icon': _ICON['finish'], 'minutes': int(round(finish)),
                       'time': _fmt_min(finish),
                       'label': 'Back at the trailhead', 'sub': 'Hike complete'})
-        # drive home (you return to your car at the trailhead)
-        if origin and th and drive_min:
-            steps.append({'kind': 'drive_back', 'icon': _ICON['drive_back'],
-                          'minutes': int(round(finish + drive_min)),
-                          'time': _fmt_min(finish + drive_min),
-                          'label': 'Drive back', 'sub': f'~{drive_min} min to where you started'})
     else:
         # one-way: you ARRIVE somewhere else — don't claim a drive back to the car.
         steps.append({'kind': 'finish', 'icon': _ICON['finish'], 'minutes': int(round(finish)),
