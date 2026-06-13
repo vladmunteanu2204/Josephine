@@ -59,5 +59,22 @@ data/user_behaviour.json
 data/saved_trails_server.json
 data/notification_prefs.json
 
+# Runtime / user-generated state — accumulates on the deployed server. NEVER
+# committed, so a deploy can't overwrite real users' data. (Root cause: #20,
+# JSON-as-database. These move to a DB later.)
+data/completed_hikes.json
+data/user_analytics.json
+data/reviews.json
+data/plans.json
+data/challenges.json
+data/trail_segments.json
+data/trails.json.backup
+backend/data/booking_inquiries.json
+# Curated content that is EMPTY locally — managed on the server so an empty
+# local copy can't wipe it on deploy. Un-ignore + commit real content to make
+# these git-managed (like data/trails.json) when you want.
+backend/data/rifugios.json
+backend/data/multi_day_trails.json
+
 # Local safety snapshot of cleared seed data (not for the repo — recoverable via git history)
 .cleanup_backup_*/
