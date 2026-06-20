@@ -418,15 +418,19 @@ def load_trail_segments():
     segments_path = os.path.join(BASE_DIR, 'data', 'trail_segments.json')
     return _cached_json(segments_path)
 
-def load_complete_trails():
-    """Load all trails — from PostgreSQL if available, else JSON file (TTL-cached).
+# The curated catalog (trails / rifugios / multi-day) is authored in git as JSON
+# and is the SINGLE SOURCE OF TRUTH. The Postgres catalog tables are NOT read by
+# default: a stale DB copy (e.g. an old 42-trail seed) would shadow the git JSON
+# and the catalog would never reflect deploys (#20). Set CATALOG_FROM_DB=1 to
+# restore the legacy DB-first behaviour. (User/runtime data stays DB-first —
+# this flag only governs the curated catalog loaders.)
+CATALOG_FROM_DB = os.environ.get('CATALOG_FROM_DB', '').strip().lower() in ('1', 'true', 'yes')
 
-    Falls back to the bundled JSON not only on a DB *error* but also when the
-    DB returns *zero* trails. A freshly provisioned (but un-seeded) Postgres
-    table is a valid, error-free query that returns no rows — without this
-    guard the catalog and recommend endpoints would silently go empty.
-    """
-    if DB_AVAILABLE:
+
+def load_complete_trails():
+    """Load all trails — JSON (git, authoritative) by default; DB only when
+    CATALOG_FROM_DB=1. TTL-cached via _cached_json."""
+    if DB_AVAILABLE and CATALOG_FROM_DB:
         try:
             with get_db() as conn:
                 rows = conn.execute(_sql("SELECT * FROM trails ORDER BY rating DESC NULLS LAST")).fetchall()
@@ -3078,8 +3082,8 @@ def track_trail_save():
 
 # Rifugio Management
 def load_rifugios():
-    """Load rifugios — from PostgreSQL if available, else JSON (TTL-cached)."""
-    if DB_AVAILABLE:
+    """Load rifugios — JSON (git, authoritative) by default; DB only when CATALOG_FROM_DB=1."""
+    if DB_AVAILABLE and CATALOG_FROM_DB:
         try:
             with get_db() as conn:
                 rows = conn.execute(_sql("SELECT * FROM rifugios ORDER BY name")).fetchall()
@@ -3963,8 +3967,8 @@ def load_completed_hikes():
 # ============================================
 
 def load_multi_day_trails():
-    """Load multi-day trails — from PostgreSQL if available, else JSON file."""
-    if DB_AVAILABLE:
+    """Load multi-day trails — JSON (git, authoritative) by default; DB only when CATALOG_FROM_DB=1."""
+    if DB_AVAILABLE and CATALOG_FROM_DB:
         try:
             with get_db() as conn:
                 rows = conn.execute(_sql("SELECT * FROM multi_day_trails ORDER BY name")).fetchall()
