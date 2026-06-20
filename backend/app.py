@@ -418,12 +418,12 @@ def load_trail_segments():
     segments_path = os.path.join(BASE_DIR, 'data', 'trail_segments.json')
     return _cached_json(segments_path)
 
-# The curated catalog (trails / rifugios / multi-day) is authored in git as JSON
-# and is the SINGLE SOURCE OF TRUTH. The Postgres catalog tables are NOT read by
-# default: a stale DB copy (e.g. an old 42-trail seed) would shadow the git JSON
-# and the catalog would never reflect deploys (#20). Set CATALOG_FROM_DB=1 to
-# restore the legacy DB-first behaviour. (User/runtime data stays DB-first —
-# this flag only governs the curated catalog loaders.)
+# The TRAILS catalog is authored in git as JSON and is the SINGLE SOURCE OF TRUTH.
+# The Postgres trails table is NOT read by default: a stale DB copy (e.g. an old
+# 42-trail seed) would shadow the git JSON and the catalog would never reflect
+# deploys (#20). Set CATALOG_FROM_DB=1 to restore the legacy DB-first behaviour.
+# (Rifugios / multi-day stay DB-first for now because their git JSON is empty —
+# flip them once they're authored in git. User/runtime data stays DB-first.)
 CATALOG_FROM_DB = os.environ.get('CATALOG_FROM_DB', '').strip().lower() in ('1', 'true', 'yes')
 
 
@@ -3082,8 +3082,10 @@ def track_trail_save():
 
 # Rifugio Management
 def load_rifugios():
-    """Load rifugios — JSON (git, authoritative) by default; DB only when CATALOG_FROM_DB=1."""
-    if DB_AVAILABLE and CATALOG_FROM_DB:
+    """Load rifugios — DB-first, JSON fallback. (Kept DB-first because rifugios.json
+    is empty in git; flipping to JSON-authoritative would blank prod rifugios. Flip
+    to JSON only once the curated rifugios live in git — see #20.)"""
+    if DB_AVAILABLE:
         try:
             with get_db() as conn:
                 rows = conn.execute(_sql("SELECT * FROM rifugios ORDER BY name")).fetchall()
@@ -3967,8 +3969,9 @@ def load_completed_hikes():
 # ============================================
 
 def load_multi_day_trails():
-    """Load multi-day trails — JSON (git, authoritative) by default; DB only when CATALOG_FROM_DB=1."""
-    if DB_AVAILABLE and CATALOG_FROM_DB:
+    """Load multi-day trails — DB-first, JSON fallback. (Kept DB-first; multi_day_trails.json
+    is empty in git — flipping to JSON-authoritative would blank prod adventures. See #20.)"""
+    if DB_AVAILABLE:
         try:
             with get_db() as conn:
                 rows = conn.execute(_sql("SELECT * FROM multi_day_trails ORDER BY name")).fetchall()
